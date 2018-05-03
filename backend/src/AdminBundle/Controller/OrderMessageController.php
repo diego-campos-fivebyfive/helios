@@ -170,6 +170,7 @@ class OrderMessageController extends AbstractController
     private function filterMessages(Request $request, QueryBuilder &$qb)
     {
         $searchTerm = $request->get('searchTerm');
+        $unreadMessages = $request->get('unreadMessages');
 
         if (!is_null($searchTerm)) {
             $qb->andWhere(
@@ -180,6 +181,11 @@ class OrderMessageController extends AbstractController
                 )
             );
             $qb->setParameter('searchTerm', '%' . $searchTerm . '%');
+        }
+
+        if ($unreadMessages) {
+            $qb->andWhere($qb->expr()->like('m.read', ':memberId'));
+            $qb->setParameter('memberId', '%"' . $this->member()->getId() . '"%');
         }
     }
 

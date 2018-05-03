@@ -18,6 +18,11 @@ class FilterType extends AbstractType
     {
         $statusNames = array_map('ucfirst', Order::getStatusNames());
 
+        $optionsValues = [
+            'power' => 'Potência',
+            'total' => 'Valor'
+        ];
+
         $builder
             ->add('status', ChoiceType::class, [
                 'required' => false,
@@ -25,7 +30,21 @@ class FilterType extends AbstractType
                 'choices' => $statusNames,
                 'multiple' => true
             ])
-        ;
+            ->add('like', TextType::class, [
+                'required' => false
+            ])
+            ->add('statusAt', null, [
+                'required' => false
+            ])
+            ->add('optionsVal', ChoiceType::class, [
+                'choices' => $optionsValues
+            ])
+            ->add('valueMin', null, [
+                'required' => false
+            ])
+            ->add('valueMax', null, [
+                'required' => false
+            ]);
     }
 
     /**

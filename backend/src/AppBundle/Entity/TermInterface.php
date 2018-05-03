@@ -11,7 +11,7 @@ interface TermInterface
 
     /**
      * @param int $id
-     * @return Term
+     * @return TermInterface
      */
     public function setId($id);
     /**
@@ -21,7 +21,7 @@ interface TermInterface
 
     /**
      * @param string $title
-     * @return Term
+     * @return TermInterface
      */
     public function setTitle($title);
 
@@ -32,9 +32,20 @@ interface TermInterface
 
     /**
      * @param string $url
-     * @return Term
+     * @return TermInterface
      */
     public function setUrl($url);
+
+    /**
+     * @param $publishedAt
+     * @return TermInterface
+     */
+    public function setPublishedAt($publishedAt);
+
+    /**
+     * @return \DateTime
+     */
+    public function getPublishedAt();
 
     /**
      * @return \DateTime
@@ -42,20 +53,7 @@ interface TermInterface
     public function getCreatedAt();
 
     /**
-     * @param \DateTime $createdAt
-     * @return Term
-     */
-    public function setCreatedAt($createdAt);
-
-    /**
      * @return \DateTime
      */
     public function getUpdatedAt();
-
-
-    /**
-     * @param \DateTime $updatedAt
-     * @return Term
-     */
-    public function setUpdatedAt($updatedAt);
 }

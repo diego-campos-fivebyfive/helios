@@ -410,7 +410,7 @@
                                                 <input type="checkbox" data-antecipated-billing="{{ path('antecipated_billing_order', {id:order.id}) }}" {{ order.antecipatedBilling ? 'checked' }}>
                                                 Faturamento Antecipado
                                             {% else %}
-                                                {{ order.antecipatedBilling ? 'Faruramento Antecipado' }}
+                                                {{ order.antecipatedBilling ? 'Faturamento Antecipado' }}
                                             {% endif %}
 
                                             {#TODO: Está funcionalidade já está ok, esta apenas aguardando outras propriedades#}
@@ -854,7 +854,9 @@
                 </div>
 
                 {# TODO: Tirar classes hidden quando ocorrer o lançamento do cupom#}
-                <div id="coupon_form" class="hidden"></div>
+                {% if couponOrderRescue %}
+                    <div id="coupon_form"></div>
+                {% endif %}
 
                 <div class="ibox border-bottom">
                     <div class="ibox-content">
@@ -1089,18 +1091,20 @@
 
     <script>
 
-        var FormCoupon = $('#coupon_form');
+        {% if couponOrderRescue %}
+            var FormCoupon = $('#coupon_form');
 
-        function getAssociatedCoupon() {
-            $.ajax({
-                url: "{{ path('coupon_create', {id:order.id, isShow: '1'}) }}",
-                success: function (response) {
-                    FormCoupon.html(response);
-                }
-            });
-        }
+            function getAssociatedCoupon() {
+                $.ajax({
+                    url: "{{ path('coupon_create', {id:order.id, isShow: '1'}) }}",
+                    success: function (response) {
+                        FormCoupon.html(response);
+                    }
+                });
+            }
 
-        getAssociatedCoupon();
+            getAssociatedCoupon();
+        {% endif %}
 
         {% if member.isPlatformAfterSales %}
             var ModalAfterSales = $('#after_sales_modal');

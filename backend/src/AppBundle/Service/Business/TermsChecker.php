@@ -49,16 +49,14 @@ class TermsChecker
     {
         /** @var TermInterface $term */
         foreach ($this->allTerms as $term) {
-            $timestamp = $term->getUpdatedAt()->getTimestamp();
+            $timestamp = $term->getPublishedAt()->getTimestamp();
             $id = $term->getId();
 
             $currentTimestamp = (new \DateTime())->getTimestamp();
 
             if ($timestamp <= $currentTimestamp) {
-                if (!array_key_exists($id, $terms)) {
-                    $terms[$id] = ['checkedAt' => null];
-                } else if ($terms[$id]['checkedAt'] <= $timestamp) {
-                    $terms[$id]['checkedAt'] = null;
+                if (!array_key_exists($id, $terms) || $terms[$id] <= $timestamp) {
+                    $terms[$id] = null;
                 }
             }
         }
@@ -74,7 +72,7 @@ class TermsChecker
     public function checked()
     {
         return array_filter($this->terms, function ($term) {
-            return !empty($term['checkedAt']);
+            return !is_null($term);
         });
     }
 
@@ -84,7 +82,7 @@ class TermsChecker
     public function unchecked()
     {
         return array_filter($this->terms, function ($term) {
-            return empty($term['checkedAt']);
+            return is_null($term);
         });
     }
 

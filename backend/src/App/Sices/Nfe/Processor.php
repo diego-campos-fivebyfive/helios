@@ -59,11 +59,19 @@ class Processor
      * @param $danfe
      * @return null|object
      */
-    public function matchReference($danfe)
+    public function matchReferences($ordersReferences)
     {
-        return $this->manager->findOneBy([
-            'reference' => $danfe['reference']
-        ]);
+        if ($ordersReferences) {
+            $qb = $this->manager->createQueryBuilder();
+
+            $qb->andWhere(
+                $qb->expr()->in('o.reference', $ordersReferences)
+            );
+
+            return $qb->getQuery()->getResult();
+        }
+
+        return [];
     }
 
     /**

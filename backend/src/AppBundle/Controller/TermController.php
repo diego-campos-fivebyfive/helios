@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Term;
+use AppBundle\Manager\AccountManager;
 use AppBundle\Manager\TermManager;
 use AppBundle\Service\Business\TermsChecker;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +30,7 @@ class TermController extends AbstractController
 
         $qb = $termManager->createQueryBuilder();
 
-        $qb->andWhere('DATE_DIFF(t.updatedAt, CURRENT_DATE()) <= 0');
+        $qb->andWhere('DATE_DIFF(t.publishedAt, CURRENT_DATE()) <= 0');
 
         $accountTerms = $this->account()->getTerms() ? $this->account()->getTerms() : [];
 
@@ -60,22 +61,70 @@ class TermController extends AbstractController
     }
 
     /**
+     * @Route("/agree/{id}", name="agree_term_account")
+     * @Method("post")
+     */
+    public function postAgreeTermAction(Term $term)
+    {
+        $account = $this->account();
+
+        $accountTerms = $account->getTerms() ? $account->getTerms() : [];
+
+        /** @var AccountManager $accountManager */
+        $accountManager = $this->get('account_manager');
+
+        $currentTimestamp = (new \DateTime())->getTimestamp();
+
+        $accountTerms[$term->getId()] = $currentTimestamp;
+
+        $account->setTerms($accountTerms);
+
+        $accountManager->save($account);
+
+        return $this->json([]);
+    }
+
+    /**
+     * @Route("/disagree/{id}", name="disagree_term_account")
+     * @Method("post")
+     */
+    public function postDisagreeTermAction(Term $term)
+    {
+        $account = $this->account();
+
+        $accountTerms = $account->getTerms() ? $account->getTerms() : [];
+
+        /** @var AccountManager $accountManager */
+        $accountManager = $this->get('account_manager');
+
+        $accountTerms[$term->getId()] = null;
+
+        $account->setTerms($accountTerms);
+
+        $accountManager->save($account);
+
+        return $this->json([]);
+    }
+
+    /**
     * @param $termCollection
     * @return array
     */
     private function formatEntity($termCollection)
     {
         return array_map(function(Term $term) {
-            /** @var \DateTime $createDate */
-            $createDate = $term->getCreatedAt()->format('Y-m-d H:i:s ');
-            $updatedAt = $term->getUpdatedAt()->format('Y-m-d H:i:s ');
+            /** @var \DateTime $createdDate */
+            $createdDate = $term->getCreatedAt()->format('Y-m-d H:i:s');
+            $updatedAt = $term->getUpdatedAt()->format('Y-m-d H:i:s');
+            $publishedAt = $term->getPublishedAt()->format('Y-m-d H:i:s');
 
             return [
                 'id' => $term->getId(),
                 'title' => $term->getTitle(),
                 'url' => $term->getUrl(),
+                'publishedAt' => $publishedAt,
                 'updatedAt' => $updatedAt,
-                'createdAt' => $createDate
+                'createdAt' => $createdDate
             ];
         }, $termCollection);
     }

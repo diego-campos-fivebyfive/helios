@@ -78,12 +78,15 @@
     border-bottom: $ui-space-y/10 solid $ui-divider-color;
     border-top: $ui-space-y/10 solid $ui-divider-color;
     color: $ui-text-main;
-    font-size: 1.75rem;
-    font-weight: 600;
-    line-height: 1.5;
 
     .icon {
       opacity: 0.5;
+    }
+
+    .title {
+      font-size: 1.75rem;
+      font-weight: 600;
+      line-height: 1.5;
     }
   }
 

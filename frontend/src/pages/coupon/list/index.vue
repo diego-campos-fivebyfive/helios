@@ -4,8 +4,7 @@
     Confirm(ref='confirm', v-on:removeItem='removeCoupon')
       div(slot='content')
         Icon.icon(name='question-circle-o', scale='4')
-        h2
-        | Confirma exclusão deste Cupom?
+        h2.title Confirma exclusão deste Cupom?
     Table.table(type='stripped')
       tr(slot='head')
         th.col-name Nome

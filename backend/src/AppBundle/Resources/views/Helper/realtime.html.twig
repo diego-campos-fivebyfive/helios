@@ -38,7 +38,9 @@
         });
     }
 
+    {% if app.user.isPlatform %}
     getUnreadMessageCount();
+    {% endif %}
 
     var Realtime = {
         tasks: {
