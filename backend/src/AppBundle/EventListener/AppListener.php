@@ -6,6 +6,7 @@ use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\UserInterface;
 use AppBundle\Service\Slack\ExceptionNotifier;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -52,6 +53,8 @@ class AppListener
         if (null != $member = $this->getMember()) {
             date_default_timezone_set($member->getTimezone() ?: 'America/Sao_Paulo');
         }
+
+        $this->checkTerms($event);
     }
 
     /**
@@ -107,13 +110,44 @@ class AppListener
     }
 
     /**
-     * @return \AppBundle\Entity\BusinessInterface
+     * @return \AppBundle\Entity\AccountInterface
      */
     public function getAccount()
     {
         $member = $this->getMember();
 
         return $member instanceof BusinessInterface ? $member->getAccount() : null;
+    }
+
+    /**
+     * @param GetResponseEvent $event
+     */
+    private function checkTerms(GetResponseEvent $event)
+    {
+        $member = $this->getMember();
+
+        if ($member && !$member->isPlatformUser() && !$event->getRequest()->isXmlHttpRequest()) {
+            $account = $member->getAccount();
+            $terms = $account->getTerms();
+
+            /** @var TermsChecker $termsChecker */
+            $termsChecker = $this->container->get('terms_checker');
+
+            $uncheckedTerms = $termsChecker->synchronize($terms)->unchecked();
+
+            if (!empty($uncheckedTerms)) {
+
+                if ($member->isMasterOwner()) {
+
+                } else {
+
+                }
+
+                //        $response = new RedirectResponse('http://www.google.com');
+                //
+                //        $event->setResponse($response);
+            }
+        }
     }
 
     /**
