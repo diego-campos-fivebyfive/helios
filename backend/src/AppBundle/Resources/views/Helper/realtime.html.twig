@@ -41,8 +41,6 @@
     {% if app.user.isPlatform %}
         getUnreadMessageCount();
     {% else %}
-        var checkTermsInterval = 300000;
-
         var key =  "{{ app.user.info.token }}-terms";
 
         var uri = window.location;
@@ -69,6 +67,7 @@
 
         function checkTerms() {
             var checkedTermsTime = localStorage.getItem(key);
+            var checkTermsInterval = 300000;
 
             if (!checkedTermsTime || (new Date().getTime() - checkedTermsTime) > checkTermsInterval) {
                 checkTermsRequest();
