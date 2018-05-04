@@ -34,11 +34,8 @@ const validateType = field => {
   return validateRequired(field)
 }
 
-export const validate = field => {
-  return (
-    field.type
-    && field.component.name === 'Check'
-  )
+export const validate = field => (
+  (field.type && field.component.name === 'Check')
     ? validateType(field)
     : validateRequired(field)
-}
+)
