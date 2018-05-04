@@ -8,10 +8,12 @@
   },
   "extends": [
     "plugin:vue/essential",
-    "airbnb-base"
+    "airbnb-base",
+    "plugin:jest/recommended"
   ],
   "plugins": [
-    "vue"
+    "vue",
+    "jest"
   ],
   "rules": {
     "max-len": ["error", 80],
@@ -23,6 +25,7 @@
     "no-useless-escape": ["off", "always"],
     "quote-props": ["error", "consistent-as-needed"],
     "vue/script-indent": ["error", 2, { "baseIndent": 1 }],
+    "import/prefer-default-export": ["off", "always"],
     "import/no-unresolved": ["off", "always"],
     "import/extensions": ["off", "always", {
       "js": "never",
