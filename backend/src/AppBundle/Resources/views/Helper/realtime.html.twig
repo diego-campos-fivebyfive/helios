@@ -43,11 +43,7 @@
     {% else %}
         var checkTermsInterval = 300000;
 
-        var userToken = "{{ app.user.info.token }}";
-
-        var key =  userToken + '-terms';
-
-        var checkedTermsTime = localStorage.getItem(key);
+        var key =  "{{ app.user.info.token }}-terms";
 
         var uri = window.location;
 
@@ -72,6 +68,8 @@
         }
 
         function checkTerms() {
+            var checkedTermsTime = localStorage.getItem(key);
+
             if (!checkedTermsTime || (new Date().getTime() - checkedTermsTime) > checkTermsInterval) {
                 checkTermsRequest();
             }
