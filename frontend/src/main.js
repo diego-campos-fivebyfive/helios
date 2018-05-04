@@ -20,7 +20,7 @@ initGlobals(Vue).then(() => {
     components: globalComponents,
     template: '<App/>',
     render: h => h(App),
-    sockets:{
+    sockets: {
       connect() {
         if (process.env.AMBIENCE === 'development') {
           console.log('socket connected')

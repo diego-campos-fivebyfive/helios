@@ -10,7 +10,7 @@
 
 <script>
   import Datepicker from 'vuejs-datepicker'
-  import {ptBR} from 'vuejs-datepicker/dist/locale'
+  import { ptBR } from 'vuejs-datepicker/dist/locale'
   import Field from './Field'
 
   export default {
@@ -33,7 +33,7 @@
 </script>
 
 <style lang="scss" scoped>
-  .vdp-datepicker{
+  .vdp-datepicker {
     input {
       width: 100%;
       padding: 0.75rem;

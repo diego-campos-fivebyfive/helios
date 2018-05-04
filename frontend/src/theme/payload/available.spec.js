@@ -16,10 +16,10 @@ describe('available()', () => {
         rejected: false
       }
     ]
-  
+
     expect(available(payload)).toBe(false)
   })
-  
+
   it('should returns true if all items are not rejected', () => {
     const payload = [
       {
@@ -31,7 +31,7 @@ describe('available()', () => {
         rejected: false
       }
     ]
-  
+
     expect(available(payload)).toBe(true)
   })
 })

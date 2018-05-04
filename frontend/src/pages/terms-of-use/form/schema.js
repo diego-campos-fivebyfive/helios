@@ -5,9 +5,9 @@ export default {
   id: {},
   publishedAt: {
     label: 'Publicado em',
-      component: Datepicker,
-      required: true,
-      style: {
+    component: Datepicker,
+    required: true,
+    style: {
       size: [1, 1, 1]
     }
   },

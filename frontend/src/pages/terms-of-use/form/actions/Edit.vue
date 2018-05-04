@@ -23,7 +23,6 @@
 
         const data = payload.parse(this.payload)
 
-        console.log('data', data)
         const uri = `/admin/api/v1/terms/${data.id}`
 
         const response = this.axios.put(uri, data)
