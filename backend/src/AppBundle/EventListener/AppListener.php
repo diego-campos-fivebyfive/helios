@@ -54,8 +54,6 @@ class AppListener
         if (null != $member = $this->getMember()) {
             date_default_timezone_set($member->getTimezone() ?: 'America/Sao_Paulo');
         }
-
-        $this->checkTerms($event);
     }
 
     /**
@@ -118,45 +116,6 @@ class AppListener
         $member = $this->getMember();
 
         return $member instanceof BusinessInterface ? $member->getAccount() : null;
-    }
-
-    /**
-     * @param GetResponseEvent $event
-     */
-    private function checkTerms(GetResponseEvent $event)
-    {
-        $member = $this->getMember();
-
-        $request = $event->getRequest();
-
-        // TODO: tambem nao deverá entrar quando a rota for a dos termos
-        if ($member && !$member->isPlatformUser()
-            && !$request->isXmlHttpRequest()
-            && $request->attributes->get('_route') != "notice_render"
-            && $request->getPathInfo() != "/_fragment") {
-            $account = $member->getAccount();
-            $terms = $account->getTerms();
-
-            /** @var TermsChecker $termsChecker */
-            $termsChecker = $this->container->get('terms_checker');
-
-            $uncheckedTerms = $termsChecker->synchronize($terms)->unchecked();
-
-            if (!empty($uncheckedTerms)) {
-
-                if ($member->isMasterOwner()) {
-
-                } else {
-
-                }
-                // TODO: mover essa linha para o else
-                $url = $this->container->get('router')->generate('notice_render', ['view' => 'terms']);
-
-                $response = new RedirectResponse($url);
-
-                $event->setResponse($response);
-            }
-        }
     }
 
     /**
