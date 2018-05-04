@@ -1,7 +1,25 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kolinalabs
- * Date: 5/4/18
- * Time: 4:06 PM
- */
+
+namespace AppBundle\Menu;
+
+class MenuAccountOnlyTerms
+{
+    /**
+     * @var menuMap
+     */
+    private static $menuMap = [
+        'terms' => [
+            'name' => 'Termos de Uso',
+            'link' => '/terms',
+            'icon' => 'file-text-o',
+            'allowedRoles' => [
+                'ownerMaster'
+            ]
+        ]
+    ];
+
+    public static function getMenuMap()
+    {
+        return self::$menuMap;
+    }
+}
