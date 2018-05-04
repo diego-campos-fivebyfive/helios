@@ -156,6 +156,14 @@ class MenuAccount
             ],
             'allowedRoles' => '*',
         ],
+        'terms' => [
+            'name' => 'Termos de Uso',
+            'link' => '/terms',
+            'icon' => 'file-text-o',
+            'allowedRoles' => [
+                'ownerMaster'
+            ]
+        ],
         'settings' => [
             'name' => 'Configurações',
             'uri' => '#',

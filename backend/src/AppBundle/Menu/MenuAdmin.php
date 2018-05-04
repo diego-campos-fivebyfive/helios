@@ -168,6 +168,15 @@ class MenuAdmin
             ],
             'allowedRoles' => '*',
         ],
+        'terms' => [
+            'name' => 'Termos de Uso',
+            'link' => '/terms-of-use',
+            'icon' => 'file-text-o',
+            'allowedRoles' => [
+                'master',
+                'admin'
+            ]
+        ],
        'settings' => [
             'name' => 'Configurações',
             'uri' => '#',
