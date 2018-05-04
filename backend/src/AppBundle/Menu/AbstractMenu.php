@@ -4,6 +4,7 @@ namespace AppBundle\Menu;
 
 use AppBundle\Entity\User;
 use AppBundle\Entity\UserInterface;
+use AppBundle\Service\Business\TermsChecker;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
@@ -77,13 +78,24 @@ abstract class AbstractMenu implements ContainerAwareInterface
 
     protected function getMenuMap()
     {
+        /** @var TermsChecker $termsChecker */
+        $termsChecker = $this->container->get('terms_checker');
+
+        $accountTerms = $this->getUser()->getInfo()->getAccount()->getTerms();
+
+        $uncheckedTerms = $termsChecker->synchronize($accountTerms)->unchecked();
+
         /** @var User $user */
         $user = $this->getUser();
 
         if ($user->isPlatform()) {
             return MenuAdmin::getMenuMap();
         } else {
-            return MenuAccount::getMenuMap();
+            if (empty($uncheckedTerms)) {
+                return MenuAccount::getMenuMap();
+            } else {
+                return MenuAccountOnlyTerms::getMenuMap();
+            }
         }
     }
 }
