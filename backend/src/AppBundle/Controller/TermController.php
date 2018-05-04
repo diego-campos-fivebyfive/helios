@@ -61,6 +61,42 @@ class TermController extends AbstractController
     }
 
     /**
+     * @Route("/checker", name="checker_terms")
+     * @Method("get")
+     */
+    public function checkTermsAction()
+    {
+        $status = Response::HTTP_OK;
+        $url = "";
+
+        $member = $this->member();
+
+        if (!$member->isPlatformUser()) {
+            $account = $member->getAccount();
+
+            $terms = $account->getTerms() ? $account->getTerms() : [];
+
+            /** @var TermsChecker $termsChecker */
+            $termsChecker = $this->get('terms_checker');
+
+            $uncheckedTerms = $termsChecker->synchronize($terms)->unchecked();
+
+            if (!empty($uncheckedTerms)) {
+
+                if ($member->isMasterOwner()) {
+                    $url = "/terms";
+                } else {
+                    $url = $this->container->get('router')->generate('notice_render', ['view' => 'terms']);
+                }
+
+                $status = Response::HTTP_UNAUTHORIZED;
+            }
+        }
+
+        return $this->json(['url' => $url], $status);
+    }
+
+    /**
      * @Route("/agree/{id}", name="agree_term_account")
      * @Method("post")
      */
