@@ -78,19 +78,19 @@ abstract class AbstractMenu implements ContainerAwareInterface
 
     protected function getMenuMap()
     {
-        /** @var TermsChecker $termsChecker */
-        $termsChecker = $this->container->get('terms_checker');
-
-        $accountTerms = $this->getUser()->getInfo()->getAccount()->getTerms();
-
-        $uncheckedTerms = $termsChecker->synchronize($accountTerms)->unchecked();
-
         /** @var User $user */
         $user = $this->getUser();
 
         if ($user->isPlatform()) {
             return MenuAdmin::getMenuMap();
         } else {
+            /** @var TermsChecker $termsChecker */
+            $termsChecker = $this->container->get('terms_checker');
+
+            $accountTerms = $this->getUser()->getInfo()->getAccount()->getTerms();
+
+            $uncheckedTerms = $termsChecker->synchronize($accountTerms)->unchecked();
+
             if (empty($uncheckedTerms)) {
                 return MenuAccount::getMenuMap();
             } else {
