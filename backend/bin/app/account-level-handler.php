@@ -85,7 +85,7 @@ function normalizeLevels(array $config)
         return false;
     }
 
-    $beforeProccess = countAccounts();
+    $beforeProcess = countAccounts();
 
     normalizeConfig($config);
 
@@ -164,31 +164,31 @@ WHERE c.id %s (
         executeSQL($updateSQL);
     }
 
-    $afterProccess = countAccounts();
+    $afterProcess = countAccounts();
 
-    slackNotify($beforeProccess, $afterProccess);
+    slackNotify($beforeProcess, $afterProcess);
 
     return true;
 }
 
 /**
- * @param $beforeProccess
- * @param $afterProccess
+ * @param $beforeProcess
+ * @param $afterProcess
  */
-function slackNotify($beforeProccess, $afterProccess)
+function slackNotify($beforeProcess, $afterProcess)
 {
-    $message = formatMessage($beforeProccess, $afterProccess);
+    $message = formatMessage($beforeProcess, $afterProcess);
 
     $context = "account-levels";
     createLog($context, sprintf('%s: ' . $message, strtoupper($context)));
 }
 
 /**
- * @param $beforeProccess
- * @param $afterProccess
+ * @param $beforeProcess
+ * @param $afterProcess
  * @return string
  */
-function formatMessage($beforeProccess, $afterProccess)
+function formatMessage($beforeProcess, $afterProcess)
 {
     $message = '\nInformações dos níveis de contas:\n';
 
@@ -196,21 +196,21 @@ function formatMessage($beforeProccess, $afterProccess)
         $arrayKeys = array_keys($array);
 
         for ($i = 0; $i < count($array); $i++) {
-            $level = $arrayKeys[$i];
-            $total = $array[$level];
+            $key = $arrayKeys[$i];
+            $total = $array[$key];
 
             $endLine = ($i == count($array) - 1) ? '\n' : ',\n';
-            $messageLevel = '_'.$level.'_: '.$total.$endLine;
+            $messageLevel = '_'.$key.'_: '.$total.$endLine;
 
             $message .= $messageLevel;
         }
     }
 
     $message .= '*Antes:*\n';
-    formatArray($beforeProccess, $message);
+    formatArray($beforeProcess, $message);
 
     $message .= '*Depois:*\n';
-    formatArray($afterProccess, $message);
+    formatArray($afterProcess, $message);
 
     return $message;
 }
@@ -231,6 +231,13 @@ function countAccounts()
     foreach ($rows as $row) {
         $result[$row['level']] = intval($row['total']);
     }
+
+    $sqlBlockedAccounts = "SELECT COUNT(a.id) as total
+    FROM app_customer a
+    WHERE a.context = 'account'
+    AND a.status = 4;";
+
+    $result['bloqueadas'] = R::getAll($sqlBlockedAccounts)[0]['total'];
 
     return $result;
 }
