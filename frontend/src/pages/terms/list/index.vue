@@ -3,24 +3,30 @@
     tr(slot='head')
       th.col-title Título
       th.col-published Publicação
-      th.col-action Aceitar
+      th.col-action Status
     tr.rows(slot='rows', v-for='term in terms')
       td.col-title
         a(:href='term.url', target='_blank') {{ term.title }}
       td.col-published {{ formatDate(term.publishedAt) }}
       td.col-action
-        Checkbox(
-          :field='includeCheckedState(term)',
-          v-on:click.native='changedCheck(term, $event.target.checked)')
+        Button(
+          :class='{ "button-active": term.isAgree }',
+          type='default-bordered',
+          link='#linkB',
+          label='Aceito',
+          pos='first',
+          v-on:click.native='accept(term)')
+        Button(
+          :class='{ "button-active": !term.isAgree }',
+          type='default-bordered',
+          link='#linkB',
+          label='Não Aceito',
+          pos='last',
+          v-on:click.native='noAccept(term)')
 </template>
 
 <script>
-  import Checkbox from '@/theme/collection/Checkbox'
-
   export default {
-    components: {
-      Checkbox
-    },
     props: [
       'terms',
       'notification'
@@ -30,22 +36,19 @@
         const moment = this.$moment(date, 'YYYY-MM-DD, hh:mm a')
         return moment.format('DD/MM/YYYY, hh:mm a')
       },
-      includeCheckedState(term) {
-        const checked = term.isAgree
-        this.$set(term, 'value', Boolean(checked))
+      accept(term) {
+        const uri = `/api/v1/terms/agree/${term.id}`
 
-        return term
+        this.axios.post(uri).then(resolve => {
+          this.$emit('getTerms')
+        })
       },
-      changedCheck(term, checked) {
-        let uri = ''
+      noAccept(term) {
+        const uri = `/api/v1/terms/disagree/${term.id}`
 
-        if (checked) {
-          uri = `/api/v1/terms/agree/${term.id}`
-        } else {
-          uri = `/api/v1/terms/disagree/${term.id}`
-        }
-
-        this.axios.post(uri)
+        this.axios.post(uri).then(resolve => {
+          this.$emit('getTerms')
+        })
       }
     }
   }
@@ -57,18 +60,37 @@
   }
 
   .col-title {
-    width: 45%;
+    width: 40%;
     text-align: left;
   }
 
   .col-published {
-    width: 45%;
+    width: 40%;
     text-align: left;
   }
 
   .col-action {
-    width: 10%;
+    width: 20%;
     text-align: center;
+  }
+
+  .button-active {
+    background-color: $ui-blue-dark;
+    border-color: $ui-blue-dark;
+    box-shadow:
+      inset 4px 4px 6px $ui-blue-darken,
+      inset -4px -4px 6px $ui-blue-darken;
+    color: $ui-white-regular;
+
+    &:hover {
+      background-color: $ui-blue-dark;
+      border-color: $ui-blue-dark;
+      color: $ui-white-regular;
+    }
+
+    &:active {
+      box-shadow: inset 3px 3px 3px $ui-blue-darken;
+    }
   }
 
   a {
