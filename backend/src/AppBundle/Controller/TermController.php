@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
+ * @Security("!user.isPlatform()")
  *
  * @Route("/api/v1/terms")
  */
@@ -21,6 +22,7 @@ class TermController extends AbstractController
 {
     /**
      * @Route("/", name="list_terms_account")
+     * @Security("has_role('ROLE_OWNER_MASTER')")
      * @Method("get")
      */
     public function getTermsAction(Request $request)
@@ -98,6 +100,7 @@ class TermController extends AbstractController
 
     /**
      * @Route("/agree/{id}", name="agree_term_account")
+     * @Security("has_role('ROLE_OWNER_MASTER')")
      * @Method("post")
      */
     public function postAgreeTermAction(Term $term)
@@ -122,6 +125,7 @@ class TermController extends AbstractController
 
     /**
      * @Route("/disagree/{id}", name="disagree_term_account")
+     * @Security("has_role('ROLE_OWNER_MASTER')")
      * @Method("post")
      */
     public function postDisagreeTermAction(Term $term)
