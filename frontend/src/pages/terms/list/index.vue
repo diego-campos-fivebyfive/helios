@@ -37,14 +37,14 @@
       accept(term) {
         const uri = `/api/v1/terms/agree/${term.id}`
 
-        this.axios.post(uri).then(resolve => {
+        this.axios.post(uri).then(() => {
           this.$emit('getTerms')
         })
       },
       noAccept(term) {
         const uri = `/api/v1/terms/disagree/${term.id}`
 
-        this.axios.post(uri).then(resolve => {
+        this.axios.post(uri).then(() => {
           this.$emit('getTerms')
         })
       }
@@ -90,8 +90,8 @@
       background-color: $ui-blue-dark;
       border-color: $ui-blue-dark;
       box-shadow:
-              inset 4px 4px 6px $ui-blue-darken,
-              inset -4px -4px 6px $ui-blue-darken;
+        inset 4px 4px 6px $ui-blue-darken,
+        inset -4px -4px 6px $ui-blue-darken;
       color: $ui-white-regular;
     }
   }
