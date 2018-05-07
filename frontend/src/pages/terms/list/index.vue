@@ -12,14 +12,12 @@
         Button(
           :class='{ "button-active": term.isAgree }',
           type='default-bordered',
-          link='#linkB',
           label='Aceito',
           pos='first',
           v-on:click.native='accept(term)')
         Button(
           :class='{ "button-active": !term.isAgree }',
           type='default-bordered',
-          link='#linkB',
           label='Não Aceito',
           pos='last',
           v-on:click.native='noAccept(term)')
@@ -89,7 +87,12 @@
     }
 
     &:active {
-      box-shadow: inset 3px 3px 3px $ui-blue-darken;
+      background-color: $ui-blue-dark;
+      border-color: $ui-blue-dark;
+      box-shadow:
+              inset 4px 4px 6px $ui-blue-darken,
+              inset -4px -4px 6px $ui-blue-darken;
+      color: $ui-white-regular;
     }
   }
 
