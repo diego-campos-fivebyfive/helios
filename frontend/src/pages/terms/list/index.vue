@@ -16,7 +16,7 @@
           pos='first',
           v-on:click.native='accept(term)')
         Button(
-          :class='{ "button-active": !term.isAgree }',
+          :class='{ ":active": !term.isAgree }',
           type='default-bordered',
           label='Não Aceito',
           pos='last',
