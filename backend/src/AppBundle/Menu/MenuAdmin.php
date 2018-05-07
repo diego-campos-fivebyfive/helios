@@ -173,8 +173,7 @@ class MenuAdmin
             'link' => '/terms-of-use',
             'icon' => 'file-text-o',
             'allowedRoles' => [
-                'master',
-                'admin'
+                'master'
             ]
         ],
        'settings' => [
