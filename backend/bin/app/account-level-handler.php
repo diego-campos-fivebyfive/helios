@@ -237,7 +237,7 @@ function countAccounts()
     WHERE a.context = 'account'
     AND a.status = 4;";
 
-    $result['bloqueadas'] = R::getAll($sqlBlockedAccounts)[0]['total'];
+    $result['bloqueadas'] = R::getCell($sqlBlockedAccounts);
 
     return $result;
 }
