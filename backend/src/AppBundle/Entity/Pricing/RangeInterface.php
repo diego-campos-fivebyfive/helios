@@ -130,4 +130,15 @@ interface RangeInterface
      * @return \DateTime
      */
     public function getUpdatedAt();
+
+    /**
+     * @return string
+     */
+    public function getTag();
+
+    /**
+     * @param string $tag
+     * @return RangeInterface
+     */
+    public function setTag($tag);
 }
