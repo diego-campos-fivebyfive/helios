@@ -10,6 +10,7 @@
 
 namespace AppBundle\Service\Business;
 
+use AppBundle\Entity\Term;
 use AppBundle\Entity\TermInterface;
 use AppBundle\Manager\TermManager;
 
@@ -61,6 +62,8 @@ class TermsChecker
             }
         }
 
+        $this->cleanup($terms);
+
         $this->terms = $terms;
 
         return $this;
@@ -87,10 +90,37 @@ class TermsChecker
     }
 
     /**
+     * @return mixed
+     */
+    public function getTerms()
+    {
+       return $this->terms;
+    }
+
+    /**
      * @return array
      */
     public function all()
     {
         return $this->allTerms;
+    }
+
+    /**
+     * @param $terms
+     */
+    private function cleanup(&$terms)
+    {
+        $allTermsIds = [];
+
+        /** @var Term $term */
+        foreach ($this->allTerms as $term) {
+            $allTermsIds[] = $term->getId();
+        }
+
+        $deletedTerms = array_diff(array_keys($terms), $allTermsIds);
+
+        foreach ($deletedTerms as $id) {
+            unset($terms[$id]);
+        }
     }
 }
