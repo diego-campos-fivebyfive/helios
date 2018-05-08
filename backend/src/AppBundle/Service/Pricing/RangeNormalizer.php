@@ -110,15 +110,19 @@ class RangeNormalizer
 
     /**
      * @param Memorial $memorial
-     * @param array $codes
+     * @param array $data
      * @param array $levels
      * @param array $definitions
+     * @throws \Throwable
+     * @throws \TypeError
      */
-    public function normalize(Memorial $memorial, array $codes, array $levels, array $definitions = [])
+    public function normalize(Memorial $memorial, array $data, array $levels, array $definitions = [])
     {
         $this->definitions = $definitions;
 
-        $this->cache($memorial, $codes, $levels);
+        $tags = $data['tags'];
+
+        $this->cache($memorial, $tags, $levels);
 
         foreach ($this->powers as $config) {
 
@@ -126,17 +130,18 @@ class RangeNormalizer
 
             foreach($levels as $level) {
 
-                foreach ($codes as $code){
+                foreach ($tags as $tag){
 
-                    $range = $this->filter($code, $level, $initialPower, $finalPower);
+                    $range = $this->filter($tag, $level, $initialPower, $finalPower);
 
                     if (!$range instanceof Range) {
+                        $code = $data['codes'][$tag];
 
-                        $range = $this->create($memorial, $code, $level, $initialPower, $finalPower);
+                        $range = $this->create($memorial, $tag, $code, $level, $initialPower, $finalPower);
 
                         $cacheKey = $this->createCacheKey($initialPower, $finalPower);
 
-                        $this->cache[$cacheKey][$level][$code] = $range;
+                        $this->cache[$cacheKey][$level][$tag] = $range;
                     }
 
                     $this->checkDefinitions($range);
@@ -149,6 +154,7 @@ class RangeNormalizer
 
     /**
      * @param Memorial $memorial
+     * @param $tag
      * @param $code
      * @param $level
      * @param $initialPower
@@ -156,12 +162,14 @@ class RangeNormalizer
      * @param int $price
      * @return mixed|object|Range
      */
-    public function create(Memorial $memorial, $code, $level, $initialPower, $finalPower, $price = 0)
+    public function create(Memorial $memorial, $tag, $code, $level, $initialPower, $finalPower, $price = 0)
     {
+        /** @var Range $range */
         $range = $this->manager->create();
 
         $range
             ->setMemorial($memorial)
+            ->setTag($tag)
             ->setCode($code)
             ->setLevel($level)
             ->setInitialPower($initialPower)
@@ -175,21 +183,21 @@ class RangeNormalizer
     }
 
     /**
-     * @param $code
+     * @param $tag
      * @param $level
      * @param $initialPower
      * @param $finalPower
      * @param Memorial|null $memorial
      * @return bool|mixed|null|object|Range
      */
-    public function filter($code, $level, $initialPower, $finalPower, Memorial $memorial = null)
+    public function filter($tag, $level, $initialPower, $finalPower, Memorial $memorial = null)
     {
         switch ($this->strategy){
             case self::FILTER_CACHE:
 
                 $cacheKey = $this->createCacheKey($initialPower ,$finalPower);
 
-                return array_key_exists($code, $this->cache[$cacheKey][$level]) ? $this->cache[$cacheKey][$level][$code] : false ;
+                return array_key_exists($tag, $this->cache[$cacheKey][$level]) ? $this->cache[$cacheKey][$level][$tag] : false ;
 
                 break;
 
@@ -197,7 +205,7 @@ class RangeNormalizer
 
                 return $this->manager->findOneBy([
                     'memorial' => $memorial,
-                    'code' => $code,
+                    'tag' => $tag,
                     'level' => $level,
                     'initialPower' => $initialPower,
                     'finalPower' => $finalPower
@@ -207,8 +215,8 @@ class RangeNormalizer
 
             case self::FILTER_COLLECTION:
 
-                return $memorial->getRanges()->filter(function (Range $range) use ($code, $level, $initialPower, $finalPower) {
-                    return $range->hasConfig($code, $level, $initialPower, $finalPower);
+                return $memorial->getRanges()->filter(function (Range $range) use ($tag, $level, $initialPower, $finalPower) {
+                    return $range->hasConfig($tag, $level, $initialPower, $finalPower);
                 })->last();
 
                 break;
@@ -229,15 +237,17 @@ class RangeNormalizer
 
     /**
      * @param Range $range
+     * @throws \Throwable
+     * @throws \TypeError
      */
     private function checkDefinitions(Range $range)
     {
-        if(array_key_exists($range->getCode(), $this->definitions)){
+        if(array_key_exists($range->getTag(), $this->definitions)){
 
             $updatePrice = false;
             $accessor = $this->getAccessor();
 
-            foreach ($this->definitions[$range->getCode()] as $property => $value){
+            foreach ($this->definitions[$range->getTag()] as $property => $value){
 
                 if($accessor->getValue($range, $property) != $value){
                     $accessor->setValue($range, $property, $value);
@@ -256,11 +266,11 @@ class RangeNormalizer
 
     /**
      * @param Memorial $memorial
-     * @param array $codes
+     * @param array $tags
      * @param array $levels
      * @return $this
      */
-    private function cache(Memorial $memorial, array $codes, array $levels)
+    private function cache(Memorial $memorial, array $tags, array $levels)
     {
         $cache = [];
 
@@ -276,7 +286,7 @@ class RangeNormalizer
 
                 $qb->select('r')
                     ->where(
-                        $qb->expr()->in('r.code', ':codes')
+                        $qb->expr()->in('r.tag', ':tags')
                     )
                     ->andWhere('r.level = :level')
                     ->andWhere('r.memorial = :memorial')
@@ -286,7 +296,7 @@ class RangeNormalizer
 
                 $ranges = $qb
                     ->setParameters([
-                        'codes' => $codes,
+                        'tags' => $tags,
                         'level' => $level,
                         'memorial' => $memorial,
                         'initialPower' => $initialPower,
@@ -297,7 +307,7 @@ class RangeNormalizer
                 ;
 
                 $keys = array_map(function(Range $range){
-                    return $range->getCode();
+                    return $range->getTag();
                 }, $ranges);
 
                 $cache[$cacheKey][$level] = array_combine($keys, $ranges);
