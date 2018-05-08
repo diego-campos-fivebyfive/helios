@@ -87,9 +87,9 @@ abstract class AbstractMenu implements ContainerAwareInterface
             /** @var TermsChecker $termsChecker */
             $termsChecker = $this->container->get('terms_checker');
 
-            $accountTerms = $this->getUser()->getInfo()->getAccount()->getTerms();
+            $account = $this->getUser()->getInfo()->getAccount();
 
-            $uncheckedTerms = $termsChecker->synchronize($accountTerms)->unchecked();
+            $uncheckedTerms = $termsChecker->synchronize($account)->unchecked();
 
             if (empty($uncheckedTerms)) {
                 return MenuAccount::getMenuMap();

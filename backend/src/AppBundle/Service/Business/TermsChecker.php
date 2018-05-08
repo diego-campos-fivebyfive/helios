@@ -10,9 +10,12 @@
 
 namespace AppBundle\Service\Business;
 
+use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\Term;
 use AppBundle\Entity\TermInterface;
+use AppBundle\Manager\AccountManager;
 use AppBundle\Manager\TermManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class TermsChecker
 {
@@ -29,25 +32,34 @@ class TermsChecker
     /**
      * @var TermManager
      */
-    private $manager;
+    private $termManager;
+
+    /**
+     * @var AccountManager
+     */
+    private $accountManager;
 
     /**
      * TermsChecker constructor.
-     * @param TermManager $manager
+     * @param ContainerInterface $container
      */
-    public function __construct($manager)
+    public function __construct($container)
     {
-        $this->manager = $manager;
+        $this->accountManager = $container->get('account_manager');
 
-        $this->allTerms = $this->manager->findAll();
+        $this->termManager = $container->get('term_manager');
+
+        $this->allTerms = $this->termManager->findAll();
     }
 
     /**
-     * @param array $terms
+     * @param AccountInterface $account
      * @return $this
      */
-    public function synchronize(array &$terms)
+    public function synchronize(AccountInterface $account)
     {
+        $terms = $account->getTerms() ? $account->getTerms() : [];
+
         /** @var TermInterface $term */
         foreach ($this->allTerms as $term) {
             $timestamp = $term->getPublishedAt()->getTimestamp();
@@ -65,6 +77,10 @@ class TermsChecker
         $this->cleanup($terms);
 
         $this->terms = $terms;
+
+        $account->setTerms($this->terms);
+
+        $this->accountManager->save($account);
 
         return $this;
     }
@@ -87,14 +103,6 @@ class TermsChecker
         return array_filter($this->terms, function ($term) {
             return is_null($term);
         });
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTerms()
-    {
-       return $this->terms;
     }
 
     /**

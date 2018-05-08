@@ -34,12 +34,12 @@ class TermController extends AbstractController
 
         $qb->andWhere('DATE_DIFF(t.publishedAt, CURRENT_DATE()) <= 0');
 
-        $accountTerms = $this->account()->getTerms() ? $this->account()->getTerms() : [];
+        $account = $this->account();
 
         /** @var TermsChecker $termChecker */
         $termChecker = $this->get('terms_checker');
 
-        $uncheckedTerms = $termChecker->synchronize($accountTerms)->unchecked();
+        $uncheckedTerms = $termChecker->synchronize($account)->unchecked();
 
         $itemsPerPage = 10;
         $pagination = $this->getPaginator()->paginate(
@@ -66,7 +66,7 @@ class TermController extends AbstractController
      * @Route("/checker", name="checker_terms")
      * @Method("get")
      */
-    public function checkTermsAction()
+    public function checkerTermsAction()
     {
         $status = Response::HTTP_OK;
         $url = "";
@@ -74,23 +74,13 @@ class TermController extends AbstractController
         $member = $this->member();
 
         if (!$member->isPlatformUser()) {
-            $account = $member->getAccount();
 
-            $terms = $account->getTerms() ? $account->getTerms() : [];
+            $account = $member->getAccount();
 
             /** @var TermsChecker $termsChecker */
             $termsChecker = $this->get('terms_checker');
 
-            $uncheckedTerms = $termsChecker->synchronize($terms)->unchecked();
-
-            $normalizedTerms = $termsChecker->getTerms();
-
-            $account->setTerms($normalizedTerms);
-
-            /** @var AccountManager $accountManager */
-            $accountManager = $this->manager('account');
-
-            $accountManager->save($account);
+            $uncheckedTerms = $termsChecker->synchronize($account)->unchecked();
 
             if (!empty($uncheckedTerms)) {
 
