@@ -74,26 +74,26 @@
   }
 
   .button-active {
-    background-color: $ui-blue-dark;
-    border-color: $ui-blue-dark;
+    background-color: $ui-blue-dark !important;
+    border-color: $ui-blue-dark !important;
     box-shadow:
       inset 4px 4px 6px $ui-blue-darken,
       inset -4px -4px 6px $ui-blue-darken;
-    color: $ui-white-regular;
+    color: $ui-white-regular !important;
 
     &:hover {
-      background-color: $ui-blue-dark;
-      border-color: $ui-blue-dark;
-      color: $ui-white-regular;
+      background-color: $ui-blue-dark !important;
+      border-color: $ui-blue-dark !important;
+      color: $ui-white-regular !important;
     }
 
     &:active {
-      background-color: $ui-blue-dark;
-      border-color: $ui-blue-dark;
+      background-color: $ui-blue-dark !important;
+      border-color: $ui-blue-dark !important;
       box-shadow:
         inset 4px 4px 6px $ui-blue-darken,
         inset -4px -4px 6px $ui-blue-darken;
-      color: $ui-white-regular;
+      color: $ui-white-regular !important;
     }
   }
 
