@@ -1,6 +1,7 @@
 import Icon from 'vue-awesome/components/Icon'
 import './icons'
 
+import Banner from './Banner'
 import Button from './Button'
 import Confirm from './Confirm'
 import Modal from './Modal'
@@ -13,6 +14,7 @@ import Table from './Table'
 
 export default {
   Icon,
+  Banner,
   Button,
   Confirm,
   Modal,
