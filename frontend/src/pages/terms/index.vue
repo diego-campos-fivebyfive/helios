@@ -10,9 +10,17 @@
       div(slot='header')
         h1.title
           | Termos de Uso
+        nav.menu
+          Button(
+          type='primary-common',
+          label='Atualizar a Página',
+          icon='refresh',
+          pos='single',
+          v-on:click.native='reloadPage')
       List(
         slot='section',
         :terms='terms',
+        :pagination='pagination',
         :notification='$refs.notification',
         v-on:getTerms='getTerms')
       Paginator(
@@ -30,7 +38,9 @@
     },
     data: () => ({
       terms: [],
-      pagination: {}
+      pagination: {},
+      isAgree: [],
+      state: ''
     }),
     methods: {
       getTerms(page = 1) {
@@ -40,6 +50,9 @@
           this.terms = response.data.results
           this.pagination = response.data.page
         })
+      },
+      reloadPage() {
+        location.reload()
       }
     },
     mounted() {
