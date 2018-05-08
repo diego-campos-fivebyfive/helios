@@ -91,7 +91,7 @@ class Range implements RangeInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="tag", type="string")
+     * @ORM\Column(name="tag", type="string", nullable=true)
      */
     private $tag;
 
