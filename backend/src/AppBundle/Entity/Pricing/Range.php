@@ -91,7 +91,7 @@ class Range implements RangeInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="tag", type="string")
+     * @ORM\Column(name="tag", type="string", nullable=true)
      */
     private $tag;
 
@@ -321,7 +321,7 @@ class Range implements RangeInterface
     /**
      * @inheritDoc
      */
-    public function hasConfig($code, $level, $initialPower, $finalPower)
+    public function hasConfig($tag, $level, $initialPower, $finalPower)
     {
         foreach (get_object_vars($this) as $property => $value){
             if(isset($$property)){
