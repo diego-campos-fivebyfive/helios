@@ -26,8 +26,9 @@
 <script>
   export default {
     props: [
+      'notification',
+      'pagination',
       'terms',
-      'notification'
     ],
     methods: {
       formatDate(date) {
@@ -38,14 +39,14 @@
         const uri = `/api/v1/terms/agree/${term.id}`
 
         this.axios.post(uri).then(() => {
-          this.$emit('getTerms')
+          this.$emit('getTerms', this.pagination.current)
         })
       },
       noAccept(term) {
         const uri = `/api/v1/terms/disagree/${term.id}`
 
         this.axios.post(uri).then(() => {
-          this.$emit('getTerms')
+          this.$emit('getTerms', this.pagination.current)
         })
       }
     }
