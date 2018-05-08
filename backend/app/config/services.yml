@@ -415,7 +415,7 @@ services:
 
     terms_checker:
         class: AppBundle\Service\Business\TermsChecker
-        arguments: ['@term_manager']
+        arguments: ['@service_container']
 
     timeline_resource:
         class: AppBundle\Service\Timeline\Resource
