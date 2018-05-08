@@ -95,6 +95,8 @@ class MemorialAnalyzer
     /**
      * @param array $config
      * @return array
+     * @throws \Throwable
+     * @throws \TypeError
      */
     public function analyze(array $config)
     {
@@ -102,7 +104,8 @@ class MemorialAnalyzer
         $memorial = $config['memorial'];
         $this->level = $config['level'];
         $types = $config['components'];
-        $codes = [];
+        $data['tags'] = [];
+        $data['codes'] = [];
 
         foreach ($types as $type) {
 
@@ -120,10 +123,10 @@ class MemorialAnalyzer
 
             $this->updateItems($type, $components);
 
-            $codes = array_merge($codes, $this->filterCodes($components));
+            $data = array_merge($data, $this->getData($components));
         }
 
-        $this->normalizer->normalize($memorial, $codes, [$this->level]);
+        $this->normalizer->normalize($memorial, $data, [$this->level]);
 
         $this->finishCollection();
 
@@ -160,10 +163,10 @@ class MemorialAnalyzer
 
                     $cacheKey = $this->normalizer->createCacheKey($initialPower, $finalPower);
 
-                    if (array_key_exists($product->getCode(), $cache[$cacheKey][$this->level])) {
+                    if (array_key_exists($product->getTag(), $cache[$cacheKey][$this->level])) {
 
                         /** @var Range $range */
-                        $range = $cache[$cacheKey][$this->level][$product->getCode()];
+                        $range = $cache[$cacheKey][$this->level][$product->getTag()];
 
                         $this->collection['components'][$componentType]['items'][$product->getId()]['ranges'][] = $range;
                         $this->collection['components'][$componentType]['items'][$product->getId()]['defaults'] = [
@@ -192,14 +195,16 @@ class MemorialAnalyzer
      * @param array $components
      * @return array
      */
-    private function filterCodes(array $components)
+    private function getData(array $components)
     {
-        $codes = [];
+        $data['tags'] = [];
+        $data['codes'] = [];
         foreach ($components as $component) {
-            $codes[] = $component->getCode();
+            $data['tags'][] = $component->getTag();
+            $data['codes'][$component->getTag()] = $component->getCode();
         }
 
-        return $codes;
+        return $data;
     }
 
     /**
