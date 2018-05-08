@@ -138,7 +138,7 @@ interface RangeInterface
 
     /**
      * @param string $tag
-     * @return Range
+     * @return RangeInterface
      */
     public function setTag($tag);
 }
