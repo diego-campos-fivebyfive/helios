@@ -83,6 +83,15 @@ class TermController extends AbstractController
 
             $uncheckedTerms = $termsChecker->synchronize($terms)->unchecked();
 
+            $normalizedTerms = $termsChecker->getTerms();
+
+            $account->setTerms($normalizedTerms);
+
+            /** @var AccountManager $accountManager */
+            $accountManager = $this->manager('account');
+
+            $accountManager->save($account);
+
             if (!empty($uncheckedTerms)) {
 
                 if ($member->isMasterOwner()) {
