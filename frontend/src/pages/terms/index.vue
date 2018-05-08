@@ -1,5 +1,10 @@
 <template lang="pug">
   .wrapper
+    Banner(
+      title='Aviso',
+      text='É necessário aceitar todos os termos de uso da Plataforma SICES',
+      type='info',
+      icon='info-circle')
     Notification(ref='notification')
     Panel.panel
       div(slot='header')
