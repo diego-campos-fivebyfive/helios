@@ -7,7 +7,7 @@
 
 <script>
   export default {
-    props: ['title', 'text', 'type', 'icon',]
+    props: ['title', 'text', 'type', 'icon']
   }
 </script>
 
@@ -16,12 +16,9 @@
     border-radius: 0.5rem;
     color: inherit;
     font-size: 1.5rem;
-    padding: $ui-space-x/2 $ui-space-y/2;
+    padding: $ui-space-y/2;
     position: relative;
-    margin-top: $ui-space-y;
-    margin-bottom: $ui-space-y/2;
-    margin-left: $ui-space-x/2;
-    margin-right: $ui-space-x/2;
+    margin: $ui-space-y;
     text-align: center;
 
     svg {
