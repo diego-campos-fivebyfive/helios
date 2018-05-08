@@ -1,17 +1,23 @@
 <template lang="pug">
   .collection-banner(:class='type')
-    Icon.collection-banner-icon(v-if='icon', :name='icon', scale='1.7')
+    Icon.collection-banner-icon(v-if='icon', :name='icon', scale='1.75')
     h2.collection-banner-title {{ title }}
-    p.collection-banner-text {{ text }}
+    p.collection-banner-text {{ message }}
 </template>
 
 <script>
   export default {
-    props: ['title', 'text', 'type', 'icon']
+    props: [
+      'title',
+      'message',
+      'type',
+      'icon']
   }
 </script>
 
 <style lang="scss" scoped>
+  $banner-blue-bg: #d9edf7;
+
   .collection-banner {
     border-radius: 0.5rem;
     color: inherit;
@@ -39,7 +45,7 @@
     }
 
     &.info {
-      background-color: $ui-blue-extra-lighter;
+      background-color: $banner-blue-bg;
       border: 1px solid $ui-blue-lighter;
       color: $ui-blue-darken;
     }
