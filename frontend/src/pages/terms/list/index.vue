@@ -28,7 +28,7 @@
     props: [
       'notification',
       'pagination',
-      'terms',
+      'terms'
     ],
     methods: {
       formatDate(date) {
