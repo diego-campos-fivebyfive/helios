@@ -64,7 +64,8 @@ class MemorialsController extends AbstractController
                     'PLATINUM'  => 'platinum',
                     'PREMIUM' => 'premium',
                     'PARCEIRO'  => 'partner',
-                    'PROMOCIONAL' => 'promotional'
+                    'PROMOCIONAL' => 'promotional',
+                    'TITANIUM' => 'titanium'
                 ];
 
                 $memorialInfo = $data['Dados'];
