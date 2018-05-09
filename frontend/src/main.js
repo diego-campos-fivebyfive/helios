@@ -8,10 +8,13 @@ import { router } from '@/router'
 import { initGlobals, globalComponents } from '@/globals'
 
 initGlobals(Vue).then(() => {
-  const userId = Vue.prototype.$global.user.id
-
   Vue.use(VueMoment, moment)
-  Vue.use(VueSocket, `${process.env.SOCKET_URL}/socket?id=${userId}`)
+
+  const User = Vue.prototype.$global.user
+
+  if (User.sices) {
+    Vue.use(VueSocket, `${process.env.SOCKET_URL}/socket?id=${User.id}`)
+  }
 
   /* eslint-disable no-new, no-console */
   new Vue({
