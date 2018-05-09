@@ -50,6 +50,9 @@ class TermController extends AbstractController
         $data = $this->formatCollection($pagination);
 
         $terms = $data['results'];
+
+        $hasTermsToAccept = $uncheckedTerms ? true : false;
+
         /** @var Term $term */
         foreach ($terms as $key => $term) {
             if (array_key_exists($term['id'], $uncheckedTerms)) {
@@ -58,6 +61,8 @@ class TermController extends AbstractController
                 $data['results'][$key]['isAgree'] = true;
             }
         }
+
+        $data['hasTermsToAccept'] = $hasTermsToAccept;
 
         return $this->json($data, Response::HTTP_OK);
     }

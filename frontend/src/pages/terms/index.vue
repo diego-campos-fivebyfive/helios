@@ -10,13 +10,6 @@
       div(slot='header')
         h1.title
           | Termos de Uso
-        nav.menu
-          Button(
-          type='primary-common',
-          label='Atualizar a Página',
-          icon='refresh',
-          pos='single',
-          v-on:click.native='reloadPage')
       List(
         slot='section',
         :terms='terms',
@@ -40,7 +33,7 @@
       terms: [],
       pagination: {},
       isAgree: [],
-      state: ''
+      hasTerms: null
     }),
     methods: {
       getTerms(page = 1) {
@@ -49,10 +42,15 @@
         this.axios.get(uri).then(response => {
           this.terms = response.data.results
           this.pagination = response.data.page
+
+          const currentTerms = response.data.hasTermsToAccept
+
+          if (this.hasTerms != null && currentTerms !== this.hasTerms) {
+            location.reload()
+          }
+
+          this.hasTerms = currentTerms
         })
-      },
-      reloadPage() {
-        location.reload()
       }
     },
     mounted() {
