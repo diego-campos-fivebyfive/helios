@@ -196,11 +196,6 @@ class MemorialController extends AdminController
 
     /**
      * @Route("/{id}/config", name="memorials_config")
-     * @param Memorial $memorial
-     * @param Request $request
-     * @return Response
-     * @throws \Throwable
-     * @throws \TypeError
      */
     public function configAction(Memorial $memorial, Request $request)
     {
@@ -236,11 +231,6 @@ class MemorialController extends AdminController
     /**
      * @Route("/{id}/product/update", name="memorials_product_update")
      * Method("post")
-     * @param Request $request
-     * @param Memorial $memorial
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     * @throws \Throwable
-     * @throws \TypeError
      */
     public function updateProductAction(Request $request, Memorial $memorial)
     {
@@ -266,22 +256,16 @@ class MemorialController extends AdminController
                 /** @var \AppBundle\Service\Pricing\RangeNormalizer $normalizer */
                 $normalizer = $this->get('range_normalizer');
 
-                $data = [
-                    'tags' => [$component->getTag()],
-                    'codes' => [
-                        $component->getTag() => $component->getCode()
-                    ]
-                ];
-
+                $codes = [$component->getCode()];
                 $levels = Memorial::getDefaultLevels(true);
 
                 $definitions = [
-                    $component->getTag() => [
+                    $component->getCode() => [
                         'costPrice' => $component->getCmvApplied()
                     ]
                 ];
 
-                $normalizer->normalize($memorial, $data, $levels, $definitions);
+                $normalizer->normalize($memorial, $codes, $levels, $definitions);
             }
         }
 

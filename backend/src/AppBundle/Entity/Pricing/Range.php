@@ -88,13 +88,6 @@ class Range implements RangeInterface
      */
     private $markup;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="tag", type="string", nullable=true)
-     */
-    private $tag;
-
     public function __construct()
     {
         $this->tax = self::DEFAULT_TAX;
@@ -321,7 +314,7 @@ class Range implements RangeInterface
     /**
      * @inheritDoc
      */
-    public function hasConfig($tag, $level, $initialPower, $finalPower)
+    public function hasConfig($code, $level, $initialPower, $finalPower)
     {
         foreach (get_object_vars($this) as $property => $value){
             if(isset($$property)){
@@ -342,24 +335,6 @@ class Range implements RangeInterface
         if(0 == $this->tax) $this->tax = self::DEFAULT_TAX;
 
         $this->price = round($this->costPrice * (1 + $this->markup) / (1 - $this->tax), 2);
-
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getTag()
-    {
-        return $this->tag;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setTag($tag)
-    {
-        $this->tag = $tag;
 
         return $this;
     }

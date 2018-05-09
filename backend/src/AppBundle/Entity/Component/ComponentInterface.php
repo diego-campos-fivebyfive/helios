@@ -257,9 +257,4 @@ interface ComponentInterface
      * @return int
      */
     public function getAlternative();
-
-    /**
-     * @return string
-     */
-    public function getTag();
 }

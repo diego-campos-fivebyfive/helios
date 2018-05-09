@@ -32,8 +32,7 @@ class MemorialCloner
         'level',
         'price',
         'code',
-        'tax',
-        'tag'
+        'tax'
     ];
 
     /**
