@@ -2,7 +2,7 @@
   header.bar
     h1.title {{ getPageTitle }}
     h2.info {{ date }}
-    a.messages(href='/messenger')
+    a.messages(v-if='$global.user.sices', href='/messenger')
       Icon.messages-icon(name='envelope')
       label.messages-label(v-if='totalOfMessages')
         | {{ totalOfMessages }}

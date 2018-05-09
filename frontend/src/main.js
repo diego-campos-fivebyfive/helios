@@ -10,10 +10,10 @@ import { initGlobals, globalComponents } from '@/globals'
 initGlobals(Vue).then(() => {
   Vue.use(VueMoment, moment)
 
-  const User = Vue.prototype.$global.user
+  const { user } = Vue.prototype.$global
 
-  if (User.sices) {
-    Vue.use(VueSocket, `${process.env.SOCKET_URL}/socket?id=${User.id}`)
+  if (user.sices) {
+    Vue.use(VueSocket, `${process.env.SOCKET_URL}/socket?id=${user.id}`)
   }
 
   /* eslint-disable no-new, no-console */
