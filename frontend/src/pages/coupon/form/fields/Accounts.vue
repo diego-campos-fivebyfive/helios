@@ -1,19 +1,21 @@
 <template lang="pug">
-  Select(
+  SelectSearch(
     :field='field',
     :options='options',
-    :selected='getCurrentAccount',
+    :selected='selected',
+    v-on:request='requestAccount',
     v-on:update='updateAccount')
 </template>
 
 <script>
-  import Select from '@/theme/collection/Select'
+  import SelectSearch from '@/theme/collection/SelectSearch'
 
   export default {
     components: {
-      Select
+      SelectSearch
     },
     data: () => ({
+      selected: {},
       options: [],
       defaultOption: {
         value: '',
@@ -24,36 +26,47 @@
       'field'
     ],
     methods: {
-      updateAccount(select) {
-        this.$set(this.field, 'value', {
-          id: select.value,
-          name: select.text
-        })
-      }
-    },
-    computed: {
-      getCurrentAccount() {
-        return (
+      requestAccount(search = '') {
+        this.selected = {
+          value: '',
+          text: search
+        }
+
+        this.axios.get(`api/v1/account/available?search=${search}`)
+          .then(response => {
+            const accounts = response.data
+
+            this.options = accounts
+              .map(this.formatOption)
+
+            this.options.unshift(this.defaultOption)
+          })
+      },
+      updateAccount(select = {}) {
+        const id = select.value || this.defaultOption.value
+        const name = select.text || this.defaultOption.text
+        this.$set(this.field, 'value', { id, name })
+
+        this.setCurrentAccount()
+      },
+      formatOption(option) {
+        return {
+          value: option.id,
+          text: option.name
+        }
+      },
+      setCurrentAccount() {
+        this.selected = (
           this.field.value
           && this.field.value.id
         )
-          ? this.field.value.id
-          : this.defaultOption.value
+          ? this.formatOption(this.field.value)
+          : this.defaultOption
       }
     },
     mounted() {
-      this.axios.get('api/v1/account/available')
-        .then(response => {
-          const accounts = response.data
-
-          this.options = accounts
-            .map(account => ({
-              value: account.id,
-              text: account.name
-            }))
-
-          this.options.unshift(this.defaultOption)
-        })
+      this.requestAccount()
+      this.setCurrentAccount()
     }
   }
 </script>
