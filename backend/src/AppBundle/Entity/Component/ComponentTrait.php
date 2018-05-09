@@ -584,12 +584,4 @@ trait ComponentTrait
     {
         return $this->alternative;
     }
-
-    /**
-     * @inheritDoc
-     */
-    public function getTag()
-    {
-        return $this->getFamily() . '_' . $this->getId();
-    }
 }
