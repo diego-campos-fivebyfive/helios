@@ -24,7 +24,8 @@ class UserController extends AbstractController
             'id' => $member->getId(),
             'name' => $member->getFirstname(),
             'company' => $account->getFirstname(),
-            'level' => $account->getLevel()
+            'level' => $account->getLevel(),
+            'sices' => $member->isPlatformUser()
         ]);
     }
 }
