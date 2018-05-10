@@ -12,7 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Security("has_role('ROLE_PLATFORM_MASTER')")
+ * @Security("has_role('ROLE_PLATFORM_ADMIN')")
  *
  * @Route("/api/v1/memorials")
  */
