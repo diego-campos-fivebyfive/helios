@@ -16,11 +16,11 @@ class Calculator
     // TODO: mover variável para entidade Range
 
     /**
-     * @param $data
-     * @param $componentsRange
+     * @param array $data
+     * @param array $componentsRange
      * @return array
      */
-    public static function precify($data, $componentsRange)
+    public static function precify(array $data, array $componentsRange)
     {
         $ranges = [];
 
