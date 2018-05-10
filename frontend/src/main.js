@@ -6,6 +6,7 @@ import moment from 'moment'
 import App from '@/App'
 import { router } from '@/router'
 import { initGlobals, globalComponents } from '@/globals'
+import { trackWoopra } from '@/widgets/woopra'
 
 initGlobals(Vue).then(() => {
   Vue.use(VueMoment, moment)
@@ -14,6 +15,13 @@ initGlobals(Vue).then(() => {
 
   if (user.sices) {
     Vue.use(VueSocket, `${process.env.SOCKET_URL}/socket?id=${user.id}`)
+  }
+
+  const host = (process.env.API_URL != 'app.plataformasicessolar.com.br')
+    ?  'homolog.plataformasicessolar.com.br' : 'app.plataformasicessolar.com.br'
+
+  if (!user.sices && host) {
+    trackWoopra()
   }
 
   /* eslint-disable no-new, no-console */
