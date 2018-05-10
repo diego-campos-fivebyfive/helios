@@ -71,8 +71,6 @@ class MemorialsController extends AbstractController
         $memorial = $memorialManager->create();
 
         $memorial->setName($data['name']);
-        $memorial->setPublishedAt($data['publishedAt']);
-        $memorial->setExpiredAt($data['expiredAt']);
 
         $memorialManager->save($memorial);
 
