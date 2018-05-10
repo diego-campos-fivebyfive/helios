@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kolinalabs
- * Date: 5/9/18
- * Time: 2:50 PM
- */
 
 namespace Tests\AppBundle\Service\Precifier;
 
