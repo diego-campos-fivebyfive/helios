@@ -8,6 +8,7 @@ use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\UserInterface;
+use AppBundle\Manager\AccountManager;
 use AppBundle\Manager\CustomerManager;
 use AppBundle\Entity\Pricing\Memorial;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -340,6 +341,55 @@ class AccountController extends AbstractController
         }
 
         return $this->json($data, $status);
+    }
+
+    /**
+     * @Route("/{id}/switch-owner", name="switch_account_owner_api")
+     *
+     * @Security("has_role('ROLE_PLATFORM_AFTER_SALES') or has_role('ROLE_PLATFORM_EXPANSE')")
+     *
+     * @Method("post")
+     */
+    public function switchOwnerAction(Request $request, Customer $account)
+    {
+        $status = Response::HTTP_OK;
+
+        if ($account->isAccount()) {
+            $targetId = $request->request->get('target');
+
+            /** @var CustomerManager $customerManager */
+            $customerManager = $this->manager('customer');
+
+            /** @var MemberInterface $newOwer */
+            $newOwer = $customerManager->find($targetId);
+            $owner = $account->getOwner();
+
+            if ($this->belongsToAccount($newOwer, $account) && $newOwer !== $owner) {
+                $owner->getUser()->removeRole(UserInterface::ROLE_OWNER_MASTER);
+                $newOwer->getUser()->addRole(UserInterface::ROLE_OWNER_MASTER);
+
+                $customerManager->save($account);
+            } else {
+                $status = Response::HTTP_BAD_REQUEST;
+            }
+        } else {
+            $status = Response::HTTP_BAD_REQUEST;
+        }
+
+        return $this->json([], $status);
+    }
+
+    private function belongsToAccount($member, $account)
+    {
+        $accountMembers = $account->getMembers();
+
+        foreach ($accountMembers as $accountMember) {
+            if ($member === $accountMember) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
