@@ -9,6 +9,8 @@ require_once $currentDir . '/helpers/logger.php';
 require_once(dirname(__FILE__) . '/config/functions.php');
 getAutoload();
 
+const ORDER_STATUS = 7;
+
 /**
  * Este script efetua o procedimento de alteração de nível das contas
  * com base nos orçamentos dentro dos parâmetros definidos.
@@ -76,6 +78,19 @@ function executeSQL($sql)
 }
 
 /**
+ * @param $sql
+ * @return string
+ */
+function getAccountIds($sql){
+
+    $accounts = R::getAll($sql);
+
+    $ids = array_map('current', $accounts);
+
+    return implode(',', $ids);
+}
+
+/**
  * @param array $config
  * @return bool
  */
@@ -98,40 +113,37 @@ function normalizeLevels(array $config)
     $firstAmount = (float)$config['levels'][$levelKeys[0]]['amount'];
     $firstCreatedAt = (new \DateTime(sprintf('%d days ago', $levels[$levelKeys[0]]['days'])))->format('Y-m-d');
 
-    $firstSQL = sprintf(<<<SQL
-UPDATE app_customer c
-SET c.level = '%s'
-WHERE c.id NOT IN (
-  SELECT o.account_id
+    $accountSQL = sprintf("SELECT o.account_id AS id
   FROM app_order o
   WHERE o.parent_id IS NULL
-        AND o.status >= 7
+        AND o.status >= %d
         AND DATE(o.created_at) >= '%s'
   GROUP BY account_id
-  HAVING (SUM(o.total)) >= %f
-)
+  HAVING (SUM(o.total)) >= %f", ORDER_STATUS, $firstCreatedAt, $firstAmount);
+
+    $ids = getAccountIds($accountSQL);
+
+    if(strlen($ids)){
+
+        $firstSQL = sprintf(<<<SQL
+UPDATE app_customer c
+SET c.level = '%s'
+WHERE c.id NOT IN (%s)
 AND c.activated_at >= '%s'
 SQL
-, $firstLevel, $firstCreatedAt, $firstAmount, $activatedAt);
+            , $firstLevel, $ids, $activatedAt);
 
-    $lockSQL = sprintf(<<<SQL
+        $lockSQL = sprintf(<<<SQL
 UPDATE app_customer c
     SET c.status = %d, c.level = '%s'
-    WHERE id NOT IN (
-    SELECT o.account_id
-    FROM app_order o
-    WHERE o.parent_id IS NULL
-    AND o.status >= 7
-    AND DATE(o.created_at) >= '%s'
-    GROUP BY account_id
-    HAVING (SUM(o.total)) >= %f
-    )
+    WHERE id NOT IN (%s)
     AND c.activated_at < '%s'
 SQL
-, $lockedStatus, $firstLevel, $firstCreatedAt, $firstAmount, $activatedAt);
+            , $lockedStatus, $firstLevel, $ids, $activatedAt);
 
-    executeSQL($firstSQL);
-    executeSQL($lockSQL);
+        executeSQL($firstSQL);
+        executeSQL($lockSQL);
+    }
 
     // UPGRADE / DOWNGRADE
     $index = 0;
@@ -143,25 +155,29 @@ SQL
 
         $expr = 0 == $index ? 'IN' : 'IN';
 
-        $updateSQL = sprintf("UPDATE app_customer c
-SET c.level = '%s'
-WHERE c.id %s (
-  SELECT o.account_id
+        $accountSQL = sprintf("SELECT o.account_id AS id
   FROM app_order o
   WHERE o.parent_id IS NULL
-        AND o.status >= 7
+        AND o.status >= %d
         AND DATE(o.created_at) >= '%s'
   GROUP BY account_id
-  HAVING (SUM(o.total)) >= %f_FSQL_
-)", $level, $expr, $createdAt, $amount);
+  HAVING (SUM(o.total)) >= %f_FSQL_", ORDER_STATUS, $createdAt, $amount);
 
-        $updateSQL = str_replace('_ASQL_', (0 == $index) ? sprintf("AND c.activated_at >= '%s'", $activatedAt) : '' , $updateSQL);
+
+        $updateSQL = sprintf("UPDATE app_customer c SET c.level = '%s' WHERE c.id %s (_IDS_)", $level, $expr);
 
         $index++;
 
-        $updateSQL = str_replace('_FSQL_', $index < count($levels) ? sprintf(' AND SUM(o.total) < %f', $levels[$levelKeys[$index]]['amount']) : '', $updateSQL);
+        $accountSQL = str_replace('_FSQL_', $index < count($levels) ? sprintf(' AND SUM(o.total) < %f', $levels[$levelKeys[$index]]['amount']) : '', $accountSQL);
 
-        executeSQL($updateSQL);
+        $ids = getAccountIds($accountSQL);
+
+        if(!empty($ids)){
+
+            $updateSQL = str_replace('_IDS_', $ids, $updateSQL);
+
+            executeSQL($updateSQL);
+        }
     }
 
     $afterProcess = countAccounts();
