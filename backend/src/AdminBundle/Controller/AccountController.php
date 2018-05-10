@@ -408,7 +408,7 @@ class AccountController extends AdminController
     /**
      * @Route("/{id}", name="account_show")
      */
-    public function showAction(Request $request, Customer $account)
+    public function showAction(Customer $account)
     {
         $member = $account->getMembers();
 
@@ -416,6 +416,19 @@ class AccountController extends AdminController
             'account' => $account,
             'members' => $member,
             'errors' => ''
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/members", name="list_account_members")
+     */
+    public function listMembersAction(Customer $account)
+    {
+        $member = $account->getMembers();
+
+        return $this->render('admin/accounts/members.html.twig', [
+            'account' => $account,
+            'members' => $member
         ]);
     }
 
