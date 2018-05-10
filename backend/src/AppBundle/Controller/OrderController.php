@@ -544,14 +544,14 @@ class OrderController extends AbstractController
         ], Response::HTTP_BAD_REQUEST);
     }
 
-    private function sendNotification($message, array $ids)
+    private function sendNotification($message, array $usersToken)
     {
         $host = $this->container->getParameter('platform_host');
         $port = $this->container->getParameter('socket_port');
 
 
-        foreach($ids as $id) {
-          $socketUrl = "${host}:${port}/messages?id=${id}";
+        foreach($usersToken as $userToken) {
+          $socketUrl = "${host}:${port}/messages?token=${userToken}";
           $curl = curl_init();
           curl_setopt($curl, CURLOPT_URL, $socketUrl);
           curl_exec($curl);
@@ -588,18 +588,27 @@ class OrderController extends AbstractController
 
                 $members = $this->account()->getMembers();
 
+                $usersToken = [];
+
                 /** @var MemberInterface $member */
                 foreach ($members as $member) {
+                    foreach ($toUsers as $userId) {
+                      if ($userId == $member->getId()) {
+                        $usersToken[] = $member->getToken();
+                      }
+                    }
+
                     $roleAccepted = in_array($member->getUser()->getRole(), $toRoles);
 
                     $added = in_array($member->getId(), $toUsers);
 
                     if ($roleAccepted && !$added) {
                         $toUsers[] = $member->getId();
+                        $usersToken[] = $member->getToken();
                     }
                 }
 
-                $this->sendNotification($contentMessage, $toUsers);
+                $this->sendNotification($contentMessage, $usersToken);
 
                 $toUsers = array_map(function ($user) {
                     return '"'.$user.'"';

@@ -13,7 +13,7 @@ initGlobals(Vue).then(() => {
   const { user } = Vue.prototype.$global
 
   if (user.sices) {
-    Vue.use(VueSocket, `${process.env.SOCKET_URL}/socket?id=${user.id}`)
+    Vue.use(VueSocket, `${process.env.SOCKET_URL}/socket?token=${user.token}`)
   }
 
   /* eslint-disable no-new, no-console */

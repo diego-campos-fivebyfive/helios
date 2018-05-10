@@ -15,11 +15,13 @@ const room = '/socket'
 const nsp = io.of(room)
 
 nsp.on('connect', (socket) => {
-  socket.memberId = socket.handshake.query.id
+  socket.memberToken = socket.handshake.query.token
 })
 
 app.get('/messages', (request, response) => {
-  if (!request.query.id) {
+  const { token } = request.query
+
+  if (!token) {
     response.json({
       error: 'undefined id'
     })
@@ -28,7 +30,7 @@ app.get('/messages', (request, response) => {
   const clients = Object
     .entries(nsp.sockets)
     .forEach(([name, value]) => {
-      if(request.query.id === value.memberId) {
+      if(token === value.memberToken) {
         nsp.to(name).emit('updateTotalOfMessages', 1)
       }
     })
