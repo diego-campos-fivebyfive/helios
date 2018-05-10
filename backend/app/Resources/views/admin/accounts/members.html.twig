@@ -69,19 +69,19 @@
                 data: {target:target},
                 complete: function (xhr) {
                     if (200 == xhr.status) {
-                        swal("{{ 'Success'|trans }}", "Exclusão efetuada com sucesso!", "success");
+                        swal("{{ 'Success'|trans }}", "Atualização executada com sucesso!", "success");
 
                         window.setTimeout(function(){
                             listMembers();
                             swal.close();
                         }, 1000);
                     } else {
-                        swal("{{ 'Error'|trans }}!", 'Falha ao excluir', "error");
+                        swal("{{ 'Error'|trans }}!", 'Falha no processo de atualização', "error");
                     }
                 },
                 beforeSend: function () {
                     swal({
-                        title: "Excluindo...",
+                        title: "Atualizando...",
                         text: "Aguarde",
                         type: "info",
                         showConfirmButton: false
