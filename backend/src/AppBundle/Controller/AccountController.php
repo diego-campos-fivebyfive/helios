@@ -349,8 +349,6 @@ class AccountController extends AbstractController
      */
     public function switchOwnerAction(Request $request, Customer $account)
     {
-        $status = Response::HTTP_OK;
-
         if ($account->isAccount()) {
             $targetId = $request->request->get('target');
 
@@ -361,11 +359,13 @@ class AccountController extends AbstractController
             $newOwer = $customerManager->find($targetId);
             $owner = $account->getOwner();
 
-            if ($this->belongsToAccount($newOwer, $account) && $newOwer !== $owner) {
+            if ($newOwer->getAccount() === $account && $newOwer !== $owner) {
                 $owner->getUser()->removeRole(UserInterface::ROLE_OWNER_MASTER);
                 $newOwer->getUser()->addRole(UserInterface::ROLE_OWNER_MASTER);
 
                 $customerManager->save($account);
+
+                $status = Response::HTTP_OK;
             } else {
                 $status = Response::HTTP_BAD_REQUEST;
             }
@@ -374,16 +374,6 @@ class AccountController extends AbstractController
         }
 
         return $this->json([], $status);
-    }
-
-    /**
-     * @param MemberInterface $member
-     * @param AccountInterface $account
-     * @return bool
-     */
-    private function belongsToAccount(MemberInterface $member, AccountInterface $account)
-    {
-        return $member->getAccount() === $account;
     }
 
     /**
