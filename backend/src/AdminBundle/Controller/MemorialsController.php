@@ -127,7 +127,6 @@ class MemorialsController extends AbstractController
         }, $memorialCollection);
     }
 
-
     /**
      * @param Memorial $memorial
      * @return array
