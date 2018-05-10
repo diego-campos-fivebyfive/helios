@@ -345,14 +345,14 @@ class AccountController extends AbstractController
 
     /**
      * @Route("/{id}/switch-owner", name="switch_account_owner_api")
-     * @Method("get")
+     * @Method("post")
      */
     public function switchOwnerAction(Request $request, Customer $account)
     {
         $status = Response::HTTP_OK;
 
         if ($account->isAccount()) {
-            $targetId = $request->query->get('target');
+            $targetId = $request->request->get('target');
 
             /** @var CustomerManager $customerManager */
             $customerManager = $this->manager('customer');
