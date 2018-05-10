@@ -1,268 +1,114 @@
-{% extends view('layout') %}
+{% set showActions = not app.user.isPlatformFinancial and not app.user.isPlatformAfterSales %}
+<table class="table table-striped table-hover">
+    <thead>
+    <tr>
+        <th class="col-md-4">Nome</th>
+        <th class="col-md-5">E-mail</th>
+        <th class="col-md-3">Nivel de Usuário</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for member in members %}
+        {% set is_user = member.user and member.user.same(app.user) %}
+        {% set is_owner = member.isOwner or member.getAttribute('is_owner', false) %}
+        {% set is_master = member.masterOwner %}
 
-{% block body %}
-
-    {% set showActions = not app.user.isPlatformFinancial and not app.user.isPlatformAfterSales %}
-
-    <div class="wrapper wrapper-content">
-        <div class="row animated fadeInRight">
-            <div class="ibox float-e-margins">
-                <div class="ibox-title">
-                    <h3>
-                        <label> {{ 'Account'|trans }}: </label>
-                        {{ account.firstname }}
-                    </h3>
-                    <div class="btn-group">
-                        <a class="btn btn-default"
-                           href="{{ path('account_index',{'id':account.id}) }}">
-                            <i class="fa fa-arrow-left"></i> Voltar
-                        </a>
-                        {% if showActions %}
-                            <a class="btn btn-info"
-                               href="{{ path('account_update',{'id':account.id}) }}">
-                                <i class="fa fa-edit"></i> {{ 'Edit'|trans }}
-                            </a>
+        <tr>
+            <td> {{ member.firstname }} </td>
+            <td>
+                {% if showActions %}
+                    <a class="label label-primary" data-user-email="{{ path('email_user_update', { 'id': member.id }) }}">
+                        <i class="fa fa-pencil"></i></a>
+                {% endif %}
+                <span id="{{ member.id }}">{{ member.email }}</span>
+            </td>
+            <td data-value="{{ member.isOwner ? 'a' : 'z' }}">
+                {% if is_owner %}
+                    <a class="label label-{{ is_master ? 'info' : 'default' }}"
+                            {% if not is_master %}
+                                data-admin="{{ member.id }}"
+                                data-name="{{ member.firstname }}"
+                            {% endif %}
+                    >
+                        {{ is_master ? 'Account Owner'|trans : 'Administrator'|trans }}
+                        {% if not is_master %}
+                            <i class='fa fa-arrow-circle-up'></i>
                         {% endif %}
+                    </a>
+                {% else %}
+                    <div class="label label-{{ is_user ? 'info' : 'default' }}" style="width: 100%;">
+                        {{ is_user ? 'Account User'|trans : 'Usuário Comum'|trans }}
                     </div>
-                    {% if showActions %}
-                        {% include view('admin/accounts/info_status.html.twig') %}
-                    {% endif %}
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
 
-                </div>
-                <div class="ibox-content no-padding border-left-right">
-                </div>
-                <div class="ibox-content profile-content">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="panel panel-primary">
-                                <div class="panel-heading">
-                                    &nbsp; Informações da Empresa
-                                </div>
-                                <div class="panel-body">
-                                    <div class="col-md-4">
-                                        <div class="col-md-12">
-                                            <label> Nome Fantasia: </label>
-                                            {{ account.firstname }}
-                                        </div>
-                                        <div class="col-md-12">
-                                            <label> Razão Social: </label>
-                                            {{ account.lastname }}
-                                        </div>
-                                        <div class="col-md-12">
-                                            <label> CNPJ: </label>
-                                            {{ account.document }}
-                                        </div>
-                                        <div class="col-md-12">
-                                            <label> Inscrição Estadual: </label>
-                                            {{ account.ExtraDocument }}
-                                        </div>
-                                        <div class="col-md-12">
-                                            <label> {{ 'Email'|trans }}: </label>
-                                            <span id="email_account">{{ account.email }}</span>
-                                        </div>
-                                    </div>
+<script>
+    $("[data-admin]").on('click', function () {
 
-                                    <div class="col-md-4">
-                                        <div class="col-md-12">
-                                            <label> {{ 'Phone'|trans }}: </label>
-                                            {{ account.phone }}
-                                        </div>
-                                        <div class="col-md-12">
-                                            <label> {{ 'Postcode'|trans }}: </label>
-                                            {{ account.postcode }}
-                                        </div>
-                                        <div class="col-md-12">
-                                            <label> {{ 'State'|trans }}: </label>
-                                            {{ account.state }}
-                                        </div>
-                                        <div class="col-md-12">
-                                            <label> {{ 'City'|trans }}: </label>
-                                            {{ account.city }}
-                                        </div>
-                                        <div class="col-md-12">
-                                            <label> {{ 'District'|trans }}: </label>
-                                            {{ account.district }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="col-md-12">
-                                            <label> {{ 'Street'|trans }}:  </label>
-                                            {{ account.street }}
-                                        </div>
-                                        <div class="col-md-12">
-                                            <label> {{ 'Number'|trans }}: </label>
-                                            {{ account.number }}
-                                        </div>
-                                        <div class="col-md-12">
-                                            <label> Nível de desconto: </label>
-                                            {{ account.level }}
-                                        </div>
-                                        <div class="col-md-12">
-                                            <label> Data de Registro: </label>
-                                            {{ account.createdAt|date('d/m/Y') }}
-                                        </div>
-                                        <div class="col-md-12">
-                                            <label> Usuário Sices Vinculado: </label>
-                                            {{ account.agent }}
-                                        </div>
+        var url = "{{ path('switch_account_owner_api', {id: account.id}) }}";
+        var target = $(this).data('admin');
+        var name = $(this).data('name');
 
-                                    </div>
-                                </div>
-                            </div>
+        swal({
+            title: "Deseja tornar " + name + " dono da conta?",
+            text: "O usuário " + "{{ account.owner.firstname }}" + " será convertido em Administrador.",
+            type: "info",
+            showCancelButton: true,
+            cancelButtonText: "{{ 'Cancel'|trans }}",
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "{{ 'Confirm'|trans }}",
+            closeOnConfirm: false
+        }, function () {
+            $.ajax({
+                url: url,
+                method: 'post',
+                data: {target:target},
+                complete: function (xhr) {
+                    if (200 == xhr.status) {
+                        swal("{{ 'Success'|trans }}", "Exclusão efetuada com sucesso!", "success");
 
-                            <div class="panel panel-success">
-                                <div class="panel-heading">
-                                    Usuários Vinculados
-                                </div>
-                                <div class="panel-body">
-
-                                    <div id="email_form" class="col-md-12">
-
-                                    </div>
-
-                                    <table class="table table-striped table-hover">
-                                        <thead>
-                                        <tr>
-                                            <th class="col-md-4">Nome</th>
-                                            <th class="col-md-5">E-mail</th>
-                                            <th class="col-md-3">Nivel de Usuário</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% for member in members %}
-                                            {% set is_user = member.user and member.user.same(app.user) %}
-                                            {% set is_owner = member.isOwner or member.getAttribute('is_owner', false) %}
-                                            {% set is_master = member.masterOwner %}
-
-                                            <tr>
-                                                <td> {{ member.firstname }} </td>
-                                                <td>
-                                                    {% if showActions %}
-                                                        <a class="label label-primary" data-user-email="{{ path('email_user_update', { 'id': member.id }) }}">
-                                                            <i class="fa fa-pencil"></i></a>
-                                                    {% endif %}
-                                                    <span id="{{ member.id }}">{{ member.email }}</span>
-                                                </td>
-                                                <td data-value="{{ member.isOwner ? 'a' : 'z' }}">
-                                                    {% if is_owner %}
-                                                        <a class="label label-{{ is_master ? 'info' : 'default' }}"
-                                                                {% if not is_master %}
-                                                                    data-admin="{{ member.id }}"
-                                                                    data-name="{{ member.firstname }}"
-                                                                {% endif %}
-                                                        >
-                                                            {{ is_master ? 'Account Owner'|trans : 'Administrator'|trans }}
-                                                            {% if not is_master %}
-                                                                <i class='fa fa-arrow-circle-up'></i>
-                                                            {% endif %}
-                                                        </a>
-                                                    {% else %}
-                                                        <div class="label label-{{ is_user ? 'info' : 'default' }}" style="width: 100%;">
-                                                            {{ is_user ? 'Account User'|trans : 'Usuário Comum'|trans }}
-                                                        </div>
-                                                    {% endif %}
-                                                </td>
-                                            </tr>
-                                        {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="{{ asset('assets/toastr/toastr.min.js') }}"></script>
-    <script>
-
-        function display_error(message){
-            toastr.error(message, '', {
-                positionClass: 'toast-top-center',
-                progressBar: true,
-                preventDuplicates: true
-            });
-        }
-        function display_success(message){
-            toastr.success(message, '', {
-                positionClass: 'toast-top-center',
-                progressBar: true,
-                preventDuplicates: true
-            });
-        }
-
-        $("[data-admin]").on('click', function () {
-
-            var url = "{{ path('switch_account_owner_api', {id: account.id}) }}";
-            var target = $(this).data('admin');
-            var name = $(this).data('name');
-
-            swal({
-                title: "Deseja tornar " + name + " dono da conta?",
-                text: "O usuário " + "{{ account.owner.firstname }}" + " será convertido em Administrador.",
-                type: "info",
-                showCancelButton: true,
-                cancelButtonText: "{{ 'Cancel'|trans }}",
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "{{ 'Confirm'|trans }}",
-                closeOnConfirm: false
-            }, function () {
-                $.ajax({
-                    url: url,
-                    method: 'post',
-                    data: {target:target},
-                    complete: function (xhr) {
-                        if (200 == xhr.status) {
-                            swal("{{ 'Success'|trans }}", "Exclusão efetuada com sucesso!", "success");
-
-                            window.setTimeout(function(){
-                                swal.close();
-                            }, 1000);
-                        } else {
-                            swal("{{ 'Error'|trans }}!", 'Falha ao excluir', "error");
-                        }
-                    },
-                    beforeSend: function () {
-                        swal({
-                            title: "Excluindo...",
-                            text: "Aguarde",
-                            type: "info",
-                            showConfirmButton: false
-                        });
+                        window.setTimeout(function(){
+                            listMembers();
+                            swal.close();
+                        }, 1000);
+                    } else {
+                        swal("{{ 'Error'|trans }}!", 'Falha ao excluir', "error");
                     }
-                });
+                },
+                beforeSend: function () {
+                    swal({
+                        title: "Excluindo...",
+                        text: "Aguarde",
+                        type: "info",
+                        showConfirmButton: false
+                    });
+                }
             });
         });
+    });
 
-        var dataEmail = $('[data-user-email]');
-        if(dataEmail.length){
-            dataEmail.on('click', function () {
-                var url = $(this).data('user-email');
+    var dataEmail = $('[data-user-email]');
+    if(dataEmail.length){
+        dataEmail.on('click', function () {
+            var url = $(this).data('user-email');
 
-                $.ajax({
-                    url: url,
-                    method: 'post',
-                    data: {_method:'post'},
-                    complete: function (xhr) {
-                        if (200 == xhr.status) {
-                            $('#email_form').html(xhr.responseJSON['form_email']);
-                        } else {
-                            swal("{{ 'Error'|trans }}!", 'Falha ao editar', "error");
-                        }
+            $.ajax({
+                url: url,
+                method: 'post',
+                data: {_method:'post'},
+                complete: function (xhr) {
+                    if (200 == xhr.status) {
+                        $('#email_form').html(xhr.responseJSON['form_email']);
+                    } else {
+                        swal("{{ 'Error'|trans }}!", 'Falha ao editar', "error");
                     }
-                });
-
+                }
             });
-        }
 
-    </script>
-    {% if errors|length %}
-        <script>
-            {% for key, error in errors if 0 == key %}
-            display_error('{{ error.message|trans([],'messages') }}');
-            {% endfor %}
-        </script>
-    {% endif %}
-{% endblock %}
+        });
+    }
+</script>
