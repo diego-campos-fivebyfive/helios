@@ -345,17 +345,14 @@ class AccountController extends AbstractController
 
     /**
      * @Route("/{id}/switch-owner", name="switch_account_owner_api")
-     *
-     * @Security("has_role('ROLE_PLATFORM_AFTER_SALES') or has_role('ROLE_PLATFORM_EXPANSE')")
-     *
-     * @Method("post")
+     * @Method("get")
      */
     public function switchOwnerAction(Request $request, Customer $account)
     {
         $status = Response::HTTP_OK;
 
         if ($account->isAccount()) {
-            $targetId = $request->request->get('target');
+            $targetId = $request->query->get('target');
 
             /** @var CustomerManager $customerManager */
             $customerManager = $this->manager('customer');
@@ -379,17 +376,14 @@ class AccountController extends AbstractController
         return $this->json([], $status);
     }
 
-    private function belongsToAccount($member, $account)
+    /**
+     * @param MemberInterface $member
+     * @param AccountInterface $account
+     * @return bool
+     */
+    private function belongsToAccount(MemberInterface $member, AccountInterface $account)
     {
-        $accountMembers = $account->getMembers();
-
-        foreach ($accountMembers as $accountMember) {
-            if ($member === $accountMember) {
-                return true;
-            }
-        }
-
-        return false;
+        return $member->getAccount() === $account;
     }
 
     /**
