@@ -6,13 +6,18 @@
     {{ form_widget(form.email, {'attr':{'class':'form-control', 'data-placeholder':'Email'}})}}
 </div>
 
-<div class="form-group col-md-1">
+<div class="form-group col-md-4">
     <input type="submit" class="btn btn-primary" value="Salvar" />
+    <button type="button" class="btn" id="cancel_update">Cancelar</button>
 </div>
 {{ form_end(form) }}
 <input id="user_email" type="hidden" value="{{ member.email }}">
 
 <script>
+    $('#cancel_update').on('click', function () {
+        $('#email_form').html('');
+    });
+
     var form = $('#email_member');
         form.on('submit', function (event) {
             event.preventDefault();
