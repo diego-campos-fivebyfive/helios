@@ -359,7 +359,7 @@ class AccountController extends AbstractController
             $newOwer = $customerManager->find($targetId);
             $owner = $account->getOwner();
 
-            if ($newOwer->getAccount() === $account && $newOwer !== $owner) {
+            if ($newOwer && $newOwer->getAccount() === $account && $newOwer !== $owner && $newOwer->isOwner()) {
                 $owner->getUser()->removeRole(UserInterface::ROLE_OWNER_MASTER);
                 $newOwer->getUser()->addRole(UserInterface::ROLE_OWNER_MASTER);
 
