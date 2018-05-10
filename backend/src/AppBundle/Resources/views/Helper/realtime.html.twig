@@ -2,7 +2,7 @@
 <script>
     {# general scripts #}
     $(function () {
-        var socket = io('{{ platform_host }}:{{ socket_port }}/socket?id={{ app.user.info.id }}');
+        var socket = io('{{ platform_host }}:{{ socket_port }}/socket?token={{ app.user.info.token }}');
         var beepSound = new Audio("{{ asset('assets/sound/beep_messages.wav') }}");
 
         socket.on('updateTotalOfMessages', function(data) {
