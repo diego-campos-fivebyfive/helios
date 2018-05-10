@@ -8,6 +8,7 @@ use AppBundle\Entity\BusinessInterface;
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\UserInterface;
+use AppBundle\Manager\AccountManager;
 use AppBundle\Manager\CustomerManager;
 use AppBundle\Entity\Pricing\Memorial;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -340,6 +341,39 @@ class AccountController extends AbstractController
         }
 
         return $this->json($data, $status);
+    }
+
+    /**
+     * @Route("/{id}/switch-owner", name="switch_account_owner_api")
+     * @Method("post")
+     */
+    public function switchOwnerAction(Request $request, Customer $account)
+    {
+        if ($account->isAccount()) {
+            $targetId = $request->request->get('target');
+
+            /** @var CustomerManager $customerManager */
+            $customerManager = $this->manager('customer');
+
+            /** @var MemberInterface $newOwer */
+            $newOwer = $customerManager->find($targetId);
+            $owner = $account->getOwner();
+
+            if ($newOwer->getAccount() === $account && $newOwer !== $owner) {
+                $owner->getUser()->removeRole(UserInterface::ROLE_OWNER_MASTER);
+                $newOwer->getUser()->addRole(UserInterface::ROLE_OWNER_MASTER);
+
+                $customerManager->save($account);
+
+                $status = Response::HTTP_OK;
+            } else {
+                $status = Response::HTTP_BAD_REQUEST;
+            }
+        } else {
+            $status = Response::HTTP_BAD_REQUEST;
+        }
+
+        return $this->json([], $status);
     }
 
     /**
