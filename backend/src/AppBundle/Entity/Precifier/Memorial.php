@@ -1,20 +1,20 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\Precifier;
 
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
- * Term
- *
- * @ORM\Table(name="app_term")
+ * Memorial
  * @ORM\Entity
+ * @ORM\Table(name="app_precifier_memorial")
  * @ORM\HasLifecycleCallbacks()
  */
-class Term implements TermInterface {
-
+class Memorial
+{
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -23,23 +23,30 @@ class Term implements TermInterface {
     private $id;
 
     /**
-     * @var string
+     * @var int
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(name="status", type="integer", nullable=true)
      */
-    private $title;
+    private $status;
 
     /**
      * @var string
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    private $url;
+    private $name;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="published_at", type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $expiredAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $publishedAt;
 
@@ -58,7 +65,7 @@ class Term implements TermInterface {
     private $updatedAt;
 
     /**
-     * @inheritDoc
+     * @return int
      */
     public function getId()
     {
@@ -66,7 +73,8 @@ class Term implements TermInterface {
     }
 
     /**
-     * @inheritDoc
+     * @param int $id
+     * @return Memorial
      */
     public function setId($id)
     {
@@ -76,43 +84,73 @@ class Term implements TermInterface {
     }
 
     /**
-     * @inheritDoc
+     * @return int
      */
-    public function getTitle()
+    public function getStatus()
     {
-        return $this->title;
+        return $this->status;
     }
 
     /**
-     * @inheritDoc
+     * @param int $status
+     * @return Memorial
      */
-    public function setTitle($title)
+    public function setStatus($status)
     {
-        $this->title = $title;
+        $this->status = $status;
 
         return $this;
     }
 
     /**
-     * @inheritDoc
+     * @return string
      */
-    public function getUrl()
+    public function getName()
     {
-        return $this->url;
+        return $this->name;
     }
 
     /**
-     * @inheritDoc
+     * @param string $name
+     * @return Memorial
      */
-    public function setUrl($url)
+    public function setName($name)
     {
-        $this->url = $url;
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * @inheritDoc
+     * @return \DateTime
+     */
+    public function getExpiredAt()
+    {
+        return $this->expiredAt;
+    }
+
+    /**
+     * @param \DateTime $expiredAt
+     * @return Memorial
+     */
+    public function setExpiredAt($expiredAt)
+    {
+        $this->expiredAt = $expiredAt;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getPublishedAt()
+    {
+        return $this->publishedAt;
+    }
+
+    /**
+     * @param \DateTime $publishedAt
+     * @return Memorial
      */
     public function setPublishedAt($publishedAt)
     {
@@ -122,15 +160,7 @@ class Term implements TermInterface {
     }
 
     /**
-     * @inheritDoc
-     */
-    public function getPublishedAt()
-    {
-        return $this->publishedAt;
-    }
-
-    /**
-     * @inheritDoc
+     * @return mixed
      */
     public function getCreatedAt()
     {
@@ -138,7 +168,7 @@ class Term implements TermInterface {
     }
 
     /**
-     * @inheritDoc
+     * @return mixed
      */
     public function getUpdatedAt()
     {
