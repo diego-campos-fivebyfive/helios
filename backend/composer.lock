@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f95ef2c14545f248fe5bea579a01146c",
-    "content-hash": "2d2f2be6e2f8562f0b416b057238b735",
+    "hash": "6c15bef84be91c21efce177dd4c2729b",
+    "content-hash": "2d997074b4663a956e974a88c27c0b5a",
     "packages": [
         {
             "name": "apy/breadcrumbtrail-bundle",
@@ -1135,7 +1135,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSOAuthServerBundle/zipball/07f64710664f6d135902c93542bf0a35c5159bf9",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSOAuthServerBundle/zipball/e12b077855b278579f97b293184eed2f1cea1acb",
                 "reference": "504530d63d4334594c0c24a63345d6b0a10a848c",
                 "shasum": ""
             },
@@ -1368,7 +1368,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/1049935edd24ec305cc6cfde1875372fa9600446",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/dc4a927491a7082402a890976b5452d3ad474f9c",
                 "reference": "b1ea299e26e8c806b14cf6a694e601d2b8bcf388",
                 "shasum": ""
             },
@@ -2085,6 +2085,57 @@
                 "xml"
             ],
             "time": "2017-05-10 10:17:17"
+        },
+        {
+            "name": "kettle/dynamodb-orm",
+            "version": "v0.2.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/inouet/kettle.git",
+                "reference": "31dfe655dedc4da9e544b139d30ee875d3f55036"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/inouet/kettle/zipball/31dfe655dedc4da9e544b139d30ee875d3f55036",
+                "reference": "31dfe655dedc4da9e544b139d30ee875d3f55036",
+                "shasum": ""
+            },
+            "require": {
+                "aws/aws-sdk-php": "3.*",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*"
+            },
+            "bin": [
+                "bin/kettle-skeleton.php"
+            ],
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/kettle.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taiji Inoue",
+                    "email": "inudog@gmail.com",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "A lightweight object-dynamodb mapper for PHP5",
+            "homepage": "http://github.com/inouet/",
+            "keywords": [
+                "aws",
+                "dynamodb",
+                "kettle",
+                "orm"
+            ],
+            "time": "2016-01-02 16:50:26"
         },
         {
             "name": "knplabs/doctrine-behaviors",
