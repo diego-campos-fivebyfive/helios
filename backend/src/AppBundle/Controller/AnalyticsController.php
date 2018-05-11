@@ -10,10 +10,10 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * @Route("/api/v1")
  */
-class analyticsController extends AbstractController
+class AnalyticsController extends AbstractController
 {
     /**
-     * @Route("/track-account", name="user_track_account")
+     * @Route("/track_account", name="user_track_account")
      *
      * @Method("get")
      */
