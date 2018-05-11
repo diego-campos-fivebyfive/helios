@@ -68,11 +68,12 @@ function logSQL($sql){
  */
 function executeSQL($sql)
 {
-    $sql .= " AND c.context = 'account' AND c.persistent = 0;";
+    $sql .= " AND c.context = 'account' AND (c.persistent = 0 OR c.persistent IS NULL);";
 
     $sql = preg_replace('/( )+/', ' ', str_replace(["\n", "\t"], ' ', $sql));
 
     R::exec($sql);
+    echo $sql . "\n\n";
 
     logSQL($sql);
 }
@@ -117,9 +118,11 @@ function normalizeLevels(array $config)
   FROM app_order o
   WHERE o.parent_id IS NULL
         AND o.status >= %d
-        AND DATE(o.created_at) >= '%s'
+        AND DATE(o.billed_at) >= '%s'
   GROUP BY account_id
   HAVING (SUM(o.total)) >= %f", ORDER_STATUS, $firstCreatedAt, $firstAmount);
+
+	//echo $accountSQL . "\n\n"; die;
 
     $ids = getAccountIds($accountSQL);
 
@@ -127,11 +130,11 @@ function normalizeLevels(array $config)
 
         $firstSQL = sprintf(<<<SQL
 UPDATE app_customer c
-SET c.level = '%s'
+SET c.level = '%s', c.status = 3
 WHERE c.id NOT IN (%s)
 AND c.activated_at >= '%s'
 SQL
-            , $firstLevel, $ids, $activatedAt);
+, $firstLevel, $ids, $activatedAt);
 
         $lockSQL = sprintf(<<<SQL
 UPDATE app_customer c
@@ -139,7 +142,7 @@ UPDATE app_customer c
     WHERE id NOT IN (%s)
     AND c.activated_at < '%s'
 SQL
-            , $lockedStatus, $firstLevel, $ids, $activatedAt);
+, $lockedStatus, $firstLevel, $ids, $activatedAt);
 
         executeSQL($firstSQL);
         executeSQL($lockSQL);
@@ -159,16 +162,18 @@ SQL
   FROM app_order o
   WHERE o.parent_id IS NULL
         AND o.status >= %d
-        AND DATE(o.created_at) >= '%s'
+        AND DATE(o.billed_at) >= '%s'
   GROUP BY account_id
-  HAVING (SUM(o.total)) >= %f_FSQL_", ORDER_STATUS, $createdAt, $amount);
+  HAVING (SUM(o.total)) >= %f_FSQL_", ORDER_STATUS,  $createdAt, $amount);
 
 
-        $updateSQL = sprintf("UPDATE app_customer c SET c.level = '%s' WHERE c.id %s (_IDS_)", $level, $expr);
+        $updateSQL = sprintf("UPDATE app_customer c SET c.level = '%s', c.status = 3 WHERE c.id %s (_IDS_)", $level, $expr);
 
         $index++;
 
         $accountSQL = str_replace('_FSQL_', $index < count($levels) ? sprintf(' AND SUM(o.total) < %f', $levels[$levelKeys[$index]]['amount']) : '', $accountSQL);
+
+	//echo $accountSQL . "\n\n";
 
         $ids = getAccountIds($accountSQL);
 
@@ -176,7 +181,7 @@ SQL
 
             $updateSQL = str_replace('_IDS_', $ids, $updateSQL);
 
-            executeSQL($updateSQL);
+ 	    executeSQL($updateSQL);
         }
     }
 
@@ -265,3 +270,4 @@ if(normalizeLevels($config)){
 }
 
 echo "\n";
+
