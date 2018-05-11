@@ -6,6 +6,7 @@ import moment from 'moment'
 import App from '@/App'
 import { router } from '@/router'
 import { initGlobals, globalComponents } from '@/globals'
+import { woopra } from '@/widgets/woopra'
 
 initGlobals(Vue).then(() => {
   Vue.use(VueMoment, moment)
@@ -14,6 +15,10 @@ initGlobals(Vue).then(() => {
 
   if (user.sices) {
     Vue.use(VueSocket, `${process.env.SOCKET_URL}/socket?token=${user.token}`)
+  }
+
+  if (!user.sices) {
+    woopra()
   }
 
   /* eslint-disable no-new, no-console */
