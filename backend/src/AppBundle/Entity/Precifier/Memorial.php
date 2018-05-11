@@ -13,8 +13,6 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
  */
 class Memorial
 {
-    use ORMBehaviors\Timestampable\Timestampable;
-
     /**
      * @var int
      *
@@ -51,6 +49,20 @@ class Memorial
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $publishedAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created_at", type="datetime", nullable=true)
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     */
+    private $updatedAt;
 
     /**
      * @return int
@@ -164,7 +176,7 @@ class Memorial
     }
 
     /**
-     * @ORM\prePersist
+     * @ORM\PrePersist
      */
     public function prePersist()
     {
@@ -173,7 +185,7 @@ class Memorial
     }
 
     /**
-     * @ORM\preUpdate
+     * @ORM\PreUpdate
      */
     public function preUpdate()
     {

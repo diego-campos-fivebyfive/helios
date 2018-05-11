@@ -146,7 +146,7 @@ class Term implements TermInterface {
     }
 
     /**
-     * @ORM\prePersist
+     * @ORM\PrePersist
      */
     public function prePersist()
     {
@@ -155,7 +155,7 @@ class Term implements TermInterface {
     }
 
     /**
-     * @ORM\preUpdate
+     * @ORM\PreUpdate
      */
     public function preUpdate()
     {
