@@ -14,7 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @Route("/api/v1/")
+ * @Route("/api/v1")
  */
 class analyticsController extends AbstractController
 {
@@ -23,16 +23,10 @@ class analyticsController extends AbstractController
      *
      * @Method("get")
      */
-    public function trackAccount(Request $request)
+    public function trackAccount()
     {
-        $context = $request->get('context');
-
         $collector = DataCollector::create($this->container)->data();
 
-        $data = ($context === 'intercom') ?
-            array_merge(['app_id' => 't2yycetv'], $collector) 
-            : $collector;
-
-        return $this->json($data);
+        return $this->json($collector);
     }
 }
