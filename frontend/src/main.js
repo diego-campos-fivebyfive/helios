@@ -17,10 +17,7 @@ initGlobals(Vue).then(() => {
     Vue.use(VueSocket, `${process.env.SOCKET_URL}/socket?id=${user.id}`)
   }
 
-  const host = (process.env.API_URL != 'app.plataformasicessolar.com.br')
-    ?  'homolog.plataformasicessolar.com.br' : 'app.plataformasicessolar.com.br'
-
-  if (!user.sices && host) {
+  if (!user.sices) {
     trackWoopra()
   }
 
