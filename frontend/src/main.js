@@ -6,7 +6,7 @@ import moment from 'moment'
 import App from '@/App'
 import { router } from '@/router'
 import { initGlobals, globalComponents } from '@/globals'
-import { trackWoopra } from '@/widgets/woopra'
+import { woopra } from '@/widgets/woopra'
 
 initGlobals(Vue).then(() => {
   Vue.use(VueMoment, moment)
@@ -18,7 +18,7 @@ initGlobals(Vue).then(() => {
   }
 
   if (!user.sices) {
-    trackWoopra()
+    woopra()
   }
 
   /* eslint-disable no-new, no-console */
