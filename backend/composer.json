@@ -4,7 +4,7 @@
     "type": "project",
     "autoload": {
         "psr-4": {
-            "": "src/"
+            "": ["src/", "src/modules/"]
         },
         "classmap": [
             "app/AppKernel.php",
@@ -28,6 +28,7 @@
         "gaufrette/phpseclib-sftp-adapter": "^0.4.0",
         "incenteev/composer-parameter-handler": "~2.0",
         "jms/serializer-bundle": "^1.1",
+        "kettle/dynamodb-orm": "^0.2.8",
         "knplabs/doctrine-behaviors": "~1.1",
         "knplabs/knp-gaufrette-bundle": "~0.3",
         "knplabs/knp-menu-bundle": "^2.0",
