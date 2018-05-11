@@ -6,19 +6,19 @@ import moment from 'moment'
 import App from '@/App'
 import { router } from '@/router'
 import { initGlobals, globalComponents } from '@/globals'
-import { woopra } from '@/widgets/woopra'
+import tracking from '@/widgets/tracking'
 
 initGlobals(Vue).then(() => {
   Vue.use(VueMoment, moment)
 
   const { user } = Vue.prototype.$global
 
-  if (user.sices) {
+  if (user.sices && process.env.AMBIENCE !== 'development') {
     Vue.use(VueSocket, `${process.env.SOCKET_URL}/socket?token=${user.token}`)
   }
 
   if (!user.sices) {
-    woopra()
+    tracking()
   }
 
   /* eslint-disable no-new, no-console */
