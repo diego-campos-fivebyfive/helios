@@ -12,3 +12,4 @@ export SICES_PRODUCTION_FTP_HOST='54.233.182.111'
 export SICES_PRODUCTION_FTP_PORT=21
 export SICES_PRODUCTION_FTP_USER=proceda_admin
 export SICES_PRODUCTION_FTP_PASS='whJHVcRp6mhac8cnN6'
+export SICES_PRODUCTION_SOCKET_URI='https://socket.plataformasicessolar.com.br'
