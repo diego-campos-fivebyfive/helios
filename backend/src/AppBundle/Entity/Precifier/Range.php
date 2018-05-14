@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Precifier;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -21,7 +22,7 @@ class Range
     private $id;
 
     /**
-     * @var int
+     * @var ArrayCollection
      *
      * @ORM\ManyToOne(targetEntity="Memorial", inversedBy="ranges")
      */
