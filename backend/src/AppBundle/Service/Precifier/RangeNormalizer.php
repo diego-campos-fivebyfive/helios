@@ -29,6 +29,11 @@ class RangeNormalizer
     private $manager;
 
     /**
+     * @var array
+     */
+    private $defaultMetadata;
+
+    /**
      * @var string
      */
     private $memory = '512M';
@@ -43,6 +48,8 @@ class RangeNormalizer
         // ini_set('memory_limit', $this->memory);
 
         $this->manager = $manager;
+
+        $this->defaultMetadata = $this->defaultMetadata();
     }
 
     /**
@@ -51,8 +58,6 @@ class RangeNormalizer
      */
     public function normalize(Memorial $memorial, $groups)
     {
-        $defautMetadata = $this->defaultMetadata();
-
         $new = false;
 
         foreach ($groups as $family => $components) {
@@ -68,7 +73,7 @@ class RangeNormalizer
                     $family,
                     $componentId,
                     $components[$componentId],
-                    $defautMetadata
+                    $this->defaultMetadata
                 );
 
                 $new = true;
