@@ -3,8 +3,8 @@
 namespace AdminBundle\Controller;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Entity\Pricing\Memorial;
-use AppBundle\Manager\Pricing\MemorialManager;
+use AppBundle\Entity\Precifier\Memorial;
+use AppBundle\Manager\Precifier\MemorialManager;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -27,7 +27,7 @@ class MemorialsController extends AbstractController
     public function getMemorialsAction(Request $request)
     {
         /** @var MemorialManager $memorialManager */
-        $memorialManager = $this->get('memorial_manager');
+        $memorialManager = $this->get('precifier_memorial_manager');
 
         $qb = $memorialManager->createQueryBuilder();
 
@@ -64,7 +64,7 @@ class MemorialsController extends AbstractController
     public function postMemorialAction(Request $request)
     {
         /** @var MemorialManager $memorialManager */
-        $memorialManager = $this->get('memorial_manager');
+        $memorialManager = $this->get('precifier_memorial_manager');
 
         $data = json_decode($request->getContent(), true);
 
@@ -87,7 +87,7 @@ class MemorialsController extends AbstractController
     public function putMemorialAction(Request $request, Memorial $memorial)
     {
         /** @var MemorialManager $memorialManager */
-        $memorialManager = $this->get('memorial_manager');
+        $memorialManager = $this->get('precifier_memorial_manager');
 
         $data = json_decode($request->getContent(), true);
 
@@ -109,7 +109,7 @@ class MemorialsController extends AbstractController
     public function deleteMemorialAction(Memorial $memorial)
     {
         /** @var MemorialManager $memorialManager */
-        $memorialManager = $this->get('memorial_manager');
+        $memorialManager = $this->get('precifier_memorial_manager');
 
         $memorialManager->delete($memorial);
 

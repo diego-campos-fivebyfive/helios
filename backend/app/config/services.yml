@@ -216,6 +216,18 @@ services:
         class: AppBundle\Service\PowerEstimator\PowerEstimator
         arguments: ['@nasa_provider']
 
+    precifier_memorial_cloner:
+        class: AppBundle\Service\Precifier\MemorialCloner
+        arguments: ['@precifier_memorial_manager']
+
+    precifier_memorial_loader:
+        class: AppBundle\Service\Precifier\MemorialLoader
+        arguments: ['@precifier_memorial_manager']
+
+    precifier_range_loader:
+        class: AppBundle\Service\Precifier\RangeLoader
+        arguments: ['@precifier_range_manager']
+
     project_generator:
         class: AppBundle\Service\ProjectGenerator\ProjectGenerator
         arguments: ['@service_container']
