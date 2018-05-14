@@ -3,7 +3,6 @@
 namespace AppBundle\Entity\Precifier;
 
 use Doctrine\ORM\Mapping as ORM;
-use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
  * Range
@@ -22,8 +21,9 @@ class Range
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Memorial")
-     * @ORM\JoinColumn(name="memorial_id", referencedColumnName="id")
+     * @var int
+     *
+     * @ORM\Column(name="memorial_id", type="integer")
      */
     private $memorialId;
 
