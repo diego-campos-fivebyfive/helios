@@ -4,6 +4,7 @@ namespace Tests\AppBundle\Service\Precifier;
 
 use AppBundle\Entity\Precifier\Memorial;
 use AppBundle\Entity\Precifier\Range;
+use AppBundle\Service\Precifier\Calculator;
 use AppBundle\Service\Precifier\MemorialLoader;
 use AppBundle\Service\Precifier\RangeLoader;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
@@ -29,9 +30,11 @@ class RangeLoaderTest extends WebTestCase
         $rangeLoader = $this->getContainer()->get('precifier_range_loader');
 
         /** @var Range $range */
-        $range = $rangeLoader->load($memorial, 15, 'partner', 'inverter', 6418);
+        $range = $rangeLoader->load($memorial, 'inverter', 6418);
 
-        self::assertEquals($range['markup'], 0.1);
-        self::assertEquals($range['price'], 380.00);
+        $r = Calculator::identifyRange(15);
+
+        self::assertEquals($range->getMetadata()['partner'][$r]['markup'], 0.1);
+        self::assertEquals($range->getMetadata()['partner'][$r]['price'], 380.00);
     }
 }
