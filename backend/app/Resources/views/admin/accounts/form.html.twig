@@ -15,6 +15,16 @@
         .box-check-persistent {
             height: 25px;
         }
+        .clear-date-input {
+            width: 80%;
+            float: left;
+        }
+        .clear-date-btn {
+            width: 20%;
+        }
+        .clear-date-group {
+            width: 100%;
+        }
     </style>
 
     <div class="wrapper wrapper-content animated fadeInRight">
@@ -145,7 +155,7 @@
                         {% endif %}
 
                         {% if app.user.isPlatformAdmin or app.user.isPlatformMaster or app.user.isPlatformExpanse %}
-                        <div class="col-md-6 check-persistent">
+                            <div class="col-md-5 check-persistent">
                                 <div class="col-md-1">
                                     <div class="box-check-persistent">
                                         <div class="i-checks" id="check-persistent">
@@ -153,17 +163,28 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-10">
+                                <div class="col-md-11">
                                     {{ form_label(form.persistent, 'Esta conta não será bloqueada nem sofrerá alteração
                                 de nível automaticamente', {'label_attr':{class:'check-label'}}) }}
                                 </div>
-                        </div>
+                            </div>
+                            <div id="persistent_at_group" class="col-md-3 hidden" style="margin-top: 5px;">
+                                <div class="btn-group clear-date-group">
+                                    {{ form_label(form.persistentAt, 'Persistente em:') }}
+                                    {{ form_widget(form.persistentAt, {attr:{id:'persistent_date', class:'form-control clear-date-input'}}) }}
+                                    <button type="button" id="clear_date" class="btn btn-primary clear-date-btn">
+                                        <i class="fa fa-eraser"></i>
+                                    </button>
+                                </div>
+                            </div>
                         {% endif %}
-                        <div class="form-group col-md-2 pull-right" style="margin-top: 20px;">
-                            <button class="btn btn-md btn-primary ladda-button btn-block" data-style="zoom-in"
-                                    id="btn-pre-submit">
-                                <i class="fa fa-save"></i> Salvar
-                            </button>
+                        <div class="row">
+                            <div class="form-group col-md-2 pull-right" style="margin-top: 20px;">
+                                <button class="btn btn-md btn-primary ladda-button btn-block" data-style="zoom-in"
+                                        id="btn-pre-submit">
+                                    <i class="fa fa-save"></i> Salvar
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -186,8 +207,23 @@
 
         $('#check-persistent').on('ifChanged', function () {
             $('#account_persistent').trigger('change');
+            checkPersistentAt();
         });
 
+        var persistentAt = $('#account_persistentAt');
+
+        function checkPersistentAt() {
+            var isChecked = $('#account_persistent').is(':checked');
+
+            if (isChecked) {
+                $('#persistent_at_group').removeClass('hidden');
+            } else {
+                $('#persistent_at_group').addClass('hidden');
+                persistentAt.val('');
+            }
+        }
+
+        checkPersistentAt();
 
         function display_error(message){
             toastr.error(message, '', {
@@ -269,6 +305,39 @@
         $('#account_parentAccount option[value=""]').html('Sem vínculo');
 
         $('#account_parentAccount').chosen();
+
+        persistentAt.daterangepicker({
+            startDate: '{{ account.persistentAt ? account.persistentAt|date('d/m/Y') : 'now'|date('d/m/Y') }}',
+            singleDatePicker: true,
+
+            minDate: moment(),
+            locale: {
+                format: 'DD/MM/YYYY',
+                daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
+                monthNames: [
+                    "Janeiro",
+                    "Fevereiro",
+                    "Março",
+                    "Abril",
+                    "Maio",
+                    "Junho",
+                    "Julho",
+                    "Agosto",
+                    "Setembro",
+                    "Outubro",
+                    "Novembro",
+                    "Dezembro"
+                ]
+            }
+        })
+
+        {% if not account.persistentAt %}
+            persistentAt.val('');
+        {% endif %}
+
+        $('#clear_date').on('click', function () {
+            persistentAt.val('');
+        });
     </script>
 
 {% endblock %}
