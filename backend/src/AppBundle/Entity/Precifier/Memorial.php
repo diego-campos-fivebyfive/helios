@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Precifier;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
@@ -49,6 +50,13 @@ class Memorial
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $publishedAt;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Range", mappedBy="memorial", cascade={"persist", "remove"})
+     */
+    private $ranges;
 
     /**
      * @var \DateTime
@@ -173,6 +181,14 @@ class Memorial
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getRanges()
+    {
+        return $this->ranges;
     }
 
     /**

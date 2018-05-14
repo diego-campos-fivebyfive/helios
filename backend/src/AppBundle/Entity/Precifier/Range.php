@@ -23,9 +23,9 @@ class Range
     /**
      * @var int
      *
-     * @ORM\Column(name="memorial_id", type="integer")
+     * @ORM\ManyToOne(targetEntity="Memorial", inversedBy="ranges")
      */
-    private $memorialId;
+    private $memorial;
 
     /**
      * @var int
@@ -71,20 +71,20 @@ class Range
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getMemorialId()
+    public function getMemorial()
     {
-        return $this->memorialId;
+        return $this->memorial;
     }
 
     /**
-     * @param mixed $memorialId
+     * @param int $memorial
      * @return Range
      */
-    public function setMemorialId($memorialId)
+    public function setMemorial($memorial)
     {
-        $this->memorialId = $memorialId;
+        $this->memorial = $memorial;
 
         return $this;
     }
