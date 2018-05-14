@@ -58,7 +58,7 @@ class Range
     /**
      * @var array
      *
-     * @ORM\Column(name="metadata", type="json", nullable=true)
+     * @ORM\Column(name="metadata", type="json")
      */
     private $metadata;
 
