@@ -2,8 +2,8 @@
 
 namespace AppBundle\Entity\Precifier;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 
 /**
  * Memorial
@@ -51,6 +51,13 @@ class Memorial
     private $publishedAt;
 
     /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Range", mappedBy="memorial", cascade={"persist", "remove"})
+     */
+    private $ranges;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
@@ -63,6 +70,14 @@ class Memorial
      * @ORM\Column(name="updated_at", type="datetime", nullable=true)
      */
     private $updatedAt;
+
+    /**
+     * Memorial constructor.
+     */
+    public function __construct()
+    {
+        $this->ranges = new ArrayCollection();
+    }
 
     /**
      * @return int
@@ -173,6 +188,44 @@ class Memorial
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getRanges()
+    {
+        return $this->ranges;
+    }
+
+    /**
+     * @param Range $range
+     * @return $this
+     */
+    public function addRange(Range $range)
+    {
+        if (!$this->ranges->contains($range)) {
+            $this->ranges->add($range);
+
+            if (!$range->getMemorial()) {
+                $range->setMemorial($this);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Range $range
+     * @return $this
+     */
+    public function removeRange(Range $range)
+    {
+        if ($this->ranges->contains($range)) {
+            $this->ranges->removeElement($range);
+        }
+
+        return $this;
     }
 
     /**
