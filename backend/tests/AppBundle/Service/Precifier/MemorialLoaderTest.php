@@ -2,81 +2,27 @@
 
 namespace Tests\AppBundle\Service\Precifier;
 
-use AppBundle\Service\Precifier\Calculator;
+use AppBundle\Entity\Precifier\Memorial;
+use AppBundle\Service\Precifier\MemorialLoader;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 
 /**
- * Class CalculatorTest
- * @group precifier_calculator
+ * Class MemorialLoaderTest
+ * @group precifier_memorial_loader
  */
-class CalculatorTest extends WebTestCase
+class MemorialLoaderTest extends WebTestCase
 {
-    private $ranges = [
-        [
-            'id' => 1,
-            'memorial_id' => 258,
-            'component_id' => 123,
-            'family' => 'inverter',
-            'code' => 1,
-            'cost_price' => 150,
-            'metadata' => [
-                'partner' => [
-                    60 => [
-                        'markup' => 0.1,
-                        'price' => 100
-                    ],
-                    70 => [
-                        'price' => 200
-                    ],
-                    80 => [
-                        'price' => 300
-                    ]
-                ]
-            ]
-        ],
-        [
-            'id' => 2,
-            'memorial_id' => 258,
-            'component_id' => 345,
-            'family' => 'module',
-            'code' => 2,
-            'cost_price' => 250,
-            'metadata' => [
-                'partner' => [
-                    60 => [
-                        'markup' => 0.2,
-                        'price' => 130
-                    ],
-                    70 => [
-                        'price' => 230
-                    ],
-                    80 => [
-                        'price' => 330
-                    ]
-                ]
-            ]
-        ]
-    ];
-
-    public function testPrecify()
+    /**
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function testLoad()
     {
-        $data = [
-            "level" => 'partner',
-            "power" => 78,
-            "groups" => [
-                'inverter' => [
-                    123
-                ],
-                'module' => [
-                    345
-                ]
-            ]
-        ];
+        /** @var MemorialLoader $memorialLoader */
+        $memorialLoader = $this->getContainer()->get('precifier_memorial_loader');
 
-        $precifiedComponents = Calculator::precify($data, $this->ranges);
+        /** @var Memorial $memorial */
+        $memorial = $memorialLoader->load();
 
-        self::assertEquals(2, count($precifiedComponents));
-        self::assertEquals(200, $precifiedComponents['inverter'][123]);
-        self::assertEquals(230, $precifiedComponents['module'][345]);
+        self::assertNotNull($memorial);
     }
 }
