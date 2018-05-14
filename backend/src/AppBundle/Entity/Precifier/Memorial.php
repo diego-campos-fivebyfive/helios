@@ -13,6 +13,19 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Memorial
 {
+    const STATUS_PENDING = 0;
+    const STATUS_PUBLISHED = 1;
+    const STATUS_EXPIRED = 2;
+
+    const LEVEL_TITANIUM = 'titanium';
+    const LEVEL_BLACK = 'black';
+    const LEVEL_GOLD = 'gold';
+    const LEVEL_PARTNER = 'partner';
+    const LEVEL_PLATINUM = 'platinum';
+    const LEVEL_PREMIUM = 'premium';
+    const LEVEL_PROMOTIONAL = 'promotional';
+    const LEVEL_FINAME = 'finame';
+
     /**
      * @var int
      *
