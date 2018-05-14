@@ -1,6 +1,7 @@
 import Account from '@/pages/account'
 import AccountForm from '@/pages/account/form'
 import Coupon from '@/pages/coupon'
+import Memorial from '@/pages/memorial'
 import Messenger from '@/pages/messenger'
 import Metric from '@/pages/metric'
 import NotFound from '@/pages/notfound'
@@ -33,6 +34,11 @@ export const routes = [
     component: Coupon
   },
   {
+    path: '/memorial',
+    name: 'Memoriais',
+    component: Memorial
+  },
+  {
     path: '/messenger',
     name: 'Mensagens',
     component: Messenger
@@ -43,15 +49,6 @@ export const routes = [
     component: Metric
   },
   {
-    path: '*',
-    name: 'not-found',
-    component: NotFound,
-    meta: {
-      sidebar: 'none',
-      mainbar: 'none'
-    }
-  },
-  {
     path: '/terms-of-use',
     name: 'Termos de Uso',
     component: TermsOfUse
@@ -60,5 +57,14 @@ export const routes = [
     path: '/terms',
     name: 'Termos de Uso',
     component: Terms
+  },
+  {
+    path: '*',
+    name: 'not-found',
+    component: NotFound,
+    meta: {
+      sidebar: 'none',
+      mainbar: 'none'
+    }
   }
 ]
