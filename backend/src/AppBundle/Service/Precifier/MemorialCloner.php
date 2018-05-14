@@ -1,14 +1,18 @@
 <?php
 
-namespace AppBundle\Service\Pricing;
+namespace AppBundle\Service\Precifier;
 
-use AppBundle\Entity\Pricing\Memorial;
-use AppBundle\Entity\Pricing\MemorialInterface;
-use AppBundle\Entity\Pricing\Range;
-use AppBundle\Entity\Pricing\RangeInterface;
-use AppBundle\Manager\Pricing\MemorialManager;
+use AppBundle\Entity\Precifier\Memorial;
+use AppBundle\Entity\Precifier\Range;
+use AppBundle\Manager\Precifier\MemorialManager;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
+
+/**
+ * Class RangeLoader
+ * @package AppBundle\Service\Precifier
+ * @author Gianluca Bine <gian_bine@hotmail.com>
+ */
 class MemorialCloner
 {
     /**
@@ -25,14 +29,12 @@ class MemorialCloner
      * @var array
      */
     private $rangeProperties = [
-        'initialPower',
-        'finalPower',
+        'componentId',
+        'family',
+        'memorial',
         'costPrice',
-        'markup',
-        'level',
-        'price',
         'code',
-        'tax'
+        'metadata'
     ];
 
     /**
@@ -53,12 +55,12 @@ class MemorialCloner
     }
 
     /**
-     * @param MemorialInterface $source
+     * @param Memorial $source
      * @return Memorial
      */
-    public function execute(MemorialInterface $source)
+    public function execute(Memorial $source)
     {
-        $memorial = new Memorial();
+        $memorial = $this->manager->create();
 
         $memorial
             ->setStatus(Memorial::STATUS_PENDING)
@@ -78,53 +80,42 @@ class MemorialCloner
     }
 
     /**
-     * @param MemorialInterface $memorial
+     * @param Memorial $memorial
      * @param $source
      * @param $target
      */
-    public function convertLevel(MemorialInterface $memorial, $source, $target)
+    public function convertLevel(Memorial $memorial, $source, $target)
     {
-        $sources = $this->filterRangesByLevel($memorial, $source);
+        /** @var Range $range */
+        foreach ($memorial->getRanges() as $range) {
+            $metadata = $range->getMetadata();
 
-        if(!$sources->isEmpty()) {
+            $metadata[$target] = $metadata[$source];
 
-            $targets = $this->filterRangesByLevel($memorial, $target);
-
-            $em = $this->manager->getEntityManager();
-            foreach ($targets as $range){
-                $memorial->removeRange($range);
-                $em->remove($range);
-            }
-
-            foreach ($sources as $source) {
-                $this->cloneRange($source, [
-                    'memorial' => $memorial,
-                    'level' => $target
-                ]);
-            }
-
-            $this->manager->save($memorial);
+            $range->setMetadata($metadata);
         }
+
+        $this->manager->save($memorial);
     }
 
     /**
-     * @param MemorialInterface $memorial
+     * @param Memorial $memorial
      * @param $level
      * @return \Doctrine\Common\Collections\ArrayCollection|\Doctrine\Common\Collections\Collection
      */
-    private function filterRangesByLevel(MemorialInterface $memorial, $level)
+    private function filterRangesByLevel(Memorial $memorial, $level)
     {
-        return $memorial->getRanges()->filter(function (RangeInterface $range) use($level){
-            return $level === $range->getLevel();
+        return $memorial->getRanges()->filter(function (Range $range) use($level){
+            return $range->getMetadata()[$level] === $level;
         });
     }
 
     /**
-     * @param RangeInterface $source
+     * @param Range $source
      * @param array $definitions
      * @return Range
      */
-    private function cloneRange(RangeInterface $source, array $definitions = [])
+    private function cloneRange(Range $source, array $definitions = [])
     {
         $range = new Range();
 
