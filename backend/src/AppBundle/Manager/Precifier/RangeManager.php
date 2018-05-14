@@ -6,5 +6,4 @@ use AppBundle\Manager\AbstractManager;
 
 class RangeManager extends AbstractManager
 {
-
 }
