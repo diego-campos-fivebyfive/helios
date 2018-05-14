@@ -2,81 +2,53 @@
 
 namespace Tests\AppBundle\Service\Precifier;
 
-use AppBundle\Service\Precifier\Calculator;
+use AppBundle\Entity\Precifier\Memorial;
+use AppBundle\Entity\Precifier\Range;
+use AppBundle\Manager\Precifier\MemorialManager;
+use AppBundle\Service\Precifier\MemorialCloner;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 
 /**
- * Class CalculatorTest
- * @group precifier_calculator
+ * Class MemorialClonerTest
+ * @group precifier_memorial_cloner
  */
-class CalculatorTest extends WebTestCase
+class MemorialClonerTest extends WebTestCase
 {
-    private $ranges = [
-        [
-            'id' => 1,
-            'memorial_id' => 258,
-            'component_id' => 123,
-            'family' => 'inverter',
-            'code' => 1,
-            'cost_price' => 150,
-            'metadata' => [
-                'partner' => [
-                    60 => [
-                        'markup' => 0.1,
-                        'price' => 100
-                    ],
-                    70 => [
-                        'price' => 200
-                    ],
-                    80 => [
-                        'price' => 300
-                    ]
-                ]
-            ]
-        ],
-        [
-            'id' => 2,
-            'memorial_id' => 258,
-            'component_id' => 345,
-            'family' => 'module',
-            'code' => 2,
-            'cost_price' => 250,
-            'metadata' => [
-                'partner' => [
-                    60 => [
-                        'markup' => 0.2,
-                        'price' => 130
-                    ],
-                    70 => [
-                        'price' => 230
-                    ],
-                    80 => [
-                        'price' => 330
-                    ]
-                ]
-            ]
-        ]
-    ];
-
-    public function testPrecify()
+    public function testExecute()
     {
-        $data = [
-            "level" => 'partner',
-            "power" => 78,
-            "groups" => [
-                'inverter' => [
-                    123
-                ],
-                'module' => [
-                    345
-                ]
-            ]
-        ];
+        /** @var MemorialCloner $memorialCloner */
+        $memorialCloner = $this->getContainer()->get('precifier_memorial_cloner');
 
-        $precifiedComponents = Calculator::precify($data, $this->ranges);
+        /** @var MemorialManager $memorialManager */
+        $memorialManager = $this->getContainer()->get('precifier_memorial_manager');
 
-        self::assertEquals(2, count($precifiedComponents));
-        self::assertEquals(200, $precifiedComponents['inverter'][123]);
-        self::assertEquals(230, $precifiedComponents['module'][345]);
+        /** @var Memorial $memorial */
+        $memorial = $memorialManager->find(1);
+
+        $clone = $memorialCloner->execute($memorial);
+
+        self::assertNotNull($clone);
+    }
+
+    public function testConvertLevel()
+    {
+        /** @var MemorialCloner $memorialCloner */
+        $memorialCloner = $this->getContainer()->get('precifier_memorial_cloner');
+
+        /** @var MemorialManager $memorialManager */
+        $memorialManager = $this->getContainer()->get('precifier_memorial_manager');
+
+        /** @var Memorial $memorial */
+        $memorial = $memorialManager->find(3);
+
+        $source = 'platinum';
+        $target = 'titanium';
+
+        $memorialCloner->convertLevel($memorial, $source, $target);
+
+        /** @var Range $range */
+        foreach ($memorial->getRanges() as $range) {
+            self::assertEquals($range->getMetadata()[$source], $range->getMetadata()[$target]);
+        }
     }
 }
