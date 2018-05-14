@@ -1,0 +1,186 @@
+<?php
+
+namespace AppBundle\Entity\Precifier;
+
+use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Model as ORMBehaviors;
+
+/**
+ * Range
+ * @ORM\Entity
+ * @ORM\Table(name="app_precifier_range")
+ */
+class Range
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Memorial")
+     * @ORM\JoinColumn(name="memorial_id", referencedColumnName="id")
+     */
+    private $memorialId;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="component_id", type="integer")
+     */
+    private $componentId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="family", type="string")
+     */
+    private $family;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="code", type="string")
+     */
+    private $code;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="cost_price", type="float")
+     */
+    private $costPrice;
+
+    /**
+     * @var array
+     *
+     * @ORM\Column(name="metadata", type="json", nullable=true)
+     */
+    private $metadata;
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMemorialId()
+    {
+        return $this->memorialId;
+    }
+
+    /**
+     * @param mixed $memorialId
+     * @return Range
+     */
+    public function setMemorialId($memorialId)
+    {
+        $this->memorialId = $memorialId;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getComponentId()
+    {
+        return $this->componentId;
+    }
+
+    /**
+     * @param int $componentId
+     * @return Range
+     */
+    public function setComponentId($componentId)
+    {
+        $this->componentId = $componentId;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFamily()
+    {
+        return $this->family;
+    }
+
+    /**
+     * @param string $family
+     * @return Range
+     */
+    public function setFamily($family)
+    {
+        $this->family = $family;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * @param string $code
+     * @return Range
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getCostPrice()
+    {
+        return $this->costPrice;
+    }
+
+    /**
+     * @param float $costPrice
+     * @return Range
+     */
+    public function setCostPrice($costPrice)
+    {
+        $this->costPrice = $costPrice;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMetadata()
+    {
+        return $this->metadata;
+    }
+
+    /**
+     * @param array $metadata
+     * @return Range
+     */
+    public function setMetadata($metadata)
+    {
+        $this->metadata = $metadata;
+
+        return $this;
+    }
+}
