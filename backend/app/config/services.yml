@@ -273,6 +273,10 @@ services:
         class: AppBundle\Entity\Component\PricingManager
         arguments: ['@parameter_manager', '@security.token_storage']
 
+    precifier_range_normalizer:
+        class: AppBundle\Service\Precifier\RangeNormalizer
+        arguments: ['@precifier_range_manager']
+
     project_precifier:
         class: AppBundle\Service\ProjectGenerator\Precifier
         arguments: ['@memorial_loader', '@range_loader', '@margin_manager']
