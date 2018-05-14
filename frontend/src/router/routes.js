@@ -1,6 +1,7 @@
 import Account from '@/pages/account'
 import AccountForm from '@/pages/account/form'
 import Coupon from '@/pages/coupon'
+import Memorial from '@/pages/memorial'
 import Messenger from '@/pages/messenger'
 import Metric from '@/pages/metric'
 import NotFound from '@/pages/notfound'
@@ -31,6 +32,11 @@ export const routes = [
     path: '/coupon',
     name: 'Cupons',
     component: Coupon
+  },
+  {
+    path: '/memorial',
+    name: 'Memoriais',
+    component: Memorial
   },
   {
     path: '/messenger',
