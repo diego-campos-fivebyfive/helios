@@ -82,7 +82,7 @@ class Range
      * @param Memorial $memorial
      * @return Range
      */
-    public function setMemorial($memorial)
+    public function setMemorial(Memorial $memorial)
     {
         $this->memorial = $memorial;
 
