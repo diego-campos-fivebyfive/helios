@@ -22,7 +22,7 @@ class Range
     private $id;
 
     /**
-     * @var ArrayCollection
+     * @var Memorial
      *
      * @ORM\ManyToOne(targetEntity="Memorial", inversedBy="ranges")
      */
@@ -72,7 +72,7 @@ class Range
     }
 
     /**
-     * @return ArrayCollection
+     * @return Memorial
      */
     public function getMemorial()
     {
@@ -80,13 +80,13 @@ class Range
     }
 
     /**
-     * @param ArrayCollection $memorial
+     * @param Memorial $memorial
      * @return Range
      */
     public function setMemorial($memorial)
     {
         $this->memorial = $memorial;
-        
+
         return $this;
     }
 
