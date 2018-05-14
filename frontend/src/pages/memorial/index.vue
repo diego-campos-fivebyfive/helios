@@ -16,7 +16,7 @@
   import List from './list'
 
   /* Mocked Data */
-  const memorials = new Promise(resolve => resolve([
+  const memorials = [
     {
       name: 'Memorial Editada',
       createdAt: '2017-09-21 09:36:26',
@@ -45,7 +45,7 @@
       publishedAt: '',
       status: 0
     }
-  ]))
+  ]
   /* End Mocked Data */
 
   export default {
@@ -57,13 +57,46 @@
     }),
     methods: {
       getMemorials() {
-        return this.memorials
+        this.memorials = memorials
+          .map(memorial => ({
+            name: memorial.name,
+            createdAt: this.formatDate(memorial.createdAt),
+            expiredAt: this.formatDate(memorial.expiredAt),
+            publishedAt: this.formatDate(memorial.publishedAt),
+            status: this.getStatusClassName(memorial.status),
+            class: this.getStatusClassName(memorial.status)
+          }))
+      },
+      formatDate(date = null) {
+        if (!date) {
+          const defaultValue = ''
+          return defaultValue
+        }
+
+        const moment = this.$moment(date, 'YYYY-MM-DD')
+        return moment.format('DD/MM/YYYY')
+      },
+      getStatusName(statusCode) {
+        const statuses = {
+          0: 'pendente',
+          1: 'publicado',
+          2: 'expirado'
+        }
+
+        return statuses[statusCode]
+      },
+      getStatusClassName(statusCode) {
+        const statuses = {
+          0: 'pending',
+          1: 'published',
+          2: 'expired'
+        }
+
+        return statuses[statusCode]
       }
     },
     mounted() {
-      memorials.then(data => {
-        this.memorials = data
-      })
+      this.getMemorials()
     }
   }
 </script>
