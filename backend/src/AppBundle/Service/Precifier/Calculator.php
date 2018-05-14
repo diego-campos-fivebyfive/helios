@@ -53,6 +53,8 @@ class Calculator
      */
     public static function identifyRange($power)
     {
+        sort(Range::$powerRanges);
+
         foreach (Range::$powerRanges as $i => $basePower) {
             if ($power < $basePower) {
                 return Range::$powerRanges[$i-1];
