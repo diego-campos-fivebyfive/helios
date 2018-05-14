@@ -68,7 +68,7 @@ function logSQL($sql){
  */
 function executeSQL($sql)
 {
-    $sql .= " AND c.context = 'account' AND (c.persistent = 0 OR c.persistent IS NULL);";
+    $sql .= " AND c.context = 'account' AND (c.persistentAt IS NULL OR c.persistentAt >= NOW());";
 
     $sql = preg_replace('/( )+/', ' ', str_replace(["\n", "\t"], ' ', $sql));
 
@@ -118,7 +118,7 @@ function normalizeLevels(array $config)
   FROM app_order o
   WHERE o.parent_id IS NULL
         AND o.status >= %d
-        AND DATE(o.billed_at) >= '%s'
+        AND DATE(o.status_at) >= '%s'
   GROUP BY account_id
   HAVING (SUM(o.total)) >= %f", ORDER_STATUS, $firstCreatedAt, $firstAmount);
 
@@ -162,7 +162,7 @@ SQL
   FROM app_order o
   WHERE o.parent_id IS NULL
         AND o.status >= %d
-        AND DATE(o.billed_at) >= '%s'
+        AND DATE(o.status_at) >= '%s'
   GROUP BY account_id
   HAVING (SUM(o.total)) >= %f_FSQL_", ORDER_STATUS,  $createdAt, $amount);
 
@@ -243,7 +243,7 @@ function countAccounts()
 {
     $sql = "SELECT a.level as level, COUNT(a.id) as total
     FROM app_customer a
-    WHERE a.context = 'account'
+    WHERE a.context = 'account' AND a.status = 3
     GROUP BY a.level;";
 
     $result = [];
