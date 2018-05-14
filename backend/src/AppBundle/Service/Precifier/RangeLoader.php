@@ -33,7 +33,7 @@ class RangeLoader
      * @return mixed
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function load(Memorial $memorial, $power, $level, $family, $componentId)
+    public function load(Memorial $memorial, $family, $componentId)
     {
         $qb = $this->manager->createQueryBuilder();
 
@@ -46,8 +46,6 @@ class RangeLoader
         /** @var Range $result */
         $result = $qb->getQuery()->getOneOrNullResult();
 
-        $range = Calculator::identifyRange($power);
-
-        return $result->getMetadata()[$level][$range];
+        return $result;
     }
 }
