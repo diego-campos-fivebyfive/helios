@@ -43,15 +43,6 @@ export const routes = [
     component: Metric
   },
   {
-    path: '*',
-    name: 'not-found',
-    component: NotFound,
-    meta: {
-      sidebar: 'none',
-      mainbar: 'none'
-    }
-  },
-  {
     path: '/terms-of-use',
     name: 'Termos de Uso',
     component: TermsOfUse
@@ -60,5 +51,14 @@ export const routes = [
     path: '/terms',
     name: 'Termos de Uso',
     component: Terms
+  },
+  {
+    path: '*',
+    name: 'not-found',
+    component: NotFound,
+    meta: {
+      sidebar: 'none',
+      mainbar: 'none'
+    }
   }
 ]
