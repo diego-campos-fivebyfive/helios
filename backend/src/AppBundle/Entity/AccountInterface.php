@@ -300,8 +300,8 @@ interface AccountInterface extends CustomerInterface
     public function getPersistentAt();
 
     /**
-     * @param \DateTime $persistentAt
+     * @param \DateTime $date
      * @return AccountTrait
      */
-    public function setPersistentAt($persistentAt);
+    public function setPersistentAt($date);
 }

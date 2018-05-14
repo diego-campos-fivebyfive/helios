@@ -428,9 +428,9 @@ trait AccountTrait
     /**
      * @inheritDoc
      */
-    public function setPersistentAt($persistentAt)
+    public function setPersistentAt($date)
     {
-        $this->persistentAt = $persistentAt;
+        $this->persistentAt = $date;
 
         return $this;
     }
