@@ -257,4 +257,22 @@ class Memorial
     {
         $this->updatedAt = new \DateTime;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public static function getDefaultLevels($keys = false)
+    {
+        $levels = [
+            self::LEVEL_TITANIUM => 'Titanium',
+            self::LEVEL_BLACK => 'Black',
+            self::LEVEL_PLATINUM => 'Platinum',
+            self::LEVEL_PREMIUM => 'Premium',
+            self::LEVEL_PARTNER => 'Partner',
+            self::LEVEL_PROMOTIONAL => 'Promotional',
+            self::LEVEL_FINAME => 'Finame'
+        ];
+
+        return $keys ? array_keys($levels) : $levels ;
+    }
 }
