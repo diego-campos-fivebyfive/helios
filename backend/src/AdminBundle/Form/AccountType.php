@@ -12,6 +12,7 @@ use AppBundle\Util\Validator\Constraints\ContainsCnpj;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -37,25 +38,30 @@ class AccountType extends AbstractType
         unset($levels[Memorial::LEVEL_FINAME]);
 
         $builder->add('document',TextType::class, array(
-                'constraints' => new ContainsCnpj() ));
+            'constraints' => new ContainsCnpj() ));
         $builder->add('extraDocument',TextType::class, [
-                'required' => false ]);
+            'required' => false ]);
         $builder->add('lastname',TextType::class);
         $builder->add('firstname',TextType::class);
         $builder->add('postcode',TextType::class);
         $builder->add('state',ChoiceType::class, [
-                'choices' => Brazil::states()
+            'choices' => Brazil::states()
         ]);
         $builder->add('city',TextType::class);
         $builder->add('district',TextType::class);
         $builder->add('street',TextType::class);
         $builder->add('number',TextType::class, [
-                'required' => false ]);
+            'required' => false ]);
         $builder->add('level', ChoiceType::class, [
-                'choices' => $levels
-            ]);
+            'choices' => $levels
+        ]);
         $builder->add('persistent', CheckboxType::class, [
-                'required' => false
+            'required' => false
+        ]);
+        $builder->add('persistentAt', DateType::class, [
+            'widget' => 'single_text',
+            'format' => 'dd/MM/yyyy',
+            'required' => false
         ]);
 
         if ($isAdmin) {
@@ -76,7 +82,6 @@ class AccountType extends AbstractType
 
 
         if (!$accountId) {
-
             $builder->add('members', CollectionType::class, [
                 'entry_type' => OwnerType::class
             ]);
