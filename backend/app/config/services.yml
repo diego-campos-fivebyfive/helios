@@ -112,6 +112,14 @@ services:
         class: AppBundle\Manager\Precifier\RangeManager
         arguments: ['AppBundle\Entity\Precifier\Range', '@doctrine']
 
+    precifier_memorial_loader:
+        class: AppBundle\Service\Precifier\MemorialLoader
+        arguments: ['@precifier_memorial_manager']
+
+    precifier_range_loader:
+        class: AppBundle\Service\Precifier\RangeLoader
+        arguments: ['@precifier_range_manager']
+
     project_manager:
         class: AppBundle\Manager\ProjectManager
         arguments: ['AppBundle\Entity\Component\Project', '@doctrine']
