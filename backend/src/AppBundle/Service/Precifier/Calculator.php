@@ -2,6 +2,8 @@
 
 namespace AppBundle\Service\Precifier;
 
+use AppBundle\Entity\Precifier\Range;
+
 /**
  * Class Calculator
  * @package AppBundle\Service\Precifier
@@ -9,12 +11,6 @@ namespace AppBundle\Service\Precifier;
  */
 class Calculator
 {
-    /**
-     * @var array
-     */
-    private static $powerRanges = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
-    // TODO: mover variável para entidade Range
-
     /**
      * @param array $data
      * @param array $componentsRange
@@ -55,15 +51,15 @@ class Calculator
      * @param $power
      * @return mixed
      */
-    private static function identifyRange($power)
+    public static function identifyRange($power)
     {
-        foreach (self::$powerRanges as $i => $basePower) {
+        foreach (Range::$powerRanges as $i => $basePower) {
             if ($power < $basePower) {
-                return self::$powerRanges[$i-1];
+                return Range::$powerRanges[$i-1];
             }
         }
 
-        return self::$powerRanges[count(self::$powerRanges)-1];
+        return Range::$powerRanges[count(Range::$powerRanges)-1];
     }
 
     /**
