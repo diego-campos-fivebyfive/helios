@@ -72,6 +72,14 @@ class Memorial
     private $updatedAt;
 
     /**
+     * Memorial constructor.
+     */
+    public function __construct()
+    {
+        $this->ranges = new ArrayCollection();
+    }
+
+    /**
      * @return int
      */
     public function getId()
