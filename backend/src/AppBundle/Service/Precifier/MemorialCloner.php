@@ -99,18 +99,6 @@ class MemorialCloner
     }
 
     /**
-     * @param Memorial $memorial
-     * @param $level
-     * @return \Doctrine\Common\Collections\ArrayCollection|\Doctrine\Common\Collections\Collection
-     */
-    private function filterRangesByLevel(Memorial $memorial, $level)
-    {
-        return $memorial->getRanges()->filter(function (Range $range) use($level){
-            return $range->getMetadata()[$level] === $level;
-        });
-    }
-
-    /**
      * @param Range $source
      * @param array $definitions
      * @return Range
