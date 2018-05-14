@@ -26,7 +26,7 @@ class MemorialLoader
     }
 
     /**
-     * @return mixed
+     * @return Memorial
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function load()
@@ -41,8 +41,6 @@ class MemorialLoader
                 'status' => Memorial::STATUS_PUBLISHED
             ]);
 
-        $memorial = $qb->getQuery()->getOneOrNullResult();
-
-        return $memorial;
+        return $qb->getQuery()->getOneOrNullResult();
     }
 }
