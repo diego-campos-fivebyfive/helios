@@ -104,6 +104,14 @@ services:
         class: AppBundle\Manager\PostcodeManager
         arguments: ['AppBundle\Entity\Postcode', '@doctrine']
 
+    precifier_memorial_manager:
+        class: AppBundle\Manager\Precifier\MemorialManager
+        arguments: ['AppBundle\Entity\Precifier\Memorial', '@doctrine']
+
+    precifier_range_manager:
+        class: AppBundle\Manager\Precifier\RangeManager
+        arguments: ['AppBundle\Entity\Precifier\Range', '@doctrine']
+
     project_manager:
         class: AppBundle\Manager\ProjectManager
         arguments: ['AppBundle\Entity\Component\Project', '@doctrine']
