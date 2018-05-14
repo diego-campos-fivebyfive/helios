@@ -55,7 +55,7 @@ class Calculator
      * @param $power
      * @return mixed
      */
-    private static function identifyRange($power)
+    public static function identifyRange($power)
     {
         foreach (self::$powerRanges as $i => $basePower) {
             if ($power < $basePower) {
