@@ -25,12 +25,10 @@ class RangeLoader
     }
 
     /**
-     * @param $memorial
-     * @param $power
-     * @param $level
+     * @param Memorial $memorial
      * @param $family
      * @param $componentId
-     * @return mixed
+     * @return Range
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function load(Memorial $memorial, $family, $componentId)
@@ -43,9 +41,6 @@ class RangeLoader
             $qb->expr()->eq('r.componentId', $componentId)
         ));
 
-        /** @var Range $result */
-        $result = $qb->getQuery()->getOneOrNullResult();
-
-        return $result;
+        return $qb->getQuery()->getOneOrNullResult();
     }
 }
