@@ -293,4 +293,15 @@ interface AccountInterface extends CustomerInterface
      * @return AccountInterface
      */
     public function setTerms($terms);
+
+    /**
+     * @return \DateTime
+     */
+    public function getPersistentAt();
+
+    /**
+     * @param \DateTime $persistentAt
+     * @return AccountTrait
+     */
+    public function setPersistentAt($persistentAt);
 }
