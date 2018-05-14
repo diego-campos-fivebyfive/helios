@@ -52,6 +52,13 @@ trait AccountTrait
     private $terms;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="persistent_at", type="datetime", nullable=true)
+     */
+    private $persistentAt;
+
+    /**
      * @param $level
      * @return $this
      */
@@ -406,6 +413,24 @@ trait AccountTrait
     public function setTerms($terms)
     {
         $this->terms = $terms;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPersistentAt()
+    {
+        return $this->persistentAt;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setPersistentAt($date)
+    {
+        $this->persistentAt = $date;
 
         return $this;
     }
