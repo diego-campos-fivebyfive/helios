@@ -86,6 +86,8 @@ class Range
     {
         $this->memorial = $memorial;
 
+        $memorial->addRange($this);
+
         return $this;
     }
 
