@@ -72,7 +72,7 @@ class Range
     }
 
     /**
-     * @return int
+     * @return ArrayCollection
      */
     public function getMemorial()
     {
@@ -80,13 +80,13 @@ class Range
     }
 
     /**
-     * @param int $memorial
+     * @param ArrayCollection $memorial
      * @return Range
      */
     public function setMemorial($memorial)
     {
         $this->memorial = $memorial;
-
+        
         return $this;
     }
 
