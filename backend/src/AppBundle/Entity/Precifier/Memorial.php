@@ -199,6 +199,36 @@ class Memorial
     }
 
     /**
+     * @param Range $range
+     * @return $this
+     */
+    public function addRange(Range $range)
+    {
+        if (!$this->ranges->contains($range)) {
+            $this->ranges->add($range);
+
+            if (!$range->getMemorial()) {
+                $range->setMemorial($this);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Range $range
+     * @return $this
+     */
+    public function removeRange(Range $range)
+    {
+        if ($this->ranges->contains($range)) {
+            $this->ranges->removeElement($range);
+        }
+
+        return $this;
+    }
+
+    /**
      * @ORM\PrePersist
      */
     public function prePersist()
