@@ -11,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Range
 {
+    const DEFAULT_TAX = 0.0925;
+
     /**
      * @var array
      */
@@ -66,6 +68,14 @@ class Range
      * @ORM\Column(name="metadata", type="json")
      */
     private $metadata;
+
+    /**
+     * Range constructor.
+     */
+    public function __construct()
+    {
+        $this->costPrice = 0;
+    }
 
     /**
      * @return int
