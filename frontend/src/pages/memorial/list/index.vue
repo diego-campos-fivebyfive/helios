@@ -22,18 +22,51 @@
         label(:class='memorial.class')
           | {{ memorial.status }}
       td.col-action
-        Button(
-          label='Operações',
-          type='primary-common',
-          icon='arrow-down',
-          pos='single')
+        ButtonDropdown(:groups='getButtons(memorial)')
 </template>
 
 <script>
   export default {
     props: [
       'memorials'
-    ]
+    ],
+    methods: {
+      getButtons(memorial) {
+        const buttons = [
+          [{
+            icon: 'pencil',
+            position: 'single',
+            label: 'Editar'
+          }, {
+            icon: 'cog',
+            position: 'single',
+            label: 'Gerenciar Markups'
+          }],
+          [{
+            icon: 'recycle',
+            position: 'single',
+            label: 'Efetuar Cópia'
+          }]
+        ]
+
+        if(memorial.status === 'pending') {
+          const [first, last] = buttons
+          last.push(
+            {
+              icon: 'exchange',
+              position: 'sigle',
+              label: 'Engenharia Reversa'
+            }, {
+              icon: 'trash',
+              position: 'sigle',
+              label: 'Excluir'
+            }
+          )
+        }
+
+        return buttons
+      }
+    }
   }
 </script>
 
@@ -64,7 +97,7 @@
 
     .col-status {
       text-align: center;
-      width: 15%;
+      width: 10%;
 
       label {
         border-radius: $ui-corner;
@@ -87,7 +120,7 @@
 
     .col-action {
       text-align: center;
-      width: 15%;
+      width: 20%;
     }
   }
 </style>
