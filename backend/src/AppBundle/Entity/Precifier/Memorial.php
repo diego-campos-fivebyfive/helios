@@ -73,7 +73,7 @@ class Memorial
     /**
      * @var array
      *
-     * @ORM\Column(name="metadata", type="json")
+     * @ORM\Column(name="metadata", type="json", nullable=true)
      */
     private $metadata;
 
@@ -271,10 +271,13 @@ class Memorial
     /**
      * @param $type
      * @param $family
+     * @return $this
      */
     public function addFamilyMetadata($type, $family)
     {
         $this->metadata[$type][$family] = true;
+
+        return $this;
     }
 
     /**
