@@ -26,22 +26,29 @@ class RangeLoader
     }
 
     /**
-     * @param Memorial $memorial
-     * @param $family
-     * @param $componentId
-     * @return Range
+     * @param $rangeIds
+     * @return array|mixed
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function load(Memorial $memorial, $family, $componentId)
+    public function load($rangeIds)
     {
+        $single = false;
+
+        if(!is_array($rangeIds)){
+            $single = true;
+            $rangeIds = [$rangeIds];
+        }
+
         $qb = $this->manager->createQueryBuilder();
 
-        $qb->where($qb->expr()->andX(
-            $qb->expr()->eq('r.memorial', $memorial->getId()),
-            $qb->expr()->eq('r.family', $qb->expr()->literal($family)),
-            $qb->expr()->eq('r.componentId', $componentId)
-        ));
+        $qb->where(
+            $qb->expr()->in('r.id', $rangeIds)
+        );
 
-        return $qb->getQuery()->getOneOrNullResult();
+        if ($single) {
+            return $qb->getQuery()->getOneOrNullResult();
+        }
+
+        return $qb->getQuery()->getResult();
     }
 }

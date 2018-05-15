@@ -20,21 +20,17 @@ class RangeLoaderTest extends WebTestCase
      */
     public function testLoad()
     {
-        /** @var MemorialLoader $memorialLoader */
-        $memorialLoader = $this->getContainer()->get('precifier_memorial_loader');
-
-        /** @var Memorial $memorial */
-        $memorial = $memorialLoader->load();
-
         /** @var RangeLoader $rangeLoader */
         $rangeLoader = $this->getContainer()->get('precifier_range_loader');
 
         /** @var Range $range */
-        $range = $rangeLoader->load($memorial, 'inverter', 6418);
+        $range = $rangeLoader->load(7);
 
-        $r = Calculator::identifyRange(15);
+        self::assertEquals(true, $range instanceof Range);
 
-        self::assertEquals($range->getMetadata()['partner'][$r]['markup'], 0.1);
-        self::assertEquals($range->getMetadata()['partner'][$r]['price'], 380.00);
+        $ranges = $rangeLoader->load([7,8,9]);
+
+        self::assertEquals(3, count($ranges));
+        self::assertEquals(true, $ranges[0] instanceof Range);
     }
 }
