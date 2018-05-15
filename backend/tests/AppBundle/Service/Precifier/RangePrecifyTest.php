@@ -2,39 +2,41 @@
 
 namespace Tests\AppBundle\Service\Precifier;
 
-use AppBundle\Entity\Precifier\Memorial;
 use AppBundle\Entity\Precifier\Range;
-use AppBundle\Service\Precifier\Calculator;
-use AppBundle\Service\Precifier\MemorialLoader;
-use AppBundle\Service\Precifier\RangeLoader;
+use AppBundle\Manager\Precifier\RangeManager;
+use AppBundle\Service\Precifier\RangePrecify;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 
 /**
- * Class RangeLoaderTest
- * @group precifier_range_loader
+ * Class RangePrecifyTest
+ * @group precifier_range_precify
  */
-class RangeLoaderTest extends WebTestCase
+class RangePrecifyTest extends WebTestCase
 {
-    /**
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
-    public function testLoad()
+    /**/
+    public function testPrecify()
     {
-        /** @var MemorialLoader $memorialLoader */
-        $memorialLoader = $this->getContainer()->get('precifier_memorial_loader');
-
-        /** @var Memorial $memorial */
-        $memorial = $memorialLoader->load();
-
-        /** @var RangeLoader $rangeLoader */
-        $rangeLoader = $this->getContainer()->get('precifier_range_loader');
+        /** @var RangeManager $manager */
+        $manager = $this->getContainer()->get('precifier_range_manager');
 
         /** @var Range $range */
-        $range = $rangeLoader->load($memorial, 'inverter', 6418);
+        $range = $manager->find(7);
 
-        $r = Calculator::identifyRange(15);
 
-        self::assertEquals($range->getMetadata()['partner'][$r]['markup'], 0.1);
-        self::assertEquals($range->getMetadata()['partner'][$r]['price'], 380.00);
+        $metadata = $range->getMetadata();
+        $costPrice = $range->getCostPrice();
+        $level = 'finame';
+
+        $newMetadata = RangePrecify::calculate($metadata, $level, $costPrice);
+
+        self::assertEquals(220.39, $newMetadata[$level][0]['price']);
+
+        $markup = 0.2;
+        $powerRange = 900;
+
+        $newMetadata = RangePrecify::calculate($metadata, $level, $costPrice, $markup, $powerRange);
+
+        self::assertEquals(264.46, $newMetadata[$level][$powerRange]['price']);
+        self::assertEquals($markup, $newMetadata[$level][$powerRange]['markup']);
     }
 }
