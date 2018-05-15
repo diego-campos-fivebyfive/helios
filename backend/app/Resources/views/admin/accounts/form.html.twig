@@ -155,7 +155,7 @@
                         {% endif %}
 
                         {% if app.user.isPlatformAdmin or app.user.isPlatformMaster or app.user.isPlatformExpanse %}
-                            <div id="persistent_at_group" class="col-md-4">
+                            <div class="col-md-4">
                                 <div class="btn-group clear-date-group">
                                     {{ form_label(form.persistentAt, 'Data de persistência:') }}
                                     {{ form_widget(form.persistentAt, {attr:{class:'form-control clear-date-input'}}) }}
@@ -165,7 +165,7 @@
                                 </div>
                             </div>
                         {% endif %}
-                        <div class="form-group col-md-2 pull-right" style="margin-top: 20px;">
+                        <div class="form-group col-md-2 pull-right" style="margin-top: 24px;">
                             <button class="btn btn-md btn-primary ladda-button btn-block" data-style="zoom-in"
                                     id="btn-pre-submit">
                                 <i class="fa fa-save"></i> Salvar
