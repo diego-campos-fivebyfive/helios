@@ -68,7 +68,7 @@ function logSQL($sql){
  */
 function executeSQL($sql)
 {
-    $sql .= " AND c.context = 'account' AND (c.persistentAt IS NULL OR c.persistentAt >= NOW());";
+    $sql .= " AND c.context = 'account' AND (c.persistent_at IS NULL OR c.persistent_at < NOW());";
 
     $sql = preg_replace('/( )+/', ' ', str_replace(["\n", "\t"], ' ', $sql));
 
@@ -122,8 +122,6 @@ function normalizeLevels(array $config)
   GROUP BY account_id
   HAVING (SUM(o.total)) >= %f", ORDER_STATUS, $firstCreatedAt, $firstAmount);
 
-	//echo $accountSQL . "\n\n"; die;
-
     $ids = getAccountIds($accountSQL);
 
     if(strlen($ids)){
@@ -173,15 +171,13 @@ SQL
 
         $accountSQL = str_replace('_FSQL_', $index < count($levels) ? sprintf(' AND SUM(o.total) < %f', $levels[$levelKeys[$index]]['amount']) : '', $accountSQL);
 
-	//echo $accountSQL . "\n\n";
-
         $ids = getAccountIds($accountSQL);
 
         if(!empty($ids)){
 
             $updateSQL = str_replace('_IDS_', $ids, $updateSQL);
 
- 	    executeSQL($updateSQL);
+ 	        executeSQL($updateSQL);
         }
     }
 
