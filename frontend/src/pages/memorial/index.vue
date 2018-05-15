@@ -23,8 +23,8 @@
       memorials: []
     }),
     methods: {
-      getMemorials() {
-        const uri = `admin/api/v1/memorials/`
+      getMemorials(pageNumber = 1) {
+        const uri = `admin/api/v1/memorials/?page=${pageNumber}`
 
         this.axios.get(uri).then(response => {
           this.memorials = response.data.results

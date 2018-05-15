@@ -32,39 +32,51 @@
     ],
     methods: {
       getButtons(memorial) {
-        const buttons = [
-          [{
+        const buttons = {
+          edit: {
             icon: 'pencil',
             position: 'single',
             label: 'Editar'
-          }, {
+          },
+          management: {
             icon: 'cog',
             position: 'single',
             label: 'Gerenciar Markups'
-          }],
-          [{
+          },
+          copy: {
             icon: 'recycle',
             position: 'single',
             label: 'Efetuar Cópia'
-          }]
-        ]
-
-        if(memorial.status === 'pending') {
-          const [first, last] = buttons
-          last.push(
-            {
-              icon: 'exchange',
-              position: 'sigle',
-              label: 'Engenharia Reversa'
-            }, {
-              icon: 'trash',
-              position: 'sigle',
-              label: 'Excluir'
-            }
-          )
+          },
+          reverse: {
+            icon: 'exchange',
+            position: 'sigle',
+            label: 'Engenharia Reversa'
+          },
+          delete: {
+            icon: 'trash',
+            position: 'sigle',
+            label: 'Excluir'
+          }
         }
 
-        return buttons
+        if (memorial.status === 'pending') {
+          return [[
+            buttons.edit,
+            buttons.management
+          ], [
+            buttons.copy,
+            buttons.reverse,
+            buttons.delete
+          ]]
+        }
+
+        return [[
+          buttons.edit,
+          buttons.management
+        ], [
+          buttons.copy
+        ]]
       }
     }
   }
