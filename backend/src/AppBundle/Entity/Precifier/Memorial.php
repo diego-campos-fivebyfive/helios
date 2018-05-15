@@ -26,6 +26,9 @@ class Memorial
     const LEVEL_PROMOTIONAL = 'promotional';
     const LEVEL_FINAME = 'finame';
 
+    const ACTION_TYPE_ADD_COMPONENT = 'added';
+    const ACTION_TYPE_REMOVE_COMPONENT = 'removed';
+
     /**
      * @var int
      *
