@@ -6,7 +6,7 @@ use AppBundle\Service\Precifier\ComponentsLoader;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 
 /**
- * Class CalculatorTest
+ * Class ComponentsLoaderTest
  * @group precifier_components_loader
  */
 class ComponentsLoaderTest extends WebTestCase
