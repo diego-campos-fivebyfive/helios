@@ -71,6 +71,13 @@ class Memorial
     private $ranges;
 
     /**
+     * @var array
+     *
+     * @ORM\Column(name="metadata", type="json", nullable=true)
+     */
+    private $metadata;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
@@ -90,6 +97,7 @@ class Memorial
     public function __construct()
     {
         $this->ranges = new ArrayCollection();
+        $this->metadata = [];
     }
 
     /**
@@ -237,6 +245,37 @@ class Memorial
         if ($this->ranges->contains($range)) {
             $this->ranges->removeElement($range);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMetadata()
+    {
+        return $this->metadata;
+    }
+
+    /**
+     * @param array $metadata
+     * @return Memorial
+     */
+    public function setMetadata(array $metadata)
+    {
+        $this->metadata = $metadata;
+
+        return $this;
+    }
+
+    /**
+     * @param $type
+     * @param $family
+     * @return $this
+     */
+    public function addFamilyMetadata($type, $family)
+    {
+        $this->metadata[$type][$family] = true;
 
         return $this;
     }
