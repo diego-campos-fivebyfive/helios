@@ -155,22 +155,9 @@
                         {% endif %}
 
                         {% if app.user.isPlatformAdmin or app.user.isPlatformMaster or app.user.isPlatformExpanse %}
-                            <div class="col-md-5 check-persistent">
-                                <div class="col-md-1">
-                                    <div class="box-check-persistent">
-                                        <div class="i-checks" id="check-persistent">
-                                            {{ form_widget(form.persistent) }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-11">
-                                    {{ form_label(form.persistent, 'Esta conta não será bloqueada nem sofrerá alteração
-                                de nível automaticamente', {'label_attr':{class:'check-label'}}) }}
-                                </div>
-                            </div>
-                            <div id="persistent_at_group" class="col-md-3 hidden" style="margin-top: 5px;">
+                            <div id="persistent_at_group" class="col-md-4">
                                 <div class="btn-group clear-date-group">
-                                    {{ form_label(form.persistentAt, 'Persistente em:') }}
+                                    {{ form_label(form.persistentAt, 'Data de persistência:') }}
                                     {{ form_widget(form.persistentAt, {attr:{class:'form-control clear-date-input'}}) }}
                                     <button type="button" id="clear_date" class="btn btn-primary clear-date-btn">
                                         <i class="fa fa-eraser"></i>
@@ -178,13 +165,11 @@
                                 </div>
                             </div>
                         {% endif %}
-                        <div class="row">
-                            <div class="form-group col-md-2 pull-right" style="margin-top: 20px;">
-                                <button class="btn btn-md btn-primary ladda-button btn-block" data-style="zoom-in"
-                                        id="btn-pre-submit">
-                                    <i class="fa fa-save"></i> Salvar
-                                </button>
-                            </div>
+                        <div class="form-group col-md-2 pull-right" style="margin-top: 20px;">
+                            <button class="btn btn-md btn-primary ladda-button btn-block" data-style="zoom-in"
+                                    id="btn-pre-submit">
+                                <i class="fa fa-save"></i> Salvar
+                            </button>
                         </div>
                     </div>
 
@@ -198,32 +183,9 @@
 
 {% block scripts %}
 
-    <script src="{{ asset('assets/iCheck/icheck.js') }}"></script>
-
     <script>
-        $('#check-persistent').iCheck({
-            checkboxClass: 'icheckbox_square-blue'
-        });
-
-        $('#check-persistent').on('ifChanged', function () {
-            $('#account_persistent').trigger('change');
-            checkPersistentAt();
-        });
 
         var persistentAt = $('#account_persistentAt');
-
-        function checkPersistentAt() {
-            var isChecked = $('#account_persistent').is(':checked');
-
-            if (isChecked) {
-                $('#persistent_at_group').removeClass('hidden');
-            } else {
-                $('#persistent_at_group').addClass('hidden');
-                persistentAt.val('');
-            }
-        }
-
-        checkPersistentAt();
 
         function display_error(message){
             toastr.error(message, '', {
@@ -310,7 +272,6 @@
             startDate: '{{ account.persistentAt ? account.persistentAt|date('d/m/Y') : 'now'|date('d/m/Y') }}',
             singleDatePicker: true,
 
-            minDate: moment(),
             locale: {
                 format: 'DD/MM/YYYY',
                 daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],

@@ -55,9 +55,6 @@ class AccountType extends AbstractType
         $builder->add('level', ChoiceType::class, [
             'choices' => $levels
         ]);
-        $builder->add('persistent', CheckboxType::class, [
-            'required' => false
-        ]);
         $builder->add('persistentAt', DateType::class, [
             'widget' => 'single_text',
             'format' => 'dd/MM/yyyy',
