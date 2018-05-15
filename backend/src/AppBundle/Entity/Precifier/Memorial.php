@@ -71,6 +71,13 @@ class Memorial
     private $ranges;
 
     /**
+     * @var array
+     *
+     * @ORM\Column(name="metadata", type="json")
+     */
+    private $metadata;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
@@ -90,6 +97,7 @@ class Memorial
     public function __construct()
     {
         $this->ranges = new ArrayCollection();
+        $this->metadata = [];
     }
 
     /**
@@ -239,6 +247,34 @@ class Memorial
         }
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMetadata()
+    {
+        return $this->metadata;
+    }
+
+    /**
+     * @param array $metadata
+     * @return Memorial
+     */
+    public function setMetadata(array $metadata)
+    {
+        $this->metadata = $metadata;
+
+        return $this;
+    }
+
+    /**
+     * @param $type
+     * @param $family
+     */
+    public function addFamilyMetadata($type, $family)
+    {
+        $this->metadata[$type][$family] = true;
     }
 
     /**
