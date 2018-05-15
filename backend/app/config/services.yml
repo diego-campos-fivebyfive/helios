@@ -216,6 +216,10 @@ services:
         class: AppBundle\Service\PowerEstimator\PowerEstimator
         arguments: ['@nasa_provider']
 
+    precifier_components_listener:
+        class: AppBundle\Service\Precifier\ComponentsListener
+        arguments: ['@precifier_memorial_manager']
+
     precifier_components_loader:
         class: AppBundle\Service\Precifier\ComponentsLoader
         arguments: ['@service_container']
