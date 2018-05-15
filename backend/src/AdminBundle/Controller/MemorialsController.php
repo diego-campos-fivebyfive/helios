@@ -30,6 +30,7 @@ class MemorialsController extends AbstractController
         $memorialManager = $this->get('precifier_memorial_manager');
 
         $qb = $memorialManager->createQueryBuilder();
+        $qb->orderBy('m.createdAt', 'DESC');
 
         $itemsPerPage = 10;
         $pagination = $this->getPaginator()->paginate(
@@ -134,14 +135,17 @@ class MemorialsController extends AbstractController
     private function formatMemorial(Memorial $memorial)
     {
         /** @var \DateTime $createdAt */
+        $createdAt = $memorial->getCreatedAt()? $memorial->getCreatedAt()->format('Y-m-d H:i:s') : null;
         $publishedAt = $memorial->getPublishedAt()? $memorial->getPublishedAt()->format('Y-m-d H:i:s') : null;
         $expiredAt = $memorial->getExpiredAt() ? $memorial->getExpiredAt()->format('Y-m-d H:i:s') : null;
 
         return [
             'id' => $memorial->getId(),
             'name' => $memorial->getName(),
-            'published_at' => $publishedAt,
-            'expired_at' => $expiredAt
+            'createdAt' => $createdAt,
+            'publishedAt' => $publishedAt,
+            'expiredAt' => $expiredAt,
+            'status' => $memorial->getStatus()
         ];
     }
 
