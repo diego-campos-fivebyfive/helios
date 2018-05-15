@@ -2,8 +2,11 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Component\ComponentInterface;
 use AppBundle\Entity\Component\KitComponent;
 use AppBundle\Entity\Component\MakerInterface;
+use AppBundle\Entity\Precifier\Memorial;
+use AppBundle\Service\Precifier\ComponentsListener;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -101,6 +104,11 @@ class StructureController extends AbstractController
 
             $this->setNotice('Estrutura cadastrada com sucesso!');
 
+            /** @var ComponentsListener $componentListener */
+            $componentListener = $this->container->get('precifier_components_listener');
+
+            $componentListener->action(Memorial::ACTION_TYPE_ADD_COMPONENT, ComponentInterface::FAMILY_STRUCTURE);
+
             return $this->redirectToRoute('structure_index');
         }
 
@@ -159,6 +167,12 @@ class StructureController extends AbstractController
                 $message = 'Estrutura excluída com sucesso';
                 $status = Response::HTTP_OK;
                 $this->manager('structure')->delete($structure);
+
+                /** @var ComponentsListener $componentListener */
+                $componentListener = $this->container->get('precifier_components_listener');
+
+                $componentListener->action(Memorial::ACTION_TYPE_REMOVE_COMPONENT, ComponentInterface::FAMILY_STRUCTURE);
+
             } catch (\Exception $exception) {
                 $message = 'Falha ao excluir estrutura';
                 $status = Response::HTTP_CONFLICT;

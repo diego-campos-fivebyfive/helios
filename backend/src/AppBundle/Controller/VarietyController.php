@@ -2,8 +2,11 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Component\ComponentInterface;
 use AppBundle\Entity\Component\Variety;
+use AppBundle\Entity\Precifier\Memorial;
 use AppBundle\Form\Component\VarietyType;
+use AppBundle\Service\Precifier\ComponentsListener;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -98,6 +101,11 @@ class VarietyController extends AbstractController
 
             $this->setNotice('Variedade cadastrada com sucesso. ');
 
+            /** @var ComponentsListener $componentListener */
+            $componentListener = $this->container->get('precifier_components_listener');
+
+            $componentListener->action(Memorial::ACTION_TYPE_ADD_COMPONENT, ComponentInterface::FAMILY_VARIETY);
+
             return $this->redirectToRoute('variety_index');
         }
 
@@ -171,6 +179,12 @@ class VarietyController extends AbstractController
                 $message = 'Variedade excluída com sucesso';
                 $status = Response::HTTP_OK;
                 $this->manager('variety')->delete($variety);
+
+                /** @var ComponentsListener $componentListener */
+                $componentListener = $this->container->get('precifier_components_listener');
+
+                $componentListener->action(Memorial::ACTION_TYPE_REMOVE_COMPONENT, ComponentInterface::FAMILY_VARIETY);
+
             } catch (\Exception $exception) {
                 $message = 'Falha ao excluir variedade';
                 $status = Response::HTTP_CONFLICT;

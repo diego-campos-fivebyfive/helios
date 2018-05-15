@@ -3,8 +3,11 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Controller\AbstractController;
+use AppBundle\Entity\Component\ComponentInterface;
 use AppBundle\Entity\Component\StringBox;
+use AppBundle\Entity\Precifier\Memorial;
 use AppBundle\Service\Component\ComponentFileHandler;
+use AppBundle\Service\Precifier\ComponentsListener;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -104,6 +107,11 @@ class StringBoxController extends AbstractController
 
             $this->setNotice('StringBox criado com sucesso.');
 
+            /** @var ComponentsListener $componentListener */
+            $componentListener = $this->container->get('precifier_components_listener');
+
+            $componentListener->action(Memorial::ACTION_TYPE_ADD_COMPONENT, ComponentInterface::FAMILY_STRING_BOX);
+
             return $this->redirectToRoute('stringbox_index');
         }
 
@@ -177,6 +185,12 @@ class StringBoxController extends AbstractController
                 $this->manager('string_box')->delete($stringBox);
                 $message = 'Stringbox excluída com sucesso';
                 $status = Response::HTTP_OK;
+
+                /** @var ComponentsListener $componentListener */
+                $componentListener = $this->container->get('precifier_components_listener');
+
+                $componentListener->action(Memorial::ACTION_TYPE_REMOVE_COMPONENT, ComponentInterface::FAMILY_STRING_BOX);
+
             } catch (\Exception $exception) {
                 $message = 'Falha ao excluir Stringbox';
                 $status = Response::HTTP_CONFLICT;

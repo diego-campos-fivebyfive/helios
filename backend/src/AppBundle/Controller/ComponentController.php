@@ -6,8 +6,10 @@ use AppBundle\Entity\Component\Inverter;
 use AppBundle\Entity\Component\InverterInterface;
 use AppBundle\Entity\Component\Module;
 use AppBundle\Entity\Component\ModuleInterface;
+use AppBundle\Entity\Precifier\Memorial;
 use AppBundle\Form\Component\InverterType;
 use AppBundle\Form\Component\ModuleType;
+use AppBundle\Service\Precifier\ComponentsListener;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -115,6 +117,12 @@ class ComponentController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            /** @var ComponentsListener $componentLister */
+            $componentLister = $this->container->get('precifier_components_listener');
+
+            $componentLister->action(Memorial::ACTION_TYPE_ADD_COMPONENT, $type);
+
             return $this->saveComponent($component, $type, $request);
         }
 
@@ -174,6 +182,11 @@ class ComponentController extends AbstractController
         if(is_file($dataSheet)) unlink($dataSheet);
 
         $this->manager($type)->delete($component);
+
+        /** @var ComponentsListener $componentListener */
+        $componentListener = $this->container->get('precifier_components_listener');
+
+        $componentListener->action(Memorial::ACTION_TYPE_REMOVE_COMPONENT, $type);
 
         return $this->json([]);
     }
