@@ -135,8 +135,8 @@ class MemorialsController extends AbstractController
     private function formatMemorial(Memorial $memorial)
     {
         /** @var \DateTime $createdAt */
-        $createdAt = $memorial->getCreatedAt()? $memorial->getCreatedAt()->format('Y-m-d H:i:s') : null;
-        $publishedAt = $memorial->getPublishedAt()? $memorial->getPublishedAt()->format('Y-m-d H:i:s') : null;
+        $createdAt = $memorial->getCreatedAt() ? $memorial->getCreatedAt()->format('Y-m-d H:i:s') : null;
+        $publishedAt = $memorial->getPublishedAt() ? $memorial->getPublishedAt()->format('Y-m-d H:i:s') : null;
         $expiredAt = $memorial->getExpiredAt() ? $memorial->getExpiredAt()->format('Y-m-d H:i:s') : null;
 
         return [
