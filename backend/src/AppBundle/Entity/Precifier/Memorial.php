@@ -303,7 +303,8 @@ class Memorial
     }
 
     /**
-     * @inheritDoc
+     * @param bool $keys
+     * @return array
      */
     public static function getDefaultLevels($keys = false)
     {
@@ -318,6 +319,17 @@ class Memorial
         ];
 
         return $keys ? array_keys($levels) : $levels ;
+    }
+
+    public static function getDefaultStatuses($keys = false)
+    {
+        $statuses = [
+            self::STATUS_PENDING => 'Pendente',
+            self::STATUS_PUBLISHED => 'Publicado',
+            self::STATUS_EXPIRED => 'Expirado'
+        ];
+
+        return $keys ? array_keys($statuses) : $statuses ;
     }
 
     /**
