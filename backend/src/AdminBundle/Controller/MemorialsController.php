@@ -29,6 +29,18 @@ class MemorialsController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/can_change_status", name="memorial_can_change_status")
+     * @Method("get")
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function getMemorialCanChangeStatus(Memorial $memorial)
+    {
+        return $this->json([
+            'canChangeStatus' => $memorial->canChangeStatus()
+        ]);
+    }
+
+    /**
      * @Route("/", name="list_memorials")
      * @Method("get")
      * @param Request $request
