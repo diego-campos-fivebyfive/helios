@@ -30,7 +30,7 @@
     }),
     methods: {
       requestOptions(param) {
-        this.$emit("request", param)
+        this.$emit('request', param)
         this.show = true
       },
       updateOption(selectedOption) {
