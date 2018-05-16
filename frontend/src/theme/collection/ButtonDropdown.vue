@@ -14,7 +14,8 @@
             :key='button.icon',
             :icon='button.icon',
             :label='button.label',
-            type='default-common')
+            type='default-common',
+            v-on:click.native='button.click')
 </template>
 
 <script>

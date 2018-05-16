@@ -9,7 +9,8 @@
           pos='single')
     List(
       slot='section',
-      :memorials='memorials')
+      :memorials='memorials',
+      v-on:getMemorials='getMemorials')
 </template>
 
 <script>
@@ -29,6 +30,7 @@
         this.axios.get(uri).then(response => {
           this.memorials = response.data.results
             .map(memorial => ({
+              id: memorial.id,
               name: memorial.name,
               createdAt: this.formatDate(memorial.createdAt),
               expiredAt: this.formatDate(memorial.expiredAt),
