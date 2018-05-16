@@ -1,28 +1,34 @@
 <template lang="pug">
-  Table.table(type='bordered')
-    tr(slot='head')
-      th.col-name Nome
-      th.col-creation
-        Icon(name='calendar')
-        |  Criação
-      th.col-publication
-        Icon(name='calendar')
-        |  Publicação
-      th.col-expiration
-        Icon(name='calendar')
-        |  Expiração
-      th.col-status Status
-      th.col-action
-    tr.rows(slot='rows', v-for='memorial in memorials')
-      td.col-name {{ memorial.name }}
-      td.col-creation {{ memorial.createdAt }}
-      td.col-publication {{ memorial.expiredAt }}
-      td.col-expiration {{ memorial.publishedAt }}
-      td.col-status
-        label(:class='memorial.class')
-          | {{ memorial.status }}
-      td.col-action
-        ButtonDropdown(:groups='getButtons(memorial.status)')
+  div
+    Notification(ref='notification')
+    Confirm(ref='confirm', v-on:removeItem='removeMemorial')
+      div(slot='content')
+        Icon.icon(name='question-circle-o', scale='4')
+        h2.title Confirma exclusão deste Memorial?
+    Table.table(type='bordered')
+      tr(slot='head')
+        th.col-name Nome
+        th.col-creation
+          Icon(name='calendar')
+          |  Criação
+        th.col-publication
+          Icon(name='calendar')
+          |  Publicação
+        th.col-expiration
+          Icon(name='calendar')
+          |  Expiração
+        th.col-status Status
+        th.col-action
+      tr.rows(slot='rows', v-for='memorial in memorials')
+        td.col-name {{ memorial.name }}
+        td.col-creation {{ memorial.createdAt }}
+        td.col-publication {{ memorial.expiredAt }}
+        td.col-expiration {{ memorial.publishedAt }}
+        td.col-status
+          label(:class='memorial.class')
+            | {{ memorial.status }}
+        td.col-action
+          ButtonDropdown(:groups='getButtons(memorial)')
 </template>
 
 <script>
@@ -31,7 +37,9 @@
       'memorials'
     ],
     methods: {
-      getButtons(status) {
+      getButtons(memorial) {
+        const self = this
+
         const buttons = {
           edit: {
             icon: 'pencil',
@@ -56,11 +64,12 @@
           delete: {
             icon: 'trash',
             position: 'sigle',
-            label: 'Excluir'
+            label: 'Excluir',
+            click: () => self.$refs.confirm.show(memorial.id)
           }
         }
 
-        if (status === 'pending') {
+        if (memorial.status === 'pending') {
           return [[
             buttons.edit,
             buttons.management
@@ -77,6 +86,15 @@
         ], [
           buttons.copy
         ]]
+      },
+      removeMemorial(id) {
+        this.$refs.confirm.hide()
+
+        this.axios.delete(`admin/api/v1/memorials/${id}`)
+          .then(() => {
+            this.$emit('getMemorials')
+            this.$refs.notification.notify('Memorial removido com sucesso')
+          })
       }
     }
   }
