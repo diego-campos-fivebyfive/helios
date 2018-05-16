@@ -133,6 +133,12 @@ class MemorialsController extends AbstractController
      */
     public function deleteMemorialAction(Memorial $memorial)
     {
+        if(!$memorial->isPending()) {
+            return $this->json([
+                'error' => 'Somente memoriais pendentes podem ser excluídos'
+            ], Response::HTTP_CONFLICT);
+        }
+
         /** @var MemorialManager $memorialManager */
         $memorialManager = $this->get('precifier_memorial_manager');
 
