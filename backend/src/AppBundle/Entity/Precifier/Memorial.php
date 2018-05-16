@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Precifier;
 
+use AppBundle\Entity\Component\ComponentInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -100,7 +101,8 @@ class Memorial
     public function __construct()
     {
         $this->ranges = new ArrayCollection();
-        $this->metadata = [];
+        $this->metadata = $this->getDefaultMetadata();
+        $this->status = Memorial::STATUS_PENDING;
     }
 
     /**
@@ -316,5 +318,21 @@ class Memorial
         ];
 
         return $keys ? array_keys($levels) : $levels ;
+    }
+
+    /**
+     * @return array
+     */
+    private function getDefaultMetadata()
+    {
+        return [
+            Memorial::ACTION_TYPE_ADD_COMPONENT => [
+                ComponentInterface::FAMILY_VARIETY => true,
+                ComponentInterface::FAMILY_STRING_BOX => true,
+                ComponentInterface::FAMILY_STRUCTURE => true,
+                ComponentInterface::FAMILY_INVERTER => true,
+                ComponentInterface::FAMILY_MODULE => true
+            ]
+        ];
     }
 }
