@@ -19,25 +19,17 @@ use Symfony\Component\HttpFoundation\Response;
 class MemorialsController extends AbstractController
 {
     /**
-     * @Route("/status", name="memorial_statuses")
+     * @Route("/{id}/status", name="memorial_statuses")
      * @Method("get")
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getMemorialStatuses()
+    public function getMemorialStatuses(Memorial $memorial)
     {
-        return $this->json(Memorial::getDefaultStatuses());
-    }
+        if ($memorial->canChangeStatus()) {
+            return $this->json(Memorial::getDefaultStatuses());
+        }
 
-    /**
-     * @Route("/{id}/can_change_status", name="memorial_can_change_status")
-     * @Method("get")
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     */
-    public function getMemorialCanChangeStatus(Memorial $memorial)
-    {
-        return $this->json([
-            'canChangeStatus' => $memorial->canChangeStatus()
-        ]);
+        return $this->json();
     }
 
     /**
