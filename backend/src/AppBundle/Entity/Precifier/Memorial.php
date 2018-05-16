@@ -321,6 +321,10 @@ class Memorial
         return $keys ? array_keys($levels) : $levels ;
     }
 
+    /**
+     * @param bool $keys
+     * @return array
+     */
     public static function getDefaultStatuses($keys = false)
     {
         $statuses = [
@@ -329,7 +333,7 @@ class Memorial
             self::STATUS_EXPIRED => 'Expirado'
         ];
 
-        return $keys ? array_keys($statuses) : $statuses ;
+        return $keys ? array_keys($statuses) : $statuses;
     }
 
     /**
