@@ -232,8 +232,8 @@ services:
         class: AppBundle\Service\Precifier\MemorialHelper
         arguments: ['@precifier_memorial_manager']
 
-    precifier_range_loader:
-        class: AppBundle\Service\Precifier\RangeLoader
+    precifier_range_helper:
+        class: AppBundle\Service\Precifier\RangeHelper
         arguments: ['@precifier_range_manager']
 
     project_generator:
