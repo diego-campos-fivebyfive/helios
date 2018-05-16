@@ -1,12 +1,13 @@
 <template lang="pug">
   .collection-dropdown
     Button.collection-dropdown-button(
-      v-on:click.native='toggleDropdown($event)',
+      v-on:click.native='dropdown',
       type='primary-common',
       icon='arrow-down',
       label='Operações',
       pos='single')
-    nav.collection-dropdown-content
+    nav.collection-dropdown-content(
+      v-show='open')
       ul.collection-dropdown-content-separator(v-for='group in groups')
         li(v-for='button in group')
           Button(
@@ -22,9 +23,12 @@
     props: [
       'groups'
     ],
+    data: () => ({
+      open: false
+    }),
     methods: {
-      toggleDropdown(event) {
-        event.currentTarget.classList.toggle('is-active')
+      dropdown() {
+        this.open = !this.open
       }
     }
   }
@@ -37,8 +41,11 @@
       border: medium none;
       border-radius: 3px;
       box-shadow: 0 0 3px rgba(86, 96, 117, 0.7);
-      display: none;
+      display: block;
       float: left;
+      opacity: 1;
+      position: absolute;
+      padding: $ui-space-x/2 0;
       text-align: left;
       text-shadow: none;
       z-index: 1000;
@@ -57,15 +64,6 @@
       display: block;
       text-align: center;
       width: 100%;
-
-      &.is-active {
-        + .collection-dropdown-content {
-          display: block;
-          opacity: 1;
-          position: absolute;
-          padding: $ui-space-x/2 0;
-        }
-      }
     }
   }
 </style>

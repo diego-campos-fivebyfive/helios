@@ -22,7 +22,7 @@
         label(:class='memorial.class')
           | {{ memorial.status }}
       td.col-action
-        ButtonDropdown(:groups='getButtons(memorial)')
+        ButtonDropdown(:groups='getButtons(memorial.status)')
 </template>
 
 <script>
@@ -31,7 +31,7 @@
       'memorials'
     ],
     methods: {
-      getButtons(memorial) {
+      getButtons(status) {
         const buttons = {
           edit: {
             icon: 'pencil',
@@ -60,7 +60,7 @@
           }
         }
 
-        if (memorial.status === 'pending') {
+        if (status === 'pending') {
           return [[
             buttons.edit,
             buttons.management
