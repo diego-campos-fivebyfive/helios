@@ -48,7 +48,8 @@ class MemorialCloner
      */
     function __construct(MemorialManager $manager)
     {
-        ini_set('memory_limit', $this->memory);
+        // TODO: liberar esta linha se necessário
+        //ini_set('memory_limit', $this->memory);
 
         $this->accessor = PropertyAccess::createPropertyAccessor();
         $this->manager = $manager;
