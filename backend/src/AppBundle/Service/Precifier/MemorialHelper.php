@@ -49,7 +49,7 @@ class MemorialHelper
      */
     public function syncPublishMemorial(Memorial $memorial)
     {
-        if ($memorial->isPublished()){
+        if ($memorial->isPublished()) {
 
             $qb = $this->manager->createQueryBuilder();
 
