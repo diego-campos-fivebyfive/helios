@@ -38,7 +38,7 @@
     ],
     methods: {
       getButtons(memorial) {
-        const self = this
+        const { show: showConfirm } = this.$refs.confirm
 
         const buttons = {
           edit: {
@@ -65,7 +65,7 @@
             icon: 'trash',
             position: 'sigle',
             label: 'Excluir',
-            click: () => self.$refs.confirm.show(memorial.id)
+            click: () => showConfirm(memorial.id)
           }
         }
 
