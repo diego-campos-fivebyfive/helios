@@ -22,6 +22,16 @@ class MemorialsController extends AbstractController
 {
 
     /**
+     * @Route("/levels", name="memorial_account_levels")
+     * @Method("get")
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function getMemorialLevelsAction()
+    {
+        return $this->json(Memorial::getDefaultLevels());
+    }
+
+    /**
      * @Route("/{id}/copy_level", name="memorial_copy_level_ranges")
      * @Method("put")
      * @return \Symfony\Component\HttpFoundation\JsonResponse
