@@ -107,8 +107,10 @@ class MemorialsController extends AbstractController
         $data = json_decode($request->getContent(), true);
 
         $memorial->setName($data['name']);
-        $memorial->setPublishedAt($data['publishedAt']);
-        $memorial->setExpiredAt($data['expiredAt']);
+
+        if ($memorial->canChangeStatus()) {
+            $memorial->setStatus($data['status']);
+        }
 
         $memorialManager->save($memorial);
 

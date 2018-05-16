@@ -228,8 +228,8 @@ services:
         class: AppBundle\Service\Precifier\MemorialCloner
         arguments: ['@precifier_memorial_manager']
 
-    precifier_memorial_loader:
-        class: AppBundle\Service\Precifier\MemorialLoader
+    precifier_memorial_helper:
+        class: AppBundle\Service\Precifier\MemorialHelper
         arguments: ['@precifier_memorial_manager']
 
     precifier_range_loader:
