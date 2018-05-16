@@ -1,13 +1,12 @@
 <template lang="pug">
   .collection-dropdown
     Button.collection-dropdown-button(
-      v-on:click.native='dropdown',
+      v-on:click.native='open = !open',
       type='primary-common',
       icon='arrow-down',
       label='Operações',
       pos='single')
-    nav.collection-dropdown-content(
-      v-show='open')
+    nav.collection-dropdown-content(v-show='open')
       ul.collection-dropdown-content-separator(v-for='group in groups')
         li(v-for='button in group')
           Button(
@@ -25,12 +24,7 @@
     ],
     data: () => ({
       open: false
-    }),
-    methods: {
-      dropdown() {
-        this.open = !this.open
-      }
-    }
+    })
   }
 </script>
 
