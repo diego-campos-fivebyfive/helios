@@ -330,6 +330,14 @@ class Memorial
     /**
      * @return bool
      */
+    public function isExpired()
+    {
+        return self::STATUS_EXPIRED === $this->status;
+    }
+
+    /**
+     * @return bool
+     */
     public function isPending()
     {
         return self::STATUS_PENDING === $this->status;
