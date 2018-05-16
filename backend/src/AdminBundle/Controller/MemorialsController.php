@@ -5,6 +5,7 @@ namespace AdminBundle\Controller;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Precifier\Memorial;
 use AppBundle\Manager\Precifier\MemorialManager;
+use AppBundle\Service\Precifier\MemorialHelper;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -110,6 +111,13 @@ class MemorialsController extends AbstractController
 
         if ($memorial->canChangeStatus()) {
             $memorial->setStatus($data['status']);
+
+            if ($memorial->isPublished()) {
+                /** @var MemorialHelper $memorialHelper */
+                $memorialHelper = $this->get('precifier_memorial_helper');
+
+                $memorialHelper->syncPublishMemorial($memorial);
+            }
         }
 
         $memorialManager->save($memorial);
