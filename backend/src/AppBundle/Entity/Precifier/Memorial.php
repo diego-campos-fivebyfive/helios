@@ -130,7 +130,7 @@ class Memorial
      */
     public function getStatus($label = false)
     {
-        return  !$label ? $this->status : self::getDefaultStatuses()[$this->status] ;
+        return  !$label ? $this->status : self::getDefaultStatuses()[$this->status];
     }
 
     /**
