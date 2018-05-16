@@ -26,7 +26,7 @@ class MemorialsController extends AbstractController
      * @Method("post")
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function postMemorialClone(Memorial $memorial)
+    public function postMemorialCloneAction(Memorial $memorial)
     {
         /** @var MemorialCloner $memorialCloner */
         $memorialCloner = $this->get('precifier_memorial_cloner');
@@ -41,7 +41,7 @@ class MemorialsController extends AbstractController
      * @Method("get")
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getMemorialStatuses(Memorial $memorial)
+    public function getMemorialStatusesAction(Memorial $memorial)
     {
         if ($memorial->canChangeStatus()) {
             return $this->json(Memorial::getDefaultStatuses());
