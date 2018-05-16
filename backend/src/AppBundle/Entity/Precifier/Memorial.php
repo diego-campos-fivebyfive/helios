@@ -332,13 +332,6 @@ class Memorial
                 ComponentInterface::FAMILY_STRUCTURE => true,
                 ComponentInterface::FAMILY_INVERTER => true,
                 ComponentInterface::FAMILY_MODULE => true
-            ],
-            Memorial::ACTION_TYPE_REMOVE_COMPONENT => [
-                ComponentInterface::FAMILY_VARIETY => true,
-                ComponentInterface::FAMILY_STRING_BOX => true,
-                ComponentInterface::FAMILY_STRUCTURE => true,
-                ComponentInterface::FAMILY_INVERTER => true,
-                ComponentInterface::FAMILY_MODULE => true
             ]
         ];
     }
