@@ -81,6 +81,34 @@ class ComponentsLoader
     }
 
     /**
+     * @param array $groups
+     * @return array
+     */
+    public function loadByNotInIds(array $groups)
+    {
+        $components = [];
+
+        foreach ($groups as $family => $componentIds) {
+            $manager = $this->container->get("{$family}_manager");
+
+            /** @var QueryBuilder $qb */
+            $qb = $manager->createQueryBuilder();
+            $alias = $qb->getRootAlias();
+
+            $qb->select("{$alias}.id");
+            $qb->andWhere(
+                $qb->expr()->notIn("{$alias}.id", $componentIds)
+            );
+
+            $results = $qb->getQuery()->getResult();
+
+            $components[$family] = array_map('current', $results);
+        }
+
+        return $components;
+    }
+
+    /**
      * @return array
      */
     private function getFamilies()
