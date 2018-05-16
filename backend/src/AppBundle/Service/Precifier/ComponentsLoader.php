@@ -23,11 +23,12 @@ class ComponentsLoader
     }
 
     /**
+     * @param array|null $loadFamilies
      * @return array
      */
-    public function load()
+    public function loadAll(array $loadFamilies = null)
     {
-        $families = $this->getFamilies();
+        $families = $loadFamilies ? $loadFamilies : $this->getFamilies();
         $components = [];
 
         foreach ($families as $family) {
@@ -42,6 +43,38 @@ class ComponentsLoader
             $ids = array_map('current', $qb->getQuery()->getResult());
 
             $components[$family] = $ids;
+        }
+
+        return $components;
+    }
+
+    /**
+     * @param array $groups
+     * @return array
+     */
+    public function loadByIds(array $groups)
+    {
+        $components = [];
+
+        foreach ($groups as $family => $componentIds) {
+            $manager = $this->container->get("{$family}_manager");
+
+            $field = $family === 'module' || $family === 'inverter' ? 'model' : 'description';
+
+            /** @var QueryBuilder $qb */
+            $qb = $manager->createQueryBuilder();
+            $alias = $qb->getRootAlias();
+
+            $qb->select("{$alias}.id, {$alias}.{$field} as description");
+            $qb->andWhere(
+                $qb->expr()->in("{$alias}.id", $componentIds)
+            );
+
+            $results = $qb->getQuery()->getResult();
+
+            foreach ($results as $result) {
+                $components[$family][$result['id']]['description'] = $result['description'];
+            }
         }
 
         return $components;
