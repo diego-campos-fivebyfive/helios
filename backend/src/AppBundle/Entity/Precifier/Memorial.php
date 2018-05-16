@@ -125,11 +125,12 @@ class Memorial
     }
 
     /**
+     * @param bool $label
      * @return int
      */
-    public function getStatus()
+    public function getStatus($label = false)
     {
-        return $this->status;
+        return  !$label ? $this->status : self::getDefaultStatuses()[$this->status];
     }
 
     /**
@@ -138,6 +139,22 @@ class Memorial
      */
     public function setStatus($status)
     {
+        switch ($status){
+            case self::STATUS_PENDING:
+                $this->publishedAt = null;
+                $this->expiredAt = null;
+                break;
+
+            case self::STATUS_PUBLISHED:
+                $this->expiredAt = null;
+                $this->publishedAt = new \DateTime();
+                break;
+
+            case self::STATUS_EXPIRED:
+                $this->expiredAt = new \DateTime();
+                break;
+        }
+
         $this->status = $status;
 
         return $this;
