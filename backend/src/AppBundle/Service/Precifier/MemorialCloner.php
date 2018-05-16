@@ -86,7 +86,7 @@ class MemorialCloner
      * @param $source
      * @param $target
      */
-    public function convertLevel(Memorial $memorial, $source, $target)
+    public function copyLevel(Memorial $memorial, $source, $target)
     {
         /** @var Range $range */
         foreach ($memorial->getRanges() as $range) {
