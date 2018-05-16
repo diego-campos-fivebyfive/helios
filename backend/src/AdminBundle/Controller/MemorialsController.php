@@ -19,6 +19,16 @@ use Symfony\Component\HttpFoundation\Response;
 class MemorialsController extends AbstractController
 {
     /**
+     * @Route("/status", name="memorial_statuses")
+     * @Method("get")
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function getMemorialStatuses()
+    {
+        return $this->json(Memorial::getDefaultStatuses());
+    }
+
+    /**
      * @Route("/", name="list_memorials")
      * @Method("get")
      * @param Request $request
