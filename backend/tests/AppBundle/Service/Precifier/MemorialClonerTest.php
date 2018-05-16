@@ -44,7 +44,7 @@ class MemorialClonerTest extends WebTestCase
         $source = 'platinum';
         $target = 'titanium';
 
-        $memorialCloner->convertLevel($memorial, $source, $target);
+        $memorialCloner->copyLevel($memorial, $source, $target);
 
         /** @var Range $range */
         foreach ($memorial->getRanges() as $range) {
