@@ -2,8 +2,6 @@
 
 namespace AppBundle\Service\Precifier;
 
-use AppBundle\Entity\Precifier\Memorial;
-use AppBundle\Entity\Precifier\Range;
 use AppBundle\Manager\Precifier\RangeManager;
 
 /**
@@ -11,7 +9,7 @@ use AppBundle\Manager\Precifier\RangeManager;
  * @package AppBundle\Service\Precifier
  * @author Gianluca Bine <gian_bine@hotmail.com>
  */
-class RangeLoader
+class RangeHelper
 {
     /** @var RangeManager */
     private $manager;
@@ -49,5 +47,32 @@ class RangeLoader
         }
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @param int $memorialId
+     * @return array
+     */
+    public function componentsIds(int $memorialId)
+    {
+        $families = ComponentsLoader::getFamilies();
+
+        $componentsIds = [];
+
+        foreach ($families as $family) {
+            $qb = $this->manager->createQueryBuilder();
+
+            $qb->select('r.componentId')
+                ->where('r.family = :family')
+                ->andWhere('r.memorial = :memorial')
+                ->setParameters([
+                    'family' => $family,
+                    'memorial' => $memorialId
+                ]);
+
+            $componentsIds[$family] = array_map('current', $qb->getQuery()->getResult());
+        }
+
+        return $componentsIds;
     }
 }
