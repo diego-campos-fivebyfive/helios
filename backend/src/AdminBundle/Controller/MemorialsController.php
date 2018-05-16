@@ -23,10 +23,10 @@ class MemorialsController extends AbstractController
 
     /**
      * @Route("/{id}/copy_level", name="memorial_copy_level_ranges")
-     * @Method("post")
+     * @Method("put")
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function postMemorialCopyLevelAction(Request $request, Memorial $memorial)
+    public function putMemorialCopyLevelAction(Request $request, Memorial $memorial)
     {
         $source = $request->get('source');
         $target = $request->get('target');
