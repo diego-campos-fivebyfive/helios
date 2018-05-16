@@ -139,7 +139,7 @@ class Memorial
      */
     public function setStatus($status)
     {
-        switch ($status){
+        switch ($status) {
             case self::STATUS_PENDING:
                 $this->publishedAt = null;
                 $this->expiredAt = null;
@@ -324,7 +324,31 @@ class Memorial
      */
     public function canChangeStatus()
     {
-        return !$this->getRanges()->isEmpty() && self::STATUS_PENDING === $this->status;
+        return !$this->getRanges()->isEmpty() && $this->isPending();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isExpired()
+    {
+        return self::STATUS_EXPIRED === $this->status;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPending()
+    {
+        return self::STATUS_PENDING === $this->status;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPublished()
+    {
+        return self::STATUS_PUBLISHED === $this->status;
     }
 
     /**

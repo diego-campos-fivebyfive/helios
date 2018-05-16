@@ -2,10 +2,7 @@
 
 namespace Tests\AppBundle\Service\Precifier;
 
-use AppBundle\Entity\Precifier\Memorial;
 use AppBundle\Entity\Precifier\Range;
-use AppBundle\Service\Precifier\Calculator;
-use AppBundle\Service\Precifier\MemorialLoader;
 use AppBundle\Service\Precifier\RangeLoader;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 

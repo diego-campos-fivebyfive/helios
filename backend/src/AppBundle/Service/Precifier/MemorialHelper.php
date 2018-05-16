@@ -6,11 +6,11 @@ use AppBundle\Entity\Precifier\Memorial;
 use AppBundle\Manager\Precifier\MemorialManager;
 
 /**
- * Class MemorialLoader
+ * Class MemorialHelper
  * @package AppBundle\Service\Precifier
  * @author Gianluca Bine <gian_bine@hotmail.com>
  */
-class MemorialLoader
+class MemorialHelper
 {
     /**
      * @var MemorialManager
@@ -42,5 +42,36 @@ class MemorialLoader
             ]);
 
         return $qb->getQuery()->getOneOrNullResult();
+    }
+
+    /**
+     * @param Memorial $memorial
+     */
+    public function syncPublishMemorial(Memorial $memorial)
+    {
+        if ($memorial->isPublished()) {
+
+            $qb = $this->manager->createQueryBuilder();
+
+            $qb
+                ->where('m.status = :status')
+                ->andWhere(
+                    $qb->expr()->notIn('m.id', ':id')
+                )
+                ->setParameters([
+                    'status' => Memorial::STATUS_PUBLISHED,
+                    'id' => $memorial->getId()
+                ]);
+
+            $memorials = $qb->getQuery()->getResult();
+
+            /** @var Memorial $currentMemorial */
+            foreach ($memorials as $currentMemorial){
+                $currentMemorial->setStatus(Memorial::STATUS_EXPIRED);
+                $this->manager->save($currentMemorial, false);
+            }
+
+            $this->manager->flush();
+        }
     }
 }
