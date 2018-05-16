@@ -320,6 +320,14 @@ class Memorial
     }
 
     /**
+     * @return bool
+     */
+    public function canChangeStatus()
+    {
+        return !$this->getRanges()->isEmpty() && self::STATUS_PENDING === $this->status;
+    }
+
+    /**
      * @param bool $keys
      * @return array
      */
