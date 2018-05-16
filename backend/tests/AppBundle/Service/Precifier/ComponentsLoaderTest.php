@@ -43,4 +43,17 @@ class ComponentsLoaderTest extends WebTestCase
         self::assertArrayHasKey('inverter', $components);
         self::assertArrayHasKey(6418, $components['inverter']);
     }
+
+    public function testLoadByNotInIds()
+    {
+        /** @var ComponentsLoader $componentsLoader */
+        $componentsLoader = $this->getContainer()->get('precifier_components_loader');
+
+        $components = $componentsLoader->loadByNotInIds([
+            'inverter' => [6418, 6419]
+        ]);
+
+        self::assertFalse(in_array(6148, $components['inverter']));
+        self::assertFalse(in_array(6149, $components['inverter']));
+    }
 }
