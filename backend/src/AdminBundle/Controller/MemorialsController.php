@@ -5,6 +5,7 @@ namespace AdminBundle\Controller;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Precifier\Memorial;
 use AppBundle\Manager\Precifier\MemorialManager;
+use AppBundle\Service\Precifier\MemorialCloner;
 use AppBundle\Service\Precifier\MemorialHelper;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -19,12 +20,28 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class MemorialsController extends AbstractController
 {
+
+    /**
+     * @Route("/{id}/clone", name="memorial_clone")
+     * @Method("post")
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function postMemorialCloneAction(Memorial $memorial)
+    {
+        /** @var MemorialCloner $memorialCloner */
+        $memorialCloner = $this->get('precifier_memorial_cloner');
+
+        $memorialCloner->execute($memorial);
+
+        return $this->json();
+    }
+
     /**
      * @Route("/{id}/status", name="memorial_statuses")
      * @Method("get")
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getMemorialStatuses(Memorial $memorial)
+    public function getMemorialStatusesAction(Memorial $memorial)
     {
         if ($memorial->canChangeStatus()) {
             return $this->json(Memorial::getDefaultStatuses());

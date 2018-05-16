@@ -60,11 +60,13 @@ class MemorialCloner
      */
     public function execute(Memorial $source)
     {
+        /** @var Memorial $memorial */
         $memorial = $this->manager->create();
 
         $memorial
             ->setStatus(Memorial::STATUS_PENDING)
             ->setName(sprintf('%s [clone:%s]', $source->getName(), $source->getId()))
+            ->setMetadata($source->getMetadata())
         ;
 
         /** @var Range $sourceRange */

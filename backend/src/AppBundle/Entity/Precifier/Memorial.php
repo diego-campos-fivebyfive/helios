@@ -276,7 +276,7 @@ class Memorial
      */
     public function getMetadata()
     {
-        return $this->metadata;
+        return $this->metadata ? $this->metadata : [];
     }
 
     /**
