@@ -6,7 +6,6 @@ use AppBundle\Entity\Precifier\Memorial;
 use AppBundle\Entity\Precifier\Range;
 use AppBundle\Manager\Precifier\RangeManager;
 
-
 /**
  * Class RangeLoader
  * @package AppBundle\Service\Precifier

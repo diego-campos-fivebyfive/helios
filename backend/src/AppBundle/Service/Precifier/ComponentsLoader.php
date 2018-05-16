@@ -25,10 +25,11 @@ class ComponentsLoader
     /**
      * @param array|null $loadFamilies
      * @return array
+     * @throws \Doctrine\ORM\RuntimeException
      */
     public function loadAll(array $loadFamilies = null)
     {
-        $families = $loadFamilies ? $loadFamilies : $this->getFamilies();
+        $families = $loadFamilies ? $loadFamilies : self::getFamilies();
         $components = [];
 
         foreach ($families as $family) {
@@ -83,7 +84,7 @@ class ComponentsLoader
     /**
      * @return array
      */
-    private function getFamilies()
+    public static function getFamilies()
     {
         return [
             ComponentInterface::FAMILY_MODULE,
