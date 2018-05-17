@@ -234,7 +234,7 @@ services:
 
     precifier_range_helper:
         class: AppBundle\Service\Precifier\RangeHelper
-        arguments: ['@precifier_range_manager']
+        arguments: ['@service_container']
 
     precifier_range_normalizer:
         class: AppBundle\Service\Precifier\RangeNormalizer
