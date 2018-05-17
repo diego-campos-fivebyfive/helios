@@ -123,8 +123,8 @@ class RangeHelper
         $groupComponents = $this->componentsLoader->loadByIds($groups);
 
         $level = $filters['level'];
-        $powerRanges = $filters['powerRanges'] ?? [];
 
+        $powerRanges = $filters['powerRanges'] ?? [];
         sort($powerRanges);
 
         foreach ($results as $family => $ranges) {
