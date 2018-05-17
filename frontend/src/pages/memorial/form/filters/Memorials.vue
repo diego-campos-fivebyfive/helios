@@ -1,17 +1,31 @@
 <template lang="pug">
-  Button(
-    type='default-bordered'
-    icon='arrow-left',
-    label='voltar',
-    pos='single')
   Select(
+    :field='{ label: "Memorial" }',
     :options='options',
-    :selected='getCurrentAgent',)
+    :selected='true',
+    v-on:update='$emit("updateQuery")')
 </template>
 
 <script>
-  export default {
+  import Select from '@/theme/collection/Select'
 
+  export default {
+    components: {
+      Select
+    },
+    data: () => ({
+      options: []
+    }),
+    mounted() {
+      this.axios.get('admin/api/v1/memorials')
+        .then(response => {
+          this.options = response.data.results
+            .map(memorial => ({
+              value: memorial.id,
+              text: memorial.name
+            }))
+        })
+    }
   }
 </script>
 

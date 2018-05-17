@@ -1,8 +1,9 @@
 <template lang="pug">
   Select(
-    :field='{ label: "Memorial" }',
+    :field='{ label: "Nível de Desconto" }',
     :options='options',
-    :selected='true')
+    :selected='true',
+    v-on:update='$emit("updateQuery")')
 </template>
 
 <script>
@@ -16,12 +17,12 @@
       options: []
     }),
     mounted() {
-      this.axios.get('admin/api/v1/memorials')
+      this.axios.get('admin/api/v1/memorials/levels')
         .then(response => {
-          this.options = response.data.results
-            .map(memorial => ({
-              value: memorial.id,
-              text: memorial.name
+          this.options = Object.entries(response.data)
+            .map(item => ({
+              value: item[0],
+              text: item[1]
             }))
         })
     }
