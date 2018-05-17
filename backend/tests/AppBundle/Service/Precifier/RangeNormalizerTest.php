@@ -78,21 +78,12 @@ class RangeNormalizerTest extends WebTestCase
      */
     public function testNormalize()
     {
-//        /** @var RangeManager $manager */
-//        $manager = $this->getContainer()->get('precifier_range_manager');
-//
-//        $allBefore = $manager->findAll();
-
         $memorial = $this->createMemorial();
 
         /** @var RangeNormalizer $normalizer */
         $normalizer = $this->getContainer()->get('precifier_range_normalizer');
 
         $normalizer->normalize($memorial);
-
-        //$all = $manager->findAll();
-
-        //$this->assertEquals(count($allBefore)-1, count($all));
     }
 
     /**
