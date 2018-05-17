@@ -22,6 +22,21 @@ class MemorialsController extends AbstractController
 {
 
     /**
+     * @Route("/{id}/normalize", name="memorial_normalize_ranges")
+     * @Method("post")
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function postMemorialNormalizeAction(Memorial $memorial)
+    {
+        /** @var \AppBundle\Service\Precifier\RangeNormalizer $rangeNormalizer */
+        $rangeNormalizer = $this->get('precifier_range_normalizer');
+
+        $rangeNormalizer->normalize($memorial);
+
+        return $this->json();
+    }
+
+    /**
      * @Route("/levels", name="memorial_account_levels")
      * @Method("get")
      * @return \Symfony\Component\HttpFoundation\JsonResponse
