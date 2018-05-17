@@ -236,6 +236,10 @@ services:
         class: AppBundle\Service\Precifier\RangeHelper
         arguments: ['@precifier_range_manager']
 
+    precifier_range_normalizer:
+        class: AppBundle\Service\Precifier\RangeNormalizer
+        arguments: ['@service_container']
+
     project_generator:
         class: AppBundle\Service\ProjectGenerator\ProjectGenerator
         arguments: ['@service_container']
@@ -292,10 +296,6 @@ services:
     margin_manager:
         class: AppBundle\Entity\Component\PricingManager
         arguments: ['@parameter_manager', '@security.token_storage']
-
-    precifier_range_normalizer:
-        class: AppBundle\Service\Precifier\RangeNormalizer
-        arguments: ['@precifier_range_manager']
 
     project_precifier:
         class: AppBundle\Service\ProjectGenerator\Precifier
