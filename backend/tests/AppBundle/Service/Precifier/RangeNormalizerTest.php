@@ -19,24 +19,28 @@ class RangeNormalizerTest extends WebTestCase
      */
     public function testSingleNormalization()
     {
+        /** @var RangeManager $manager */
+        $manager = $this->getContainer()->get('precifier_range_manager');
+
+        $allBefore = $manager->findAll();
+
+        $c = count($allBefore);
+
         $memorial = $this->createMemorial();
 
         $groups = [
-            'module' => [1 => '123',2 => 'abc',3 => '541',4 => '111'],
-            'inverter' => [3=>'158',4=>'875',5=>'fnh',6=>'222'],
+            'variety' => [$c+1,$c+2,$c+3],
+            'inverter' => [$c+1,$c+2,$c+3]
         ];
 
         /** @var RangeNormalizer $normalizer */
         $normalizer = $this->getContainer()->get('precifier_range_normalizer');
 
-        $normalizer->normalize($memorial, $groups);
-
-        /** @var RangeManager $manager */
-        $manager = $this->getContainer()->get('precifier_range_manager');
+        $normalizer->generateRanges($memorial, $groups);
 
         $all = $manager->findAll();
 
-        $this->assertEquals(count($all), 8);
+        $this->assertEquals(count($allBefore)+6, count($all));
     }
 
     /**

@@ -51,7 +51,7 @@ class Range
     /**
      * @var string
      *
-     * @ORM\Column(name="code", type="string")
+     * @ORM\Column(name="code", type="string", nullable=true)
      */
     private $code;
 

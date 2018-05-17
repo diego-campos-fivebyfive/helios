@@ -56,23 +56,17 @@ class RangeNormalizer
      * @param Memorial $memorial
      * @param $groups
      */
-    public function normalize(Memorial $memorial, $groups)
+    public function generateRanges(Memorial $memorial, $groups)
     {
         $new = false;
 
-        foreach ($groups as $family => $components) {
-            $ids = array_keys($components);
+        foreach ($groups as $family => $componentsIds) {
 
-            $has = $this->getRanges($family, $memorial, $ids);
-
-            $without = array_diff($ids, $has);
-
-            foreach ($without as $componentId) {
+            foreach ($componentsIds as $componentId) {
                 $this->createRange(
                     $memorial,
                     $family,
                     $componentId,
-                    $components[$componentId],
                     $this->defaultMetadata
                 );
 
@@ -83,28 +77,6 @@ class RangeNormalizer
         if ($new) {
             $this->manager->flush();
         }
-    }
-
-    /**
-     * @param $family
-     * @param Memorial $memorial
-     * @param array $ids
-     * @return array
-     */
-    private function getRanges($family, Memorial $memorial, array $ids)
-    {
-        $qb = $this->manager->createQueryBuilder();
-
-        $qb->select('r.componentId')
-            ->where('r.family = :family')
-            ->andWhere('r.memorial = :memorial')
-            ->andWhere($qb->expr()->in('r.componentId', $ids))
-            ->setParameters([
-                'family' => $family,
-                'memorial' => $memorial->getId()
-            ]);
-
-        return array_map('current', $qb->getQuery()->getResult());
     }
 
     /**
@@ -130,18 +102,17 @@ class RangeNormalizer
      * @param Memorial $memorial
      * @param $family
      * @param $componentId
-     * @param $code
      * @param $metadata
      * @param int $price
      */
-    public function createRange(Memorial $memorial, $family, $componentId, $code, $metadata, $price = 0)
+    private function createRange(Memorial $memorial, $family, $componentId, $metadata, $price = 0)
     {
         $range = new Range();
 
         $range->setMemorial($memorial);
         $range->setFamily($family);
         $range->setComponentId($componentId);
-        $range->setCode($code);
+        $range->setCode(null);
         $range->setCostPrice($price);
         $range->setMetadata($metadata);
 
