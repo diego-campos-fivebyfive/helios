@@ -3,44 +3,42 @@
 namespace AdminBundle\Controller;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Entity\Precifier\Range;
-use AppBundle\Manager\Precifier\RangeManager;
+use AppBundle\Entity\Precifier\Memorial;
+use AppBundle\Service\Precifier\ComponentsLoader;
+use AppBundle\Service\Precifier\RangeHelper;
+use AppBundle\Service\Precifier\RangeNormalizer;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Security("has_role('ROLE_PLATFORM_ADMIN')")
  *
- * @Route("/api/v1/ranges")
+ * @Route("/api/v1/memorial_ranges")
  */
 class RangesController extends AbstractController
 {
     /**
-     * @Route("/{id}", name="update_range")
-     * //@Method("put")
+     * @Route("/{id}", name="list_ranges")
+     * @Method("get")
      * @param Request $request
-     * @param Range $range
+     * @param Memorial $memorial
      * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @throws \Doctrine\ORM\RuntimeException
      */
-    public function putRangeAction(Request $request, Range $range)
+    public function getRangesAction(Request $request, Memorial $memorial)
     {
-        /** @var RangeManager $rangeManager */
-        $rangeManager = $this->get('precifier_range_manager');
+        /** @var RangeNormalizer $rangeNormalizer */
+        $rangeNormalizer = $this->container->get('precifier_range_normalizer');
 
-        //mudar para request
-        $costPrice = $request->query->get('cost_price');
-        $powerRange = $request->query->get('power_range');
-        $markup = $request->query->get('markup');
+        $rangeNormalizer->normalize($memorial);
 
-        dump($costPrice, $powerRange, $markup);die;
+        /** @var RangeHelper $rangeHelper */
+        $rangeHelper = $this->container->get('precifier_range_helper');
 
-        //chamada ao serviço que faz o calculo do valor
+        $ranges = $rangeHelper->filterAndFormatRanges($memorial, $request->query->all());
 
-        $rangeManager->save($range);
-
-        return $this->json();
+        return $this->json($ranges);
     }
 }
