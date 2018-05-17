@@ -67,7 +67,7 @@ class ComponentsLoader
             $qb = $manager->createQueryBuilder();
             $alias = $qb->getRootAlias();
 
-            $qb->select("{$alias}.id, {$alias}.{$field} as description");
+            $qb->select("{$alias}.id, {$alias}.code, {$alias}.{$field} as description");
             $qb->andWhere(
                 $qb->expr()->in("{$alias}.id", $componentIds)
             );
@@ -75,6 +75,7 @@ class ComponentsLoader
             $results = $qb->getQuery()->getResult();
 
             foreach ($results as $result) {
+                $components[$family][$result['id']]['code'] = $result['code'];
                 $components[$family][$result['id']]['description'] = $result['description'];
             }
         }
