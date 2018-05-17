@@ -2,12 +2,15 @@
 
 namespace AppBundle\Service\Precifier;
 
+use AppBundle\Entity\Precifier\Memorial;
 use AppBundle\Manager\Precifier\RangeManager;
 
 /**
  * Class RangeLoader
  * @package AppBundle\Service\Precifier
+ *
  * @author Gianluca Bine <gian_bine@hotmail.com>
+ * @author Fabio Dukievicz <fabiojd47@gmail.com>
  */
 class RangeHelper
 {
@@ -50,12 +53,13 @@ class RangeHelper
     }
 
     /**
-     * @param int $memorialId
+     * @param Memorial $memorial
+     * @param array $families
      * @return array
      */
-    public function componentsIds(int $memorialId)
+    public function componentsIds(Memorial $memorial, array $families)
     {
-        $families = ComponentsLoader::getFamilies();
+        $families = $families ? $families : ComponentsLoader::getFamilies();
 
         $componentsIds = [];
 
@@ -67,7 +71,7 @@ class RangeHelper
                 ->andWhere('r.memorial = :memorial')
                 ->setParameters([
                     'family' => $family,
-                    'memorial' => $memorialId
+                    'memorial' => $memorial
                 ]);
 
             $componentsIds[$family] = array_map('current', $qb->getQuery()->getResult());
