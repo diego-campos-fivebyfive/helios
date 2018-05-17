@@ -14,6 +14,7 @@ namespace AppBundle\Service\Precifier;
 use AppBundle\Entity\Precifier\Memorial;
 use AppBundle\Entity\Precifier\Range;
 use AppBundle\Manager\Precifier\RangeManager;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Class RangeNormalizer
@@ -56,7 +57,7 @@ class RangeNormalizer
      * @param Memorial $memorial
      * @param $groups
      */
-    public function generateRanges(Memorial $memorial, $groups)
+    private function generateRanges(Memorial $memorial, $groups)
     {
         $new = false;
 
@@ -76,6 +77,36 @@ class RangeNormalizer
 
         if ($new) {
             $this->manager->flush();
+        }
+    }
+
+    /**
+     * @param Memorial $memorial
+     * @param $groups
+     */
+    private function excludeRanges(Memorial $memorial, $groups)
+    {
+        foreach ($groups as $family => $componentsIds) {
+
+            $componentsIds = $componentsIds ? $componentsIds : [''];
+
+            /** @var QueryBuilder $qb */
+            $qb = $this->manager->createQueryBuilder();
+
+            $qb->where(
+                $qb->expr()->notIn('r.componentId', $componentsIds)
+            )->andWhere('r.family = :family')
+                ->andWhere('r.memorial = :memorial')
+                ->setParameters([
+                    'family' => $family,
+                    'memorial' => $memorial
+                    ]);
+
+            $results = $qb->getQuery()->getResult();
+            /** @var Range $range */
+            foreach ($results as $range) {
+                $this->manager->delete($range);
+            }
         }
     }
 
