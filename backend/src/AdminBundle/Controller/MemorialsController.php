@@ -129,13 +129,16 @@ class MemorialsController extends AbstractController
 
         $data = json_decode($request->getContent(), true);
 
+        /** @var Memorial $memorial */
         $memorial = $memorialManager->create();
 
         $memorial->setName($data['name']);
 
         $memorialManager->save($memorial);
 
-        return $this->json();
+        return $this->json([
+            'id' => $memorial->getId()
+        ]);
     }
 
     /**
