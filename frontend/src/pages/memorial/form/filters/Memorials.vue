@@ -20,9 +20,9 @@
       this.axios.get('admin/api/v1/memorials')
         .then(response => {
           this.options = response.data.results
-            .map(memorial => ({
-              value: memorial.id,
-              text: memorial.name
+            .map(({ id, name }) => ({
+              value: id,
+              text: name
             }))
         })
     }
@@ -30,5 +30,5 @@
 </script>
 
 <style lang="scss" scoped>
-  /* Head */
+  /* Memorials Style */
 </style>

@@ -47,6 +47,7 @@
     },
     methods: {
       updateQuery() {
+        // está função fará update da query para consulta
       }
     }
   }

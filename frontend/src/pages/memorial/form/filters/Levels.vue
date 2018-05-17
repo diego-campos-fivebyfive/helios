@@ -20,9 +20,9 @@
       this.axios.get('admin/api/v1/memorials/levels')
         .then(response => {
           this.options = Object.entries(response.data)
-            .map(item => ({
-              value: item[0],
-              text: item[1]
+            .map(([key, value]) => ({
+              value: key,
+              text: value
             }))
         })
     }
@@ -30,5 +30,5 @@
 </script>
 
 <style lang="scss" scoped>
-  /* Head */
+  /* Levels Style*/
 </style>
