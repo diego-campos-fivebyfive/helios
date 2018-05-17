@@ -48,7 +48,8 @@ class MemorialCloner
      */
     function __construct(MemorialManager $manager)
     {
-        ini_set('memory_limit', $this->memory);
+        // TODO: liberar esta linha se necessário
+        //ini_set('memory_limit', $this->memory);
 
         $this->accessor = PropertyAccess::createPropertyAccessor();
         $this->manager = $manager;
@@ -60,11 +61,13 @@ class MemorialCloner
      */
     public function execute(Memorial $source)
     {
+        /** @var Memorial $memorial */
         $memorial = $this->manager->create();
 
         $memorial
             ->setStatus(Memorial::STATUS_PENDING)
             ->setName(sprintf('%s [clone:%s]', $source->getName(), $source->getId()))
+            ->setMetadata($source->getMetadata())
         ;
 
         /** @var Range $sourceRange */
@@ -84,7 +87,7 @@ class MemorialCloner
      * @param $source
      * @param $target
      */
-    public function convertLevel(Memorial $memorial, $source, $target)
+    public function copyLevel(Memorial $memorial, $source, $target)
     {
         /** @var Range $range */
         foreach ($memorial->getRanges() as $range) {

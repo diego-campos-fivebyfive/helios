@@ -3,6 +3,7 @@ import './icons'
 
 import Banner from './Banner'
 import Button from './Button'
+import ButtonDropdown from './ButtonDropdown'
 import Confirm from './Confirm'
 import Modal from './Modal'
 import Notification from './Notification'
@@ -16,6 +17,7 @@ export default {
   Icon,
   Banner,
   Button,
+  ButtonDropdown,
   Confirm,
   Modal,
   Notification,

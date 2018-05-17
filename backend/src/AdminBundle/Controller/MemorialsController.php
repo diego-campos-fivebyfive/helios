@@ -5,6 +5,8 @@ namespace AdminBundle\Controller;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Precifier\Memorial;
 use AppBundle\Manager\Precifier\MemorialManager;
+use AppBundle\Service\Precifier\MemorialCloner;
+use AppBundle\Service\Precifier\MemorialHelper;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -18,6 +20,79 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class MemorialsController extends AbstractController
 {
+
+    /**
+     * @Route("/{id}/normalize", name="memorial_normalize_ranges")
+     * @Method("post")
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function postMemorialNormalizeAction(Memorial $memorial)
+    {
+        /** @var \AppBundle\Service\Precifier\RangeNormalizer $rangeNormalizer */
+        $rangeNormalizer = $this->get('precifier_range_normalizer');
+
+        $rangeNormalizer->normalize($memorial);
+
+        return $this->json();
+    }
+
+    /**
+     * @Route("/levels", name="memorial_account_levels")
+     * @Method("get")
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function getMemorialLevelsAction()
+    {
+        return $this->json(Memorial::getDefaultLevels());
+    }
+
+    /**
+     * @Route("/{id}/copy_level", name="memorial_copy_level_ranges")
+     * @Method("put")
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function putMemorialCopyLevelAction(Request $request, Memorial $memorial)
+    {
+        $source = $request->get('source');
+        $target = $request->get('target');
+
+        /** @var MemorialCloner $memorialCloner */
+        $memorialCloner = $this->get('precifier_memorial_cloner');
+
+        $memorialCloner->copyLevel($memorial, $source, $target);
+
+        return $this->json();
+    }
+
+    /**
+     * @Route("/{id}/clone", name="memorial_clone")
+     * @Method("post")
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function postMemorialCloneAction(Memorial $memorial)
+    {
+        /** @var MemorialCloner $memorialCloner */
+        $memorialCloner = $this->get('precifier_memorial_cloner');
+
+        $memorialCloner->execute($memorial);
+
+        return $this->json();
+    }
+
+    /**
+     * @Route("/{id}/status", name="memorial_statuses")
+     * @Method("get")
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function getMemorialStatusesAction(Memorial $memorial)
+    {
+        if ($memorial->canChangeStatus()) {
+            return $this->json(Memorial::getDefaultStatuses());
+        }
+
+        return $this->json();
+    }
+
     /**
      * @Route("/", name="list_memorials")
      * @Method("get")
@@ -30,6 +105,7 @@ class MemorialsController extends AbstractController
         $memorialManager = $this->get('precifier_memorial_manager');
 
         $qb = $memorialManager->createQueryBuilder();
+        $qb->orderBy('m.createdAt', 'DESC');
 
         $itemsPerPage = 10;
         $pagination = $this->getPaginator()->paginate(
@@ -68,13 +144,16 @@ class MemorialsController extends AbstractController
 
         $data = json_decode($request->getContent(), true);
 
+        /** @var Memorial $memorial */
         $memorial = $memorialManager->create();
 
         $memorial->setName($data['name']);
 
         $memorialManager->save($memorial);
 
-        return $this->json();
+        return $this->json([
+            'id' => $memorial->getId()
+        ]);
     }
 
     /**
@@ -92,8 +171,17 @@ class MemorialsController extends AbstractController
         $data = json_decode($request->getContent(), true);
 
         $memorial->setName($data['name']);
-        $memorial->setPublishedAt($data['publishedAt']);
-        $memorial->setExpiredAt($data['expiredAt']);
+
+        if ($memorial->canChangeStatus()) {
+            $memorial->setStatus($data['status']);
+
+            if ($memorial->isPublished()) {
+                /** @var MemorialHelper $memorialHelper */
+                $memorialHelper = $this->get('precifier_memorial_helper');
+
+                $memorialHelper->syncPublishMemorial($memorial);
+            }
+        }
 
         $memorialManager->save($memorial);
 
@@ -108,6 +196,12 @@ class MemorialsController extends AbstractController
      */
     public function deleteMemorialAction(Memorial $memorial)
     {
+        if (!$memorial->isPending()) {
+            return $this->json([
+                'error' => 'Somente memoriais pendentes podem ser excluídos'
+            ], Response::HTTP_CONFLICT);
+        }
+
         /** @var MemorialManager $memorialManager */
         $memorialManager = $this->get('precifier_memorial_manager');
 
@@ -134,14 +228,17 @@ class MemorialsController extends AbstractController
     private function formatMemorial(Memorial $memorial)
     {
         /** @var \DateTime $createdAt */
-        $publishedAt = $memorial->getPublishedAt()? $memorial->getPublishedAt()->format('Y-m-d H:i:s') : null;
+        $createdAt = $memorial->getCreatedAt() ? $memorial->getCreatedAt()->format('Y-m-d H:i:s') : null;
+        $publishedAt = $memorial->getPublishedAt() ? $memorial->getPublishedAt()->format('Y-m-d H:i:s') : null;
         $expiredAt = $memorial->getExpiredAt() ? $memorial->getExpiredAt()->format('Y-m-d H:i:s') : null;
 
         return [
             'id' => $memorial->getId(),
             'name' => $memorial->getName(),
-            'published_at' => $publishedAt,
-            'expired_at' => $expiredAt
+            'createdAt' => $createdAt,
+            'publishedAt' => $publishedAt,
+            'expiredAt' => $expiredAt,
+            'status' => $memorial->getStatus()
         ];
     }
 

@@ -1,7 +1,8 @@
 <template lang="pug">
   .collection-checkbox
     label.collection-checkbox-label(
-      for='collection-checkbox-wrapper-checker-field')
+      for='collection-checkbox-wrapper-checker-field',
+      v-if='field.label')
     | {{ field.label }}
     .collection-checkbox-wrapper
       .collection-checkbox-wrapper-checker

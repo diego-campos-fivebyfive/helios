@@ -13,7 +13,10 @@ namespace AppBundle\Service\Precifier;
 
 use AppBundle\Entity\Precifier\Memorial;
 use AppBundle\Entity\Precifier\Range;
+use AppBundle\Manager\Precifier\MemorialManager;
 use AppBundle\Manager\Precifier\RangeManager;
+use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class RangeNormalizer
@@ -23,6 +26,11 @@ use AppBundle\Manager\Precifier\RangeManager;
  */
 class RangeNormalizer
 {
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
+
     /**
      * @var RangeManager
      */
@@ -40,71 +48,112 @@ class RangeNormalizer
 
     /**
      * RangeNormalizer constructor.
-     * @param RangeManager $manager
+     * @param ContainerInterface $container
      */
-    function __construct(RangeManager $manager)
+    function __construct(ContainerInterface $container)
     {
         // TODO: liberar esta linha se necessário
         // ini_set('memory_limit', $this->memory);
 
-        $this->manager = $manager;
+        $this->container = $container;
+
+        $this->manager = $container->get('precifier_range_manager');
 
         $this->defaultMetadata = $this->defaultMetadata();
     }
 
     /**
      * @param Memorial $memorial
+     * @throws \Doctrine\ORM\RuntimeException
+     */
+    public function normalize(Memorial $memorial)
+    {
+        $metadata = $memorial->getMetadata();
+
+        /** @var ComponentsLoader $componentsLoader */
+        $componentsLoader = $this->container->get('precifier_components_loader');
+
+        if (key_exists(Memorial::ACTION_TYPE_ADD_COMPONENT, $metadata)) {
+
+            $families = array_keys($metadata[Memorial::ACTION_TYPE_ADD_COMPONENT]);
+
+            /** @var RangeHelper $rangesHelper */
+            $rangesHelper = $this->container->get('precifier_range_helper');
+
+            $componentsIdsOfAllRanges = $rangesHelper->componentsIds($memorial, $families);
+
+            $componentsWithoutRange = $componentsLoader->loadByNotInIds($componentsIdsOfAllRanges);
+
+            $this->generateRanges($memorial, $componentsWithoutRange);
+        }
+
+        if (key_exists(Memorial::ACTION_TYPE_REMOVE_COMPONENT, $metadata)) {
+
+            $families = array_keys($metadata[Memorial::ACTION_TYPE_REMOVE_COMPONENT]);
+
+            $allComponents = $componentsLoader->loadAll($families);
+
+            $this->removeRanges($memorial, $allComponents);
+        }
+
+        $memorial->setMetadata([]);
+
+        /** @var MemorialManager $memorialManager */
+        $memorialManager = $this->container->get('precifier_memorial_manager');
+
+        $memorialManager->save($memorial);
+    }
+
+    /**
+     * @param Memorial $memorial
      * @param $groups
      */
-    public function normalize(Memorial $memorial, $groups)
+    private function generateRanges(Memorial $memorial, $groups)
     {
-        $new = false;
-
-        foreach ($groups as $family => $components) {
-            $ids = array_keys($components);
-
-            $has = $this->getRanges($family, $memorial, $ids);
-
-            $without = array_diff($ids, $has);
-
-            foreach ($without as $componentId) {
+        foreach ($groups as $family => $componentsIds) {
+            foreach ($componentsIds as $componentId) {
                 $this->createRange(
                     $memorial,
                     $family,
                     $componentId,
-                    $components[$componentId],
                     $this->defaultMetadata
                 );
-
-                $new = true;
             }
         }
 
-        if ($new) {
-            $this->manager->flush();
-        }
+        $this->manager->flush();
     }
 
     /**
-     * @param $family
      * @param Memorial $memorial
-     * @param array $ids
-     * @return array
+     * @param $groups
      */
-    private function getRanges($family, Memorial $memorial, array $ids)
+    private function removeRanges(Memorial $memorial, $groups)
     {
-        $qb = $this->manager->createQueryBuilder();
+        foreach ($groups as $family => $componentsIds) {
 
-        $qb->select('r.componentId')
-            ->where('r.family = :family')
-            ->andWhere('r.memorial = :memorial')
-            ->andWhere($qb->expr()->in('r.componentId', $ids))
-            ->setParameters([
-                'family' => $family,
-                'memorial' => $memorial->getId()
-            ]);
+            $componentsIds = $componentsIds ? $componentsIds : [''];
 
-        return array_map('current', $qb->getQuery()->getResult());
+            /** @var QueryBuilder $qb */
+            $qb = $this->manager->createQueryBuilder();
+
+            $qb->where(
+                $qb->expr()->notIn('r.componentId', $componentsIds)
+            )->andWhere('r.family = :family')
+                ->andWhere('r.memorial = :memorial')
+                ->setParameters([
+                    'family' => $family,
+                    'memorial' => $memorial
+                    ]);
+
+            $results = $qb->getQuery()->getResult();
+            /** @var Range $range */
+            foreach ($results as $range) {
+                $this->manager->delete($range, false);
+            }
+        }
+
+        $this->manager->flush();
     }
 
     /**
@@ -130,18 +179,17 @@ class RangeNormalizer
      * @param Memorial $memorial
      * @param $family
      * @param $componentId
-     * @param $code
      * @param $metadata
      * @param int $price
      */
-    public function createRange(Memorial $memorial, $family, $componentId, $code, $metadata, $price = 0)
+    private function createRange(Memorial $memorial, $family, $componentId, $metadata, $price = 0)
     {
         $range = new Range();
 
         $range->setMemorial($memorial);
         $range->setFamily($family);
         $range->setComponentId($componentId);
-        $range->setCode($code);
+        $range->setCode(null);
         $range->setCostPrice($price);
         $range->setMetadata($metadata);
 
