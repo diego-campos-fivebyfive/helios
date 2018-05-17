@@ -52,6 +52,7 @@ class ComponentsLoader
     /**
      * @param array $groups
      * @return array
+     * @throws \Doctrine\ORM\RuntimeException
      */
     public function loadByIds(array $groups)
     {
@@ -84,12 +85,16 @@ class ComponentsLoader
     /**
      * @param array $groups
      * @return array
+     * @throws \Doctrine\ORM\RuntimeException
      */
     public function loadByNotInIds(array $groups)
     {
         $components = [];
 
-        foreach ($groups as $family => $componentIds) {
+        foreach ($groups as $family => $componentsIds) {
+
+            $componentsIds = $componentsIds ? $componentsIds : [''];
+
             $manager = $this->container->get("{$family}_manager");
 
             /** @var QueryBuilder $qb */
@@ -98,7 +103,7 @@ class ComponentsLoader
 
             $qb->select("{$alias}.id");
             $qb->andWhere(
-                $qb->expr()->notIn("{$alias}.id", $componentIds)
+                $qb->expr()->notIn("{$alias}.id", $componentsIds)
             );
 
             $results = $qb->getQuery()->getResult();
