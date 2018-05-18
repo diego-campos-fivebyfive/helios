@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6c15bef84be91c21efce177dd4c2729b",
+    "hash": "e742b2c24e593bfdac8813c5dfc42af4",
     "content-hash": "2d997074b4663a956e974a88c27c0b5a",
     "packages": [
         {
@@ -1368,7 +1368,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/dc4a927491a7082402a890976b5452d3ad474f9c",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/d3c0d3223e6adbb1d5698449a25352b816afd973",
                 "reference": "b1ea299e26e8c806b14cf6a694e601d2b8bcf388",
                 "shasum": ""
             },
@@ -6261,7 +6261,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vindi/vindi-php/zipball/f46cafe44298c3cb927159fe5054d0acac565413",
+                "url": "https://api.github.com/repos/vindi/vindi-php/zipball/34ae45e4c3d41d1b49272f9f938b53f7c835a4ca",
                 "reference": "c5117ffd5cf92e730c611677fe10ddbc99e33cbf",
                 "shasum": ""
             },
