@@ -24,7 +24,9 @@ class MemorialsController extends AbstractController
     /**
      * @Route("/{id}/normalize", name="memorial_normalize_ranges")
      * @Method("post")
+     * @param Memorial $memorial
      * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @throws \Doctrine\ORM\RuntimeException
      */
     public function postMemorialNormalizeAction(Memorial $memorial)
     {
