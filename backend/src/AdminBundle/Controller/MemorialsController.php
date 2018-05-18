@@ -4,6 +4,7 @@ namespace AdminBundle\Controller;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Precifier\Memorial;
+use AppBundle\Entity\Precifier\Range;
 use AppBundle\Manager\Precifier\MemorialManager;
 use AppBundle\Service\Precifier\MemorialCloner;
 use AppBundle\Service\Precifier\MemorialHelper;
@@ -20,6 +21,27 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class MemorialsController extends AbstractController
 {
+    /**
+     * @Route("/power_ranges", name="memorial_power_ranges")
+     * @Method("get")
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function getMemorialPowerRangesAction()
+    {
+        $powerRanges = Range::$powerRanges;
+
+        $result = [];
+
+        for ($i = 0; $i < count($powerRanges); $i++) {
+            if ($i === count($powerRanges) - 1) {
+                $result[$powerRanges[$i]] = "{$powerRanges[$i]} - * kWp";
+            } else {
+                $result[$powerRanges[$i]] = "{$powerRanges[$i]} - {$powerRanges[$i+1]} kWp";
+            }
+        }
+
+        return $this->json($result);
+    }
 
     /**
      * @Route("/{id}/normalize", name="memorial_normalize_ranges")
