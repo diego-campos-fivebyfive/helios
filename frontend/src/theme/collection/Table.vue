@@ -15,6 +15,7 @@
 <style lang="scss">
   $table-striped-bg: #f9f9f9;
   $table-striped-bg_: #f5f5f5;
+  $table-bordered-bg: #f5f5f5;
 
   %stripped {
     border-spacing: 0;
@@ -51,7 +52,7 @@
     border-collapse: separate;
 
     .collection-table-header {
-      background-color: $table-striped-bg_;
+      background-color: $table-bordered-bg;
       border-color: inherit;
     }
 
