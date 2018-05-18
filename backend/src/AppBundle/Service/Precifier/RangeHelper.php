@@ -92,13 +92,12 @@ class RangeHelper
      * @param Memorial $memorial
      * @param array $filters
      * @return array
-     * @throws \Doctrine\ORM\RuntimeException
      */
     public function filterAndFormatRanges(Memorial $memorial, array $filters)
     {
-        $families = $filters['families'];
+        $families = $filters['families'] ?? [];
 
-        $results = [];
+        $groupsRanges = [];
 
         $groups = [];
 
@@ -117,43 +116,45 @@ class RangeHelper
 
             $groups[$family] = array_column($ranges, 'componentId');
 
-            $results[$family] = $ranges;
+            $groupsRanges[$family] = $ranges;
         }
 
         $groupComponents = $this->componentsLoader->loadByIds($groups);
 
-        $level = $filters['level'];
+        $level = $filters['level'] ?? '';
 
         $powerRanges = $filters['powerRanges'] ?? [];
+
         sort($powerRanges);
 
-        foreach ($results as $family => $ranges) {
+        $results = [];
+
+        foreach ($groupsRanges as $family => $ranges) {
 
             $components = $groupComponents[$family];
 
-            $results[$family] = array_map(function ($range) use ($components, $family, $level, $powerRanges) {
-
+            foreach ($ranges as $range) {
                 $componentId = $range['componentId'];
+                $rangeId = $range['id'];
 
                 $range['code'] = $components[$componentId]['code'];
                 $range['description'] = $components[$componentId]['description'];
 
-                $ranges = $range['ranges'][$level];
+                $levelRanges = $range['ranges'][$level];
 
                 if ($powerRanges) {
                     $range['ranges'] = [];
                     foreach ($powerRanges as $powerRange) {
-                        if (isset($ranges[$powerRange])) {
-                            $range['ranges'][$powerRange] = $ranges[$powerRange];
+                        if (isset($levelRanges[$powerRange])) {
+                            $range['ranges'][$powerRange] = $levelRanges[$powerRange];
                         }
                     }
                 } else {
-                    $range['ranges'] = $ranges;
+                    $range['ranges'] = $levelRanges;
                 }
 
-                return $range;
-            }, $ranges);
-
+                $results[$family][$rangeId] = $range;
+            }
         }
 
         return $results;
