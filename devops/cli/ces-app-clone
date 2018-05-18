@@ -43,6 +43,9 @@ elif [ $1 = '--production' ]; then
   sed -i "s,${SICES_HOMOLOG_URI},${SICES_PRODUCTION_URI},g;" \
     backend/web/app/main.js
 
+  sed -i "s,${SICES_HOMOLOG_IP}:${SICES_SOCKET_PORT},${SICES_PRODUCTION_SOCKET_URI}:${SICES_SOCKET_PORT},g;" \
+    backend/web/app/main.js
+
 else
   echo -e "\033[0;31mError: Invalid Ambience Argument:\033[0m $1"
   get_help

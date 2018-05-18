@@ -30,7 +30,13 @@
       'pagination'
     ],
     data() {
-      const self = this
+      const {
+        refreshPage,
+        markIsRead,
+        filterUnread,
+        nextPage,
+        prevPage
+      } = this
 
       return {
         buttons: {
@@ -38,31 +44,31 @@
             icon: 'refresh',
             position: 'single',
             label: 'atualizar',
-            click: () => self.refresh()
+            click: () => refreshPage()
           }, {
             icon: 'eye',
             position: 'single',
-            click: () => self.markIsRead()
+            click: () => markIsRead()
           }, {
             icon: 'envelope',
             position: 'single',
-            click: () => self.filterUnread()
+            click: () => filterUnread()
           }],
           right: [{
             icon: 'arrow-right',
             position: 'last',
-            click: () => self.next()
+            click: () => nextPage()
           }, {
             icon: 'arrow-left',
             position: 'first',
-            click: () => self.prev()
+            click: () => prevPage()
           }]
         },
         unreadMessages: false
       }
     },
     methods: {
-      refresh() {
+      refreshPage() {
         this.unreadMessages = false
         this.clearCheckedMessages()
       },
@@ -90,13 +96,13 @@
         this.unreadMessages = true
         this.$emit('updateList')
       },
-      next() {
+      nextPage() {
         if (this.pagination.links.next) {
           const pageNumber = this.pagination.current + 1
           this.getMessages(pageNumber)
         }
       },
-      prev() {
+      prevPage() {
         if (this.pagination.links.prev) {
           const pageNumber = this.pagination.current - 1
           this.getMessages(pageNumber)

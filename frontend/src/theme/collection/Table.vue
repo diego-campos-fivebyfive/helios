@@ -46,12 +46,33 @@
     }
   }
 
+  %bordered {
+    border-spacing: 0;
+    border-collapse: separate;
+
+    .collection-table-header {
+      background-color: $table-striped-bg_;
+      border-color: inherit;
+    }
+
+    td,
+    th {
+      border: $ui-space-y/15 solid $ui-divider-color;
+      padding: $ui-space-y/2;
+      vertical-align: middle;
+    }
+  }
+
   .collection-table {
     display: table;
     width: 100%;
 
     &.stripped {
       @extend %stripped;
+    }
+
+    &.bordered {
+      @extend %bordered;
     }
   }
 </style>

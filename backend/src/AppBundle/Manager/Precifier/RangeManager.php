@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Manager\Pricing;
+namespace AppBundle\Manager\Precifier;
 
 use AppBundle\Manager\AbstractManager;
 

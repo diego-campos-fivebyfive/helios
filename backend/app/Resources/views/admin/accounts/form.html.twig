@@ -15,6 +15,16 @@
         .box-check-persistent {
             height: 25px;
         }
+        .clear-date-input {
+            width: 80%;
+            float: left;
+        }
+        .clear-date-btn {
+            width: 20%;
+        }
+        .clear-date-group {
+            width: 100%;
+        }
     </style>
 
     <div class="wrapper wrapper-content animated fadeInRight">
@@ -144,22 +154,18 @@
                             </div>
                         {% endif %}
 
-                        {% if app.user.isPlatformAdmin or app.user.isPlatformMaster %}
-                        <div class="col-md-6 check-persistent">
-                                <div class="col-md-1">
-                                    <div class="box-check-persistent">
-                                        <div class="i-checks" id="check-persistent">
-                                            {{ form_widget(form.persistent) }}
-                                        </div>
-                                    </div>
+                        {% if app.user.isPlatformAdmin or app.user.isPlatformMaster or app.user.isPlatformExpanse %}
+                            <div class="col-md-4">
+                                <div class="btn-group clear-date-group">
+                                    {{ form_label(form.persistentAt, 'Imune a alterações automáticas até:') }}
+                                    {{ form_widget(form.persistentAt, {attr:{class:'form-control clear-date-input'}}) }}
+                                    <button type="button" id="clear_date" class="btn btn-primary clear-date-btn">
+                                        <i class="fa fa-eraser"></i>
+                                    </button>
                                 </div>
-                                <div class="col-md-10">
-                                    {{ form_label(form.persistent, 'Esta conta não será bloqueada nem sofrerá alteração
-                                de nível automaticamente', {'label_attr':{class:'check-label'}}) }}
-                                </div>
-                        </div>
+                            </div>
                         {% endif %}
-                        <div class="form-group col-md-2 pull-right" style="margin-top: 20px;">
+                        <div class="form-group col-md-2 pull-right" style="margin-top: 24px;">
                             <button class="btn btn-md btn-primary ladda-button btn-block" data-style="zoom-in"
                                     id="btn-pre-submit">
                                 <i class="fa fa-save"></i> Salvar
@@ -177,17 +183,9 @@
 
 {% block scripts %}
 
-    <script src="{{ asset('assets/iCheck/icheck.js') }}"></script>
-
     <script>
-        $('#check-persistent').iCheck({
-            checkboxClass: 'icheckbox_square-blue'
-        });
 
-        $('#check-persistent').on('ifChanged', function () {
-            $('#account_persistent').trigger('change');
-        });
-
+        var persistentAt = $('#account_persistentAt');
 
         function display_error(message){
             toastr.error(message, '', {
@@ -269,6 +267,38 @@
         $('#account_parentAccount option[value=""]').html('Sem vínculo');
 
         $('#account_parentAccount').chosen();
+
+        persistentAt.daterangepicker({
+            startDate: '{{ account.persistentAt ? account.persistentAt|date('d/m/Y') : 'now'|date('d/m/Y') }}',
+            singleDatePicker: true,
+
+            locale: {
+                format: 'DD/MM/YYYY',
+                daysOfWeek: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
+                monthNames: [
+                    "Janeiro",
+                    "Fevereiro",
+                    "Março",
+                    "Abril",
+                    "Maio",
+                    "Junho",
+                    "Julho",
+                    "Agosto",
+                    "Setembro",
+                    "Outubro",
+                    "Novembro",
+                    "Dezembro"
+                ]
+            }
+        })
+
+        {% if not account.persistentAt %}
+            persistentAt.val('');
+        {% endif %}
+
+        $('#clear_date').on('click', function () {
+            persistentAt.val('');
+        });
     </script>
 
 {% endblock %}

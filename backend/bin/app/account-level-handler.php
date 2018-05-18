@@ -68,7 +68,7 @@ function logSQL($sql){
  */
 function executeSQL($sql)
 {
-    $sql .= " AND c.context = 'account' AND (c.persistent = 0 OR c.persistent IS NULL);";
+    $sql .= " AND c.context = 'account' AND (c.persistent_at IS NULL OR c.persistent_at < NOW());";
 
     $sql = preg_replace('/( )+/', ' ', str_replace(["\n", "\t"], ' ', $sql));
 
@@ -118,11 +118,9 @@ function normalizeLevels(array $config)
   FROM app_order o
   WHERE o.parent_id IS NULL
         AND o.status >= %d
-        AND DATE(o.billed_at) >= '%s'
+        AND DATE(o.status_at) >= '%s'
   GROUP BY account_id
   HAVING (SUM(o.total)) >= %f", ORDER_STATUS, $firstCreatedAt, $firstAmount);
-
-	//echo $accountSQL . "\n\n"; die;
 
     $ids = getAccountIds($accountSQL);
 
@@ -162,7 +160,7 @@ SQL
   FROM app_order o
   WHERE o.parent_id IS NULL
         AND o.status >= %d
-        AND DATE(o.billed_at) >= '%s'
+        AND DATE(o.status_at) >= '%s'
   GROUP BY account_id
   HAVING (SUM(o.total)) >= %f_FSQL_", ORDER_STATUS,  $createdAt, $amount);
 
@@ -173,15 +171,13 @@ SQL
 
         $accountSQL = str_replace('_FSQL_', $index < count($levels) ? sprintf(' AND SUM(o.total) < %f', $levels[$levelKeys[$index]]['amount']) : '', $accountSQL);
 
-	//echo $accountSQL . "\n\n";
-
         $ids = getAccountIds($accountSQL);
 
         if(!empty($ids)){
 
             $updateSQL = str_replace('_IDS_', $ids, $updateSQL);
 
- 	    executeSQL($updateSQL);
+ 	        executeSQL($updateSQL);
         }
     }
 
@@ -243,7 +239,7 @@ function countAccounts()
 {
     $sql = "SELECT a.level as level, COUNT(a.id) as total
     FROM app_customer a
-    WHERE a.context = 'account'
+    WHERE a.context = 'account' AND a.status = 3
     GROUP BY a.level;";
 
     $result = [];
