@@ -26,14 +26,18 @@ class MemorialsController extends AbstractController
      * @Method("get")
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function getMemorialPowerRanges()
+    public function getMemorialPowerRangesAction()
     {
         $powerRanges = Range::$powerRanges;
 
         $result = [];
 
-        for ($i = 0; $i < count($powerRanges) - 1; $i++) {
-            $result[$powerRanges[$i]] = "{$powerRanges[$i]} - {$powerRanges[$i+1]} kWp";
+        for ($i = 0; $i < count($powerRanges); $i++) {
+            if ($i === count($powerRanges) - 1) {
+                $result[$powerRanges[$i]] = "{$powerRanges[$i]} - * kWp";
+            } else {
+                $result[$powerRanges[$i]] = "{$powerRanges[$i]} - {$powerRanges[$i+1]} kWp";
+            }
         }
 
         return $this->json($result);
