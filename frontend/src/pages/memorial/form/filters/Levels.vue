@@ -3,7 +3,7 @@
     :field='{ label: "Nível de Desconto" }',
     :options='options',
     :selected='true',
-    v-on:update='$emit("updateQuery")')
+    v-on:update='$emit("updateLevelQuery", $event)')
 </template>
 
 <script>
