@@ -30,5 +30,5 @@
 </script>
 
 <style lang="scss" scoped>
-  /* Levels Style*/
+  /* Levels Style */
 </style>
