@@ -44,7 +44,7 @@ export const routes = [
         component: Memorial
       },
       {
-        path: 'config',
+        path: ':id/config',
         component: MemorialConfig
       }
     ]
