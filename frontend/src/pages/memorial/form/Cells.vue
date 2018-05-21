@@ -11,7 +11,7 @@
           | {{ range }}
       tr
         th(colspan='5')
-        th.test(v-for='range in ranges')
+        th.range(v-for='range in ranges')
           span Markup (%)
           span Preço (R$)
     slot(
@@ -45,7 +45,7 @@
     }),
     methods: {
       getGroups() {
-        const uri = `admin/api/v1/memorial_ranges/2`
+        const uri = 'admin/api/v1/memorial_ranges/2'
 
         const data = {
           params: {
@@ -58,7 +58,7 @@
           this.groups = response.data
         })
       },
-      getRanges(){
+      getRanges() {
         const uri = 'admin/api/v1/memorials/power_ranges'
 
         this.axios.get(uri).then(({ data }) => {
@@ -118,6 +118,11 @@
         text-align: right;
       }
     }
+
+    span {
+      width: 50%;
+      display: inline-block;
+    }
   }
 
   .group-name {
@@ -128,13 +133,6 @@
     svg {
       float: left;
       margin: 0 $ui-space-y/2;
-    }
-  }
-
-  .test {
-    span {
-      width: 50%;
-      display: inline-block;
     }
   }
 </style>
