@@ -5,30 +5,9 @@
       icon='arrow-left',
       label='voltar',
       pos='single')
-    Memorials.col-memorial(v-on:updateQuery='updateQuery')
-    Levels(v-on:updateQuery='updateQuery')
-    .col-components
-      span.components-title Componentes
-      label
-        input(type='checkbox', v-on:change='updateQuery')
-        Icon(name='th')
-        | Módulos
-      label
-        input(type='checkbox', v-on:change='updateQuery')
-        Icon(name='exchange')
-        | Inversores
-      label
-        input(type='checkbox', v-on:change='updateQuery')
-        Icon(name='plug')
-        | String Box
-      label
-        input(type='checkbox', v-on:change='updateQuery')
-        Icon(name='sitemap')
-        | Estrutura
-      label
-        input(type='checkbox', v-on:change='updateQuery')
-        Icon(name='wrench')
-        | Variedades
+    Memorials.col-memorial(v-on:updateMemorialQuery='updateMemorialQuery')
+    Levels(v-on:updateLevelQuery='updateLevelQuery')
+    Components(v-on:updateFamiliesQuery='updateFamiliesQuery')
     Button.copy(
       type='primary-common',
       icon='copy',
@@ -37,17 +16,48 @@
 </template>
 
 <script>
+  import Components from './Components'
   import Levels from './Levels'
   import Memorials from './Memorials'
 
   export default {
+    props: [
+      'setMemorialId'
+    ],
+    data: () => ({
+      queryParams: {
+        families: [],
+        level: 'titanium'
+      }
+    }),
     components: {
+      Components,
       Levels,
       Memorials
     },
     methods: {
-      updateQuery() {
-        // está função fará update da query para consulta
+      updateFamiliesQuery(selectedFamilyName, event) {
+        if (event.target.checked) {
+          this.queryParams.families = this.queryParams.families
+            .concat(selectedFamilyName)
+        } else {
+          this.queryParams.families = this.queryParams.families
+            .filter(eachFamilyName => (
+              eachFamilyName !== selectedFamilyName
+            ))
+        }
+
+        this.$emit('getMemorialGroups', this.queryParams)
+      },
+      updateLevelQuery(event) {
+        this.queryParams.level = event.value
+        this.$emit('getMemorialGroups', this.queryParams)
+      },
+      updateMemorialQuery(memorialId) {
+        this.setMemorialId(memorialId)
+          .then(() => {
+            this.$emit('getMemorialGroups', this.queryParams)
+          })
       }
     }
   }
@@ -63,24 +73,6 @@
 
   .col-memorial {
     max-width: 150px;
-  }
-
-  .col-components {
-    text-align: left;
-
-    label {
-      display: inline-block;
-      padding: $ui-space-y/1.25 $ui-space-x/3;
-    }
-
-    svg {
-      margin: 0 $ui-space-x/6;
-    }
-
-    .components-title {
-      display: block;
-      font-weight: 600;
-    }
   }
 
   .prev {
