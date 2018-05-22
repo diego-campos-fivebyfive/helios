@@ -58,7 +58,7 @@
         const icons = {
           module: 'th',
           inverter: 'exchange',
-          string_box: 'plug',
+          stringBox: 'plug',
           structure: 'sitemap',
           variety: 'wrench'
         }
@@ -69,7 +69,7 @@
         const names = {
           module: 'módulos',
           inverter: 'inversores',
-          string_box: 'string box',
+          stringBox: 'string box',
           structure: 'estrutura',
           variety: 'variedades'
         }
