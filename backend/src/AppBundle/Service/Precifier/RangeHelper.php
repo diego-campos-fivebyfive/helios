@@ -102,9 +102,6 @@ class RangeHelper
         $groups = [];
 
         foreach ($families as $family) {
-            if ($family === 'stringBox') {
-                $family = 'string_box';
-            }
 
             $qb = $this->manager->createQueryBuilder();
 
@@ -113,14 +110,12 @@ class RangeHelper
                 ->andWhere('r.family = :family')
                 ->setParameters([
                     'memorial' => $memorial,
-                    'family' => $family
+                    'family' => $family === 'stringBox'
+                        ? 'string_box'
+                        : $family
                 ]);
 
             $ranges = $qb->getQuery()->getResult();
-
-            if ($family === 'string_box') {
-                $family = 'stringBox';
-            }
 
             $groups[$family] = array_column($ranges, 'componentId');
 
