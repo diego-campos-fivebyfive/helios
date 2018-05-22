@@ -102,14 +102,16 @@ class ComponentsLoader
             $qb = $manager->createQueryBuilder();
             $alias = $qb->getRootAlias();
 
-            $qb->select("{$alias}.id");
+            $qb->select("{$alias}.id, {$alias}.code");
             $qb->andWhere(
                 $qb->expr()->notIn("{$alias}.id", $componentsIds)
             );
 
             $results = $qb->getQuery()->getResult();
 
-            $components[$family] = array_map('current', $results);
+            foreach ($results as $data) {
+                $components[$family][$data['id']] = $data['code'];
+            }
         }
 
         return $components;
