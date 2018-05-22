@@ -29,22 +29,21 @@ class RangePrecify
      * @param null $powerRange
      * @return array
      */
-    public static function calculate($metadata, $level, $costPrice, $markup = null, $powerRange = null)
+    public static function calculate($metadata, $costPrice, $level = null, $markup = null, $powerRange = null)
     {
         $costPrice = $costPrice ? $costPrice : 0;
 
-        $levelRanges = $metadata[$level];
+        $precifyAllLevels = ($markup === null || $powerRange === null) && $level === null ? true : false;
 
-        $all = $markup === null || $powerRange === null ? true : false;
+        if ($precifyAllLevels) {
+            foreach ($metadata as $level => $levelRanges) {
+                foreach ($levelRanges as $powerRange => $data) {
+                    $markup = $data['markup'];
 
-        if ($all) {
-            foreach ($levelRanges as $powerRange => $data) {
-                $markup = $data['markup'];
-
-                $levelRanges[$powerRange]['price'] = self::precify($costPrice, $markup);
+                    $levelRanges[$powerRange]['price'] = self::precify($costPrice, $markup);
+                }
+                $metadata[$level] = $levelRanges;
             }
-
-            $metadata[$level] = $levelRanges;
         } else {
             $metadata[$level][$powerRange]['markup'] = $markup;
 
