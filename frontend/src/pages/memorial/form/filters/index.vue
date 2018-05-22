@@ -7,7 +7,9 @@
       pos='single')
     Memorials.col-memorial(v-on:updateMemorialQuery='updateMemorialQuery')
     Levels(v-on:updateLevelQuery='updateLevelQuery')
-    Components(v-on:updateFamiliesQuery='updateFamiliesQuery')
+    Components(
+      :families='queryParams.families',
+      v-on:updateFamiliesQuery='updateFamiliesQuery')
     Button.copy(
       type='primary-common',
       icon='copy',
@@ -36,16 +38,8 @@
       Memorials
     },
     methods: {
-      updateFamiliesQuery(selectedFamilyName, event) {
-        if (event.target.checked) {
-          this.queryParams.families = this.queryParams.families
-            .concat(selectedFamilyName)
-        } else {
-          this.queryParams.families = this.queryParams.families
-            .filter(eachFamilyName => (
-              eachFamilyName !== selectedFamilyName
-            ))
-        }
+      updateFamiliesQuery(value) {
+        this.queryParams.families = value
 
         this.$emit('getMemorialGroups', this.queryParams)
       },
