@@ -102,6 +102,10 @@ class RangeHelper
         $groups = [];
 
         foreach ($families as $family) {
+            if ($family === 'stringBox') {
+                $family = 'string_box';
+            }
+
             $qb = $this->manager->createQueryBuilder();
 
             $qb->select('r.id, r.componentId, r.costPrice, r.metadata as ranges')
@@ -113,6 +117,10 @@ class RangeHelper
                 ]);
 
             $ranges = $qb->getQuery()->getResult();
+
+            if ($family === 'string_box') {
+                $family = 'stringBox';
+            }
 
             $groups[$family] = array_column($ranges, 'componentId');
 
