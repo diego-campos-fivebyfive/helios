@@ -102,6 +102,7 @@ class RangeHelper
         $groups = [];
 
         foreach ($families as $family) {
+
             $qb = $this->manager->createQueryBuilder();
 
             $qb->select('r.id, r.componentId, r.costPrice, r.metadata as ranges')
@@ -109,7 +110,9 @@ class RangeHelper
                 ->andWhere('r.family = :family')
                 ->setParameters([
                     'memorial' => $memorial,
-                    'family' => $family
+                    'family' => $family === 'stringBox'
+                        ? 'string_box'
+                        : $family
                 ]);
 
             $ranges = $qb->getQuery()->getResult();

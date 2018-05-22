@@ -3,7 +3,7 @@
     :field='{ label: "Memorial" }',
     :options='options',
     :selected='true',
-    v-on:update='$emit("updateQuery")')
+    v-on:update='$emit("updateMemorialQuery", $event.value)')
 </template>
 
 <script>

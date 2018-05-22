@@ -38,26 +38,14 @@
 
 <script>
   export default {
+    props: [
+      'groups'
+    ],
     data: () => ({
-      groups: [],
       ranges: [],
       rangesCount: null
     }),
     methods: {
-      getGroups() {
-        const uri = 'admin/api/v1/memorial_ranges/2'
-
-        const data = {
-          params: {
-            families: ['inverter', 'module'],
-            level: 'titanium'
-          }
-        }
-
-        this.axios.get(uri, data).then(response => {
-          this.groups = response.data
-        })
-      },
       getRanges() {
         const uri = 'admin/api/v1/memorials/power_ranges'
 
@@ -90,7 +78,6 @@
       }
     },
     mounted() {
-      this.getGroups()
       this.getRanges()
     }
   }
