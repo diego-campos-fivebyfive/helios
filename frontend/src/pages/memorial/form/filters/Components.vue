@@ -14,32 +14,30 @@
     props: [
       'families'
     ],
-    data() {
-      return {
-        components: {
-          module: {
-            icon: 'th',
-            label: 'Módulos'
-          },
-          inverter: {
-            icon: 'exchange',
-            label: 'Inversores'
-          },
-          stringBox: {
-            icon: 'plug',
-            label: 'String Box'
-          },
-          structure: {
-            icon: 'sitemap',
-            label: 'Estrutura'
-          },
-          variety: {
-            icon: 'wrench',
-            label: 'Variedades'
-          }
+    data: () => ({
+      components: {
+        module: {
+          icon: 'th',
+          label: 'Módulos'
+        },
+        inverter: {
+          icon: 'exchange',
+          label: 'Inversores'
+        },
+        stringBox: {
+          icon: 'plug',
+          label: 'String Box'
+        },
+        structure: {
+          icon: 'sitemap',
+          label: 'Estrutura'
+        },
+        variety: {
+          icon: 'wrench',
+          label: 'Variedades'
         }
       }
-    },
+    }),
     methods: {
       updateFamiliesQuery(familyName, event) {
         const familiesQuery = (event.target.checked)
