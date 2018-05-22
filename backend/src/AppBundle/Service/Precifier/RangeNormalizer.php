@@ -73,7 +73,7 @@ class RangeNormalizer
         /** @var ComponentsLoader $componentsLoader */
         $componentsLoader = $this->container->get('precifier_components_loader');
 
-        if (key_exists(Memorial::ACTION_TYPE_ADD_COMPONENT, $metadata)) {
+        if (isset($metadata[Memorial::ACTION_TYPE_ADD_COMPONENT])) {
 
             $families = array_keys($metadata[Memorial::ACTION_TYPE_ADD_COMPONENT]);
 
@@ -87,7 +87,7 @@ class RangeNormalizer
             $this->generateRanges($memorial, $componentsWithoutRange);
         }
 
-        if (key_exists(Memorial::ACTION_TYPE_REMOVE_COMPONENT, $metadata)) {
+        if (isset($metadata[Memorial::ACTION_TYPE_REMOVE_COMPONENT])) {
 
             $families = array_keys($metadata[Memorial::ACTION_TYPE_REMOVE_COMPONENT]);
 
@@ -111,11 +111,12 @@ class RangeNormalizer
     private function generateRanges(Memorial $memorial, $groups)
     {
         foreach ($groups as $family => $componentsIds) {
-            foreach ($componentsIds as $componentId) {
+            foreach ($componentsIds as $componentId => $code) {
                 $this->createRange(
                     $memorial,
                     $family,
                     $componentId,
+                    $code,
                     $this->defaultMetadata
                 );
             }
@@ -182,14 +183,14 @@ class RangeNormalizer
      * @param $metadata
      * @param int $price
      */
-    private function createRange(Memorial $memorial, $family, $componentId, $metadata, $price = 0)
+    private function createRange(Memorial $memorial, $family, $componentId, $code, $metadata, $price = 0)
     {
         $range = new Range();
 
         $range->setMemorial($memorial);
         $range->setFamily($family);
         $range->setComponentId($componentId);
-        $range->setCode(null);
+        $range->setCode($code);
         $range->setCostPrice($price);
         $range->setMetadata($metadata);
 
