@@ -1,40 +1,59 @@
 <template lang="pug">
   .col-components
     span.components-title Componentes
-    label
+    label(v-for='(component, family) in getComponents()')
       input(
         type='checkbox',
-        v-on:change='$emit("updateFamiliesQuery", "module", $event)')
-      Icon(name='th')
-      | Módulos
-    label
-      input(
-        type='checkbox',
-        v-on:change='$emit("updateFamiliesQuery", "inverter", $event)')
-      Icon(name='exchange')
-      | Inversores
-    label
-      input(
-        type='checkbox',
-        v-on:change='$emit("updateFamiliesQuery", "string_box", $event)')
-      Icon(name='plug')
-      | String Box
-    label
-      input(
-        type='checkbox',
-        v-on:change='$emit("updateFamiliesQuery", "structure", $event)')
-      Icon(name='sitemap')
-      | Estrutura
-    label
-      input(
-        type='checkbox',
-        v-on:change='$emit("updateFamiliesQuery", "variety", $event)')
-      Icon(name='wrench')
-      | Variedades
+        v-on:change='updateFamiliesQuery(family, $event)')
+      Icon(:name='component.icon')
+      | {{ component.label }}
 </template>
 
 <script>
-  export default { }
+  export default {
+    props: [
+      'families'
+    ],
+    methods: {
+      getComponents() {
+        const components = {
+          module: {
+            icon: 'th',
+            label: 'Módulos'
+          },
+          inverter: {
+            icon: 'exchange',
+            label: 'Inversores'
+          },
+          stringBox: {
+            icon: 'plug',
+            label: 'String Box'
+          },
+          structure: {
+            icon: 'sitemap',
+            label: 'Estrutura'
+          },
+          variety: {
+            icon: 'wrench',
+            label: 'Variedades'
+          }
+        }
+
+        return components
+      },
+      updateFamiliesQuery(familyName, event) {
+        if (event.target.checked) {
+          this.$emit('updateFamiliesQuery', this.families.concat(familyName))
+
+        } else {
+          this.$emit('updateFamiliesQuery', this.families
+            .filter(eachFamilyName => (
+              eachFamilyName !== familyName
+            )))
+        }
+      }
+    }
+  }
 </script>
 
 <style lang="scss" scoped>
