@@ -1,7 +1,7 @@
 <template lang="pug">
   .col-components
     span.components-title Componentes
-    label(v-for='(component, family) in getComponents()')
+    label(v-for='(component, family) in components')
       input(
         type='checkbox',
         v-on:change='updateFamiliesQuery(family, $event)')
@@ -14,9 +14,9 @@
     props: [
       'families'
     ],
-    methods: {
-      getComponents() {
-        const components = {
+    data() {
+      return {
+        components: {
           module: {
             icon: 'th',
             label: 'Módulos'
@@ -38,19 +38,15 @@
             label: 'Variedades'
           }
         }
-
-        return components
-      },
+      }
+    },
+    methods: {
       updateFamiliesQuery(familyName, event) {
-        if (event.target.checked) {
-          this.$emit('updateFamiliesQuery', this.families.concat(familyName))
+        const familiesQuery = (event.target.checked)
+          ? this.families.concat(familyName)
+          : this.families.filter(eachFamilyName => (eachFamilyName !== familyName))
 
-        } else {
-          this.$emit('updateFamiliesQuery', this.families
-            .filter(eachFamilyName => (
-              eachFamilyName !== familyName
-            )))
-        }
+        this.$emit('updateFamiliesQuery', familiesQuery)
       }
     }
   }
