@@ -40,7 +40,6 @@
     methods: {
       updateFamiliesQuery(value) {
         this.queryParams.families = value
-
         this.$emit('getMemorialGroups', this.queryParams)
       },
       updateLevelQuery(event) {
