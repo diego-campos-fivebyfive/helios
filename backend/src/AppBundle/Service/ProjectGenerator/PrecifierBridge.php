@@ -11,88 +11,123 @@
 
 namespace AppBundle\Service\ProjectGenerator;
 
-use AppBundle\Entity\Component\InverterInterface;
-use AppBundle\Entity\Component\PricingManager as MarginManager;
+use AppBundle\Entity\Component\ComponentInterface;
+use AppBundle\Entity\Component\Inverter;
+use AppBundle\Entity\Component\Module;
 use AppBundle\Entity\Component\ProjectInterface;
-use AppBundle\Entity\Component\ProjectInverterInterface;
-use AppBundle\Entity\Pricing\MemorialInterface;
-use AppBundle\Entity\Pricing\Range;
-use AppBundle\Model\KitPricing;
+use AppBundle\Entity\Component\ProjectInverter;
+use AppBundle\Entity\Component\ProjectModule;
+use AppBundle\Entity\Component\ProjectStringBox;
+use AppBundle\Entity\Component\ProjectStructure;
+use AppBundle\Entity\Component\ProjectVariety;
+use AppBundle\Entity\Component\StringBox;
+use AppBundle\Entity\Component\Structure;
+use AppBundle\Entity\Component\Variety;
+use AppBundle\Entity\Precifier\Memorial;
 use AppBundle\Service\Precifier\Calculator;
-use AppBundle\Service\Pricing\MemorialLoader;
-use AppBundle\Service\Pricing\RangeLoader;
+use AppBundle\Service\Precifier\MemorialHelper;
+use AppBundle\Service\Precifier\RangeHelper;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * ProjectPrecifier
+ * PrecifierBridge
  *
- * @author João Zaqueu Chereta <joaozaqueu@kolinalabs.com>
+ * @author Fabio Dukievicz <fabiojd47@gmail.com>
+ * @author Gianluca Bine <gian_bine@hotmail.com>
  */
-class Precifier
+class PrecifierBridge
 {
     /**
-     * @var MemorialLoader
+     * @var ContainerInterface
      */
-    private $memorialLoader;
+    private $container;
 
     /**
-     * @var RangeLoader
+     * PrecifierBridge constructor.
+     * @param ContainerInterface $container
      */
-    private $rangeLoader;
-
-    /**
-     * @var MarginManager
-     */
-    private $marginManager;
-
-    /**
-     * Precifier constructor.
-     * @param MemorialLoader $memorialLoader
-     * @param RangeLoader $rangeLoader
-     * @param MarginManager $pricingManager
-     */
-    public function __construct(MemorialLoader $memorialLoader, RangeLoader $rangeLoader, MarginManager $marginManager)
+    public function __construct(ContainerInterface $container)
     {
-        $this->memorialLoader = $memorialLoader;
-        $this->rangeLoader = $rangeLoader;
-        $this->marginManager = $marginManager;
+        $this->container = $container;
     }
 
     /**
      * @param ProjectInterface $project
+     * @param Memorial|null $memorial
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function priceCost(ProjectInterface $project, MemorialInterface $memorial = null)
+    public function priceCost(ProjectInterface $project, Memorial $memorial = null)
     {
-        if(!$project->getPower())
+        if (!$project->getPower()) {
             $this->exception('Project power is null');
+        }
 
-        if (!$memorial)
-            $memorial = $this->memorialLoader->load();
+        if (!$memorial) {
+            /** @var MemorialHelper $memorialHelper */
+            $memorialHelper = $this->container->get('precifier_memorial_helper');
 
-        if($memorial){
+            $memorial = $memorialHelper->load();
+        }
+
+        if ($memorial) {
 
             $defaults = $project->getDefaults();
 
-            if(!array_key_exists('is_promotional', $defaults)) $defaults['is_promotional'] = false;
+            if (!isset($defaults['is_promotional'])) {
+                $defaults['is_promotional'] = false;
+            }
 
             $level = $defaults['is_promotional'] ? 'promotional' : $project->getLevel();
 
             $power = $project->getPower();
+
             $components = self::extractComponents($project);
-            $codes = array_keys($components);
-            $ranges = $this->rangeLoader->load($memorial, $power, $level, $codes);
+
+            $componentsIds  = [];
+
+            foreach ($components as $family => $elements) {
+                $componentsIds[$family] = array_keys($elements);
+            }
+
+            /** @var RangeHelper $rangeHelper */
+            $rangeHelper = $this->container->get('precifier_range_helper');
+
+            $ranges = $rangeHelper->loadByComponentsIds($componentsIds);
+
             $costPrice = 0;
 
-            dump($components);
-            dump(Calculator::identifyRange($power));
-            dump($power, $ranges);
-            die;
-            /** @var \AppBundle\Entity\Component\ProjectElementInterface $component */
-            foreach ($components as $code => $items){
-                foreach ($items as $component) {
-                    if(array_key_exists($component->getCode(), $ranges)) {
-                        $range = $ranges[$component->getCode()];
-                        $component->applyRange($range);
-                        $costPrice += $component->getUnitCostPrice();
+            $data = [
+                'level' => $level,
+                'power' => $power,
+                'groups' => $components
+            ];
+
+            $groupsPrecified = Calculator::precify($data, $ranges);
+
+            foreach ($groupsPrecified as $componentsPrecified) {
+                foreach ($componentsPrecified as $data) {
+
+                    if (!isset($data['price'])) {
+                        /** @var \AppBundle\Entity\Component\ProjectElementInterface $element */
+                        foreach ($data as $dataElement) {
+                            $price = $dataElement['price'];
+
+                            /** @var \AppBundle\Entity\Component\ProjectElementInterface $projectElement */
+                            $projectElement = $dataElement['projectElement'];
+
+                            $projectElement->setUnitCostPrice($price);
+
+                            $costPrice += $projectElement->getUnitCostPrice();
+                        }
+                    } else {
+                        $price = $data['price'];
+
+                        /** @var \AppBundle\Entity\Component\ProjectElementInterface $projectElement */
+                        $projectElement = $data['projectElement'];
+
+                        $projectElement->setUnitCostPrice($price);
+
+                        $costPrice += $projectElement->getUnitCostPrice();
                     }
                 }
             }
@@ -102,7 +137,7 @@ class Precifier
 
                 $unitPrice = (float) $projectExtra->getExtra()->getCostPrice();
 
-                if(1 == $projectExtra->getExtra()->getPricingby()){
+                if (1 == $projectExtra->getExtra()->getPricingby()) {
                     $unitPrice = $unitPrice * $power;
                 }
 
@@ -114,62 +149,60 @@ class Precifier
         }
     }
 
-    /**
-     * @param ProjectInterface $project
-     */
-    public function priceSale(ProjectInterface $project)
-    {
-        $margins = $this->marginManager->findAll();
-        $percentEquipments = 0;
-        $percentServices = 0;
-        /** @var \AppBundle\Model\KitPricing $margin */
-        foreach ($margins as $margin){
-            switch ($margin->target){
-                case KitPricing::TARGET_EQUIPMENTS:
-                    $percentEquipments += $margin->percent;
-                    break;
-                case KitPricing::TARGET_SERVICES:
-                    $percentServices += $margin->percent;
-                    break;
-                default:
-                    $percentServices += $margin->percent;
-                    $percentEquipments += $margin->percent;
-                    break;
-            }
-        }
-
-        SalePrice::calculate($project, ($percentEquipments / 100), ($percentServices / 100));
-    }
-
     public static function extractComponents(ProjectInterface $project)
     {
-        $components = [];
+        $groups = [];
 
-        foreach ($project->getProjectInverters() as $projectInverter){
-            $components[$projectInverter->getInverter()->getCode()][] = $projectInverter;
+        /** @var ProjectInverter $projectInverter */
+        foreach ($project->getProjectInverters() as $projectInverter) {
+
+            /** @var Inverter $inverter */
+            $inverter = $projectInverter->getInverter();
+
+            $groups[ComponentInterface::FAMILY_INVERTER][$inverter->getId()][] = $projectInverter;
         }
 
-        foreach ($project->getProjectModules() as $projectModule){
-            $components[$projectModule->getModule()->getCode()][] = $projectModule;
+        /** @var ProjectModule $projectModule */
+        foreach ($project->getProjectModules() as $projectModule) {
+
+            /** @var Module $module */
+            $module = $projectModule->getModule();
+
+            $groups[ComponentInterface::FAMILY_MODULE][$module->getId()] = $projectModule;
         }
 
-        foreach ($project->getProjectStructures() as $projectStructure){
-            $components[$projectStructure->getStructure()->getCode()][] = $projectStructure;
+        /** @var ProjectStructure $projectStructure */
+        foreach ($project->getProjectStructures() as $projectStructure) {
+
+            /** @var Structure $structure */
+            $structure = $projectStructure->getStructure();
+
+            $groups[ComponentInterface::FAMILY_STRUCTURE][$structure->getId()] = $projectStructure;
         }
 
-        foreach ($project->getProjectStringBoxes() as $projectStringBox){
-            $components[$projectStringBox->getStringBox()->getCode()][] = $projectStringBox;
+        /** @var ProjectStringBox $projectStringBox */
+        foreach ($project->getProjectStringBoxes() as $projectStringBox) {
+
+            /** @var StringBox $stringBox */
+            $stringBox = $projectStringBox->getStringBox();
+
+            $groups[ComponentInterface::FAMILY_STRING_BOX][$stringBox->getId()] = $projectStringBox;
         }
 
-        foreach ($project->getProjectVarieties() as $projectVariety){
-            $components[$projectVariety->getVariety()->getCode()][] = $projectVariety;
+        /** @var ProjectVariety $projectVariety */
+        foreach ($project->getProjectVarieties() as $projectVariety) {
+
+            /** @var Variety $variety */
+            $variety = $projectVariety->getVariety();
+
+            $groups[ComponentInterface::FAMILY_VARIETY][$variety->getId()] = $projectVariety;
         }
 
-        if(null != $transformer = $project->getTransformer()){
-            $components[$transformer->getVariety()->getCode()][] = $transformer;
+        if (null != $transformer = $project->getTransformer()) {
+            $groups[ComponentInterface::FAMILY_VARIETY][$transformer->getVariety()->getId()] = $transformer;
         }
 
-        return $components;
+        return $groups;
     }
 
     /**
