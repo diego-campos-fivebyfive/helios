@@ -14,11 +14,11 @@ class CalculatorTest extends WebTestCase
     private $ranges = [
         [
             'id' => 1,
-            'memorial_id' => 258,
-            'component_id' => 123,
+            'memorialId' => 258,
+            'componentId' => 123,
             'family' => 'inverter',
             'code' => 1,
-            'cost_price' => 150,
+            'costPrice' => 150,
             'metadata' => [
                 'partner' => [
                     60 => [
@@ -36,11 +36,11 @@ class CalculatorTest extends WebTestCase
         ],
         [
             'id' => 2,
-            'memorial_id' => 258,
-            'component_id' => 345,
+            'memorialId' => 258,
+            'componentId' => 345,
             'family' => 'module',
             'code' => 2,
-            'cost_price' => 250,
+            'costPrice' => 250,
             'metadata' => [
                 'partner' => [
                     60 => [
@@ -65,10 +65,10 @@ class CalculatorTest extends WebTestCase
             "power" => 78,
             "groups" => [
                 'inverter' => [
-                    123
+                    123 => 111
                 ],
                 'module' => [
-                    345
+                    345 => 222
                 ]
             ]
         ];
@@ -76,7 +76,7 @@ class CalculatorTest extends WebTestCase
         $precifiedComponents = Calculator::precify($data, $this->ranges);
 
         self::assertEquals(2, count($precifiedComponents));
-        self::assertEquals(200, $precifiedComponents['inverter'][123]);
-        self::assertEquals(230, $precifiedComponents['module'][345]);
+        self::assertEquals(200, $precifiedComponents['inverter'][123]['price']);
+        self::assertEquals(230, $precifiedComponents['module'][345]['price']);
     }
 }
