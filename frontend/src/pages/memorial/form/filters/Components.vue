@@ -56,7 +56,7 @@
 
     label {
       display: inline-block;
-      padding: $ui-space-y/1.25 $ui-space-x/3;
+      padding: $ui-space-y/1.25 $ui-space-x/1.5 $ui-space-y/1.25 0;
     }
 
     svg {
