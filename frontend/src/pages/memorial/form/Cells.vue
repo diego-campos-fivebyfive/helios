@@ -1,48 +1,52 @@
 <template lang="pug">
-  Table.table(type='bordered')
-    slot(slot='head')
-      tr
-        th Código
-        th Descrição
-        th M
-        th F
-        th CMV Aplicado
-        th(v-for='range in ranges')
-          | {{ range }}
-      tr
-        th(colspan='5')
-        th.range(v-for='range in ranges')
-          span Markup (%)
-          span Preço (R$)
-    slot(
-      slot='rows', v-for='(components, groupName) in groups')
-      tr.group-name
-        th(:colspan='5 + rangesCount')
-          Icon(:name='getIcon(groupName)')
-          | {{ getGroupName(groupName) }}
-      tr.rows(v-for='component in components')
-        td
-          input(type='text', readonly, :value='component.code')
-        td
-          input(type='text', readonly, :value='component.description')
-        td
-          input(type='checkbox')
-        td
-          input(type='checkbox')
-        td
-          input(
-            type='text',
-            v-on:blur='updateRange(component.id, $event.target.value)',
-            :value='component.costPrice')
-        td(v-for='(range, key) in component.ranges')
-          div.markups
-            input(
-              type='text',
-              v-on:blur='updatePriceMarkup(component.id, key, $event.target.value)',
-              :value='range.markup')
-            span.percent %
-            input(type='text', readonly, :value='range.price')
-            span.money R$
+  .table-wrapper
+    Table.table(type='bordered')
+      slot(slot='head')
+        tr.caption-main
+          th.col-code Código
+          th.col-description Descrição
+          th.col-m M
+          th.col-f F
+          th.col-cmv CMV Aplicado
+          th.col-range(v-for='range in ranges')
+            | {{ range }}
+        tr.caption-ranges
+          th.col-range-off(colspan='5')
+          th.col-range(v-for='range in ranges')
+            span Markup (%)
+            span Preço (R$)
+      slot(
+        slot='rows', v-for='(components, groupName) in groups')
+        tr.group-name
+          th.col-group-name(colspan='5')
+            Icon(:name='getIcon(groupName)')
+            | {{ getGroupName(groupName) }}
+          th.col-group-name-off(:colspan='rangesCount')
+        tr.rows(v-for='component in components')
+          td.col-code
+            input(type='text', readonly, :value='component.code')
+          td.col-description
+            input(type='text', readonly, :value='component.description')
+          td.col-m
+            input(type='checkbox')
+          td.col-f
+            input(type='checkbox')
+          td.col-cmv
+            .costPrice
+              input(
+                type='text',
+                v-on:blur='updateRange(component.id, $event.target.value)',
+                :value='component.costPrice')
+              span R$
+          td.col-range(v-for='(range, key) in component.ranges')
+            .markups
+              input(
+                type='text',
+                v-on:blur='updatePriceMarkup(component.id, key, $event.target.value)',
+                :value='range.markup')
+              span.percent %
+              input(type='text', readonly, :value='range.price')
+              span.money R$
 </template>
 
 <script>
@@ -95,8 +99,14 @@
           this.$emit('updateMemorialRange', response.data)
         })
       },
-      updatePriceMarkup(componentId, range, markup) {
-        console.log('test update markup', componentId, range, markup)
+      updatePriceMarkup(componentId, powerRange, markup) {
+        const { level } = this.getQueryParams()
+
+        const uri = `admin/api/v1/memorial_ranges/${componentId}/markup`
+
+        this.axios.put(uri, { markup, powerRange, level}).then(response => {
+          this.$emit('updateMemorialMarkup', response.data)
+        })
       }
     },
     mounted() {
@@ -106,6 +116,11 @@
 </script>
 
 <style lang="scss" scoped>
+  .table-wrapper {
+    overflow: auto;
+    position: relative;
+  }
+
   .rows {
     input {
       border: 1px solid $ui-gray-light;
@@ -119,14 +134,14 @@
     }
   }
 
-  .range {
-    input {
-      width: 50%;
-      padding: $ui-space-y/2 $ui-space-y;
+  .group-name {
+    background-color: $ui-gray-lighter;
+    text-align: left;
+    text-transform: uppercase;
 
-      &:first-of-type {
-        text-align: right;
-      }
+    svg {
+      float: left;
+      margin-right: $ui-space-y/2;
     }
   }
 
@@ -136,19 +151,101 @@
 
     .percent {
       position: absolute;
-      left: $ui-space-y*6.25;
-      top: $ui-space-y/1.75;
+      left: $ui-space-y*5;
+      top: $ui-space-y/2;
     }
 
     .money {
       position: absolute;
-      left: $ui-space-y*7.75;
-      top: $ui-space-y/1.75;
+      left: $ui-space-y*6.5;
+      top: $ui-space-y/2;
     }
 
     input {
       width: 50%;
-      padding: $ui-space-y/2 $ui-space-y*1.5;
+      padding-left: $ui-space-y*1.5;
+
+      &:first-of-type {
+        text-align: right;
+        padding-right: $ui-space-y*1.5;
+      }
+    }
+  }
+
+  th {
+    background-color: $ui-gray-lighter;
+  }
+
+  td {
+    background-color: $ui-white-regular;
+  }
+
+  th,
+  td {
+    &:not(.col-range):not(.col-group-name-off) {
+      display: table-cell;
+      position: sticky;
+      z-index: 5;
+    }
+  }
+
+  .col-code {
+    left: 0;
+    min-width: 200px;
+  }
+
+  .col-description {
+    left: 200px;
+    min-width: 200px;
+  }
+
+  .col-m {
+    left: 400px;
+    min-width: 75px;
+  }
+
+  .col-f {
+    left: 475px;
+    min-width: 75px;
+  }
+
+  .col-cmv {
+    color: $ui-gray-regular;
+    left: 550px;
+    min-width: 135px;
+
+    .costPrice {
+      position: relative;
+    }
+
+    input {
+      padding: $ui-space-y/2 $ui-space-x;
+    }
+
+    span {
+      position: absolute;
+      left: $ui-space-y/2.5;
+      top: $ui-space-y/2;
+    }
+  }
+
+  .col-group-name {
+    left: 0;
+  }
+
+  .col-range {
+    min-width: 200px;
+    width: 100%;
+
+    span {
+      display: inline-block;
+      width: 50%;
+    }
+
+    input {
+      display: inline-block;
+      max-width: 50%;
+      width: 100%;
 
       &:first-of-type {
         text-align: right;
@@ -156,14 +253,7 @@
     }
   }
 
-  .group-name {
-    background-color: $ui-gray-lighter;
-    text-transform: uppercase;
-    text-align: left;
-
-    svg {
-      float: left;
-      margin: 0 $ui-space-y/2;
-    }
+  .col-range-off {
+    left: 0;
   }
 </style>
