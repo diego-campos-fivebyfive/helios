@@ -165,7 +165,6 @@ class RangeHelper
 
             foreach ($ranges as $range) {
                 $componentId = $range['componentId'];
-                $rangeId = $range['id'];
 
                 $range['code'] = $components[$componentId]['code'];
                 $range['description'] = $components[$componentId]['description'];
@@ -183,7 +182,7 @@ class RangeHelper
                     $range['ranges'] = $levelRanges;
                 }
 
-                $results[$family][$rangeId] = $range;
+                $results[$family][] = $range;
             }
         }
 

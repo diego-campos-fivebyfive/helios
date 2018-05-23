@@ -2,10 +2,13 @@
   Panel.panel
     Filters(
       slot='header',
+      ref='filter',
       :setMemorialId='setMemorialId',
       v-on:getMemorialGroups='getMemorialGroups')
     Cells(
       slot='section',
+      :getQueryParams='getQueryParams',
+      v-on:updateMemorialRange='updateMemorialRange',
       :groups='groups')
 </template>
 
@@ -43,6 +46,20 @@
         this.axios.get(uri, { params })
           .then(response => {
             this.groups = response.data
+          })
+      },
+      getQueryParams() {
+        return this.$refs.filter.queryParams
+      },
+      updateMemorialRange(range) {
+        this.groups[range.family]
+          .forEach(component => {
+            if (component.id === range.id) {
+              /* eslint-disable */
+              component.costPrice = range.costPrice
+              component.ranges = range.powerRanges
+              /* eslint-enable */
+            }
           })
       }
     },
