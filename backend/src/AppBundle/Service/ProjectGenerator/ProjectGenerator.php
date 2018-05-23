@@ -60,6 +60,13 @@ class ProjectGenerator
     private $bridge;
 
     /**
+     * This variable defines the use of the new precifier
+     *
+     * @var bool
+     */
+    private $newPrecifier = false;
+
+    /**
      * @inheritDoc
      */
     public function __construct(ContainerInterface $container)
@@ -99,6 +106,7 @@ class ProjectGenerator
     /**
      * @param ProjectInterface|null $project
      * @return ProjectInterface|mixed|object
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function generate(ProjectInterface $project = null)
     {
@@ -177,6 +185,7 @@ class ProjectGenerator
 
     /**
      * @param ProjectInterface|null $project
+     * @return $this|ProjectInterface|mixed|object
      */
     public function project(ProjectInterface $project = null)
     {
@@ -213,13 +222,21 @@ class ProjectGenerator
     /**
      * @param ProjectInterface $project
      * @return $this
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function pricing(ProjectInterface $project)
     {
         /** @var Precifier $precifier */
         $precifier = $this->container->get('project_precifier');
 
-        $precifier->priceCost($project);
+        if ($this->newPrecifier) {
+            /** @var PrecifierBridge $precifierBridge */
+            $precifierBridge = $this->container->get('project_precifier_bridge');
+
+            $precifierBridge->priceCost($project);
+        } else {
+            $precifier->priceCost($project);
+        }
 
         $precifier->priceSale($project);
 
@@ -230,7 +247,6 @@ class ProjectGenerator
 
     /**
      * @param ProjectInterface $project
-     * @return $this
      */
     public function priceCost(ProjectInterface $project)
     {
@@ -265,8 +281,7 @@ class ProjectGenerator
 
     /**
      * @param ProjectInterface $project
-     * @param MakerInterface $maker
-     * @return $this|bool
+     * @return $this
      */
     public function generateInverters(ProjectInterface $project)
     {
@@ -326,6 +341,10 @@ class ProjectGenerator
         return $this;
     }
 
+    /**
+     * @param ProjectInterface $project
+     * @return $this|void
+     */
     public function generateGroups(ProjectInterface $project)
     {
         $defaults = $project->getDefaults();
@@ -533,6 +552,7 @@ class ProjectGenerator
 
     /**
      * @param ProjectInterface $project
+     * @return $this
      */
     public function handleAreas(ProjectInterface $project)
     {
@@ -554,6 +574,7 @@ class ProjectGenerator
      * 1. Resolve modules quantity by config string areas
      *
      * @param ProjectInterface $project
+     * @return $this
      */
     public function synchronize(ProjectInterface $project)
     {
