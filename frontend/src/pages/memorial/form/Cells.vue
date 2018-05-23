@@ -32,7 +32,7 @@
         td
           input(
             type='text',
-            v-on:blur='updateRange(component, $event)',
+            v-on:blur='updateRange(component.id, $event.target.value)',
             :value='component.costPrice')
         td.range(v-for='range in component.ranges')
           input(type='text', :value='`${range.markup}%`')
@@ -80,16 +80,12 @@
 
         return names[name]
       },
-      updateRange(component, event) {
+      updateRange(componentId, costPrice) {
         const { level } = this.getQueryParams()
 
-        const uri = `admin/api/v1/memorial_ranges/${component.id}/cost_price`
-        const params = {
-          costPrice: event.target.value,
-          level
-        }
+        const uri = `admin/api/v1/memorial_ranges/${componentId}/cost_price`
 
-        this.axios.put(uri, params).then(response => {
+        this.axios.put(uri, { costPrice, level }).then(response => {
           this.$emit('updateMemorialRange', response.data)
         })
       }
