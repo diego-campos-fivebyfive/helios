@@ -60,11 +60,11 @@ class RangesController extends AbstractController
 
         $costPrice = (float) $request->request->get('costPrice');
 
-        $newMetadata = RangePrecify::calculate($range->getMetadata(), $costPrice);
+        $rangesPrecification = RangePrecify::calculate($range->getMetadata(), $costPrice);
 
         $range->setCostPrice($costPrice);
 
-        $range->setMetadata($newMetadata);
+        $range->setMetadata($rangesPrecification);
 
         $manager->save($range);
 
@@ -150,8 +150,8 @@ class RangesController extends AbstractController
     {
         $costPrice = $range->getCostPrice();
 
-        $newMetadata = RangePrecify::calculate($range->getMetadata(), $costPrice, $level, $markup, $powerRange);
+        $rangesPrecification = RangePrecify::calculate($range->getMetadata(), $costPrice, $level, $markup, $powerRange);
 
-        $range->setMetadata($newMetadata);
+        $range->setMetadata($rangesPrecification);
     }
 }
