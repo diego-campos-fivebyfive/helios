@@ -43,7 +43,7 @@
   export default {
     props: [
       'groups',
-      'filter'
+      'getQueryParams'
     ],
     data: () => ({
       ranges: [],
@@ -81,10 +81,12 @@
         return names[name]
       },
       updateRange(component, event) {
+        const { level } = this.getQueryParams()
+
         const uri = `admin/api/v1/memorial_ranges/${component.id}/cost_price`
         const params = {
           costPrice: event.target.value,
-          level: this.filter.queryParams.level
+          level
         }
 
         this.axios.put(uri, params).then(response => {

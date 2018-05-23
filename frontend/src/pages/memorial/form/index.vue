@@ -7,7 +7,7 @@
       v-on:getMemorialGroups='getMemorialGroups')
     Cells(
       slot='section',
-      :filter='$refs.filter',
+      :getQueryParams='getQueryParams',
       v-on:updateMemorialRange='updateMemorialRange',
       :groups='groups')
 </template>
@@ -48,12 +48,17 @@
             this.groups = response.data
           })
       },
+      getQueryParams() {
+        return this.$refs.filter.queryParams
+      },
       updateMemorialRange(range) {
         this.groups[range.family]
           .forEach(component => {
             if (component.id === range.id) {
+              /* eslint-disable */
               component.costPrice = range.costPrice
               component.ranges = range.powerRanges
+              /* eslint-enable */
             }
           })
       }

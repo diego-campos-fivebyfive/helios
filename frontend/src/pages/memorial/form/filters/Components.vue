@@ -40,10 +40,13 @@
     }),
     methods: {
       updateFamiliesQuery(familyName, event) {
+        const excludeFamily = eachFamilyName => (
+          eachFamilyName !== familyName
+        )
+
         const familiesQuery = (event.target.checked)
           ? this.families.concat(familyName)
-          : this.families
-            .filter(eachFamilyName => (eachFamilyName !== familyName))
+          : this.families.filter(excludeFamily)
 
         this.$emit('updateFamiliesQuery', familiesQuery)
       }
