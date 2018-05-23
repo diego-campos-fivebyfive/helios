@@ -34,9 +34,15 @@
             type='text',
             v-on:blur='updateRange(component.id, $event.target.value)',
             :value='component.costPrice')
-        td.range(v-for='range in component.ranges')
-          input(type='text', :value='`${range.markup}%`')
-          input(type='text', readonly, :value='`R$ ${range.price}`')
+        td(v-for='(range, key) in component.ranges')
+          div.markups
+            input(
+              type='text',
+              v-on:blur='updatePriceMarkup(component.id, key, $event.target.value)',
+              :value='range.markup')
+            span.percent %
+            input(type='text', readonly, :value='range.price')
+            span.money R$
 </template>
 
 <script>
@@ -88,6 +94,9 @@
         this.axios.put(uri, { costPrice, level }).then(response => {
           this.$emit('updateMemorialRange', response.data)
         })
+      },
+      updatePriceMarkup(componentId, range, markup) {
+        console.log('test update markup', componentId, range, markup)
       }
     },
     mounted() {
@@ -113,15 +122,37 @@
   .range {
     input {
       width: 50%;
+      padding: $ui-space-y/2 $ui-space-y;
 
       &:first-of-type {
         text-align: right;
       }
     }
+  }
 
-    span {
+  .markups {
+    position: relative;
+    color: $ui-gray-regular;
+
+    .percent {
+      position: absolute;
+      left: $ui-space-y*6.25;
+      top: $ui-space-y/1.75;
+    }
+
+    .money {
+      position: absolute;
+      left: $ui-space-y*7.75;
+      top: $ui-space-y/1.75;
+    }
+
+    input {
       width: 50%;
-      display: inline-block;
+      padding: $ui-space-y/2 $ui-space-y*1.5;
+
+      &:first-of-type {
+        text-align: right;
+      }
     }
   }
 
