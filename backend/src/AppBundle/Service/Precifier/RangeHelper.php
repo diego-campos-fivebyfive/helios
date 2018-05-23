@@ -61,6 +61,33 @@ class RangeHelper
     }
 
     /**
+     * @param $groups
+     * @return array
+     */
+    public function loadByComponentsIds($groups)
+    {
+        $ranges = [];
+
+        $qb = $this->manager->createQueryBuilder();
+
+        $qb->select('r.componentId, r.family, r.metadata');
+
+        foreach ($groups as $family => $componentsIds) {
+            $qb->where(
+                $qb->expr()->in('r.componentId', $componentsIds)
+            )->andWhere(
+                $qb->expr()->eq('r.family', $qb->expr()->literal($family))
+            );
+
+            foreach ($qb->getQuery()->getResult() as $range) {
+                $ranges[] = $range;
+            }
+        }
+
+        return $ranges;
+    }
+
+    /**
      * @param Memorial $memorial
      * @param array $families
      * @return array
@@ -138,7 +165,6 @@ class RangeHelper
 
             foreach ($ranges as $range) {
                 $componentId = $range['componentId'];
-                $rangeId = $range['id'];
 
                 $range['code'] = $components[$componentId]['code'];
                 $range['description'] = $components[$componentId]['description'];
@@ -156,7 +182,7 @@ class RangeHelper
                     $range['ranges'] = $levelRanges;
                 }
 
-                $results[$family][$rangeId] = $range;
+                $results[$family][] = $range;
             }
         }
 

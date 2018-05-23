@@ -248,6 +248,10 @@ services:
         class: AppBundle\Service\ProjectManipulator
         arguments: ['@project_manager']
 
+    project_precifier_bridge:
+        class: AppBundle\Service\ProjectGenerator\PrecifierBridge
+        arguments: ['@service_container']
+
     structure_calculator:
         class: AppBundle\Service\StructureCalculator\StructureCalculator
         arguments: ['@project_manager', '@structure_manager', '@project_structure_manager']

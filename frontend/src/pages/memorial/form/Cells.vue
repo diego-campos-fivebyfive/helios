@@ -32,7 +32,10 @@
           td.col-f
             input(type='checkbox')
           td.col-cmv
-            input(type='text', :value='component.costPrice')
+            input(
+              type='text',
+              v-on:blur='updateRange(component.id, $event.target.value)',
+              :value='component.costPrice')
           td.col-range(v-for='range in component.ranges')
             input(type='text', :value='`${range.markup}%`')
             input(type='text', readonly, :value='`R$ ${range.price}`')
@@ -41,7 +44,8 @@
 <script>
   export default {
     props: [
-      'groups'
+      'groups',
+      'getQueryParams'
     ],
     data: () => ({
       ranges: [],
@@ -77,6 +81,15 @@
         }
 
         return names[name]
+      },
+      updateRange(componentId, costPrice) {
+        const { level } = this.getQueryParams()
+
+        const uri = `admin/api/v1/memorial_ranges/${componentId}/cost_price`
+
+        this.axios.put(uri, { costPrice, level }).then(response => {
+          this.$emit('updateMemorialRange', response.data)
+        })
       }
     },
     mounted() {

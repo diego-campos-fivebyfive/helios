@@ -21,7 +21,7 @@ class Calculator
         $ranges = [];
 
         foreach ($componentsRange as $range) {
-            $tag = self::generateAccessKey($range['family'], $range['component_id']);
+            $tag = self::generateAccessKey($range['family'], $range['componentId']);
 
             $ranges[$tag] = $range;
         }
@@ -35,12 +35,22 @@ class Calculator
         $precifiedResults = [];
 
         foreach ($groups as $family => $components) {
-            foreach ($components as $component_id) {
-                $tag = self::generateAccessKey($family, $component_id);
+            foreach ($components as $componentId => $projectElement) {
+                $tag = self::generateAccessKey($family, $componentId);
 
                 $price = $ranges[$tag]['metadata'][$level][$powerRange]['price'];
 
-                $precifiedResults[$family][$component_id] = $price;
+                if (is_array($projectElement)) {
+                    foreach ($projectElement as $element) {
+                        $precifiedResults[$family][$componentId][] = [
+                            'price' => $price,
+                            'projectElement' => $element
+                        ];
+                    }
+                } else {
+                    $precifiedResults[$family][$componentId]['price'] = $price;
+                    $precifiedResults[$family][$componentId]['projectElement'] = $projectElement;
+                }
             }
         }
 
