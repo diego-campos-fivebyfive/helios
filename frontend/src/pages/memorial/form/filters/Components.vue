@@ -42,7 +42,8 @@
       updateFamiliesQuery(familyName, event) {
         const familiesQuery = (event.target.checked)
           ? this.families.concat(familyName)
-          : this.families.filter(eachFamilyName => (eachFamilyName !== familyName))
+          : this.families
+            .filter(eachFamilyName => (eachFamilyName !== familyName))
 
         this.$emit('updateFamiliesQuery', familiesQuery)
       }
