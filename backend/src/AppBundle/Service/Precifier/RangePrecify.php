@@ -33,7 +33,7 @@ class RangePrecify
     {
         $costPrice = $costPrice ? $costPrice : 0;
 
-        $precifyAllLevels = ($markup === null || $powerRange === null) && $level === null ? true : false;
+        $precifyAllLevels = ($markup === null || $powerRange === null) && !$level;
 
         if ($precifyAllLevels) {
             foreach ($metadata as $level => $levelRanges) {
