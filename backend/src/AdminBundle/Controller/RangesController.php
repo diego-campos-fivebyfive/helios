@@ -102,6 +102,7 @@ class RangesController extends AbstractController
         $results = [
             'level' => $level,
             'powerRange' => $powerRange,
+            'family' => $range->getFamily(),
             'ranges' => []
         ];
 
@@ -137,7 +138,10 @@ class RangesController extends AbstractController
      */
     private function formatRange(&$results, Range $range, $level, $powerRange)
     {
-        $results['ranges'][$range->getId()] = $range->getMetadata()[$level][$powerRange]['price'];
+        $results['ranges'][] = [
+            'id' => $range->getId(),
+            'price' => $range->getMetadata()[$level][$powerRange]['price']
+        ];
     }
 
     /**

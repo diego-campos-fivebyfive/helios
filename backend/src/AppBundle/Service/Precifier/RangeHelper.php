@@ -119,6 +119,7 @@ class RangeHelper
      * @param Memorial $memorial
      * @param array $filters
      * @return array
+     * @throws \Doctrine\ORM\RuntimeException
      */
     public function filterAndFormatRanges(Memorial $memorial, array $filters)
     {
@@ -182,10 +183,22 @@ class RangeHelper
                     $range['ranges'] = $levelRanges;
                 }
 
+                $this->formatMarkup($range['ranges']);
+
                 $results[$family][] = $range;
             }
         }
 
         return $results;
+    }
+
+    /**
+     * @param $ranges
+     */
+    private function formatMarkup(&$ranges)
+    {
+        foreach ($ranges as $powerRange => $data) {
+            $ranges[$powerRange]['markup'] = $data['markup'] * 100;
+        }
     }
 }
