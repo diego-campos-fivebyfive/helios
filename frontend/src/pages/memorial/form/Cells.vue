@@ -15,8 +15,7 @@
           th.col-range(v-for='range in ranges')
             span Markup (%)
             span Preço (R$)
-      slot(
-        slot='rows', v-for='(components, groupName) in groups')
+      slot(slot='rows', v-for='(components, groupName) in groups')
         tr.group-name
           th.col-group-name(colspan='5')
             Icon(:name='getIcon(groupName)')
@@ -37,16 +36,13 @@
                 type='text',
                 v-on:blur='updateRange(component.id, $event.target.value)',
                 :value='component.costPrice')
-              span R$
           td.col-range(v-for='(range, key) in component.ranges')
             .markups
               input(
                 type='text',
-                v-on:blur='updatePriceMarkup(component.id, key, $event.target.value)',
+                v-on:blur='updateMarkup(component, key, $event.target.value)',
                 :value='range.markup')
-              span.percent %
               input(type='text', readonly, :value='range.price')
-              span.money R$
 </template>
 
 <script>
@@ -99,13 +95,13 @@
           this.$emit('updateMemorialRange', response.data)
         })
       },
-      updatePriceMarkup(componentId, powerRange, markup) {
+      updateMarkup(component, powerRange, markup) {
         const { level } = this.getQueryParams()
 
-        const uri = `admin/api/v1/memorial_ranges/${componentId}/markup`
+        const uri = `admin/api/v1/memorial_ranges/${component.id}/markup`
 
-        this.axios.put(uri, { markup, powerRange, level}).then(response => {
-          this.$emit('updateMemorialMarkup', response.data)
+        this.axios.put(uri, { markup, powerRange, level }).then(response => {
+          this.$emit('updateMemorialMarkup', response.data, markup)
         })
       }
     },
@@ -121,19 +117,6 @@
     position: relative;
   }
 
-  .rows {
-    input {
-      border: 1px solid $ui-gray-light;
-      color: $ui-gray-regular;
-      padding: 8px 10px;
-      width: 100%;
-    }
-
-    input:read-only {
-      background-color: $ui-gray-lighter;
-    }
-  }
-
   .group-name {
     background-color: $ui-gray-lighter;
     text-align: left;
@@ -142,33 +125,6 @@
     svg {
       float: left;
       margin-right: $ui-space-y/2;
-    }
-  }
-
-  .markups {
-    position: relative;
-    color: $ui-gray-regular;
-
-    .percent {
-      position: absolute;
-      left: $ui-space-y*5;
-      top: $ui-space-y/2;
-    }
-
-    .money {
-      position: absolute;
-      left: $ui-space-y*6.5;
-      top: $ui-space-y/2;
-    }
-
-    input {
-      width: 50%;
-      padding-left: $ui-space-y*1.5;
-
-      &:first-of-type {
-        text-align: right;
-        padding-right: $ui-space-y*1.5;
-      }
     }
   }
 
@@ -192,11 +148,19 @@
   .col-code {
     left: 0;
     min-width: 200px;
+
+    input {
+      padding: $ui-space-y/2 $ui-space-x/2;
+    }
   }
 
   .col-description {
     left: 200px;
     min-width: 200px;
+
+    input {
+      padding: $ui-space-y/2 $ui-space-x/2;
+    }
   }
 
   .col-m {
@@ -210,12 +174,18 @@
   }
 
   .col-cmv {
-    color: $ui-gray-regular;
     left: 550px;
     min-width: 135px;
 
     .costPrice {
       position: relative;
+      color: $ui-gray-regular;
+    }
+
+    .costPrice:before {
+      padding: $ui-space-y/2 $ui-space-x/4;
+      position: absolute;
+      content: "R$";
     }
 
     input {
@@ -251,9 +221,41 @@
         text-align: right;
       }
     }
+
+    .markups {
+      position: relative;
+      color: $ui-gray-regular;
+
+      &:before {
+        content: "%";
+        left: $ui-space-x * 3;
+        position: absolute;
+        top: $ui-space-y/2;
+      }
+
+      &:after {
+        content: "R$";
+        left: - $ui-space-x * 4;
+        position: absolute;
+        top: $ui-space-y/2;
+      }
+    }
   }
 
   .col-range-off {
     left: 0;
+  }
+
+  .rows {
+    input {
+      border: 1px solid $ui-gray-light;
+      color: $ui-gray-regular;
+      padding: $ui-space-y/2 $ui-space-x;
+      width: 100%;
+
+      &:read-only {
+        background-color: $ui-gray-lighter;
+      }
+    }
   }
 </style>
