@@ -4,6 +4,7 @@ namespace AppBundle\Service\Precifier;
 
 use AppBundle\Entity\Precifier\Memorial;
 use AppBundle\Manager\Precifier\RangeManager;
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -124,17 +125,52 @@ class RangeHelper
     public function filterAndFormatRanges(Memorial $memorial, array $filters)
     {
         $families = $filters['families'] ?? [];
+        $level = $filters['level'] ?? '';
+        $filterPowerRanges = $filters['powerRanges'] ?? [];
+
+        sort($filterPowerRanges);
 
         $groupsRanges = [];
 
-        $groups = [];
+        $componentsGroupsIds = [];
+
+        $this->loadRanges($memorial, $families, $groupsRanges, $componentsGroupsIds);
+
+        $groupsComponents = $this->componentsLoader->loadByIds($componentsGroupsIds);
+
+        $formatedRanges = $this->formatRanges($groupsRanges, $groupsComponents, $level, $filterPowerRanges);
+
+        return $formatedRanges;
+    }
+
+    /**
+     * @param $ranges
+     * @return mixed
+     */
+    public function formatMarkup($ranges)
+    {
+        foreach ($ranges as $powerRange => $data) {
+            $ranges[$powerRange]['markup'] = $data['markup'] * 100;
+        }
+
+        return $ranges;
+    }
+
+    /**
+     * @param Memorial $memorial
+     * @param $families
+     * @param $groupsRanges
+     * @param $componentsGroupsIds
+     */
+    private function loadRanges(Memorial $memorial, $families, &$groupsRanges, &$componentsGroupsIds)
+    {
+        $qb = $this->manager->createQueryBuilder();
+
+        $qb->select('r.id, r.componentId, r.costPrice, r.metadata as ranges');
 
         foreach ($families as $family) {
 
-            $qb = $this->manager->createQueryBuilder();
-
-            $qb->select('r.id, r.componentId, r.costPrice, r.metadata as ranges')
-                ->where('r.memorial = :memorial')
+            $qb->where('r.memorial = :memorial')
                 ->andWhere('r.family = :family')
                 ->setParameters([
                     'memorial' => $memorial,
@@ -145,60 +181,68 @@ class RangeHelper
 
             $ranges = $qb->getQuery()->getResult();
 
-            $groups[$family] = array_column($ranges, 'componentId');
+            $componentsGroupsIds[$family] = array_column($ranges, 'componentId');
 
             $groupsRanges[$family] = $ranges;
         }
+    }
 
-        $groupComponents = $this->componentsLoader->loadByIds($groups);
-
-        $level = $filters['level'] ?? '';
-
-        $powerRanges = $filters['powerRanges'] ?? [];
-
-        sort($powerRanges);
-
-        $results = [];
+    /**
+     * @param $groupsRanges
+     * @param $groupsComponents
+     * @param $level
+     * @param $filterPowerRanges
+     * @return array
+     */
+    private function formatRanges($groupsRanges, $groupsComponents, $level, $filterPowerRanges)
+    {
+        $formatedRanges = [];
 
         foreach ($groupsRanges as $family => $ranges) {
 
-            $components = $groupComponents[$family];
+            $components = $groupsComponents[$family];
 
             foreach ($ranges as $range) {
+
                 $componentId = $range['componentId'];
 
                 $range['code'] = $components[$componentId]['code'];
                 $range['description'] = $components[$componentId]['description'];
 
-                $levelRanges = $range['ranges'][$level];
+                $selectedLevelRanges = $range['ranges'][$level];
 
-                if ($powerRanges) {
-                    $range['ranges'] = [];
-                    foreach ($powerRanges as $powerRange) {
-                        if (isset($levelRanges[$powerRange])) {
-                            $range['ranges'][$powerRange] = $levelRanges[$powerRange];
-                        }
-                    }
-                } else {
-                    $range['ranges'] = $levelRanges;
-                }
+                $filteredPowerRanges = $this->filterPowerRanges($selectedLevelRanges, $filterPowerRanges);
 
-                $this->formatMarkup($range['ranges']);
+                $formattedMarkupRanges = $this->formatMarkup($filteredPowerRanges);
 
-                $results[$family][] = $range;
+                $range['ranges'] = $formattedMarkupRanges;
+
+                $formatedRanges[$family][] = $range;
             }
         }
 
-        return $results;
+        return $formatedRanges;
     }
 
     /**
-     * @param $ranges
+     * @param $powerRanges
+     * @param $filterPowerRanges
+     * @return array
      */
-    private function formatMarkup(&$ranges)
+    private function filterPowerRanges($powerRanges, $filterPowerRanges)
     {
-        foreach ($ranges as $powerRange => $data) {
-            $ranges[$powerRange]['markup'] = $data['markup'] * 100;
+        if ($filterPowerRanges) {
+            $ranges = [];
+
+            foreach ($filterPowerRanges as $powerRange) {
+                if (isset($powerRanges[$powerRange])) {
+                    $ranges[$powerRange] = $powerRanges[$powerRange];
+                }
+            }
+
+            return $ranges;
         }
+
+        return $powerRanges;
     }
 }
