@@ -145,12 +145,15 @@ class RangeHelper
 
     /**
      * @param $ranges
+     * @return mixed
      */
-    private function formatMarkup(&$ranges)
+    public function formatMarkup($ranges)
     {
         foreach ($ranges as $powerRange => $data) {
             $ranges[$powerRange]['markup'] = $data['markup'] * 100;
         }
+
+        return $ranges;
     }
 
     /**
@@ -208,9 +211,11 @@ class RangeHelper
 
                 $selectedLevelRanges = $range['ranges'][$level];
 
-                $this->filterPowerRanges($range['ranges'], $selectedLevelRanges, $filterPowerRanges);
+                $filteredPowerRanges = $this->filterPowerRanges($selectedLevelRanges, $filterPowerRanges);
 
-                $this->formatMarkup($range['ranges']);
+                $formattedMarkupRanges = $this->formatMarkup($filteredPowerRanges);
+
+                $range['ranges'] = $formattedMarkupRanges;
 
                 $formatedRanges[$family][] = $range;
             }
@@ -220,21 +225,24 @@ class RangeHelper
     }
 
     /**
-     * @param $ranges
-     * @param $selectedLevelRanges
+     * @param $powerRanges
      * @param $filterPowerRanges
+     * @return array
      */
-    private function filterPowerRanges(&$ranges, $selectedLevelRanges, $filterPowerRanges)
+    private function filterPowerRanges($powerRanges, $filterPowerRanges)
     {
         if ($filterPowerRanges) {
             $ranges = [];
+
             foreach ($filterPowerRanges as $powerRange) {
-                if (isset($selectedLevelRanges[$powerRange])) {
-                    $ranges[$powerRange] = $selectedLevelRanges[$powerRange];
+                if (isset($powerRanges[$powerRange])) {
+                    $ranges[$powerRange] = $powerRanges[$powerRange];
                 }
             }
-        } else {
-            $ranges = $selectedLevelRanges;
+
+            return $ranges;
         }
+
+        return $powerRanges;
     }
 }

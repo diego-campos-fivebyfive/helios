@@ -60,18 +60,25 @@ class RangesController extends AbstractController
 
         $costPrice = (float) $request->request->get('costPrice');
 
-        $rangesPrecification = RangePrecify::calculate($range->getMetadata(), $costPrice);
+        $precificatedPowerRanges = RangePrecify::calculate($range->getMetadata(), $costPrice);
 
         $range->setCostPrice($costPrice);
 
-        $range->setMetadata($rangesPrecification);
+        $range->setMetadata($precificatedPowerRanges);
 
         $manager->save($range);
+
+        /** @var RangeHelper $rangeHelper */
+        $rangeHelper = $this->container->get('precifier_range_helper');
+
+        $powerRanges = $range->getMetadata()[$level];
+
+        $formattedMarkupRanges = $rangeHelper->formatMarkup($powerRanges);
 
         return $this->json([
             'id' => $range->getId(),
             'costPrice' => $range->getCostPrice(),
-            'powerRanges' => $range->getMetadata()[$level],
+            'powerRanges' => $formattedMarkupRanges,
             'family' => $range->getFamily()
         ]);
     }
@@ -154,8 +161,8 @@ class RangesController extends AbstractController
     {
         $costPrice = $range->getCostPrice();
 
-        $rangesPrecification = RangePrecify::calculate($range->getMetadata(), $costPrice, $level, $markup, $powerRange);
+        $precificatedPowerRanges = RangePrecify::calculate($range->getMetadata(), $costPrice, $level, $markup, $powerRange);
 
-        $range->setMetadata($rangesPrecification);
+        $range->setMetadata($precificatedPowerRanges);
     }
 }
