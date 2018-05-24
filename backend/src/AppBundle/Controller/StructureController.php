@@ -122,7 +122,7 @@ class StructureController extends AbstractController
      * @Breadcrumb("Edit")
      * @Route("/{id}/update", name="structure_update")
      * @Method({"GET","POST"})
-     * @Security("has_role('ROLE_PLATFORM_MASTER')")
+     * @Security("has_role('ROLE_PLATFORM_ADMIN')")
      */
     public function updateAction(Request $request, Structure $structure)
     {
