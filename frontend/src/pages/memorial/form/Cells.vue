@@ -15,8 +15,7 @@
           th.col-range(v-for='range in ranges')
             span Markup (%)
             span Preço (R$)
-      slot(
-        slot='rows', v-for='(components, groupName) in groups')
+      slot(slot='rows', v-for='(components, groupName) in groups')
         tr.group-name
           th.col-group-name(colspan='5')
             Icon(:name='getIcon(groupName)')
@@ -32,13 +31,18 @@
           td.col-f
             input(type='checkbox')
           td.col-cmv
-            input(
-              type='text',
-              v-on:blur='updateRange(component.id, $event.target.value)',
-              :value='component.costPrice')
-          td.col-range(v-for='range in component.ranges')
-            input(type='text', :value='`${range.markup}%`')
-            input(type='text', readonly, :value='`R$ ${range.price}`')
+            .cost-price
+              input(
+                type='text',
+                v-on:blur='updateRange(component.id, $event.target.value)',
+                :value='component.costPrice')
+          td.col-range(v-for='(range, key) in component.ranges')
+            .markups
+              input(
+                type='text',
+                v-on:blur='updateMarkup(component, key, $event.target.value)',
+                :value='range.markup')
+              input(type='text', readonly, :value='range.price')
 </template>
 
 <script>
@@ -90,6 +94,15 @@
         this.axios.put(uri, { costPrice, level }).then(response => {
           this.$emit('updateMemorialRange', response.data)
         })
+      },
+      updateMarkup(component, powerRange, markup) {
+        const { level } = this.getQueryParams()
+
+        const uri = `admin/api/v1/memorial_ranges/${component.id}/markup`
+
+        this.axios.put(uri, { markup, powerRange, level }).then(response => {
+          this.$emit('updateMemorialMarkup', response.data, markup)
+        })
       }
     },
     mounted() {
@@ -102,19 +115,6 @@
   .table-wrapper {
     overflow: auto;
     position: relative;
-  }
-
-  .rows {
-    input {
-      border: 1px solid $ui-gray-light;
-      color: $ui-gray-regular;
-      padding: 8px 10px;
-      width: 100%;
-    }
-
-    input:read-only {
-      background-color: $ui-gray-lighter;
-    }
   }
 
   .group-name {
@@ -148,11 +148,19 @@
   .col-code {
     left: 0;
     min-width: 200px;
+
+    input {
+      padding: $ui-space-y/2 $ui-space-x/2;
+    }
   }
 
   .col-description {
     left: 200px;
     min-width: 200px;
+
+    input {
+      padding: $ui-space-y/2 $ui-space-x/2;
+    }
   }
 
   .col-m {
@@ -168,6 +176,27 @@
   .col-cmv {
     left: 550px;
     min-width: 135px;
+
+    .cost-price {
+      position: relative;
+      color: $ui-gray-regular;
+
+      &:before {
+        padding: $ui-space-y/2 $ui-space-x/4;
+        position: absolute;
+        content: "R$";
+      }
+    }
+
+    input {
+      padding: $ui-space-y/2 $ui-space-x;
+    }
+
+    span {
+      position: absolute;
+      left: $ui-space-y/2.5;
+      top: $ui-space-y/2;
+    }
   }
 
   .col-group-name {
@@ -192,9 +221,41 @@
         text-align: right;
       }
     }
+
+    .markups {
+      position: relative;
+      color: $ui-gray-regular;
+
+      &:before {
+        content: "%";
+        left: $ui-space-x * 3;
+        position: absolute;
+        top: $ui-space-y/2;
+      }
+
+      &:after {
+        content: "R$";
+        position: absolute;
+        right: $ui-space-x * 2.75;
+        top: $ui-space-y/2;
+      }
+    }
   }
 
   .col-range-off {
     left: 0;
+  }
+
+  .rows {
+    input {
+      border: 1px solid $ui-gray-light;
+      color: $ui-gray-regular;
+      padding: $ui-space-y/2 $ui-space-x;
+      width: 100%;
+
+      &:read-only {
+        background-color: $ui-gray-lighter;
+      }
+    }
   }
 </style>
