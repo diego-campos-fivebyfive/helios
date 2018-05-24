@@ -53,96 +53,98 @@
                                     </div>
                                 </div>
 
-                                <div class="panel panel-primary">
-                                    <div class="panel-heading">
-                                        &nbsp; Dados gerais
-                                    </div>
-                                    <div class="panel-body">
-
-                                        <div class="form-group col-md-3">
-                                            {{ form_label(form.code, 'Código') }}
-                                            {{ form_widget(form.code,{attr:{class:'form-control'}}) }}
+                                {% if member.isPlatformMaster %}
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            &nbsp; Dados gerais
                                         </div>
+                                        <div class="panel-body">
 
-                                        <div class="form-group col-md-3">
-                                            {{ form_row(form.maker,{attr:{class:'form-control'}}) }}
-                                        </div>
+                                            <div class="form-group col-md-3">
+                                                {{ form_label(form.code, 'Código') }}
+                                                {{ form_widget(form.code,{attr:{class:'form-control'}}) }}
+                                            </div>
 
-                                        <div class="form-group col-md-6">
-                                            {{ form_row(form.description,{attr:{class:'form-control'}}) }}
-                                        </div>
+                                            <div class="form-group col-md-3">
+                                                {{ form_row(form.maker,{attr:{class:'form-control'}}) }}
+                                            </div>
 
-                                        <div class="form-group col-md-3">
-                                            {{ form_label(form.minPowerSelection, 'Potência mínima para seleção') }}
-                                            {{ form_widget(form.minPowerSelection,{attr:{class:'form-control'}}) }}
-                                        </div>
+                                            <div class="form-group col-md-6">
+                                                {{ form_row(form.description,{attr:{class:'form-control'}}) }}
+                                            </div>
 
-                                        <div class="form-group col-md-3">
-                                            {{ form_label(form.maxPowerSelection, 'Potência máxima para seleção') }}
-                                            {{ form_widget(form.maxPowerSelection,{attr:{class:'form-control'}}) }}
-                                        </div>
+                                            <div class="form-group col-md-3">
+                                                {{ form_label(form.minPowerSelection, 'Potência mínima para seleção') }}
+                                                {{ form_widget(form.minPowerSelection,{attr:{class:'form-control'}}) }}
+                                            </div>
 
-                                        <div class="form-group col-md-4">
-                                            {{ form_label(form.alternative, 'Variedade alternativa') }}
-                                            {{ form_widget(form.alternative,{attr:{class:'form-control'}}) }}
-                                        </div>
+                                            <div class="form-group col-md-3">
+                                                {{ form_label(form.maxPowerSelection, 'Potência máxima para seleção') }}
+                                                {{ form_widget(form.maxPowerSelection,{attr:{class:'form-control'}}) }}
+                                            </div>
 
-                                        <div class="form-group col-md-2">
-                                            {{ form_label(form.position, 'Posição') }}
-                                            {{ form_widget(form.position, {attr:{class:'form-control'}}) }}
-                                        </div>
+                                            <div class="form-group col-md-4">
+                                                {{ form_label(form.alternative, 'Variedade alternativa') }}
+                                                {{ form_widget(form.alternative,{attr:{class:'form-control'}}) }}
+                                            </div>
 
-                                        <div class="form-group col-md-6">
-                                            <label> Datasheet (PDF) </label>
-                                            <input type="file" name="dataSheet" accept="application/pdf">
-                                            {% if variety.datasheet %}
-                                                <span class="label info">
+                                            <div class="form-group col-md-2">
+                                                {{ form_label(form.position, 'Posição') }}
+                                                {{ form_widget(form.position, {attr:{class:'form-control'}}) }}
+                                            </div>
+
+                                            <div class="form-group col-md-6">
+                                                <label> Datasheet (PDF) </label>
+                                                <input type="file" name="dataSheet" accept="application/pdf">
+                                                {% if variety.datasheet %}
+                                                    <span class="label info">
                                                     Este componente já possui datasheet
                                                 </span>
-                                            {% endif %}
-                                        </div>
+                                                {% endif %}
+                                            </div>
 
-                                        <div class="form-group col-md-6">
-                                            <label> Imagem (JPG) </label>
-                                            <input type="file" name="image" accept="image/jpeg">
-                                            {% if variety.image %}
-                                                <span class="label info">
+                                            <div class="form-group col-md-6">
+                                                <label> Imagem (JPG) </label>
+                                                <input type="file" name="image" accept="image/jpeg">
+                                                {% if variety.image %}
+                                                    <span class="label info">
                                                     Este componente já possui imagem
                                                 </span>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="panel panel-success technical_data">
-                                    <div class="panel-heading">
-                                        &nbsp; Dados Técnicos
-                                    </div>
-                                    <div class="panel-body">
-
-                                        <div class="form-group col-md-4">
-                                            {{ form_label(form.type, 'Tipo') }}
-                                            <div class="input-group m-b">
-                                                {{ form_widget(form.type,{attr:{class:'form-control'}}) }}
+                                                {% endif %}
                                             </div>
                                         </div>
-
-                                        <div class="form-group col-md-4">
-                                            {{ form_label(form.subtype, 'Sub-Tipo') }}
-                                            <div class="input-group m-b">
-                                                {{ form_widget(form.subtype,{attr:{class:'form-control'}}) }}
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            {{ form_label(form.power, 'Potência') }}
-                                            <div class="input-group m-b">
-                                                {{ form_widget(form.power,{attr:{class:'form-control', min:'0'}}) }}
-                                            </div>
-                                        </div>
-
                                     </div>
-                                </div>
+
+                                    <div class="panel panel-success technical_data">
+                                        <div class="panel-heading">
+                                            &nbsp; Dados Técnicos
+                                        </div>
+                                        <div class="panel-body">
+
+                                            <div class="form-group col-md-4">
+                                                {{ form_label(form.type, 'Tipo') }}
+                                                <div class="input-group m-b">
+                                                    {{ form_widget(form.type,{attr:{class:'form-control'}}) }}
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                {{ form_label(form.subtype, 'Sub-Tipo') }}
+                                                <div class="input-group m-b">
+                                                    {{ form_widget(form.subtype,{attr:{class:'form-control'}}) }}
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                {{ form_label(form.power, 'Potência') }}
+                                                <div class="input-group m-b">
+                                                    {{ form_widget(form.power,{attr:{class:'form-control', min:'0'}}) }}
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                {% endif %}
 
                                 <div class="form-group clearfix">
                                     <button type="submit" name="intention" value="save" class="btn btn-primary pull-right">
@@ -151,6 +153,10 @@
                                     <a href="{{ path('variety_index') }}">
                                         <button class="btn btn-success btn-xd pull-right">{{'Voltar'|trans}}</button>
                                     </a>
+                                </div>
+
+                                <div class="hide">
+                                    {{ form_rest(form) }}
                                 </div>
 
                                 {{ form_end(form) }}
