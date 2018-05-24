@@ -130,7 +130,7 @@ class VarietyController extends AbstractController
     }
 
     /**
-     * @Security("has_role('ROLE_PLATFORM_MASTER')")
+     * @Security("has_role('ROLE_PLATFORM_ADMIN')")
      *
      * @Route("/{id}/update", name="variety_edit")
      * @Method({"GET", "POST"})
