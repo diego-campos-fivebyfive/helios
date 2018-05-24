@@ -2321,12 +2321,9 @@ class Order implements OrderInterface
             $this->state = $this->account->getState();
             $this->city = $this->account->getCity();
             $this->address = $this->account->getStreet();
-
-            if(null != $owner = $this->account->getOwner()) {
-                $this->contact = $owner->getFirstname();
-                $this->email = $owner->getEmail();
-                $this->phone = $owner->getPhone();
-            }
+            $this->contact = $this->account->getFirstname();
+            $this->email = $this->account->getEmail();
+            $this->phone = $this->account->getPhone();
         }
     }
 
