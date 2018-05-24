@@ -76,185 +76,187 @@
                                     </div>
                                 </div>
 
-                                <div class="panel panel-primary">
-                                    <div class="panel-heading">
-                                        &nbsp; Dados gerais
-                                    </div>
-                                    <div class="panel-body">
+                                {% if member.isPlatformMaster %}
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            &nbsp; Dados gerais
+                                        </div>
+                                        <div class="panel-body">
 
-                                        <div class="form-group col-md-3">
-                                            {{ form_label(form.code, 'Código do Produto') }}
-                                            {{ form_row(form.code, {attr:{class:'form-control'}}) }}
-                                        </div>
+                                            <div class="form-group col-md-3">
+                                                {{ form_label(form.code, 'Código do Produto') }}
+                                                {{ form_row(form.code, {attr:{class:'form-control'}}) }}
+                                            </div>
 
-                                        <div class="form-group col-md-3">
-                                            {{ form_row(form.maker,{attr:{class:'form-control'}}) }}
-                                        </div>
+                                            <div class="form-group col-md-3">
+                                                {{ form_row(form.maker,{attr:{class:'form-control'}}) }}
+                                            </div>
 
-                                        <div class="form-group col-md-4">
-                                            {{ form_row(form.model,{attr:{class:'form-control'}}) }}
-                                        </div>
+                                            <div class="form-group col-md-4">
+                                                {{ form_row(form.model,{attr:{class:'form-control'}}) }}
+                                            </div>
 
-                                        <div class="form-group col-md-2">
-                                            {{ form_label(form.connection_type, 'Tipo de Conexão') }}
-                                            {{ form_widget(form.connection_type,{attr:{class:'form-control'}}) }}
-                                        </div>
-                                        <div class="form-group col-md-2">
-                                            {{ form_label(form.position, 'Posição') }}
-                                            {{ form_widget(form.position,{attr:{class:'form-control'}}) }}
-                                        </div>
-                                        <div class="form-group col-md-3">
-                                            {{ form_label(form.minPowerSelection, 'Potência mínima para seleção') }}
-                                            {{ form_widget(form.minPowerSelection,{attr:{class:'form-control'}}) }}
-                                        </div>
-                                        <div class="form-group col-md-3">
-                                            {{ form_label(form.maxPowerSelection, 'Potência máxima para seleção') }}
-                                            {{ form_widget(form.maxPowerSelection,{attr:{class:'form-control'}}) }}
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            {{ form_label(form.alternative, 'Inversor alternativo') }}
-                                            {{ form_widget(form.alternative,{attr:{class:'form-control'}}) }}
-                                        </div>
+                                            <div class="form-group col-md-2">
+                                                {{ form_label(form.connection_type, 'Tipo de Conexão') }}
+                                                {{ form_widget(form.connection_type,{attr:{class:'form-control'}}) }}
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                {{ form_label(form.position, 'Posição') }}
+                                                {{ form_widget(form.position,{attr:{class:'form-control'}}) }}
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                {{ form_label(form.minPowerSelection, 'Potência mínima para seleção') }}
+                                                {{ form_widget(form.minPowerSelection,{attr:{class:'form-control'}}) }}
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                {{ form_label(form.maxPowerSelection, 'Potência máxima para seleção') }}
+                                                {{ form_widget(form.maxPowerSelection,{attr:{class:'form-control'}}) }}
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                {{ form_label(form.alternative, 'Inversor alternativo') }}
+                                                {{ form_widget(form.alternative,{attr:{class:'form-control'}}) }}
+                                            </div>
 
-                                        {% if inverter.id %}
-                                        <div class="form-group col-md-4">
-                                            <button type="button" class="btn btn-warning btn-block btn-relationship"
-                                                    data-url="{{ path('component_relationship', {type:'inverter', id:inverter.id}) }}"
-                                                    data-toggle="modal" data-target="#modal_relationship">
-                                                <i class="fa fa-th"></i> Módulos relacionados
-                                            </button>
-                                        </div>
-                                        {% endif %}
+                                            {% if inverter.id %}
+                                                <div class="form-group col-md-4">
+                                                    <button type="button" class="btn btn-warning btn-block btn-relationship"
+                                                            data-url="{{ path('component_relationship', {type:'inverter', id:inverter.id}) }}"
+                                                            data-toggle="modal" data-target="#modal_relationship">
+                                                        <i class="fa fa-th"></i> Módulos relacionados
+                                                    </button>
+                                                </div>
+                                            {% endif %}
 
-                                        <div class="form-group col-md-4">
-                                            <label> Datasheet (PDF) </label>
-                                            <input type="file" name="dataSheet" accept="application/pdf">
-                                            {% if inverter.datasheet %}
-                                                <span class="label info">
+                                            <div class="form-group col-md-4">
+                                                <label> Datasheet (PDF) </label>
+                                                <input type="file" name="dataSheet" accept="application/pdf">
+                                                {% if inverter.datasheet %}
+                                                    <span class="label info">
                                                     Este componente já possui datasheet
                                                 </span>
-                                            {% endif %}
-                                        </div>
+                                                {% endif %}
+                                            </div>
 
-                                        <div class="form-group col-md-4">
-                                            <label> Imagem (JPG) </label>
-                                            <input type="file" name="image" accept="image/jpeg">
-                                            {% if inverter.image %}
-                                                <span class="label info">
+                                            <div class="form-group col-md-4">
+                                                <label> Imagem (JPG) </label>
+                                                <input type="file" name="image" accept="image/jpeg">
+                                                {% if inverter.image %}
+                                                    <span class="label info">
                                                     Este componente já possui imagem
                                                 </span>
-                                            {% endif %}
+                                                {% endif %}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="panel panel-success technical_data">
-                                    <div class="panel-heading">
-                                        &nbsp; Dados Técnicos
+                                    <div class="panel panel-success technical_data">
+                                        <div class="panel-heading">
+                                            &nbsp; Dados Técnicos
+                                        </div>
+                                        <div class="panel-body">
+
+                                            <div class="col-md-4">
+                                                {{ form_label(form.nominalPower, 'Potência Nominal') }}
+                                                <div class="input-group m-b">
+                                                    {{ form_widget(form.nominalPower,{attr:{class:'form-control'}}) }}
+                                                    <span class="input-group-addon">kW</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                {{ form_label(form.mpptNumber, 'Número de MPPTs') }}
+                                                {{ form_widget(form.mpptNumber,{attr:{class:'form-control', min:'0'}}) }}
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                {{ form_label(form.maxEfficiency, 'Eficiência') }}
+                                                <div class="input-group m-b">
+                                                    {{ form_widget(form.maxEfficiency,{attr:{class:'form-control'}}) }}
+                                                    <span class="input-group-addon">%</span>
+                                                </div>
+                                            </div>
+
+                                        </div>
                                     </div>
-                                    <div class="panel-body">
 
-                                        <div class="col-md-4">
-                                            {{ form_label(form.nominalPower, 'Potência Nominal') }}
-                                            <div class="input-group m-b">
-                                                {{ form_widget(form.nominalPower,{attr:{class:'form-control'}}) }}
-                                                <span class="input-group-addon">kW</span>
+                                    <div class="panel panel-success input_data">
+                                        <div class="panel-heading">
+                                            &nbsp; Dados de Entrada
+                                        </div>
+                                        <div class="panel-body">
+
+                                            <div class="form-group col-md-4">
+                                                {{ form_label(form.maxDcPower, 'Potência Máxima') }}
+                                                <div class="input-group m-b">
+                                                    {{ form_widget(form.maxDcPower,{attr:{class:'form-control'}}) }}
+                                                    <span class="input-group-addon">kW</span>
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <div class="form-group col-md-4">
-                                            {{ form_label(form.mpptNumber, 'Número de MPPTs') }}
-                                            {{ form_widget(form.mpptNumber,{attr:{class:'form-control', min:'0'}}) }}
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            {{ form_label(form.maxEfficiency, 'Eficiência') }}
-                                            <div class="input-group m-b">
-                                                {{ form_widget(form.maxEfficiency,{attr:{class:'form-control'}}) }}
-                                                <span class="input-group-addon">%</span>
+                                            <div class="form-group col-md-4">
+                                                {{ form_label(form.maxDcVoltage, 'Tensão Máxima') }}
+                                                <div class="input-group m-b">
+                                                    {{ form_widget(form.maxDcVoltage,{attr:{class:'form-control'}}) }}
+                                                    <span class="input-group-addon">V</span>
+                                                </div>
                                             </div>
-                                        </div>
 
+                                            <div class="form-group col-md-4">
+                                                {{ form_label(form.mpptMaxDcCurrent, 'Corrente Máxima por MPPT') }}
+                                                <div class="input-group m-b">
+                                                    {{ form_widget(form.mpptMaxDcCurrent,{attr:{class:'form-control'}}) }}
+                                                    <span class="input-group-addon">A</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                {{ form_label(form.mpptMin, 'Tensão Mínima de MPPT') }}
+                                                <div class="input-group m-b">
+                                                    {{ form_widget(form.mpptMin,{attr:{class:'form-control'}}) }}
+                                                    <span class="input-group-addon">V</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                {{ form_label(form.mpptMax, 'Tensão Máxima de MPPT') }}
+                                                <div class="input-group m-b">
+                                                    {{ form_widget(form.mpptMax,{attr:{class:'form-control'}}) }}
+                                                    <span class="input-group-addon">V</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                {{ form_label(form.phases, 'Fase') }}
+                                                <div class="input-group m-b">
+                                                    {{ form_widget(form.phases,{attr:{class:'form-control', min:'0'}}) }}
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                {{ form_label(form.phase_voltage, 'Tensão de Fase') }}
+                                                <div class="input-group m-b">
+                                                    {{ form_widget(form.phase_voltage,{attr:{class:'form-control'}}) }}
+                                                    <span class="input-group-addon">V</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                {{ form_label(form.mppt_parallel, 'MPPT Paralelo') }}
+                                                <div class="input-group m-b">
+                                                    {{ form_widget(form.mppt_parallel,{attr:{class:'form-control'}}) }}
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                {{ form_label(form.mppt_connections, 'Conexões MPPT') }}
+                                                <div class="input-group m-b">
+                                                    {{ form_widget(form.mppt_connections,{attr:{class:'form-control'}}) }}
+                                                </div>
+                                            </div>
+
+                                        </div>
                                     </div>
-                                </div>
-
-                                <div class="panel panel-success input_data">
-                                    <div class="panel-heading">
-                                        &nbsp; Dados de Entrada
-                                    </div>
-                                    <div class="panel-body">
-
-                                        <div class="form-group col-md-4">
-                                            {{ form_label(form.maxDcPower, 'Potência Máxima') }}
-                                            <div class="input-group m-b">
-                                                {{ form_widget(form.maxDcPower,{attr:{class:'form-control'}}) }}
-                                                <span class="input-group-addon">kW</span>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            {{ form_label(form.maxDcVoltage, 'Tensão Máxima') }}
-                                            <div class="input-group m-b">
-                                                {{ form_widget(form.maxDcVoltage,{attr:{class:'form-control'}}) }}
-                                                <span class="input-group-addon">V</span>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            {{ form_label(form.mpptMaxDcCurrent, 'Corrente Máxima por MPPT') }}
-                                            <div class="input-group m-b">
-                                                {{ form_widget(form.mpptMaxDcCurrent,{attr:{class:'form-control'}}) }}
-                                                <span class="input-group-addon">A</span>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            {{ form_label(form.mpptMin, 'Tensão Mínima de MPPT') }}
-                                            <div class="input-group m-b">
-                                                {{ form_widget(form.mpptMin,{attr:{class:'form-control'}}) }}
-                                                <span class="input-group-addon">V</span>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            {{ form_label(form.mpptMax, 'Tensão Máxima de MPPT') }}
-                                            <div class="input-group m-b">
-                                                {{ form_widget(form.mpptMax,{attr:{class:'form-control'}}) }}
-                                                <span class="input-group-addon">V</span>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            {{ form_label(form.phases, 'Fase') }}
-                                            <div class="input-group m-b">
-                                                {{ form_widget(form.phases,{attr:{class:'form-control', min:'0'}}) }}
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            {{ form_label(form.phase_voltage, 'Tensão de Fase') }}
-                                            <div class="input-group m-b">
-                                                {{ form_widget(form.phase_voltage,{attr:{class:'form-control'}}) }}
-                                                <span class="input-group-addon">V</span>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            {{ form_label(form.mppt_parallel, 'MPPT Paralelo') }}
-                                            <div class="input-group m-b">
-                                                {{ form_widget(form.mppt_parallel,{attr:{class:'form-control'}}) }}
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group col-md-4">
-                                            {{ form_label(form.mppt_connections, 'Conexões MPPT') }}
-                                            <div class="input-group m-b">
-                                                {{ form_widget(form.mppt_connections,{attr:{class:'form-control'}}) }}
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
+                                {% endif %}
 
                                 <div class="form-group clearfix">
                                     <button type="submit" name="intention" value="save" class="btn btn-primary pull-right">
@@ -262,12 +264,18 @@
                                     </button>
                                 </div>
 
+                                <div class="hide">
+                                    {{ form_rest(form) }}
+                                </div>
+
                                 {{ form_end(form) }}
 
                             </div>
 
-                            {# DEPENDENCIES CONTAINER #}
-                            <div class="col-md-12" id="dependency_container" style="margin-top: 10px;"></div>
+                            {% if member.isPlatformMaster %}
+                                {# DEPENDENCIES CONTAINER #}
+                                <div class="col-md-12" id="dependency_container" style="margin-top: 10px;"></div>
+                            {% endif %}
 
                         </div>
                     </div>
@@ -282,7 +290,7 @@
 
     {% include view('helper.chosen_levels') %}
 
-    {% if inverter.id %}
+    {% if inverter.id and member.isPlatformMaster %}
         {% include view('helper.plugins_js') %}
         <script>
             $('#dependency_container').load('{{ path('component_dependency_panel',{family:'inverter', component:inverter.id}) }}');
