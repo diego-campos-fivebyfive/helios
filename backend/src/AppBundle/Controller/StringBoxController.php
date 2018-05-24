@@ -137,7 +137,7 @@ class StringBoxController extends AbstractController
     /**
      * Displays a form to edit an existing stringBox entity.
      *
-     * @Security("has_role('ROLE_PLATFORM_MASTER')")
+     * @Security("has_role('ROLE_PLATFORM_ADMIN')")
      *
      * @Route("/{id}/update", name="stringbox_edit")
      * @Method({"GET", "POST"})
