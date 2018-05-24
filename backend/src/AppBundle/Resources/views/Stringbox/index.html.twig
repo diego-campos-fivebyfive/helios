@@ -52,16 +52,18 @@
                <i class="fa fa-eye"></i> {{ 'View'|trans }}
            </a>
 
-            {% if member.isPlatformMaster %}
-                <a href="{{ path('stringbox_edit', { 'id': stringBox.id }) }}"
-                   class="btn btn-success">
-                    <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
-                </a>
-                <a data-delete="{{ path('stringbox_delete', { 'id': stringBox.id}) }}"
-                   class="btn btn-danger">
-                    <i class="fa fa-trash"></i> {{ 'Delete'|trans }}
-                </a>
-            {% endif %}
+           {% if member.isPlatformMaster or member.isPlatformAdmin %}
+               <a href="{{ path('stringbox_edit', { 'id': stringBox.id }) }}"
+                  class="btn btn-success">
+                   <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
+               </a>
+           {% endif %}
+           {% if member.isPlatformMaster %}
+               <a data-delete="{{ path('stringbox_delete', { 'id': stringBox.id}) }}"
+                  class="btn btn-danger">
+                   <i class="fa fa-trash"></i> {{ 'Delete'|trans }}
+               </a>
+           {% endif %}
 
         </div>
 
@@ -186,15 +188,17 @@
                                                 <i class="fa fa-eye"></i> {{ 'View'|trans }}
                                             </a>
 
-                                            {% if member.isAdmin or member.isPlatformAdmin or member.isPlatformMaster %}
-                                            <a href="{{ path('stringbox_edit', { 'id': stringBox.id }) }}"
-                                               class="btn btn-success">
-                                                <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
-                                            </a>
-                                            <a data-delete="{{ path('stringbox_delete', { 'id': stringBox.id}) }}"
-                                               class="btn btn-danger">
-                                                <i class="fa fa-trash"></i> {{ 'Delete'|trans }}
-                                            </a>
+                                            {% if member.isPlatformMaster or member.isPlatformAdmin %}
+                                                <a href="{{ path('stringbox_edit', { 'id': stringBox.id }) }}"
+                                                   class="btn btn-success">
+                                                    <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
+                                                </a>
+                                            {% endif %}
+                                            {% if member.isPlatformMaster %}
+                                                <a data-delete="{{ path('stringbox_delete', { 'id': stringBox.id}) }}"
+                                                   class="btn btn-danger">
+                                                    <i class="fa fa-trash"></i> {{ 'Delete'|trans }}
+                                                </a>
                                             {% endif %}
 
                                         </div>
