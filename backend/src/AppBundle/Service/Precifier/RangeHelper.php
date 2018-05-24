@@ -231,18 +231,18 @@ class RangeHelper
      */
     private function filterPowerRanges($powerRanges, $filterPowerRanges)
     {
-        $ranges = [];
-
         if ($filterPowerRanges) {
+            $ranges = [];
+
             foreach ($filterPowerRanges as $powerRange) {
                 if (isset($powerRanges[$powerRange])) {
                     $ranges[$powerRange] = $powerRanges[$powerRange];
                 }
             }
-        } else {
-            $ranges = $powerRanges;
+
+            return $ranges;
         }
 
-        return $ranges;
+        return $powerRanges;
     }
 }
