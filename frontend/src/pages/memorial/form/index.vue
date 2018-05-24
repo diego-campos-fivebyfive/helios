@@ -9,6 +9,7 @@
       slot='section',
       :getQueryParams='getQueryParams',
       v-on:updateMemorialRange='updateMemorialRange',
+      v-on:updateMemorialMarkup='updateMemorialMarkup',
       :groups='groups')
 </template>
 
@@ -60,6 +61,19 @@
               component.ranges = range.powerRanges
               /* eslint-enable */
             }
+          })
+      },
+      updateMemorialMarkup(ranges, markup) {
+        this.groups[ranges.family]
+          .forEach(component => {
+            ranges.ranges.forEach(range => {
+              if (range.id === component.id) {
+                /* eslint-disable */
+                component.ranges[ranges.powerRange].markup = markup
+                component.ranges[ranges.powerRange].price = range.price
+                /* eslint-enable */
+              }
+            })
           })
       }
     },
