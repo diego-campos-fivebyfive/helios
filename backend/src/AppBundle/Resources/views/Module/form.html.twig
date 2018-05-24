@@ -59,180 +59,182 @@
                                     </div>
                                 </div>
 
-                                <div class="panel panel-primary">
-                                    <div class="panel-heading">
-                                        &nbsp; Dados gerais
-                                    </div>
-                                    <div class="panel-body">
-
-                                        <div class="form-group col-md-4">
-                                            {{ form_label(form.code, 'Código do Produto') }}
-                                            {{ form_row(form.code,{attr:{class:'form-control'}}) }}
+                                {% if member.isPlatformMaster %}
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            &nbsp; Dados gerais
                                         </div>
+                                        <div class="panel-body">
 
-                                        <div class="form-group col-md-4">
-                                            {{ form_row(form.maker,{attr:{class:'form-control'}}) }}
-                                        </div>
+                                            <div class="form-group col-md-4">
+                                                {{ form_label(form.code, 'Código do Produto') }}
+                                                {{ form_row(form.code,{attr:{class:'form-control'}}) }}
+                                            </div>
 
-                                        <div class="form-group col-md-4">
-                                            {{ form_row(form.model,{attr:{class:'form-control'}}) }}
-                                        </div>
+                                            <div class="form-group col-md-4">
+                                                {{ form_row(form.maker,{attr:{class:'form-control'}}) }}
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                {{ form_row(form.model,{attr:{class:'form-control'}}) }}
+                                            </div>
 
 
-                                        <div class="form-group col-md-6">
-                                            <label> Datasheet (PDF) </label>
-                                            <input type="file" name="dataSheet" accept="application/pdf">
-                                            {% if module.datasheet %}
-                                                <span class="label info">
+                                            <div class="form-group col-md-6">
+                                                <label> Datasheet (PDF) </label>
+                                                <input type="file" name="dataSheet" accept="application/pdf">
+                                                {% if module.datasheet %}
+                                                    <span class="label info">
                                                     Este componente já possui datasheet
                                                 </span>
-                                            {% endif %}
-                                        </div>
+                                                {% endif %}
+                                            </div>
 
-                                        <div class="form-group col-md-6">
-                                            <label> Imagem (JPG) </label>
-                                            <input type="file" name="image" accept="image/jpeg">
-                                            {% if module.image %}
-                                                <span class="label info">
+                                            <div class="form-group col-md-6">
+                                                <label> Imagem (JPG) </label>
+                                                <input type="file" name="image" accept="image/jpeg">
+                                                {% if module.image %}
+                                                    <span class="label info">
                                                     Este componente já possui imagem
                                                 </span>
-                                            {% endif %}
-                                        </div>
+                                                {% endif %}
+                                            </div>
 
-                                        <div class="form-group col-md-4">
-                                            {{ form_label(form.cellType, 'Tipo de Célula') }}
-                                            {{ form_widget(form.cellType,{attr:{class:'form-control'}}) }}
-                                        </div>
+                                            <div class="form-group col-md-4">
+                                                {{ form_label(form.cellType, 'Tipo de Célula') }}
+                                                {{ form_widget(form.cellType,{attr:{class:'form-control'}}) }}
+                                            </div>
 
-                                        <div class="form-group col-md-4">
-                                            {{ form_label(form.cellNumber, 'Número de Células') }}
-                                            {{ form_widget(form.cellNumber,{attr:{class:'form-control'}}) }}
-                                        </div>
+                                            <div class="form-group col-md-4">
+                                                {{ form_label(form.cellNumber, 'Número de Células') }}
+                                                {{ form_widget(form.cellNumber,{attr:{class:'form-control'}}) }}
+                                            </div>
 
-                                        <div class="form-group col-md-4">
-                                            {{ form_label(form.connection_type, 'Tipo de Conexão') }}
-                                            {{ form_widget(form.connection_type,{attr:{class:'form-control'}}) }}
-                                        </div>
+                                            <div class="form-group col-md-4">
+                                                {{ form_label(form.connection_type, 'Tipo de Conexão') }}
+                                                {{ form_widget(form.connection_type,{attr:{class:'form-control'}}) }}
+                                            </div>
 
-                                        <div class="form-group col-md-3">
-                                            {{ form_label(form.length, 'Comprimento') }}
-                                            {{ form_widget(form.length,{attr:{class:'form-control'}}) }}
-                                        </div>
+                                            <div class="form-group col-md-3">
+                                                {{ form_label(form.length, 'Comprimento') }}
+                                                {{ form_widget(form.length,{attr:{class:'form-control'}}) }}
+                                            </div>
 
-                                        <div class="form-group col-md-3">
-                                            {{ form_label(form.width, 'Largura') }}
-                                            {{ form_widget(form.width,{attr:{class:'form-control'}}) }}
-                                        </div>
+                                            <div class="form-group col-md-3">
+                                                {{ form_label(form.width, 'Largura') }}
+                                                {{ form_widget(form.width,{attr:{class:'form-control'}}) }}
+                                            </div>
 
-                                        <div class="form-group col-md-3">
-                                            {{ form_label(form.height, 'Altura') }}
-                                            {{ form_widget(form.height,{attr:{class:'form-control'}}) }}
-                                        </div>
+                                            <div class="form-group col-md-3">
+                                                {{ form_label(form.height, 'Altura') }}
+                                                {{ form_widget(form.height,{attr:{class:'form-control'}}) }}
+                                            </div>
 
-                                        <div class="form-group col-md-3">
-                                            {{ form_label(form.position, 'Posição') }}
-                                            {{ form_widget(form.position, {attr:{class:'form-control'}}) }}
+                                            <div class="form-group col-md-3">
+                                                {{ form_label(form.position, 'Posição') }}
+                                                {{ form_widget(form.position, {attr:{class:'form-control'}}) }}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="panel panel-success">
-                                    <div class="panel-heading">
-                                        &nbsp; Dados do STC
+                                    <div class="panel panel-success">
+                                        <div class="panel-heading">
+                                            &nbsp; Dados do STC
+                                        </div>
+                                        <div class="panel-body">
+
+                                            <div class="col-md-4">
+                                                {{ form_label(form.maxPower, 'Potência') }}
+                                                <div class="input-group m-b">
+                                                    {{ form_widget(form.maxPower,{attr:{class:'form-control'}}) }}
+                                                    <span class="input-group-addon">W</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                {{ form_label(form.voltageMaxPower, 'Tensão de Operação (Vmp)') }}
+                                                <div class="input-group m-b">
+                                                    {{ form_widget(form.voltageMaxPower,{attr:{class:'form-control'}}) }}
+                                                    <span class="input-group-addon">V</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                {{ form_label(form.currentMaxPower, 'Corrente de Operação (Imp)') }}
+                                                <div class="input-group m-b">
+                                                    {{ form_widget(form.currentMaxPower,{attr:{class:'form-control'}}) }}
+                                                    <span class="input-group-addon">A</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                {{ form_label(form.openCircuitVoltage, 'Tensão de Circuito Aberto (Voc)') }}
+                                                <div class="input-group m-b">
+                                                    {{ form_widget(form.openCircuitVoltage,{attr:{class:'form-control'}}) }}
+                                                    <span class="input-group-addon">V</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                {{ form_label(form.shortCircuitCurrent, 'Corrente de Curto Circuito (Isc)') }}
+                                                <div class="input-group m-b">
+                                                    {{ form_widget(form.shortCircuitCurrent,{attr:{class:'form-control'}}) }}
+                                                    <span class="input-group-addon">A</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-4">
+                                                {{ form_label(form.efficiency, 'Eficiência') }}
+                                                <div class="input-group m-b">
+                                                    {{ form_widget(form.efficiency,{attr:{class:'form-control'}}) }}
+                                                    <span class="input-group-addon">%</span>
+                                                </div>
+                                            </div>
+
+                                        </div>
                                     </div>
-                                    <div class="panel-body">
 
-                                        <div class="col-md-4">
-                                            {{ form_label(form.maxPower, 'Potência') }}
-                                            <div class="input-group m-b">
-                                                {{ form_widget(form.maxPower,{attr:{class:'form-control'}}) }}
-                                                <span class="input-group-addon">W</span>
-                                            </div>
+                                    <div class="panel panel-warning">
+                                        <div class="panel-heading">
+                                            &nbsp; Temperaturas
                                         </div>
+                                        <div class="panel-body">
 
-                                        <div class="form-group col-md-4">
-                                            {{ form_label(form.voltageMaxPower, 'Tensão de Operação (Vmp)') }}
-                                            <div class="input-group m-b">
-                                                {{ form_widget(form.voltageMaxPower,{attr:{class:'form-control'}}) }}
-                                                <span class="input-group-addon">V</span>
+                                            <div class="form-group col-md-6">
+                                                {{ form_label(form.temperatureOperation, 'Temperatura Nominal de Operação da Célula (NOCT)') }}
+                                                <div class="input-group m-b">
+                                                    {{ form_widget(form.temperatureOperation,{attr:{class:'form-control'}}) }}
+                                                    <span class="input-group-addon width_adjust">ºC</span>
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <div class="form-group col-md-4">
-                                            {{ form_label(form.currentMaxPower, 'Corrente de Operação (Imp)') }}
-                                            <div class="input-group m-b">
-                                                {{ form_widget(form.currentMaxPower,{attr:{class:'form-control'}}) }}
-                                                <span class="input-group-addon">A</span>
+                                            <div class="form-group col-md-6">
+                                                {{ form_label(form.tempCoefficientMaxPower, 'Coeficiente de Temperatura (Pmax)') }}
+                                                <div class="input-group m-b">
+                                                    {{ form_widget(form.tempCoefficientMaxPower,{attr:{class:'form-control'}}) }}
+                                                    <span class="input-group-addon">% / ºC</span>
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <div class="form-group col-md-4">
-                                            {{ form_label(form.openCircuitVoltage, 'Tensão de Circuito Aberto (Voc)') }}
-                                            <div class="input-group m-b">
-                                                {{ form_widget(form.openCircuitVoltage,{attr:{class:'form-control'}}) }}
-                                                <span class="input-group-addon">V</span>
+                                            <div class="form-group col-md-6">
+                                                {{ form_label(form.tempCoefficientOpenCircuitVoltage, 'Coeficiente de Temperatura (Voc)') }}
+                                                <div class="input-group m-b">
+                                                    {{ form_widget(form.tempCoefficientOpenCircuitVoltage,{attr:{class:'form-control'}}) }}
+                                                    <span class="input-group-addon">% / ºC</span>
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <div class="form-group col-md-4">
-                                            {{ form_label(form.shortCircuitCurrent, 'Corrente de Curto Circuito (Isc)') }}
-                                            <div class="input-group m-b">
-                                                {{ form_widget(form.shortCircuitCurrent,{attr:{class:'form-control'}}) }}
-                                                <span class="input-group-addon">A</span>
+                                            <div class="form-group col-md-6">
+                                                {{ form_label(form.tempCoefficientShortCircuitCurrent, 'Coeficiente de Temperatura (Isc)') }}
+                                                <div class="input-group m-b">
+                                                    {{ form_widget(form.tempCoefficientShortCircuitCurrent,{attr:{class:'form-control'}}) }}
+                                                    <span class="input-group-addon">% / ºC</span>
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <div class="form-group col-md-4">
-                                            {{ form_label(form.efficiency, 'Eficiência') }}
-                                            <div class="input-group m-b">
-                                                {{ form_widget(form.efficiency,{attr:{class:'form-control'}}) }}
-                                                <span class="input-group-addon">%</span>
-                                            </div>
                                         </div>
-
                                     </div>
-                                </div>
-
-                                <div class="panel panel-warning">
-                                    <div class="panel-heading">
-                                        &nbsp; Temperaturas
-                                    </div>
-                                    <div class="panel-body">
-
-                                        <div class="form-group col-md-6">
-                                            {{ form_label(form.temperatureOperation, 'Temperatura Nominal de Operação da Célula (NOCT)') }}
-                                            <div class="input-group m-b">
-                                                {{ form_widget(form.temperatureOperation,{attr:{class:'form-control'}}) }}
-                                                <span class="input-group-addon width_adjust">ºC</span>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group col-md-6">
-                                            {{ form_label(form.tempCoefficientMaxPower, 'Coeficiente de Temperatura (Pmax)') }}
-                                            <div class="input-group m-b">
-                                                {{ form_widget(form.tempCoefficientMaxPower,{attr:{class:'form-control'}}) }}
-                                                <span class="input-group-addon">% / ºC</span>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group col-md-6">
-                                            {{ form_label(form.tempCoefficientOpenCircuitVoltage, 'Coeficiente de Temperatura (Voc)') }}
-                                            <div class="input-group m-b">
-                                                {{ form_widget(form.tempCoefficientOpenCircuitVoltage,{attr:{class:'form-control'}}) }}
-                                                <span class="input-group-addon">% / ºC</span>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group col-md-6">
-                                            {{ form_label(form.tempCoefficientShortCircuitCurrent, 'Coeficiente de Temperatura (Isc)') }}
-                                            <div class="input-group m-b">
-                                                {{ form_widget(form.tempCoefficientShortCircuitCurrent,{attr:{class:'form-control'}}) }}
-                                                <span class="input-group-addon">% / ºC</span>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
+                                {% endif %}
 
                                 <div class="form-group clearfix">
                                     <button type="submit" name="intention" value="save" class="btn btn-primary pull-right">
@@ -240,12 +242,18 @@
                                     </button>
                                 </div>
 
+                                <div class="hide">
+                                    {{ form_rest(form) }}
+                                </div>
+
                                 {{ form_end(form) }}
 
                             </div>
 
-                            {# DEPENDENCIES CONTAINER #}
-                            <div class="col-md-12" id="dependency_container" style="margin-top: 10px;"></div>
+                            {% if member.isPlatformMaster %}
+                                {# DEPENDENCIES CONTAINER #}
+                                <div class="col-md-12" id="dependency_container" style="margin-top: 10px;"></div>
+                            {% endif %}
 
                         </div>
                     </div>
@@ -260,7 +268,7 @@
 
     {% include view('helper.chosen_levels') %}
 
-    {% if module.id %}
+    {% if module.id and member.isPlatformMaster %}
         {% include view('helper.plugins_js') %}
         <script>
             $('#dependency_container').load('{{ path('component_dependency_panel',{family:'module', component:module.id}) }}');
