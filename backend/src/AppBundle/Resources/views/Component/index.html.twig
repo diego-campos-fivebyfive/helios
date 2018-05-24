@@ -69,15 +69,17 @@
                 <i class="fa fa-eye"></i> {{ 'View'|trans }}
             </a>
 
+            {% if member.isPlatformMaster or member.isPlatformAdmin %}
+                <a href="{{ path('component_update',{type:extra.type,id:component.id}) }}"
+                   class="btn btn-success">
+                    <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
+                </a>
+            {% endif %}
             {% if member.isPlatformMaster %}
-            <a href="{{ path('component_update',{type:extra.type,id:component.id}) }}"
-               class="btn btn-success">
-                <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
-            </a>
-            <a data-delete="{{ path('component_delete',{type:extra.type,id:component.id}) }}"
-               class="btn btn-danger">
-                <i class="fa fa-trash"></i> {{ 'Delete'|trans }}
-            </a>
+                <a data-delete="{{ path('component_delete',{type:extra.type,id:component.id}) }}"
+                   class="btn btn-danger">
+                    <i class="fa fa-trash"></i> {{ 'Delete'|trans }}
+                </a>
             {% endif %}
 
         </div>
