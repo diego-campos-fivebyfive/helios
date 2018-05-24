@@ -63,15 +63,16 @@
             }
           })
       },
-      updateMemorialMarkup(ranges, markup) {
-        this.groups[ranges.family]
-          .forEach(component => {
-            ranges.ranges.forEach(range => {
+      updateMemorialMarkup(rangesData, markup) {
+        this.groups[rangesData.family]
+          .some(component => {
+            rangesData.ranges.some(range => {
               if (range.id === component.id) {
                 /* eslint-disable */
-                component.ranges[ranges.powerRange].markup = markup
-                component.ranges[ranges.powerRange].price = range.price
+                component.ranges[rangesData.powerRange].markup = markup
+                component.ranges[rangesData.powerRange].price = range.price
                 /* eslint-enable */
+                return true
               }
             })
           })

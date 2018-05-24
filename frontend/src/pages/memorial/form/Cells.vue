@@ -31,7 +31,7 @@
           td.col-f
             input(type='checkbox')
           td.col-cmv
-            .costPrice
+            .cost-price
               input(
                 type='text',
                 v-on:blur='updateRange(component.id, $event.target.value)',
@@ -177,15 +177,15 @@
     left: 550px;
     min-width: 135px;
 
-    .costPrice {
+    .cost-price {
       position: relative;
       color: $ui-gray-regular;
-    }
 
-    .costPrice:before {
-      padding: $ui-space-y/2 $ui-space-x/4;
-      position: absolute;
-      content: "R$";
+      &:before {
+        padding: $ui-space-y/2 $ui-space-x/4;
+        position: absolute;
+        content: "R$";
+      }
     }
 
     input {
@@ -235,8 +235,8 @@
 
       &:after {
         content: "R$";
-        left: - $ui-space-x * 4;
         position: absolute;
+        right: $ui-space-x * 2.75;
         top: $ui-space-y/2;
       }
     }
