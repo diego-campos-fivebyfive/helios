@@ -34,11 +34,13 @@
             <i class="fa fa-eye"></i> {{ 'View'|trans }}
         </a>
 
-        {% if member.isPlatformMaster %}
+        {% if member.isPlatformMaster or member.isPlatformAdmin %}
             <a href="{{ path('structure_update', { 'id': structure.id }) }}"
                class="btn btn-success">
                 <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
             </a>
+        {% endif %}
+        {% if member.isPlatformMaster %}
             <a data-delete="{{ path('structure_delete', { 'id': structure.id}) }}"
                class="btn btn-danger">
                 <i class="fa fa-trash"></i> {{ 'Delete'|trans }}
