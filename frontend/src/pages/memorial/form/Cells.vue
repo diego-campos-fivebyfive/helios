@@ -26,21 +26,27 @@
             input(type='text', readonly, :value='component.code')
           td.col-description
             input(type='text', readonly, :value='component.description')
-          td.col-m
-            input(type='checkbox')
-          td.col-f
-            input(type='checkbox')
+          td.col-p
+            input(
+              type='checkbox',
+              :checked='component.relation === "parent"',
+              v-on:change='updateRelation(component, "parent", groupName, $event)')
+          td.col-c
+            input(
+              type='checkbox',
+              :checked='component.relation === "child"',
+              v-on:change='updateRelation(component, "child", groupName, $event)')
           td.col-cmv
             .cost-price
               input(
                 type='text',
                 v-on:blur='updateRange(component.id, $event.target.value)',
                 :value='component.costPrice')
-          td.col-range(v-for='(range, key) in component.ranges')
+          td.col-range(v-for='(range, rangeKey) in component.ranges')
             .markups
               input(
                 type='text',
-                v-on:blur='updateMarkup(component, key, $event.target.value)',
+                v-on:blur='updateMarkup(component, rangeKey, groupName, $event)',
                 :value='range.markup')
               input(type='text', readonly, :value='range.price')
 </template>
@@ -86,6 +92,50 @@
 
         return names[name]
       },
+      updateRelation(component, relation, groupName, $event) {
+        if (component.relation) {
+          if (component.relation === relation) {
+            if ($event.target.checked) {}
+            else {
+              this.$set(component, 'relation', null)
+
+              if (relation === 'parent') {
+                this.groups[groupName]
+                  .forEach(component => {
+                    this.$set(component, 'relation', null)
+                  })
+              }
+            }
+          }
+          else {
+            if ($event.target.checked) {
+              $event.target.checked = false
+            }
+            else {}
+          }
+        }
+        else {
+          const groupHasParent = this.groups[groupName]
+            .some(component => component.relation === 'parent')
+
+          if (relation === 'parent') {
+            if (groupHasParent) {
+              $event.target.checked = false
+            }
+            else {
+              this.$set(component, 'relation', 'parent')
+            }
+          }
+          else {
+            if (groupHasParent) {
+              this.$set(component, 'relation', 'child')
+            }
+            else {
+              $event.target.checked = false
+            }
+          }
+        }
+      },
       updateRange(componentId, costPrice) {
         const { level } = this.getQueryParams()
 
@@ -95,14 +145,38 @@
           this.$emit('updateMemorialRange', response.data)
         })
       },
-      updateMarkup(component, powerRange, markup) {
-        const { level } = this.getQueryParams()
+      updateMarkup(component, rangeKey, groupName, $event) {
+        const markupValue = $event.target.value
+
+        const getParams = () => {
+          const { level } = this.getQueryParams()
+
+          const baseParams = {
+            markup: markupValue,
+            powerRange: rangeKey,
+            level
+          }
+
+          if (component.relation !== 'parent') {
+            return baseParams
+          }
+
+          const children = this.groups[groupName]
+            .filter(component => component.relation === 'child')
+            .map(child => child.id)
+
+          return Object.assign(baseParams, {
+            parent: true,
+            children
+          })
+        }
 
         const uri = `admin/api/v1/memorial_ranges/${component.id}/markup`
 
-        this.axios.put(uri, { markup, powerRange, level }).then(response => {
-          this.$emit('updateMemorialMarkup', response.data, markup)
-        })
+        this.axios.put(uri, getParams())
+          .then(({ data }) => {
+            this.$emit('updateMemorialMarkup', data, markupValue)
+          })
       }
     },
     mounted() {
@@ -163,12 +237,12 @@
     }
   }
 
-  .col-m {
+  .col-p {
     left: 400px;
     min-width: 75px;
   }
 
-  .col-f {
+  .col-c {
     left: 475px;
     min-width: 75px;
   }
