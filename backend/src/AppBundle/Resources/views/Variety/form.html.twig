@@ -6,9 +6,6 @@
         .input-group.m-b{
             width: 50%;
         }
-        .btn {
-            margin: 2px;
-        }
         .check-label {
             vertical-align: middle;
             padding-right: 5px;
@@ -146,12 +143,12 @@
                                     </div>
                                 {% endif %}
 
-                                <div class="form-group clearfix">
-                                    <button type="submit" name="intention" value="save" class="btn btn-primary pull-right">
+                                <div class="form-group clearfix pull-right">
+                                    <button type="submit" name="intention" value="save" class="btn btn-primary">
                                         <i class="fa fa-save"></i> {{ 'Save'|trans }}
                                     </button>
                                     <a href="{{ path('variety_index') }}">
-                                        <button class="btn btn-success btn-xd pull-right">{{'Voltar'|trans}}</button>
+                                        <button class="btn btn-success btn-xd">{{'Voltar'|trans}}</button>
                                     </a>
                                 </div>
 
