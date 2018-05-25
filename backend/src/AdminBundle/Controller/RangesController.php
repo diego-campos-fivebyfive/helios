@@ -91,7 +91,7 @@ class RangesController extends AbstractController
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function putSingleMarkupRangeAction(Request $request, Range $range)
+    public function putMarkupRangeAction(Request $request, Range $range)
     {
         /** @var RangeManager $manager */
         $manager = $this->manager('precifier_range');
@@ -138,14 +138,14 @@ class RangesController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/markup_all", name="update_markup_range_all")
+     * @Route("/{id}/copy_markups", name="copy_markups_range")
      * @Method("put")
      * @param Request $request
      * @param Range $parentRange
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function putAllMarkupsRangeAction(Request $request, Range $parentRange)
+    public function putCopyRangeAction(Request $request, Range $parentRange)
     {
         /** @var RangeManager $manager */
         $manager = $this->manager('precifier_range');
