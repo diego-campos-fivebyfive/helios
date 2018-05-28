@@ -84,7 +84,7 @@ class RangesController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/markup", name="update_markup_range")
+     * @Route("/{id}/markup", name="update_markup_range_single")
      * @Method("put")
      * @param Request $request
      * @param Range $range
@@ -138,6 +138,50 @@ class RangesController extends AbstractController
     }
 
     /**
+     * @Route("/{id}/copy_markups", name="copy_markups_range")
+     * @Method("put")
+     * @param Request $request
+     * @param Range $parentRange
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function putCopyRangeAction(Request $request, Range $parentRange)
+    {
+        /** @var RangeManager $manager */
+        $manager = $this->manager('precifier_range');
+
+        $childId = (int) $request->request->get('childId');
+        $level = (string) $request->request->get('level');
+
+        /** @var Range $childRange */
+        $childRange = $manager->find($childId);
+
+        if ($parentRange && $childRange) {
+            $parentPowerRanges = $parentRange->getMetadata()[$level];
+            $childMetadata = $childRange->getMetadata();
+
+            foreach ($parentPowerRanges as $powerRange => $data) {
+                $markup = $data['markup'];
+
+                $childMetadata[$level][$powerRange]['markup'] = $markup;
+
+                $childMetadata = RangePrecify::calculate($childMetadata, $childRange->getCostPrice(), $level, $markup, $powerRange);
+            }
+
+            $childRange->setMetadata($childMetadata);
+        }
+
+        $manager->save($childRange);
+
+        /** @var RangeHelper $rangeHelper */
+        $rangeHelper = $this->container->get('precifier_range_helper');
+
+        $formatedPowerRanges = $rangeHelper->formatMarkup($childMetadata[$level]);
+
+        return $this->json($formatedPowerRanges);
+    }
+
+    /**
      * @param $results
      * @param Range $range
      * @param $level
@@ -161,8 +205,8 @@ class RangesController extends AbstractController
     {
         $costPrice = $range->getCostPrice();
 
-        $precificatedPowerRanges = RangePrecify::calculate($range->getMetadata(), $costPrice, $level, $markup, $powerRange);
+        $precifiedPowerRanges = RangePrecify::calculate($range->getMetadata(), $costPrice, $level, $markup, $powerRange);
 
-        $range->setMetadata($precificatedPowerRanges);
+        $range->setMetadata($precifiedPowerRanges);
     }
 }
