@@ -47,6 +47,8 @@ class Processor
 
     const DELIVERED = ['001', '002', '031', '105'];
 
+    const OTHERS_EVENTS = ['091'];
+
     const PROCEDA_CACHE = 'OCOREN';
 
     const SEARCH_PREFIX = 'OCOREN';
@@ -58,6 +60,7 @@ class Processor
         '001' => 'Entrega Realizada Normalmente',
         '002' => 'Entrega Fora da Data Programada',
         '031' => 'Entrega com Indenização Efetuada',
+        '091' => 'Entrega Programada',
         '105' => 'Entrega efetuada no cliente pela Transportadora de Redespacho'
     ];
 
@@ -234,7 +237,7 @@ class Processor
     private function processGroupEvents(Order $order, array $events = [])
     {
         foreach ($events as $event) {
-            $this->changeStatusByEvent($order, $event);
+            $this->processEvent($order, $event);
         }
     }
 
@@ -287,10 +290,10 @@ class Processor
      * @param Order $order
      * @param array $event
      */
-    private function changeStatusByEvent(Order $order, array $event)
+    private function processEvent(Order $order, array $event)
     {
-        if($order->getStatus() != Order::STATUS_DELIVERED
-            && in_array($event['code'], array_merge(self::DELIVERING, self::DELIVERED))){
+        if ($order->getStatus() != Order::STATUS_DELIVERED
+            && in_array($event['code'], array_merge(self::DELIVERING, self::DELIVERED))) {
 
             $status = in_array($event['code'], self::DELIVERED)
                 ? Order::STATUS_DELIVERED
@@ -298,10 +301,12 @@ class Processor
 
             $order->setStatus($status);
 
+            $this->manager->save($order, false);
+
+            $this->prepareTimelineEvent($order, $event);
+        } else if (in_array($event['code'], self::OTHERS_EVENTS)) {
             $this->prepareTimelineEvent($order, $event);
         }
-
-        $this->manager->save($order, false);
     }
 
     /**
@@ -361,6 +366,7 @@ class Processor
     /**
      * @param array $invoices
      * @return array
+     * @throws \Doctrine\DBAL\DBALException
      */
     private function findOrders(array $invoices)
     {
