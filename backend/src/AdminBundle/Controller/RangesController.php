@@ -176,9 +176,9 @@ class RangesController extends AbstractController
         /** @var RangeHelper $rangeHelper */
         $rangeHelper = $this->container->get('precifier_range_helper');
 
-        $result = $rangeHelper->formatMarkup($childMetadata[$level]);
+        $formatedPowerRanges = $rangeHelper->formatMarkup($childMetadata[$level]);
 
-        return $this->json($result);
+        return $this->json($formatedPowerRanges);
     }
 
     /**
