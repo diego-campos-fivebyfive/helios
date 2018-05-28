@@ -1,5 +1,6 @@
 'use strict'
 
+const review = require('./review')
 const { deploy } = require('./deploy')
 const { submit } = require('./submit')
 
@@ -15,6 +16,11 @@ const hook = (request, response) => {
 
   if (request.body.ref && request.body.ref.includes('master')) {
     deploy(request.body)
+    return
+  }
+
+  if (request.body.action === 'review_requested') {
+    review.require(request.body)
     return
   }
 

@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "start:dev": "./node_modules/.bin/node-supervisor index.js"
   },
   "dependencies": {
     "body-parser": "^1.17.2",
