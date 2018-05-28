@@ -63,8 +63,9 @@ class Component
      */
     public function transact(array $transactions = [])
     {
-        if(!empty($transactions))
+        if (!empty($transactions)) {
             $this->registerTransactions($transactions);
+        }
 
         $this->normalizeTransactions();
         $this->filterProducts();
