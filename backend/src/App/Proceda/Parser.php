@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the SicesSolar package.
+ *
+ * (c) SicesSolar <http://sicesbrasil.com.br/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Proceda;
 
 /**
@@ -8,8 +17,6 @@ namespace App\Proceda;
  */
 class Parser
 {
-    const ACCEPTED_EVENTS = ['000', '001', '002', '031', '091', '105'];
-
     /**
      * @param $filename
      * @return array
@@ -49,7 +56,7 @@ class Parser
                         ];
                     }, $array),
                     function ($item) {
-                        return $item['code'] == 542 && in_array($item['event'], self::ACCEPTED_EVENTS);
+                        return $item['code'] == 542 && in_array($item['event'], Events::acceptedEvents());
                     }
                 )
             );
