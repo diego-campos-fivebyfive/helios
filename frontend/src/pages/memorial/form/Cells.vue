@@ -22,27 +22,29 @@
             | {{ getGroupName(groupName) }}
           th.col-group-name-off(:colspan='rangesCount')
         tr.rows(v-for='component in components')
-          td.col-code
+          td.col-code(:class='component.class')
             input(type='text', readonly, :value='component.code')
-          td.col-description
+          td.col-description(:class='component.class')
             input(type='text', readonly, :value='component.description')
-          td.col-p
+          td.col-p(:class='component.class')
             input(
               type='checkbox',
               :checked='component.relation === "parent"',
               v-on:change='updateRelation(component, "parent", groupName, $event)')
-          td.col-c
+          td.col-c(:class='component.class')
             input(
               type='checkbox',
               :checked='component.relation === "child"',
               v-on:change='updateRelation(component, "child", groupName, $event)')
-          td.col-cmv
+          td.col-cmv(:class='component.class')
             .cost-price
               input(
                 type='text',
                 v-on:blur='updateRange(component.id, $event.target.value)',
                 :value='component.costPrice')
-          td.col-range(v-for='(range, rangeKey) in component.ranges')
+          td.col-range(
+            v-for='(range, rangeKey) in component.ranges',
+            :class='component.class')
             .markups
               input(
                 type='text',
@@ -121,11 +123,14 @@
             }
             else {
               this.$set(component, 'relation', 'parent')
+              this.$set(component, 'class', 'parent')
             }
           }
           else {
             if (groupHasParent) {
               this.$set(component, 'relation', 'child')
+              this.$set(component, 'class', 'child')
+              this.updateChildMarkups(component, groupName)
             }
             else {
               $event.target.checked = false
@@ -137,6 +142,21 @@
         this.groups[groupName]
           .forEach(component => {
             this.$set(component, 'relation', null)
+            this.$set(component, 'class', null)
+          })
+      },
+      updateChildMarkups(component, groupName) {
+        const { level } = this.getQueryParams()
+
+        const parentId = this.groups[groupName]
+          .filter(component => component.relation === 'parent')
+          .map(parent => parent.id)
+
+        const uri = `admin/api/v1/memorial_ranges/${parentId}/copy_markups`
+
+        this.axios.put(uri, { childId: component.id, level })
+          .then(({ data }) => {
+            this.$set(component, 'ranges', data)
           })
       },
       updateRange(componentId, costPrice) {
@@ -189,6 +209,9 @@
 </script>
 
 <style lang="scss" scoped>
+  $row_parent: #fcf8e3;
+  $row_child: #dff0d8;
+
   .table-wrapper {
     overflow: auto;
     position: relative;
@@ -245,9 +268,17 @@
     min-width: 75px;
   }
 
+  .parent {
+    background-color: $row_parent;
+  }
+
   .col-c {
     left: 475px;
     min-width: 75px;
+  }
+
+  .child {
+    background-color: $row_child;
   }
 
   .col-cmv {
@@ -327,6 +358,7 @@
     input {
       border: 1px solid $ui-gray-light;
       color: $ui-gray-regular;
+      background-color: $ui-white-regular;
       padding: $ui-space-y/2 $ui-space-x;
       width: 100%;
 
