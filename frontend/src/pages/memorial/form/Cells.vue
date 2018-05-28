@@ -5,9 +5,9 @@
         tr.caption-main
           th.col-code Código
           th.col-description Descrição
-          th.col-m M
-          th.col-f F
-          th.col-cmv CMV Aplicado
+          th.col-p M
+          th.col-c F
+          th.col-cmv CMV
           th.col-range(v-for='range in ranges')
             | {{ range }}
         tr.caption-ranges
@@ -256,7 +256,7 @@
 
   .col-code {
     left: 0;
-    min-width: 200px;
+    min-width: 170px;
 
     input {
       padding: $ui-space-y/2 $ui-space-x/2;
@@ -264,8 +264,8 @@
   }
 
   .col-description {
-    left: 200px;
-    min-width: 200px;
+    left: 170px;
+    min-width: 295px;
 
     input {
       padding: $ui-space-y/2 $ui-space-x/2;
@@ -273,18 +273,18 @@
   }
 
   .col-p {
-    left: 400px;
-    min-width: 75px;
+    left: 465px;
+    min-width: 50px;
   }
 
   .col-c {
-    left: 475px;
-    min-width: 75px;
+    left: 515px;
+    min-width: 50px;
   }
 
   .col-cmv {
-    left: 550px;
-    min-width: 135px;
+    left: 565px;
+    min-width: 120px;
 
     .cost-price {
       position: relative;
