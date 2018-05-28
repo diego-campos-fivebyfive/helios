@@ -21,30 +21,31 @@
             Icon(:name='getIcon(groupName)')
             | {{ getGroupName(groupName) }}
           th.col-group-name-off(:colspan='rangesCount')
-        tr.rows(v-for='component in components')
-          td.col-code(:class='component.class')
+        tr.rows(
+          v-for='component in components',
+          :class='component.relation')
+          td.col-code
             input(type='text', readonly, :value='component.code')
-          td.col-description(:class='component.class')
+          td.col-description
             input(type='text', readonly, :value='component.description')
-          td.col-p(:class='component.class')
+          td.col-p
             input(
               type='checkbox',
               :checked='component.relation === "parent"',
               v-on:change='updateRelation(component, "parent", groupName, $event)')
-          td.col-c(:class='component.class')
+          td.col-c
             input(
               type='checkbox',
               :checked='component.relation === "child"',
               v-on:change='updateRelation(component, "child", groupName, $event)')
-          td.col-cmv(:class='component.class')
+          td.col-cmv
             .cost-price
               input(
                 type='text',
                 v-on:blur='updateRange(component.id, $event.target.value)',
                 :value='component.costPrice')
           td.col-range(
-            v-for='(range, rangeKey) in component.ranges',
-            :class='component.class')
+            v-for='(range, rangeKey) in component.ranges')
             .markups
               input(
                 type='text',
@@ -123,14 +124,15 @@
             }
             else {
               this.$set(component, 'relation', 'parent')
-              this.$set(component, 'class', 'parent')
             }
           }
           else {
             if (groupHasParent) {
               this.$set(component, 'relation', 'child')
-              this.$set(component, 'class', 'child')
-              this.updateChildMarkups(component, groupName)
+
+              const parent = this.getParentId(groupName)
+
+              this.copyMarkups(component, parent.id)
             }
             else {
               $event.target.checked = false
@@ -142,15 +144,10 @@
         this.groups[groupName]
           .forEach(component => {
             this.$set(component, 'relation', null)
-            this.$set(component, 'class', null)
           })
       },
-      updateChildMarkups(component, groupName) {
+      copyMarkups(component, parentId) {
         const { level } = this.getQueryParams()
-
-        const parentId = this.groups[groupName]
-          .filter(component => component.relation === 'parent')
-          .map(parent => parent.id)
 
         const uri = `admin/api/v1/memorial_ranges/${parentId}/copy_markups`
 
@@ -158,6 +155,10 @@
           .then(({ data }) => {
             this.$set(component, 'ranges', data)
           })
+      },
+      getParentId(groupName) {
+        return this.groups[groupName]
+          .find(component => component.relation === 'parent')
       },
       updateRange(componentId, costPrice) {
         const { level } = this.getQueryParams()
@@ -209,12 +210,20 @@
 </script>
 
 <style lang="scss" scoped>
-  $row_parent: #fcf8e3;
-  $row_child: #dff0d8;
+  $parent_background_: #fcf8e3;
+  $child_background_: #dff0d8;
 
   .table-wrapper {
     overflow: auto;
     position: relative;
+
+    .parent {
+      background-color: $parent_background_;
+    }
+
+    .child {
+      background-color: $child_background_;
+    }
   }
 
   .group-name {
@@ -233,7 +242,7 @@
   }
 
   td {
-    background-color: $ui-white-regular;
+    background-color: inherit;
   }
 
   th,
@@ -268,17 +277,9 @@
     min-width: 75px;
   }
 
-  .parent {
-    background-color: $row_parent;
-  }
-
   .col-c {
     left: 475px;
     min-width: 75px;
-  }
-
-  .child {
-    background-color: $row_child;
   }
 
   .col-cmv {
@@ -355,6 +356,8 @@
   }
 
   .rows {
+    background-color: $ui-white-regular;
+
     input {
       border: 1px solid $ui-gray-light;
       color: $ui-gray-regular;
