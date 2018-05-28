@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+ACTION=$1
+ARGS=$2
+
+arg() {
+  echo $ARGS | awk -F$';' "{print \$$1}"
+}
+
+title=$(arg '1')
+developer=$($CLI_PATH/util/user-credentials $(arg '2') --slack)
+reviewer=$($CLI_PATH/util/user-credentials $(arg '3') --slack)
+
+ISSUE=${title/issue-/}
+LOGS_CHANNEL=$($CLI_PATH/ces-issue-info $ISSUE --category-channel)
+
+[[ $ACTION == '--require' ]] && {
+  message="[${title}] @${developer}: _${reviewer}_ required a pull-request *REVIEW*"
+}
+
+$CLI_PATH/ces-slack-notify "--${LOGS_CHANNEL}" "${message}"
