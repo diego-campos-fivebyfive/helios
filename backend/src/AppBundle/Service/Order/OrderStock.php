@@ -37,6 +37,11 @@ class OrderStock
     private $stock;
 
     /**
+     * @var array
+     */
+    private $transactions;
+
+    /**
      * OrderStock constructor.
      * @param ComponentCollector $collector
      * @param Stock $stock
@@ -45,6 +50,7 @@ class OrderStock
     {
         $this->collector = $collector;
         $this->stock = $stock;
+        $this->transactions = [];
     }
 
     /**
@@ -53,17 +59,15 @@ class OrderStock
      */
     public function process(OrderInterface $order, $mode)
     {
-        if($order->isMaster()){
-            foreach ($order->getChildrens() as $children){
-                $this->process($children, $mode);
+        if ($order->isMaster()) {
+            foreach ($order->getChildrens() as $children) {
+                $this->mappingTransactions($children, $mode);
             }
 
-            return;
+            $this->stock->transact($this->transactions);
         }
 
-        $transactions = $this->mappingTransactions($order, $mode);
-
-        $this->stock->transact($transactions);
+        $this->transactions = [];
     }
 
     /**
@@ -99,20 +103,17 @@ class OrderStock
             $deliveryInfo
         );
 
-        $transactions = [];
         foreach ($order->getElements() as $element){
 
             $component = $this->collector->fromCode($element->getCode());
 
             if($component) {
-                $transactions[] = [
+                $this->transactions[] = [
                     'component' =>  $component,
                     'amount' => ($element->getQuantity() * $mode),
                     'description' => $description
                 ];
             }
         }
-
-        return $transactions;
     }
 }
