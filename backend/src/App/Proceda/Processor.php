@@ -43,23 +43,11 @@ class Processor
 
     private $timeline;
 
-    const DELIVERING = ['000'];
-
-    const DELIVERED = ['001', '002', '031', '105'];
-
     const PROCEDA_CACHE = 'OCOREN';
 
     const SEARCH_PREFIX = 'OCOREN';
 
     const PROCESSED_DIR = 'PROCESSED/';
-
-    const MESSAGES = [
-        '000' => 'Processo de Transporte já Iniciado',
-        '001' => 'Entrega Realizada Normalmente',
-        '002' => 'Entrega Fora da Data Programada',
-        '031' => 'Entrega com Indenização Efetuada',
-        '105' => 'Entrega efetuada no cliente pela Transportadora de Redespacho'
-    ];
 
     /**
      * @var array
@@ -208,6 +196,7 @@ class Processor
 
     /**
      * @param array $groups
+     * @throws \Doctrine\DBAL\DBALException
      */
     private function processGroups(array &$groups = [])
     {
@@ -234,7 +223,7 @@ class Processor
     private function processGroupEvents(Order $order, array $events = [])
     {
         foreach ($events as $event) {
-            $this->changeStatusByEvent($order, $event);
+            $this->processEvent($order, $event);
         }
     }
 
@@ -248,7 +237,7 @@ class Processor
 
         $this->timelineList[] = [
             'target' => Resource::getObjectTarget($order),
-            'message' => self::MESSAGES[$event['event']],
+            'message' => Events::MESSAGES[$event['event']],
             'attributes' => [
                 'status' => $status,
                 'statusLabel' =>  Order::getStatusNames()[$status]
@@ -287,21 +276,23 @@ class Processor
      * @param Order $order
      * @param array $event
      */
-    private function changeStatusByEvent(Order $order, array $event)
+    private function processEvent(Order $order, array $event)
     {
-        if($order->getStatus() != Order::STATUS_DELIVERED
-            && in_array($event['code'], array_merge(self::DELIVERING, self::DELIVERED))){
+        if ($order->getStatus() != Order::STATUS_DELIVERED
+            && in_array($event['code'], array_merge(Events::DELIVERING, Events::DELIVERED))) {
 
-            $status = in_array($event['code'], self::DELIVERED)
+            $status = in_array($event['code'], Events::DELIVERED)
                 ? Order::STATUS_DELIVERED
                 : Order::STATUS_DELIVERING ;
 
             $order->setStatus($status);
 
+            $this->manager->save($order, false);
+
+            $this->prepareTimelineEvent($order, $event);
+        } else if (in_array($event['code'], Events::OTHERS_EVENTS)) {
             $this->prepareTimelineEvent($order, $event);
         }
-
-        $this->manager->save($order, false);
     }
 
     /**
@@ -361,6 +352,7 @@ class Processor
     /**
      * @param array $invoices
      * @return array
+     * @throws \Doctrine\DBAL\DBALException
      */
     private function findOrders(array $invoices)
     {
