@@ -21,7 +21,9 @@
             Icon(:name='getIcon(groupName)')
             | {{ getGroupName(groupName) }}
           th.col-group-name-off(:colspan='rangesCount')
-        tr.rows(v-for='component in components')
+        tr.rows(
+          v-for='component in components',
+          :class='component.relation')
           td.col-code
             input(type='text', readonly, :value='component.code')
           td.col-description
@@ -42,7 +44,8 @@
                 type='text',
                 v-on:blur='updateRange(component.id, $event.target.value)',
                 :value='component.costPrice')
-          td.col-range(v-for='(range, rangeKey) in component.ranges')
+          td.col-range(
+            v-for='(range, rangeKey) in component.ranges')
             .markups
               input(
                 type='text',
@@ -126,6 +129,10 @@
           else {
             if (groupHasParent) {
               this.$set(component, 'relation', 'child')
+
+              const parent = this.getParentId(groupName)
+
+              this.copyMarkups(component, parent.id)
             }
             else {
               $event.target.checked = false
@@ -138,6 +145,20 @@
           .forEach(component => {
             this.$set(component, 'relation', null)
           })
+      },
+      copyMarkups(component, parentId) {
+        const { level } = this.getQueryParams()
+
+        const uri = `admin/api/v1/memorial_ranges/${parentId}/copy_markups`
+
+        this.axios.put(uri, { childId: component.id, level })
+          .then(({ data }) => {
+            this.$set(component, 'ranges', data)
+          })
+      },
+      getParentId(groupName) {
+        return this.groups[groupName]
+          .find(component => component.relation === 'parent')
       },
       updateRange(componentId, costPrice) {
         const { level } = this.getQueryParams()
@@ -189,9 +210,20 @@
 </script>
 
 <style lang="scss" scoped>
+  $parent_background_: #fcf8e3;
+  $child_background_: #dff0d8;
+
   .table-wrapper {
     overflow: auto;
     position: relative;
+
+    .parent {
+      background-color: $parent_background_;
+    }
+
+    .child {
+      background-color: $child_background_;
+    }
   }
 
   .group-name {
@@ -210,7 +242,7 @@
   }
 
   td {
-    background-color: $ui-white-regular;
+    background-color: inherit;
   }
 
   th,
@@ -324,9 +356,12 @@
   }
 
   .rows {
+    background-color: $ui-white-regular;
+
     input {
       border: 1px solid $ui-gray-light;
       color: $ui-gray-regular;
+      background-color: $ui-white-regular;
       padding: $ui-space-y/2 $ui-space-x;
       width: 100%;
 
