@@ -173,7 +173,21 @@ class RangesController extends AbstractController
 
         $manager->save($childRange);
 
-        return $this->json($childMetadata[$level]);
+        $result = $this->formatPowerRanges($childMetadata[$level]);
+
+        return $this->json($result);
+    }
+
+    /**
+     * @param array $powerRanges
+     */
+    private function formatPowerRanges(array $powerRanges)
+    {
+        foreach ($powerRanges as $key => $powerRange) {
+            $powerRanges[$key]['markup'] *= 100;
+        }
+
+        return $powerRanges;
     }
 
     /**
