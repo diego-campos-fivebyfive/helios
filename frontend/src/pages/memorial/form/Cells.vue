@@ -100,10 +100,7 @@
               this.$set(component, 'relation', null)
 
               if (relation === 'parent') {
-                this.groups[groupName]
-                  .forEach(component => {
-                    this.$set(component, 'relation', null)
-                  })
+                this.cleanComponentRelations(groupName)
               }
             }
           }
@@ -135,6 +132,12 @@
             }
           }
         }
+      },
+      cleanComponentRelations(groupName) {
+        this.groups[groupName]
+          .forEach(component => {
+            this.$set(component, 'relation', null)
+          })
       },
       updateRange(componentId, costPrice) {
         const { level } = this.getQueryParams()
