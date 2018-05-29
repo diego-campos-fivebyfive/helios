@@ -1,0 +1,1 @@
+../vendor/kettle/dynamodb-orm/bin/kettle-skeleton.php

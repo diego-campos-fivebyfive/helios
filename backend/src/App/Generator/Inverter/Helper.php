@@ -18,8 +18,8 @@ class Helper
     public static function adjustPower(array $inverters, $desired, $fdi)
     {
         $newPower = $desired;
-        foreach ($inverters as $inverter){
-            $reference = $inverter["nominal_power"] / $fdi;
+        if(!empty($inverters)){
+            $reference = $inverters[0]["nominal_power"] / $fdi;
             if ($desired < $reference) {
                 $newPower = $reference;
             }
@@ -206,6 +206,7 @@ class Helper
                 }
             }
         }
+
         $inverters = array_values($inverters);
 
         if ($desiredPower >= 75) {
@@ -335,6 +336,7 @@ class Helper
                 }
             }
         }
+
         return $combinations;
     }
 
@@ -383,7 +385,6 @@ class Helper
     public static function configureArrangements($inverters, $mpptOperations, $module, $power)
     {
         $powerBalance = self::powerBalance($inverters, $power);
-
         for ($i = 0; $i < count($inverters); $i++){
             $arrangements = self::allArrangements($inverters[$i], $mpptOperations[$i], $module);
             $arrangements = self::autoArrangement($arrangements, $powerBalance[$i], $mpptOperations[$i]);

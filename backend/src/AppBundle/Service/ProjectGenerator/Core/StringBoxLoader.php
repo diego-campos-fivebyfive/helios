@@ -13,11 +13,10 @@ use Doctrine\Common\Inflector\Inflector;
 */
 class StringBoxLoader extends AbstractLoader
 {
-
     /**
      * @var string
      */
-    protected $properties = 's.id, s.inputs, s.outputs, s.generatorLevels levels';
+    protected $properties = 's.id, s.alternative, s.inputs, s.outputs, s.generatorLevels levels';
 
     /**
      * @return array

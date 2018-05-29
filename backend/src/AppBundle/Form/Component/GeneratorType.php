@@ -143,8 +143,10 @@ class GeneratorType extends AbstractType
             ])
         ;
 
-        $this->addPromotionalSelector($builder, $defaults['account_level']);
-        $this->addFinameSelector($builder);
+        if(array_key_exists('account_level', $defaults)) {
+            $this->addPromotionalSelector($builder, $defaults['account_level']);
+            $this->addFinameSelector($builder);
+        }
     }
 
     /**

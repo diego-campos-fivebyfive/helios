@@ -12,7 +12,6 @@ class Helper
      */
     public static function getParameters($arrangementChoice)
     {
-
         $inputs = 0;
         for ($i = 0; $i < count($arrangementChoice); $i++) {
             $inputs += $arrangementChoice[$i]["par"];
