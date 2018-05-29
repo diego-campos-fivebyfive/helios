@@ -160,10 +160,13 @@ class OrderCloner
     {
         $newOrder->setStatus(OrderInterface::STATUS_BUILDING);
 
-        if ($source->getAgent())
-            $newOrder->setAgent($source->getAgent());
-        if ($source->getAccount())
+        if ($source->getAccount()) {
             $newOrder->setAccount($source->getAccount());
+        }
+
+        if ($source->getAgent()) {
+            $newOrder->setAgent($source->getAgent());
+        }
 
         /** @var OrderInterface $children */
         foreach ($source->getChildrens() as $children)
