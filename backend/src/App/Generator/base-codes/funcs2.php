@@ -244,7 +244,6 @@ function inv_active_alternative_filter($all_inv, $all_alternatives)
 /**
  * Opções de combo
  * Volts/Fase
- * 127/2
  * 220/1
  * 220/2
  * 220/3

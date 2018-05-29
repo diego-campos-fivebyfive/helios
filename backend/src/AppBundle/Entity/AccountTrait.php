@@ -54,7 +54,7 @@ trait AccountTrait
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="persistent_at", type="datetime", nullable=true)
+     * /// @ORM\Column(name="persistent_at", type="datetime", nullable=true)
      */
     private $persistentAt;
 

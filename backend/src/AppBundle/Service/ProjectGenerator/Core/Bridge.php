@@ -16,10 +16,8 @@ use App\Generator\Structure\Ground;
 use AppBundle\Entity\Component\Module;
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Component\ProjectInverter;
-use AppBundle\Entity\Component\ProjectModule;
 use AppBundle\Entity\Component\ProjectStringBox;
 use AppBundle\Entity\Component\ProjectStructure;
-use AppBundle\Entity\Component\Structure;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Bridge
@@ -43,18 +41,22 @@ class Bridge
      */
     public function resolve(ProjectInterface $project)
     {
-        $this->resolveOnlyStructures($project);
-
-        return;
-
         $defaults = $project->getDefaults();
+
+        list($netStart, $netEnd) = explode('/', $defaults['grid_voltage']);
+
+        $phaseOptions = [
+            'Monophasic' => 1,
+            'Biphasic' => 2,
+            'Triphasic' => 3
+        ];
 
         $level = $this->getLevel($defaults);
         $fdiMin = $defaults['fdi_min'];
         $fdiMax = $defaults['fdi_max'];
         $power = $defaults['power'];
-        $phaseVoltage = $defaults['voltage'];
-        $phaseNumber = $defaults['phases'];
+        $phaseVoltage = (int) $netEnd;
+        $phaseNumber = $phaseOptions[$defaults['grid_phase_number']];
         $inverterMakerId = $defaults['inverter_maker'];
         $stringBoxMakerId = $defaults['string_box_maker'];
 
@@ -101,9 +103,9 @@ class Bridge
 
         $this->inverterResolution($result, $inverterLoader, $project);
 
-        $this->stringBoxResolution($result, $stringBoxLoader, $project);
+        $this->stringBoxResolution($result['string_boxes'], $stringBoxLoader, $project);
 
-        $this->structureResolution($this->getStructures($project), $project);
+        //$this->resolveOnlyStructures($project);
 
         $projectManager = $this->container->get('project_manager');
 
@@ -181,13 +183,22 @@ class Bridge
 
         $inverters = $inverterLoader->findByIds($invertersId);
 
+        $serialAndParalell = [];
+        foreach ($data['inverters'] as $inverter){
+            $serialAndParalell[$inverter['id']] = current($inverter['arrangements']);
+        }
+
         foreach ($inverters as $inverter) {
+
             for ($i = 0; $i < $invertersQuantities[$inverter->getId()]; $i++) {
+
                 $projectInverter = new ProjectInverter();
 
                 $projectInverter->setInverter($inverter);
                 $projectInverter->setQuantity(1);
                 $projectInverter->setProject($project);
+                $projectInverter->setSerial($serialAndParalell[$inverter->getId()]['ser']);
+                $projectInverter->setParallel($serialAndParalell[$inverter->getId()]['par']);
             }
         }
     }
@@ -199,7 +210,11 @@ class Bridge
      */
     private function stringBoxResolution($data, StringBoxLoader $stringBoxLoader, ProjectInterface $project)
     {
-        $stringBoxesIds = array_column($data['string_boxes'], 'id');
+        if(empty($data)){
+            return;
+        }
+
+        $stringBoxesIds = array_column($data, 'id');
 
         $stringBoxesQuantities = array_count_values($stringBoxesIds);
 
@@ -237,7 +252,7 @@ class Bridge
      */
     private function getLevel($defaults)
     {
-        if (isset($defaults['finame']) || isset($defaults['is_promotional'])) {
+        if ((isset($defaults['finame']) && $defaults['finame']) || (isset($defaults['is_promotional']) && $defaults['is_promotional'])) {
             return isset($defaults['finame']) ? 'finame' : 'promotional';
         }
 

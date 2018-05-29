@@ -3,7 +3,6 @@
 namespace AppBundle\Service\ProjectGenerator;
 
 use AppBundle\Entity\Component\InverterInterface;
-use AppBundle\Entity\Component\MakerInterface;
 use AppBundle\Entity\Component\ModuleInterface;
 use AppBundle\Entity\Component\ProjectArea;
 use AppBundle\Entity\Component\ProjectInterface;
@@ -146,8 +145,18 @@ class ProjectGenerator
         $defaults['errors'] = [];
         $this->project->setDefaults($defaults);
 
-        // INVERTERS
-        $this->generateInverters($this->project);
+        /**
+         * TODO: Variável de controle temporária para ativação/desativação do uso da bridge
+         * Resolvendo atualmente: Inversores e StringBox
+         */
+        $useBridge = true;
+
+        if($useBridge){
+            $this->bridge->resolve($project);
+        }else {
+            // INVERTERS
+            $this->generateInverters($this->project);
+        }
 
         // AREAS
         $this->generateAreas($this->project);
@@ -167,7 +176,9 @@ class ProjectGenerator
         $this->generateVarieties($this->project);
 
         // STRING BOXES
-        $this->generateStringBoxes($this->project);
+        if(!$useBridge) {
+            $this->generateStringBoxes($this->project);
+        }
 
         // RESOLVE ABB-EXTRA REFERENCE
         // TODO: Remove this call when changing this $resolveDependencies to true
