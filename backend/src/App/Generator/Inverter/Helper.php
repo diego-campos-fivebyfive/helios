@@ -18,7 +18,7 @@ class Helper
     public static function adjustPower(array $inverters, $desired, $fdi)
     {
         $newPower = $desired;
-        if(count($inverters)){
+        if(!empty($inverters)){
             $reference = $inverters[0]["nominal_power"] / $fdi;
             if ($desired < $reference) {
                 $newPower = $reference;
