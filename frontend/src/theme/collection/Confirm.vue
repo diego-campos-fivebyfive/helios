@@ -84,8 +84,15 @@
     }
 
     .title {
+      text-align: center;
       font-size: 1.75rem;
       font-weight: 600;
+      line-height: 1.5;
+    }
+
+    .sub-title {
+      font-size: 1rem;
+      font-weight: 300;
       line-height: 1.5;
     }
   }
