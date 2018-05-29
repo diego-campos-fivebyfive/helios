@@ -230,7 +230,7 @@ class OrderController extends AbstractController
 
     /**
      * @Route("/{id}/status", name="order_status")
-     * //@Method("post")
+     * @Method("post")
      */
     public function statusAction(Request $request, Order $order)
     {
