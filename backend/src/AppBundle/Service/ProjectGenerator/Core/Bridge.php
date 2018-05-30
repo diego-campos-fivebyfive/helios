@@ -101,6 +101,15 @@ class Bridge
 
         $result = Core::process($parameters);
 
+        if(empty($result['inverters'])){
+
+            $defaults['errors'][] = 'empty_inverters';
+
+            $project->setDefaults($defaults);
+
+            return;
+        }
+
         $this->inverterResolution($result, $inverterLoader, $project);
 
         $this->stringBoxResolution($result['string_boxes'], $stringBoxLoader, $project);
