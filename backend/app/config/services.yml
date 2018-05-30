@@ -34,6 +34,10 @@ services:
         class: AppBundle\Manager\AdditiveManager
         arguments: ['AppBundle\Entity\Misc\Additive', '@doctrine']
 
+    cart_manager:
+        class: AppBundle\Manager\CartManager
+        arguments: ['AppBundle\Entity\Kit\Cart', '@doctrine']
+
     category_manager:
         alias: sonata.classification.manager.category
 

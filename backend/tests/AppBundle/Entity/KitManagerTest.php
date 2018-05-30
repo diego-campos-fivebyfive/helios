@@ -3,11 +3,7 @@
 namespace Tests\AppBundle\Entity;
 
 use AppBundle\Entity\Kit\Kit;
-use AppBundle\Entity\Precifier\Memorial;
 use AppBundle\Manager\KitManager;
-use AppBundle\Manager\Precifier\MemorialManager;
-use AppBundle\Service\Precifier\Calculator;
-use AppBundle\Service\Precifier\ComponentsListener;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 
 /**
