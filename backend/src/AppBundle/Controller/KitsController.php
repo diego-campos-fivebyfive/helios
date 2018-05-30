@@ -137,4 +137,25 @@ class KitsController extends AbstractController
             'kit' => $kit
         ));
     }
+
+    /**
+     *
+     * @Security("has_role('ROLE_PLATFORM_ADMIN')")
+     *
+     * @Route("/{id}/delete/", name="delete_kit")
+     * @Method("delete")
+     */
+    public function deleteAction(Kit $kit)
+    {
+        try {
+            $this->manager('kit')->delete($kit);
+            $message = 'Kit excluído com sucesso';
+            $status = Response::HTTP_OK;
+        } catch (\Exception $exception) {
+            $message = 'Falha ao excluir este Kit';
+            $status = Response::HTTP_CONFLICT;
+        }
+
+        return $this->json(['message' => $message], $status);
+    }
 }
