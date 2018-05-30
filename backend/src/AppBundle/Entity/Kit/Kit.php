@@ -32,7 +32,7 @@ class Kit
      *
      * @ORM\Column(name="description", type="string")
      */
-    private $descrption;
+    private $description;
 
     /**
      * @var float
@@ -84,6 +84,14 @@ class Kit
     private $components;
 
     /**
+     * Kit constructor.
+     */
+    public function __construct()
+    {
+        $this->components = [];
+    }
+
+    /**
      * @return int
      */
     public function getId()
@@ -124,18 +132,18 @@ class Kit
     /**
      * @return string
      */
-    public function getDescrption()
+    public function getDescription()
     {
-        return $this->descrption;
+        return $this->description;
     }
 
     /**
-     * @param string $descrption
+     * @param string $description
      * @return Kit
      */
-    public function setDescrption($descrption)
+    public function setDescription($description)
     {
-        $this->descrption = $descrption;
+        $this->description = $description;
 
         return $this;
     }
@@ -266,10 +274,43 @@ class Kit
      * @param array $components
      * @return Kit
      */
-    public function setComponents($components)
+    public function setComponents(array $components)
     {
         $this->components = $components;
 
         return $this;
+    }
+
+
+    /**
+     * @param array $newComponent
+     * @return bool
+     */
+    public function addComponent(array $newComponent)
+    {
+        $contains = false;
+
+        foreach ($this->components as $component) {
+            if ($component['code'] === $newComponent['code']) {
+                return true;
+                break;
+            }
+        }
+
+        if (!$contains) {
+            $this->components[] = $newComponent;
+        }
+    }
+
+    /**
+     * @param $componentCode
+     */
+    public function removeComponent($componentCode)
+    {
+        foreach ($this->components as $key => $component) {
+            if ($component['code'] === $componentCode) {
+                unset($this->components[$key]);
+            }
+        }
     }
 }
