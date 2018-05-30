@@ -93,7 +93,7 @@ class KitsController extends AbstractController
 
         return $this->render("kit/config.html.twig", [
             'form' => $form->createView(),
-            'structure' => $kit
+            'kit' => $kit
         ]);
     }
 
