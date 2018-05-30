@@ -1,0 +1,338 @@
+{% extends view('layout') %}
+
+{% block body %}
+    <style>
+        img {
+            max-width: 500px;
+            height: auto;
+            width: auto;
+        }
+    </style>
+
+    <form action="" enctype="multipart/form-data">
+        <div class="wrapper wrapper-content animated fadeInRight ecommerce">
+            <div class="ibox-content m-b-sm border-bottom">
+                <fieldset>
+                    <legend>Kit:</legend>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label> Imagem (JPG) </label>
+                                <input type="file" id="kit_image" name="kit_image" accept="image/jpeg">
+                                <span class="label info">Este Kit já possui imagem</span>
+                            </div>
+                        </div>
+                        <div id="preview_kit" class="col-sm-6 hidden">
+                            <div class="form-group">
+                                <label> Preview: </label>
+                                <img id="kit_img_preview" src="#" alt="Preview"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="control-label" for="kit_code">Código</label>
+                                <input type="text" id="kit_code" name="kit_code" value="" placeholder="Código" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="form-group">
+                                <label class="control-label" for="kit_description">Descrição</label>
+                                <input type="text" id="kit_description" name="kit_description" value="" placeholder="Descrição" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label class="control-label" for="kit_power">Potência</label>
+                                <input type="text" id="kit_power" name="kit_power" value="" placeholder="Potência" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label class="control-label" for="kit_price">Preço</label>
+                                <input type="text" id="kit_price" name="kit_price" value="" placeholder="Preço" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label class="control-label" for="kit_stock">Estoque</label>
+                                <input type="text" id="kit_stock" name="kit_stock" value="" placeholder="Estoque" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label class="control-label" for="kit_position">Posição</label>
+                                <input type="text" id="kit_position" name="kit_position" value="" placeholder="Posição" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-4" style="padding-top: 20px">
+                            <label><input type="checkbox" class="i-checks"> Kit Disponível para venda </label>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Adicionar componentes ao Kit:</legend>
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label class="control-label" for="component_families">Família</label>
+                                <select id="component_families" class="form-control" required>
+                                    <option value='' selected> &nbsp; </option>
+                                    {% for family in families %}
+                                        <option value="{{ family }}">{{ family|trans }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="control-label" for="components">Componente</label>
+                                <select id="components" class="form-control" required>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label class="control-label" for="component_quantity">Quantidade</label>
+                                <input type="text" id="component_quantity" name="component_quantity" value="" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label class="control-label" for="component_position">Posição</label>
+                                <input type="text" id="component_position" name="component_position" value="" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-sm-2" style="padding-top: 25px">
+                            <div class="form-group">
+                                <button id="btn_add_component" type="button" class="btn btn-success">
+                                    <i class="fa fa-save"></i> Adicionar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox">
+                        <div class="ibox-content">
+                            <div id="table">
+                                <table class="footable table table-stripped toggle-arrow-tiny">
+                                    <thead>
+                                    <tr>
+                                        <th class="text-center">Código</th>
+                                        <th class="text-center">Descrição</th>
+                                        <th class="text-center">Quantidade</th>
+                                        <th class="text-center">Posição</th>
+                                        <th class="text-center">Ação</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="hide">
+                                            <td class="hidden component_id">
+                                            </td>
+
+                                            <td class="hidden component_family">
+                                            </td>
+
+                                            <td class="text-center component_code" contenteditable="true">
+                                            </td>
+
+                                            <td class="text-center component_description" contenteditable="true">
+                                            </td>
+
+                                            <td class="text-center component_quantity" contenteditable="true">
+                                            </td>
+
+                                            <td class="text-center component_position" contenteditable="true">
+                                            </td>
+
+                                            <td class="text-center">
+                                                <div class="btn-group">
+                                                    <button type="button"class="btn-white btn btn-xs component-remove">Excluir</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group" style="padding-left: 25px">
+                    <button id="btn_add_component" type="submit" class="btn btn-success">
+                        <i class="fa fa-save"></i> Salvar Kit
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}
+{% block scripts %}
+    {% include view('helper.request') %}
+    {% include view('helper.plugins_js') %}
+
+    <script>
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    $('#kit_img_preview').attr('src', e.target.result);
+                    $('#preview_kit').removeClass('hidden');
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        jQuery.fn.pop = [].pop;
+        jQuery.fn.shift = [].shift;
+
+        function converTableToJSON() {
+            var $rows = $('#table').find('tr:not(:hidden)');
+            var headers = [];
+            var data = [];
+
+            $($rows.shift()).find('th:not(:empty)').each(function () {
+                headers.push($(this).text().toLowerCase());
+            });
+
+            $rows.each(function () {
+                var rowData = {};
+
+                var componentId = $(this).find('.component_id').html();
+                var componentCode = $(this).find('.component_code').html();
+                var componentDescription = $(this).find('.component_description').html();
+                var componentQuantity = $(this).find('.component_quantity').html();
+                var componentPosition = $(this).find('.component_position').html();
+                var componentFamily = $(this).find('.component_family').html();
+
+                var tag = componentFamily + "_" + componentId;
+                rowData[tag] = {
+                    "code": componentCode,
+                    "description": componentDescription,
+                    "family": componentFamily,
+                    "quantity": componentQuantity,
+                    "position": componentPosition,
+                    "componentId": componentId
+                };
+
+                data.push(rowData);
+            });
+
+            return JSON.stringify(data);
+        }
+
+        $('#kit_image').change(function () {
+            readURL(this);
+        });
+
+        var inputsTouchSpin = [
+            '#component_position',
+            '#component_quantity',
+            '#kit_position',
+            '#kit_stock'
+        ];
+        for (i = 0; i < inputsTouchSpin.length; i++) {
+            $(inputsTouchSpin[i]).TouchSpin({
+                min: 0,
+                max: 9999999
+            });
+        }
+
+        var sanitize = function(element){
+            function clear(v){ return v.replace(/\D+/g,''); }
+            var value = element.val();
+            var backup = value.replace(/\./g,',');
+            value = clear(value);
+            if(backup.indexOf(',') > 0){
+                var commas = backup.split(',');
+                value = clear(commas[0])+',';
+                if(commas[1].length){
+                    value += clear(commas[1]);
+                }
+            }
+            if(0 == backup.indexOf('-')){
+                if(2 == backup.split('-').length){
+                    value = '-' + value;
+                }
+            }
+            element.val(value);
+        };
+
+        var custom_mask = function(element){
+            element.on('keyup', function(){
+                sanitize(element);
+            });
+        };
+
+        var common_mask = {pattern: '##,##', reverse: true};
+        var targets = {
+            'kit_price': common_mask,
+            'kit_power': common_mask
+        };
+
+        $.each(targets, function (id, options) {
+            custom_mask($('#'+id));
+        });
+
+        $('#btn_add_component').on('click', function () {
+            var componentQuantity = $('#component_quantity').val();
+            var componentPosition = $('#component_position').val();
+            var componentFamily = $('#component_families').val();
+            var componentSelected = $('#components').find(":selected");
+            var componentId= componentSelected.val();
+            var componentCode = componentSelected.data('code');
+            var componentDescription = componentSelected.data('description');
+
+            var clone = $('#table').find('tr.hide').clone(true).removeClass('hide');
+
+            clone.find('.component_id').html(componentId);
+            clone.find('.component_code').html(componentCode);
+            clone.find('.component_description').html(componentDescription);
+            clone.find('.component_quantity').html(componentQuantity);
+            clone.find('.component_position').html(componentPosition);
+            clone.find('.component_family').html(componentFamily);
+
+            $('#table').find('table').append(clone);
+        });
+
+        $('.component-remove').click(function () {
+            $(this).parents('tr').detach();
+        });
+
+        $('#component_families').on('change', function () {
+            var family = $('#component_families').find(':selected').val();
+            var url = '{{ path('kit_components_by_family', {family:'_family_'}) }}'.replace('_family_', family);
+
+            $.ajax({
+                url: url,
+                complete: function (response) {
+                    $('#components').empty();
+                    $('#components').append('<option value="" selected>&nbsp;</option>>');
+
+                    var len = response.responseJSON.length;
+
+                    for( var i = 0; i < len; i++) {
+                        var value = response.responseJSON[i].id;
+                        var code = response.responseJSON[i].code;
+                        var description = response.responseJSON[i].description;
+
+                        $('#components').append('<option value="'+ value +'" data-description="'+ description +'" data-code="' + code +'">' + description +'</option>');
+                    }
+                }
+            });
+        })
+    </script>
+{% endblock %}

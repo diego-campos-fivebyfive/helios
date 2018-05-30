@@ -158,4 +158,43 @@ class KitsController extends AbstractController
 
         return $this->json(['message' => $message], $status);
     }
+
+    /**
+     * @Route("/components/{family}", name="kit_components_by_family")
+     * @Method("get")
+     */
+    public function getKitComponentsByFamilyAction($family)
+    {
+        if (!in_array($family, $this->getComponentFamilies())) {
+            return JsonResponse::create([], 404);
+        }
+
+        $manager = $this->container->get("{$family}_manager");
+
+        $field = in_array($family, ['module',  'inverter']) ? 'model' : 'description';
+
+        /** @var QueryBuilder $qb */
+        $qb = $manager->createQueryBuilder();
+        $alias = $qb->getRootAlias();
+
+        $qb->select("{$alias}.id, {$alias}.code, {$alias}.{$field} as description");
+
+        $results = $qb->getQuery()->getResult();
+
+        return JsonResponse::create($results, 200);
+    }
+
+    /**
+     * @return array
+     */
+    private function getComponentFamilies()
+    {
+        return $families = [
+            ComponentInterface::FAMILY_MODULE => ComponentInterface::FAMILY_MODULE,
+            ComponentInterface::FAMILY_INVERTER => ComponentInterface::FAMILY_INVERTER,
+            ComponentInterface::FAMILY_STRING_BOX => ComponentInterface::FAMILY_STRING_BOX,
+            ComponentInterface::FAMILY_STRUCTURE => ComponentInterface::FAMILY_STRUCTURE,
+            ComponentInterface::FAMILY_VARIETY => ComponentInterface::FAMILY_VARIETY
+        ];
+    }
 }
