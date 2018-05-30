@@ -2,73 +2,39 @@
 
 namespace Tests\AppBundle\Entity;
 
-use AppBundle\Entity\Kit\Kit;
-use AppBundle\Entity\Precifier\Memorial;
+use AppBundle\Entity\Customer;
+use AppBundle\Entity\Kit\Cart;
+use AppBundle\Manager\CustomerManager;
 use AppBundle\Manager\KitManager;
-use AppBundle\Manager\Precifier\MemorialManager;
-use AppBundle\Service\Precifier\Calculator;
-use AppBundle\Service\Precifier\ComponentsListener;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 
 /**
- * Class KitManagerTest
- * @group kit_manager
+ * Class CartManagerTest
+ * @group cart_manager
  */
-class KitManagerTest extends WebTestCase
+class CartManagerTest extends WebTestCase
 {
     public function testSave()
     {
-        /** @var KitManager $kitManager */
-        $kitManager = $this->getContainer()->get('kit_manager');
+        /** @var CustomerManager $accountManager */
+        $accountManager = $this->getContainer()->get('customer_manager');
 
-        /** @var Kit $kit */
-        $kit = $kitManager->create();
+        /** @var Customer $account */
+        $account = $accountManager->findOneBy([
+            'context' => 'account',
+            'id' => 19
+        ]);
 
-        $kit->setCode('AA22');
-        $kit->setDescription('Teste');
-        $kit->setPower(2.03);
-        $kit->setPrice(2301.20);
-        $kit->setStock(30);
-        $kit->setImage('http://www.google.com');
-        $kit->setPosition(3);
-        $kit->setAvailable(true);
-        $kit->addComponent(1,
-            [
-                'code' => 'BBB111',
-                'description' => 'Componente Teste',
-                'quantity' => 10,
-                'position' => 1
-            ]
-        );
-        $kit->addComponent(1,
-            [
-                'code' => 'BBB111',
-                'description' => 'Componente Teste',
-                'quantity' => 10,
-                'position' => 1
-            ]
-        );
-        $kit->addComponent(2,
-            [
-                'code' => 'BBB222',
-                'description' => 'Componente Teste 2',
-                'quantity' => 10,
-                'position' => 1
-            ]
-        );
-        $kit->removeComponent(2);
+        /** @var KitManager $manager */
+        $manager = $this->getContainer()->get('cart_manager');
 
-        $kitManager->save($kit);
+        /** @var Cart $cart */
+        $cart = $manager->create();
 
-        self::assertTrue($kit instanceof Kit);
-        self::assertEquals($kit->getCode(), 'AA22');
-        self::assertEquals($kit->getDescription(), 'Teste');
-        self::assertEquals($kit->getPower(), 2.03);
-        self::assertEquals($kit->getPrice(), 2301.20);
-        self::assertEquals($kit->getStock(), 30);
-        self::assertEquals($kit->getImage(), 'http://www.google.com');
-        self::assertEquals($kit->getPosition(), 3);
-        self::assertTrue($kit->isAvailable());
-        self::assertEquals(1, count($kit->getComponents()));
+        $cart->setAccount($account);
+
+        $manager->save($cart);
+
+        self::assertEquals($cart->getAccount(), $account);
     }
 }
