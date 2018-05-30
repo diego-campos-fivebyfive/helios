@@ -46,7 +46,7 @@
     {% macro action_buttons(kit, member) %}
 
        <div class="btn-group btn-group-sm btn-group-justified">
-           <a data-url="{{ path('kit_show', { 'id': kit.id }) }}"
+           <a data-url="{{ path('kit_show', { id: kit.id }) }}"
               data-toggle="modal"
               data-target="#modal_details"
               class="btn btn-default">
@@ -54,11 +54,11 @@
            </a>
 
            {% if member.isPlatformMaster or member.isPlatformAdmin %}
-               <a href="{#{{ path('stringbox_edit', { 'id': stringBox.id }) }}#}"
+               <a href="{#{{ path('stringbox_edit', { id: stringBox.id }) }}#}"
                   class="btn btn-success">
                    <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
                </a>
-               <a data-delete="{{ path('delete_kit', { 'id': kit.id}) }}"
+               <a data-delete="{{ path('delete_kit', { id: kit.id}) }}"
                   class="btn btn-danger">
                    <i class="fa fa-trash"></i> {{ 'Delete'|trans }}
                </a>
@@ -104,7 +104,7 @@
                             </div>
                             <div class="product-desc">
 
-                                <a data-url="{#{{ path('stringbox_show', { 'id': stringBox.id }) }}#}"
+                                <a data-url="{{ path('kit_show', { id: kit.id }) }}"
                                    data-toggle="modal"
                                    data-target="#modal_details"
                                    class="product-name">
