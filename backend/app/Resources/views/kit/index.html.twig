@@ -46,7 +46,7 @@
     {% macro action_buttons(kit, member) %}
 
        <div class="btn-group btn-group-sm btn-group-justified">
-           <a data-url="{#{{ path('stringbox_show', { 'id': stringBox.id }) }}#}"
+           <a data-url="{{ path('kit_show', { 'id': kit.id }) }}"
               data-toggle="modal"
               data-target="#modal_details"
               class="btn btn-default">
