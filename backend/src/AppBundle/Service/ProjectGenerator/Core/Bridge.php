@@ -13,6 +13,7 @@ namespace AppBundle\Service\ProjectGenerator\Core;
 use App\Generator\Common\Isopleta;
 use App\Generator\Core;
 use App\Generator\Structure\Ground;
+use AppBundle\Entity\Component\Inverter;
 use AppBundle\Entity\Component\Module;
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Component\ProjectInverter;
@@ -184,6 +185,8 @@ class Bridge
      */
     private function inverterResolution($data, InverterLoader $inverterLoader, ProjectInterface $project)
     {
+        $defaults = $project->getDefaults();
+
         $invertersIds = array_column($data['inverters'], 'id');
 
         $invertersQuantities = array_count_values($invertersIds);
@@ -197,6 +200,8 @@ class Bridge
             $serialAndParalell[$inverter['id']] = current($inverter['arrangements']);
         }
 
+        $powerTransformer = 0;
+        /** @var Inverter $inverter */
         foreach ($inverters as $inverter) {
 
             for ($i = 0; $i < $invertersQuantities[$inverter->getId()]; $i++) {
@@ -208,8 +213,19 @@ class Bridge
                 $projectInverter->setProject($project);
                 $projectInverter->setSerial($serialAndParalell[$inverter->getId()]['ser']);
                 $projectInverter->setParallel($serialAndParalell[$inverter->getId()]['par']);
+
+                if (3 == $inverter->getPhases()) {
+                    if ($defaults['voltage'] != $inverter->getPhaseVoltage()) {
+                        $powerTransformer += $inverter->getNominalPower();
+                    }
+                }
+
             }
         }
+
+        $defaults['power_transformer'] = $powerTransformer;
+
+        $project->setDefaults($defaults);
     }
 
     /**
