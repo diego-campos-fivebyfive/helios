@@ -1,5 +1,8 @@
 <template lang="pug">
   .filters
+    CopyModal(
+      ref='copyModal',
+      :level='queryParams.level')
     Button.prev(
       type='default-bordered',
       icon='arrow-left',
@@ -14,11 +17,13 @@
       type='primary-common',
       icon='copy',
       label='Copiar',
-      pos='single')
+      pos='single',
+      v-on:click.native='show')
 </template>
 
 <script>
   import Components from './Components'
+  import CopyModal from '../CopyModal'
   import Levels from './Levels'
   import Memorials from './Memorials'
 
@@ -34,10 +39,14 @@
     }),
     components: {
       Components,
+      CopyModal,
       Levels,
       Memorials
     },
     methods: {
+      show() {
+        this.$refs.copyModal.show()
+      },
       updateFamiliesQuery(value) {
         this.queryParams.families = value
         this.$emit('getMemorialGroups', this.queryParams)
