@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Kit\Kit;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -56,6 +57,17 @@ class KitsController extends AbstractController
         return $this->render('kit/index.html.twig', array(
             'pagination' => $pagination,
             'kits_active_val' => $actives
+        ));
+    }
+
+    /**
+     * @Route("/{id}", name="kit_show")
+     * @Method("GET")
+     */
+    public function showAction(Kit $kit)
+    {
+        return $this->render('kit/show.html.twig', array(
+            'kit' => $kit
         ));
     }
 }
