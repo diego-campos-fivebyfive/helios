@@ -152,7 +152,11 @@ class ProjectGenerator
         $useBridge = true;
 
         if($useBridge){
+
             $this->bridge->resolve($project);
+
+            $this->resolveTransformer($project);
+
         }else {
             // INVERTERS
             $this->generateInverters($this->project);

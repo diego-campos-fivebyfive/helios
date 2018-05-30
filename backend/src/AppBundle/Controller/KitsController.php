@@ -2,11 +2,9 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Component\ComponentInterface;
 use AppBundle\Entity\Kit\Kit;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use AppBundle\Form\Kit\KitType;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 USE Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -29,6 +27,28 @@ class KitsController extends AbstractController
 
         $qb = $manager->createQueryBuilder();
 
+        $qb->orderBy('k.position', 'asc');
+
+        if ($actives = $request->get('actives')) {
+            if ((int) $actives == 1) {
+                $expression  =
+                    $qb->expr()->eq(
+                        'k.available',
+                        $qb->expr()->literal(1));
+            } else {
+                $expression  =
+                    $qb->expr()->eq(
+                        'k.available',
+                        $qb->expr()->literal(0));
+            }
+
+            $qb->andWhere(
+                $expression
+            );
+        }
+
+        $this->overrideGetFilters();
+
         $pagination = $this->getPaginator()->paginate(
             $qb->getQuery(),
             $request->query->getInt('page', 1), 8
@@ -36,20 +56,107 @@ class KitsController extends AbstractController
 
         return $this->render('kit/index.html.twig', array(
             'pagination' => $pagination,
-            'kits_active_val' => 1
+            'kits_active_val' => $actives
         ));
     }
 
     /**
-     * @Route("/config", name="kits_index")
-     * @Method("get")
-     * @Security("has_role('ROLE_PLATFORM_ADMIN')")
+     * @Route("/create", name="create_kit")
      */
-    public function configAction(Request $request)
+    public function createAction(Request $request)
     {
-        return $this->render('kit/config.html.twig', [
-            'families' => $this->getComponentFamilies()
+        $manager = $this->manager('kit');
+
+        /** @var Kit $kit */
+        $kit = $manager->create();
+
+        $form = $this->createForm(KitType::class, $kit);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $components = $request->get('components') ?? [];
+
+            $kit->setComponents($components);
+
+            $manager->save($kit);
+
+            $this->get('component_file_handler')->upload($kit, $request->files);
+
+            $manager->save($kit);
+
+            $this->setNotice('Kit cadastrado com sucesso!');
+
+            return $this->redirectToRoute('kits_index');
+        }
+
+        return $this->render("kit/config.html.twig", [
+            'form' => $form->createView(),
+            'kit' => $kit
         ]);
+    }
+
+    /**
+     * @Route("/{id}/update", name="update_kit")
+     */
+    public function updateAction(Request $request, Kit $kit)
+    {
+        $form = $this->createForm(KitType::class, $kit);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $manager = $this->manager('kit');
+
+            // TODO: revisar salvamento de imagem
+            $this->get('component_file_handler')->upload($kit, $request->files);
+
+            $components = $request->get('components') ?? [];
+
+            $kit->setComponents($components);
+
+            $manager->save($kit);
+
+            $this->setNotice('Kit cadastrado com sucesso!');
+
+            return $this->redirectToRoute('kits_index');
+        }
+
+        return $this->render("kit/config.html.twig", [
+            'form' => $form->createView(),
+            'kit' => $kit
+        ]);
+    }
+
+    /**
+     * @Route("/{id}", name="kit_show")
+     * @Method("GET")
+     */
+    public function showAction(Kit $kit)
+    {
+        return $this->render('kit/show.html.twig', array(
+            'kit' => $kit
+        ));
+    }
+
+    /**
+     *
+     * @Security("has_role('ROLE_PLATFORM_ADMIN')")
+     *
+     * @Route("/{id}/delete/", name="delete_kit")
+     * @Method("delete")
+     */
+    public function deleteAction(Kit $kit)
+    {
+        try {
+            $this->manager('kit')->delete($kit);
+            $message = 'Kit excluído com sucesso';
+            $status = Response::HTTP_OK;
+        } catch (\Exception $exception) {
+            $message = 'Falha ao excluir este Kit';
+            $status = Response::HTTP_CONFLICT;
+        }
+
+        return $this->json(['message' => $message], $status);
     }
 
     /**
