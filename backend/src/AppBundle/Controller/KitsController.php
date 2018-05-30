@@ -2,8 +2,10 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Kit\Kit;
+use AppBundle\Form\Kit\KitType;
+use Doctrine\Common\Util\Inflector;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 USE Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -57,5 +59,72 @@ class KitsController extends AbstractController
             'pagination' => $pagination,
             'kits_active_val' => $actives
         ));
+    }
+
+    /**
+     * @Route("/create", name="create_kit")
+     */
+    public function createAction(Request $request)
+    {
+        $manager = $this->manager('kit');
+
+        /** @var Kit $kit */
+        $kit = $manager->create();
+
+        $form = $this->createForm(KitType::class, $kit);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $components = $request->get('components') ?? [];
+
+            $kit->setComponents($components);
+
+            $manager->save($kit);
+
+            $this->get('component_file_handler')->upload($kit, $request->files);
+
+            $manager->save($kit);
+
+            $this->setNotice('Kit cadastrado com sucesso!');
+
+            return $this->redirectToRoute('kits_index');
+        }
+
+        return $this->render("kit/config.html.twig", [
+            'form' => $form->createView(),
+            'structure' => $kit
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/update", name="update_kit")
+     */
+    public function updateAction(Request $request, Kit $kit)
+    {
+        $form = $this->createForm(KitType::class, $kit);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $manager = $this->manager('kit');
+
+            // TODO: revisar salvamento de imagem
+            $this->get('component_file_handler')->upload($kit, $request->files);
+
+            $components = $request->get('components') ?? [];
+
+            $kit->setComponents($components);
+
+            $manager->save($kit);
+
+            $this->setNotice('Kit cadastrado com sucesso!');
+
+            return $this->redirectToRoute('kits_index');
+        }
+
+        return $this->render("kit/config.html.twig", [
+            'form' => $form->createView(),
+            'kit' => $kit
+        ]);
     }
 }
