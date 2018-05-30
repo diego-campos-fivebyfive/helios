@@ -1,38 +1,74 @@
 <?php
 
-namespace Tests\AppBundle\Service\Precifier;
+namespace Tests\AppBundle\Entity;
 
+use AppBundle\Entity\Kit\Kit;
 use AppBundle\Entity\Precifier\Memorial;
+use AppBundle\Manager\KitManager;
 use AppBundle\Manager\Precifier\MemorialManager;
 use AppBundle\Service\Precifier\Calculator;
 use AppBundle\Service\Precifier\ComponentsListener;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 
 /**
- * Class ComponentsListenerTest
- * @group precifier_components_listener
+ * Class KitManagerTest
+ * @group kit_manager
  */
-class ComponentsListenerTest extends WebTestCase
+class KitManagerTest extends WebTestCase
 {
-    public function testAction()
+    public function testSave()
     {
-        /** @var ComponentsListener $componentsLister */
-        $componentsLister = $this->getContainer()->get('precifier_components_listener');
+        /** @var KitManager $kitManager */
+        $kitManager = $this->getContainer()->get('kit_manager');
 
-        $componentsLister->action(Memorial::ACTION_TYPE_ADD_COMPONENT, 'module');
-        $componentsLister->action(Memorial::ACTION_TYPE_REMOVE_COMPONENT, 'variety');
+        /** @var Kit $kit */
+        $kit = $kitManager->create();
 
-        /** @var MemorialManager $memorialManager */
-        $memorialManager = $this->getContainer()->get('precifier_memorial_manager');
+        $kit->setCode('AA22');
+        $kit->setDescription('Teste');
+        $kit->setPower(2.03);
+        $kit->setPrice(2301.20);
+        $kit->setStock(30);
+        $kit->setImage('http://www.google.com');
+        $kit->setPosition(3);
+        $kit->setAvailable(true);
+        $kit->addComponent(
+            [
+                'code' => 'BBB111',
+                'description' => 'Componente Teste',
+                'quantity' => 10,
+                'position' => 1
+            ]
+        );
+        $kit->addComponent(
+            [
+                'code' => 'BBB111',
+                'description' => 'Componente Teste',
+                'quantity' => 10,
+                'position' => 1
+            ]
+        );
+        $kit->addComponent(
+            [
+                'code' => 'BBB222',
+                'description' => 'Componente Teste 2',
+                'quantity' => 10,
+                'position' => 1
+            ]
+        );
+        $kit->removeComponent('BBB222');
 
-        $memorials = $memorialManager->findAll();
+        $kitManager->save($kit);
 
-        /** @var Memorial $memorial */
-        foreach ($memorials as $memorial) {
-            self::assertArrayHasKey(Memorial::ACTION_TYPE_ADD_COMPONENT, $memorial->getMetadata());
-            self::assertArrayHasKey(Memorial::ACTION_TYPE_REMOVE_COMPONENT, $memorial->getMetadata());
-            self::assertArrayHasKey('module', $memorial->getMetadata()[Memorial::ACTION_TYPE_ADD_COMPONENT]);
-            self::assertArrayHasKey('variety', $memorial->getMetadata()[Memorial::ACTION_TYPE_REMOVE_COMPONENT]);
-        }
+        self::assertTrue($kit instanceof Kit);
+        self::assertEquals($kit->getCode(), 'AA22');
+        self::assertEquals($kit->getDescription(), 'Teste');
+        self::assertEquals($kit->getPower(), 2.03);
+        self::assertEquals($kit->getPrice(), 2301.20);
+        self::assertEquals($kit->getStock(), 30);
+        self::assertEquals($kit->getImage(), 'http://www.google.com');
+        self::assertEquals($kit->getPosition(), 3);
+        self::assertTrue($kit->isAvailable());
+        self::assertEquals(1, count($kit->getComponents()));
     }
 }
