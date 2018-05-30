@@ -2,7 +2,7 @@
 
 namespace AppBundle\Manager;
 
-class PostcodeManager extends AbstractManager
+class KitManager extends AbstractManager
 {
 
 }
