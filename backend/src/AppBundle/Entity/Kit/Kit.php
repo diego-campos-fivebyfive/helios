@@ -286,31 +286,20 @@ class Kit
      * @param array $newComponent
      * @return bool
      */
-    public function addComponent(array $newComponent)
+    public function addComponent($id, array $component)
     {
-        $contains = false;
-
-        foreach ($this->components as $component) {
-            if ($component['code'] === $newComponent['code']) {
-                return true;
-                break;
-            }
-        }
-
-        if (!$contains) {
-            $this->components[] = $newComponent;
+        if (!isset($this->components[$id])) {
+            $this->components[$id] = $component;
         }
     }
 
     /**
      * @param $componentCode
      */
-    public function removeComponent($componentCode)
+    public function removeComponent($componentId)
     {
-        foreach ($this->components as $key => $component) {
-            if ($component['code'] === $componentCode) {
-                unset($this->components[$key]);
-            }
+        if (isset($this->components[$componentId])) {
+            unset($this->components[$componentId]);
         }
     }
 }
