@@ -100,17 +100,6 @@ class Kit
     }
 
     /**
-     * @param int $id
-     * @return Kit
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getCode()
