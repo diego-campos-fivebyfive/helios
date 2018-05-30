@@ -32,7 +32,7 @@ class KitManagerTest extends WebTestCase
         $kit->setImage('http://www.google.com');
         $kit->setPosition(3);
         $kit->setAvailable(true);
-        $kit->addComponent(
+        $kit->addComponent(1,
             [
                 'code' => 'BBB111',
                 'description' => 'Componente Teste',
@@ -40,7 +40,7 @@ class KitManagerTest extends WebTestCase
                 'position' => 1
             ]
         );
-        $kit->addComponent(
+        $kit->addComponent(1,
             [
                 'code' => 'BBB111',
                 'description' => 'Componente Teste',
@@ -48,7 +48,7 @@ class KitManagerTest extends WebTestCase
                 'position' => 1
             ]
         );
-        $kit->addComponent(
+        $kit->addComponent(2,
             [
                 'code' => 'BBB222',
                 'description' => 'Componente Teste 2',
@@ -56,7 +56,7 @@ class KitManagerTest extends WebTestCase
                 'position' => 1
             ]
         );
-        $kit->removeComponent('BBB222');
+        $kit->removeComponent(2);
 
         $kitManager->save($kit);
 
