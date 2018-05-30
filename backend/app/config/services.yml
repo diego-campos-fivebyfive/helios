@@ -53,6 +53,10 @@ services:
         class: AppBundle\Manager\InverterManager
         arguments: ['AppBundle\Entity\Component\Inverter', '@doctrine']
 
+    kit_manager:
+        class: AppBundle\Manager\KitManager
+        arguments: ['AppBundle\Entity\Kit\Kit', '@doctrine']
+
     level_manager:
         class: AppBundle\Manager\Pricing\LevelManager
         arguments: ['AppBundle\Entity\Pricing\Level', '@doctrine']
