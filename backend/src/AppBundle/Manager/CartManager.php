@@ -2,7 +2,7 @@
 
 namespace AppBundle\Manager;
 
-class KitManager extends AbstractManager
+class CartManager extends AbstractManager
 {
 
 }
