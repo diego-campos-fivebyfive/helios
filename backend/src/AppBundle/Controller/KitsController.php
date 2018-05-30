@@ -64,7 +64,7 @@ class KitsController extends AbstractController
 
         $manager = $this->container->get("{$family}_manager");
 
-        $field = $family === 'module' || $family === 'inverter' ? 'model' : 'description';
+        $field = in_array($family, ['module',  'inverter']) ? 'model' : 'description';
 
         /** @var QueryBuilder $qb */
         $qb = $manager->createQueryBuilder();
