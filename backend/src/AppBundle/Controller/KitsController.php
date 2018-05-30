@@ -126,4 +126,15 @@ class KitsController extends AbstractController
             'kit' => $kit
         ]);
     }
+
+    /**
+     * @Route("/{id}", name="kit_show")
+     * @Method("GET")
+     */
+    public function showAction(Kit $kit)
+    {
+        return $this->render('kit/show.html.twig', array(
+            'kit' => $kit
+        ));
+    }
 }
