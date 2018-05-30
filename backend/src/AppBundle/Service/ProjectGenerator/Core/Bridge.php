@@ -214,10 +214,11 @@ class Bridge
                 $projectInverter->setSerial($serialAndParalell[$inverter->getId()]['ser']);
                 $projectInverter->setParallel($serialAndParalell[$inverter->getId()]['par']);
 
-                if (3 == $inverter->getPhases()) {
-                    if ($defaults['voltage'] != $inverter->getPhaseVoltage()) {
+                if (
+                    $defaults['voltage'] != $inverter->getPhaseVoltage()
+                    && 3 == $inverter->getPhases()
+                ) {
                         $powerTransformer += $inverter->getNominalPower();
-                    }
                 }
 
             }
