@@ -58,7 +58,7 @@
                   class="btn btn-success">
                    <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
                </a>
-               <a data-delete="{#{{ path('stringbox_delete', { 'id': stringBox.id}) }}#}"
+               <a data-delete="{{ path('delete_kit', { 'id': kit.id}) }}"
                   class="btn btn-danger">
                    <i class="fa fa-trash"></i> {{ 'Delete'|trans }}
                </a>
@@ -179,48 +179,48 @@
                 }
             });
 
-            {#var dataDelete = $('[data-delete]');#}
-            {#if(dataDelete.length){#}
-                {#dataDelete.on('click', function () {#}
-                    {#var url = $(this).data('delete');#}
-                    {#swal({#}
-                        {#title: "Confirma exclusão deste Stringbox?",#}
-                        {#text: null,#}
-                        {#type: "info",#}
-                        {#showCancelButton: true,#}
-                        {#cancelButtonText: "{{ 'Cancel'|trans }}",#}
-                        {#confirmButtonColor: "#DD6B55",#}
-                        {#confirmButtonText: "{{ 'Confirm'|trans }}",#}
-                        {#closeOnConfirm: false#}
-                    {#}, function () {#}
-                        {#swal.close();#}
-                        {#$.ajax({#}
-                            {#url: url,#}
-                            {#method: 'post',#}
-                            {#data: {_method:'delete'},#}
-                            {#complete: function (xhr) {#}
-                                {#if (200 == xhr.status) {#}
-                                    {#swal("", xhr.responseJSON['message'], "success");#}
-                                    {#window.setTimeout(function(){#}
-                                        {#location.reload();#}
-                                        {#swal.close();#}
-                                    {#}, 1000);#}
-                                {#} else {#}
-                                    {#swal("Oops!", xhr.responseJSON['message'], "error");#}
-                                {#}#}
-                            {#},#}
-                            {#beforeSend: function () {#}
-                                {#swal({#}
-                                    {#title: "Excluindo...",#}
-                                    {#text: "Aguarde",#}
-                                    {#type: "info",#}
-                                    {#showConfirmButton: false#}
-                                {#});#}
-                            {#}#}
-                        {#});#}
-                    {#});#}
-                {#});#}
-            {#}#}
+            var dataDelete = $('[data-delete]');
+            if(dataDelete.length){
+                dataDelete.on('click', function () {
+                    var url = $(this).data('delete');
+                    swal({
+                        title: "Confirma exclusão deste Kit?",
+                        text: null,
+                        type: "info",
+                        showCancelButton: true,
+                        cancelButtonText: "{{ 'Cancel'|trans }}",
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "{{ 'Confirm'|trans }}",
+                        closeOnConfirm: false
+                    }, function () {
+                        swal.close();
+                        $.ajax({
+                            url: url,
+                            method: 'post',
+                            data: {_method:'delete'},
+                            complete: function (xhr) {
+                                if (200 == xhr.status) {
+                                    swal("", xhr.responseJSON['message'], "success");
+                                    window.setTimeout(function(){
+                                        location.reload();
+                                        swal.close();
+                                    }, 1000);
+                                } else {
+                                    swal("Oops!", xhr.responseJSON['message'], "error");
+                                }
+                            },
+                            beforeSend: function () {
+                                swal({
+                                    title: "Excluindo...",
+                                    text: "Aguarde",
+                                    type: "info",
+                                    showConfirmButton: false
+                                });
+                            }
+                        });
+                    });
+                });
+            }
         });
 
     </script>
