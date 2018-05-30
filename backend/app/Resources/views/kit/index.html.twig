@@ -1,0 +1,228 @@
+{% extends view('layout') %}
+
+{% block styles %}
+    <style>
+        .product-imitation {
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center;
+        }
+
+        #form_filtration > .form-group > .col-sm-2 {
+            display: none;
+        }
+        .price {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background-color: #00A7EC;
+            padding: 3px 5px;
+            color: #FFF;
+        }
+        .description {
+            height: 22px;
+            font-size: 1rem;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+
+    <div class="modal inmodal fade" id="e_modal_details" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body" id="detail_kit"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">
+                        {{ 'Close'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% set kits = pagination.items %}
+
+    {% macro action_buttons(kit, member) %}
+
+       <div class="btn-group btn-group-sm btn-group-justified">
+           <a data-url="{#{{ path('stringbox_show', { 'id': stringBox.id }) }}#}"
+              data-toggle="modal"
+              data-target="#modal_details"
+              class="btn btn-default">
+               <i class="fa fa-eye"></i> {{ 'View'|trans }}
+           </a>
+
+           {% if member.isPlatformMaster or member.isPlatformAdmin %}
+               <a href="{#{{ path('stringbox_edit', { 'id': stringBox.id }) }}#}"
+                  class="btn btn-success">
+                   <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
+               </a>
+               <a data-delete="{#{{ path('stringbox_delete', { 'id': stringBox.id}) }}#}"
+                  class="btn btn-danger">
+                   <i class="fa fa-trash"></i> {{ 'Delete'|trans }}
+               </a>
+           {% endif %}
+
+        </div>
+
+    {% endmacro %}
+
+    {% import _self as handler %}
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+
+        <div class="row">
+            {{ knp_pagination_filter(pagination, {'k.description, k.code':''}) }}
+
+            <div class="col-md-2">
+                <select id="kits-active" class="form-control">
+                    <option value="">Todos</option>
+                    <option value="1">Disponíveis</option>
+                    <option value="2">Indisponíveis</option>
+                </select>
+            </div>
+
+            {% if member.isPlatformMaster %}
+            <span class="pull-right col-md-2">
+               <a class="pull-right btn btn-primary" href="{#{{ path('stringbox_create') }}#}">
+                   <i class="fa fa-plus-square" aria-hidden="true"></i> Novo Kit</a>
+            </span>
+            {% endif %}
+        </div>
+
+        <div class="row" id="real-content">
+
+            {% for kit in kits %}
+
+                <div class="col-md-3">
+                    <div class="ibox">
+                        <div class="ibox-content product-box">
+
+                            <div class="product-imitation" style="background-image: url({{ kit.image|componentFilePath }}); background-repeat: no-repeat; position: relative">
+                                <div class="price">{{ kit.price|currency }}</div>
+                            </div>
+                            <div class="product-desc">
+
+                                <a data-url="{#{{ path('stringbox_show', { 'id': stringBox.id }) }}#}"
+                                   data-toggle="modal"
+                                   data-target="#modal_details"
+                                   class="product-name">
+                                    {{ kit.code|slice(0,18) }} <br>
+                                    <div class="description">
+                                        <span style="float: left">
+                                            {{ kit.description|slice(0,70) }}&nbsp;
+                                        </span>
+                                    </div>
+                                </a>
+
+                                <div class="hr-line-dashed"></div>
+
+                                <div class="row">
+                                    {{ handler.action_buttons(kit, member) }}
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            {% endfor %}
+        </div>
+
+        <div class="row text-center">
+            <div class="btn-group bt-xs">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script>
+
+        $(function () {
+
+            var form_filtration = $('#form_filtration');
+            var kits_active = $('#kits-active');
+            var active_val = '{{ kits_active_val }}';
+            if (form_filtration.length) {
+                form_filtration.append($('<input type="hidden" name="actives"/>').val(active_val));
+
+                kits_active.val(active_val);
+
+                kits_active.on('change', function(){
+                    $('input[name="actives"]').val($(this).val());
+                    form_filtration.trigger('submit');
+                });
+            }
+
+            var detail_kit = $('#detail_kit');
+            var detail_spinner = detail_kit.html();
+            $('[data-target="#modal_details"]').on('click', function(){
+                var url = $(this).data('url');
+                if (url) {
+                    $('#e_modal_details').modal('show');
+                    detail_kit.html(detail_spinner);
+                    $.ajax({
+                        url: url,
+                        method: 'get',
+                        success: function (response) {
+                            detail_kit.html(response);
+                        }
+                    });
+                } else {
+                    detail_kit.html('<h1> Nenhum componente selecionado para visualização </h1>');
+                }
+            });
+
+            {#var dataDelete = $('[data-delete]');#}
+            {#if(dataDelete.length){#}
+                {#dataDelete.on('click', function () {#}
+                    {#var url = $(this).data('delete');#}
+                    {#swal({#}
+                        {#title: "Confirma exclusão deste Stringbox?",#}
+                        {#text: null,#}
+                        {#type: "info",#}
+                        {#showCancelButton: true,#}
+                        {#cancelButtonText: "{{ 'Cancel'|trans }}",#}
+                        {#confirmButtonColor: "#DD6B55",#}
+                        {#confirmButtonText: "{{ 'Confirm'|trans }}",#}
+                        {#closeOnConfirm: false#}
+                    {#}, function () {#}
+                        {#swal.close();#}
+                        {#$.ajax({#}
+                            {#url: url,#}
+                            {#method: 'post',#}
+                            {#data: {_method:'delete'},#}
+                            {#complete: function (xhr) {#}
+                                {#if (200 == xhr.status) {#}
+                                    {#swal("", xhr.responseJSON['message'], "success");#}
+                                    {#window.setTimeout(function(){#}
+                                        {#location.reload();#}
+                                        {#swal.close();#}
+                                    {#}, 1000);#}
+                                {#} else {#}
+                                    {#swal("Oops!", xhr.responseJSON['message'], "error");#}
+                                {#}#}
+                            {#},#}
+                            {#beforeSend: function () {#}
+                                {#swal({#}
+                                    {#title: "Excluindo...",#}
+                                    {#text: "Aguarde",#}
+                                    {#type: "info",#}
+                                    {#showConfirmButton: false#}
+                                {#});#}
+                            {#}#}
+                        {#});#}
+                    {#});#}
+                {#});#}
+            {#}#}
+        });
+
+    </script>
+
+{% endblock %}
