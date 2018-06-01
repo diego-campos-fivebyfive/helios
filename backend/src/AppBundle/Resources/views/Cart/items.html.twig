@@ -25,7 +25,10 @@
                                 </td>
                                 <td class="desc">
                                     <h3>
-                                        <a href="#" class="text-navy">
+                                        <a data-url="{{ path('kit_show', { id: kit.kit.id }) }}"
+                                           data-toggle="modal"
+                                           data-target="#modal_details"
+                                           class="text-navy modal_open">
                                             {{ kit.kit.code }}
                                         </a>
                                     </h3>
@@ -86,3 +89,22 @@
         </div>
     </div>
 </div>
+
+<script>
+    var detail_kit = $('#detail_kit');
+    $('[data-target="#modal_details"]').on('click', function() {
+        var url = $(this).data('url');
+        if (url) {
+            $('#e_modal_details').modal('show');
+            $.ajax({
+                url: url,
+                method: 'get',
+                success: function (response) {
+                    detail_kit.html(response);
+                }
+            });
+        } else {
+            detail_kit.html('<h1> Nenhum kit selecionado para visualização </h1>');
+        }
+    });
+</script>
