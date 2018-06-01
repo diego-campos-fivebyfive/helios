@@ -120,7 +120,7 @@ class CartController extends AbstractController
             'account' => $this->account()
         ]);
 
-        $quantity = (int) $request->get('quantity');
+        $quantity = $request->request->getInt('quantity');
 
         if ($cart && $kit->getStock() >= $quantity) {
 
