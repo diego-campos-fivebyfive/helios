@@ -4,8 +4,8 @@ namespace Tests\AppBundle\Entity;
 
 use AppBundle\Entity\Customer;
 use AppBundle\Entity\Kit\Cart;
+use AppBundle\Manager\CartManager;
 use AppBundle\Manager\CustomerManager;
-use AppBundle\Manager\KitManager;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 
 /**
@@ -25,7 +25,7 @@ class CartManagerTest extends WebTestCase
             'id' => 19
         ]);
 
-        /** @var KitManager $manager */
+        /** @var CartManager $manager */
         $manager = $this->getContainer()->get('cart_manager');
 
         /** @var Cart $cart */

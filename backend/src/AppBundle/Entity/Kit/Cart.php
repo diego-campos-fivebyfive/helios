@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Kit;
 
+use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\Customer;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -36,7 +37,7 @@ class Cart
     }
 
     /**
-     * @return Customer
+     * @return AccountInterface
      */
     public function getAccount()
     {
@@ -44,10 +45,10 @@ class Cart
     }
 
     /**
-     * @param Customer $account
+     * @param AccountInterface $account
      * @return $this
      */
-    public function setAccount(Customer $account)
+    public function setAccount(AccountInterface $account)
     {
         if ($account->isAccount()) {
             $this->account = $account;
