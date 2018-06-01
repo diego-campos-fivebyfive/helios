@@ -108,9 +108,9 @@ class CartController extends AbstractController
 
     /**
      * @Route("/{id}/quantity", name="cart_add_kit")
-     * @Method("post")
+     * @Method("put")
      */
-    public function updatekitQuantityAction(Request $request, Kit $kit)
+    public function updateKitQuantityAction(Request $request, Kit $kit)
     {
         /** @var CartManager $cartManager */
         $cartManager = $this->manager('cart');
@@ -131,18 +131,9 @@ class CartController extends AbstractController
                 'kit' => $kit
             ]);
 
-            if ($cartHasKit) {
+            $cartHasKit->setQuantity($quantity);
 
-                $cartHasKit->setQuantity($quantity);
-
-                $cartHasKitManager->save($cartHasKit);
-
-                $kitManager = $this->manager('kit');
-
-                $kit->setStock($kit->getStock() - $quantity);
-
-                $kitManager->save($kit);
-            }
+            $cartHasKitManager->save($cartHasKit);
 
             return $this->json([], Response::HTTP_OK);
         }
