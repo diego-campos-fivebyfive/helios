@@ -141,49 +141,6 @@
                     detail_kit.html('<h1> Nenhum componente selecionado para visualização </h1>');
                 }
             });
-
-            var dataDelete = $('[data-delete]');
-            if(dataDelete.length){
-                dataDelete.on('click', function () {
-                    var url = $(this).data('delete');
-                    swal({
-                        title: "Confirma exclusão deste Kit?",
-                        text: null,
-                        type: "info",
-                        showCancelButton: true,
-                        cancelButtonText: "{{ 'Cancel'|trans }}",
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "{{ 'Confirm'|trans }}",
-                        closeOnConfirm: false
-                    }, function () {
-                        swal.close();
-                        $.ajax({
-                            url: url,
-                            method: 'post',
-                            data: {_method:'delete'},
-                            complete: function (xhr) {
-                                if (200 == xhr.status) {
-                                    swal("", xhr.responseJSON['message'], "success");
-                                    window.setTimeout(function(){
-                                        location.reload();
-                                        swal.close();
-                                    }, 1000);
-                                } else {
-                                    swal("Oops!", xhr.responseJSON['message'], "error");
-                                }
-                            },
-                            beforeSend: function () {
-                                swal({
-                                    title: "Excluindo...",
-                                    text: "Aguarde",
-                                    type: "info",
-                                    showConfirmButton: false
-                                });
-                            }
-                        });
-                    });
-                });
-            }
         });
 
     </script>
