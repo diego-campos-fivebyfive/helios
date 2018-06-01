@@ -11,6 +11,7 @@
         #form_filtration > .form-group > .col-sm-2 {
             display: none;
         }
+
         .price {
             position: absolute;
             bottom: 0;
@@ -19,9 +20,26 @@
             padding: 3px 5px;
             color: #FFF;
         }
+
         .description {
             height: 22px;
             font-size: 1rem;
+        }
+
+        .add-to-cart-title {
+            font-size: 20px !important;
+        }
+
+        .modal_add_to_cart {
+            margin-top: 50%;
+        }
+
+        .code_kit {
+            font-weight: 600;
+        }
+
+        .add-cart-buttons {
+            text-align: center;
         }
     </style>
 {% endblock %}
@@ -41,6 +59,41 @@
         </div>
     </div>
 
+    <div class="modal inmodal fade" id="modal_add_to_cart" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content modal_add_to_cart">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h5 class="modal-title add-to-cart-title">Adicionar ao Carinho</h5>
+                </div>
+                <div class="modal-body">
+                    <form role="form" id="form_add_to_cart" action="#">
+                        <div class="form-group text-center">
+                            <h3>Código do Kit</h3>
+                            <span type="text" id="code_kit" readonly class="form-control text-center code_kit">
+                                <strong></strong>
+                            </span>
+                        </div>
+                        <div class="form-group text-center">
+                            <h3>Quantidade</h3>
+                            <input id="kit_quantity" class="form-control text-center">
+                        </div>
+                        <div class="hide">
+                            <button class="btn btn-sm btn-primary" id="cart_submit" type="submit">Adicionar</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer add-cart-buttons">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="add_cart_submit">{{ 'Add'|trans }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     {% set kits = pagination.items %}
 
     {% macro action_buttons(kit, member) %}
@@ -53,7 +106,11 @@
                <i class="fa fa-eye"></i> {{ 'View'|trans }}
            </a>
 
-           <a href="" class="btn btn-primary btn-small">
+           <a data-url="{{ path('cart_add_kit', { id: kit.id }) }}"
+              data-code-kit="{{ kit.code }}"
+              data-toggle="modal"
+              data-target="#add_to_cart"
+              class="btn btn-primary btn-small">
                <i class="fa fa-shopping-cart"></i> {{ 'Add'|trans }}
            </a>
         </div>
@@ -118,6 +175,7 @@
 {% endblock %}
 
 {% block scripts %}
+    <script type="text/javascript" src="{{ asset('assets/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
 
     <script>
 
@@ -140,6 +198,54 @@
                 } else {
                     detail_kit.html('<h1> Nenhum Kit selecionado para visualização </h1>');
                 }
+            });
+
+            var form_add_to_cart = $('#form_add_to_cart');
+            var kit_code = $('#code_kit');
+            var kit_quantity = $('#kit_quantity');
+
+            $('[data-target="#add_to_cart"]').on('click', function () {
+              var url = $(this).data('url');
+
+              kit_code.html($(this).data('code-kit'));
+              form_add_to_cart.attr("action", url);
+
+              $('#kit_quantity').TouchSpin({
+                initval: 1,
+                min: 1,
+                max: 100000
+              });
+
+              $('#modal_add_to_cart').modal('show');
+            });
+
+            $('#add_cart_submit').on('click', function () {
+                $('#cart_submit').trigger('click');
+            })
+
+            form_add_to_cart.on('submit', function (event) {
+                event.preventDefault();
+                $.ajax({
+                    url: $(this).attr("action"),
+                    method: 'post',
+                    data: { quantity: kit_quantity.val() },
+                    complete: function(xhr){
+                        if(200 === xhr.status){
+                            $('#modal_add_to_cart').modal('hide');
+                            toastr.success('Kit adicionado ao carrinho com sucesso', '{{ 'Success'|trans }}', {
+                                positionClass: 'toast-top-center',
+                                progressBar: true
+                            });
+                        }else{
+                            var response = xhr.responseJSON;
+                            $('#modal_add_to_cart').modal('hide');
+                            toastr.error(response.message, '{{ 'Error'|trans }}', {
+                                positionClass: 'toast-top-center',
+                                progressBar: true
+                            });
+                        }
+                    }
+                });
             });
         });
 
