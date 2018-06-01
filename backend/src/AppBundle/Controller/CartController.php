@@ -57,7 +57,7 @@ class CartController extends AbstractController
 
             return $this->json([], Response::HTTP_OK);
         } catch (\Exception $exception) {
-            $message = 'Não foi possível adicionar o kit';
+            $message = 'Este kit já foi adicionado ao carrinho';
 
             if ($cartHasKit->getKit() === null) {
                 $message = 'O kit não está disponível';
