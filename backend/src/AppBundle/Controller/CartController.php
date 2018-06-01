@@ -77,10 +77,10 @@ class CartController extends AbstractController
     /**
      * @Security("has_role('ROLE_OWNER')")
      *
-     * @Route("/{id}/delete_kit", name="cart_delete_kit")
+     * @Route("/{id}/remove_kit", name="cart_remove_kit")
      * @Method("delete")
      */
-    public function deleteKitAction(Kit $kit)
+    public function removeKitAction(Kit $kit)
     {
         /** @var CartManager $cartManager */
         $cartManager = $this->manager('cart');
