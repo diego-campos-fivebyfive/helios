@@ -29,6 +29,14 @@
         .add-to-cart-title {
             font-size: 20px !important;
         }
+
+        .modal_add_to_cart {
+            margin-top: 50%;
+        }
+
+        .code_kit {
+            font-weight: 600;
+        }
     </style>
 {% endblock %}
 
@@ -49,7 +57,7 @@
 
     <div class="modal inmodal fade" id="modal_add_to_cart" tabindex="-1" role="dialog"  aria-hidden="true">
         <div class="modal-dialog modal-sm">
-            <div class="modal-content">
+            <div class="modal-content modal_add_to_cart">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">
                         <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
@@ -58,13 +66,15 @@
                 </div>
                 <div class="modal-body">
                     <form role="form" id="form_add_to_cart" action="#">
-                        <div class="form-group">
-                            <label>Código do Kit</label>
-                            <input type="text" id="code_kit" readonly class="form-control">
+                        <div class="form-group text-center">
+                            <h3>Código do Kit</h3>
+                            <span type="text" id="code_kit" readonly class="form-control text-center code_kit">
+                                <strong></strong>
+                            </span>
                         </div>
-                        <div class="form-group">
-                            <label>Quantidade</label>
-                            <input id="kit_quantity" class="form-control">
+                        <div class="form-group text-center">
+                            <h3>Quantidade</h3>
+                            <input id="kit_quantity" class="form-control text-center">
                         </div>
                         <div class="hide">
                             <button class="btn btn-sm btn-primary" id="cart_submit" type="submit">Adicionar</button>
@@ -92,7 +102,7 @@
                <i class="fa fa-eye"></i> {{ 'View'|trans }}
            </a>
 
-           <a data-url="{{ path('kit_show_detail', { id: kit.id }) }}"
+           <a data-url="{{ path('cart_add_kit', { id: kit.id }) }}"
               data-code-kit="{{ kit.code }}"
               data-toggle="modal"
               data-target="#add_to_cart"
@@ -115,7 +125,7 @@
 
             {% for kit in kits %}
 
-                <div class="col-md-3">kit_quantity
+                <div class="col-md-3">
                     <div class="ibox">
                         <div class="ibox-content product-box">
 
@@ -193,7 +203,7 @@
             $('[data-target="#add_to_cart"]').on('click', function () {
               var url = $(this).data('url');
 
-              kit_code.val($(this).data('code-kit'));
+              kit_code.html($(this).data('code-kit'));
               form_add_to_cart.attr("action", url);
 
               $('#kit_quantity').TouchSpin({
@@ -206,8 +216,34 @@
             });
 
             $('#add_cart_submit').on('click', function () {
-                console.log('teste', kit_quantity.val());
+                $('#cart_submit').trigger('click');
             })
+
+            form_add_to_cart.on('submit', function (event) {
+                event.preventDefault();
+                $.ajax({
+                    url: $(this).attr("action"),
+                    method: 'post',
+                    data: { quantity: kit_quantity.val() },
+                    complete: function(xhr){
+                        if(201 == xhr.status || 202 == xhr.status){
+                            $('#modal_add_to_cart').modal('hide');
+                            toastr.success('Kit adicionado ao carrinho com sucesso', '{{ 'Success'|trans }}', {
+                                positionClass: 'toast-top-center',
+                                progressBar: true
+                            });
+                        }else{
+                            var response = xhr.responseJSON;
+                            $('#modal_add_to_cart').modal('hide');
+                            toastr.error(response.message, '{{ 'Error'|trans }}', {
+                                positionClass: 'toast-top-center',
+                                progressBar: true
+                            });
+                        }
+                    }
+                });
+            });
+
 
 
         });
