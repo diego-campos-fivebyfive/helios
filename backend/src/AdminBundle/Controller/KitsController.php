@@ -85,14 +85,7 @@ class KitsController extends AbstractController
 
             $components = $form->get('components')->getData() ?? [];
 
-            $componentsDecoded = json_decode($components, true);
-
-            $kit->setComponents([]);
-
-            foreach ($componentsDecoded as $component) {
-                $tag = $component['family'] . '_' . $component['componentId'];
-                $kit->addComponent($tag, $component);
-            }
+            $this->insertKitComponents($kit, $components);
 
             $manager->save($kit);
 
@@ -129,14 +122,7 @@ class KitsController extends AbstractController
 
             $components = $form->get('components')->getData() ?? [];
 
-            $componentsDecoded = json_decode($components, true);
-
-            $kit->setComponents([]);
-
-            foreach ($componentsDecoded as $component) {
-                $tag = $component['family'] . '_' . $component['componentId'];
-                $kit->addComponent($tag, $component);
-            }
+            $this->insertKitComponents($kit, $components);
 
             // TODO: revisar salvamento de imagem
             $this->get('component_file_handler')->upload($kit, $request->files);
@@ -210,6 +196,38 @@ class KitsController extends AbstractController
         $results = $qb->getQuery()->getResult();
 
         return JsonResponse::create($results, 200);
+    }
+
+    /**
+     * @param Kit $kit
+     * @param $components
+     */
+    private function insertKitComponents(Kit $kit, $components)
+    {
+        $componentsDecoded = json_decode($components, true);
+        $oldComponents = $kit->getComponents();
+
+        $kit->setComponents([]);
+
+        foreach ($componentsDecoded as $component) {
+            $tag = $component['family'] . '_' . $component['componentId'];
+            $quantity = $component['quantity'];
+            $position = $component['position'];
+
+            if (!is_numeric($quantity)) {
+                $quantity = $oldComponents[$tag]['quantity'];
+            }
+            if (!is_numeric($quantity)) {
+                $position = $oldComponents[$tag]['position'];
+            }
+
+            $component['quantity'] = intval($quantity);
+            $component['position'] = intval($position);
+
+            if (is_numeric($quantity) && is_numeric($position)) {
+                $kit->addComponent($tag, $component);
+            }
+        }
     }
 
     /**
