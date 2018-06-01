@@ -92,7 +92,7 @@ class CartHasKit
      */
     public function setQuantity(int $quantity)
     {
-        if (($this->kit instanceof Kit && $this->kit->getStock() >= $quantity)
+        if (($this->kit instanceof Kit && $this->kit->getStock() >= $quantity && $quantity > 0)
             || $this->kit === null) {
             $this->quantity = $quantity;
         }

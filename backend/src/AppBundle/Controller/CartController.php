@@ -125,32 +125,36 @@ class CartController extends AbstractController
         $cartHasKitManager = $this->manager('cart_has_kit');
 
         /** @var CartHasKit $cartHasKit */
-        $cartHasKit = $cartHasKitManager->create();
+        $cartHasKit = $cartHasKitManager->findOneBy([
+            'cart' => $cart,
+            'kit' => $kit
+        ]);
 
-        $quantity = $request->get('quantity');
+        $status = Response::HTTP_OK;
+        $message = 'Kit adicionado com sucesso';
 
-        $cartHasKit->setKit($kit);
-        $cartHasKit->setCart($cart);
-        $cartHasKit->setQuantity($quantity);
+        if (!$cartHasKit) {
+            $cartHasKit = $cartHasKitManager->create();
 
-        try {
-            $cartHasKitManager->save($cartHasKit);
+            $quantity = $request->get('quantity');
 
-            return $this->json([], Response::HTTP_OK);
-        } catch (\Exception $exception) {
+            $cartHasKit->setKit($kit);
+            $cartHasKit->setCart($cart);
+            $cartHasKit->setQuantity($quantity);
+
+            if (!$cartHasKit->getKit() || !$cartHasKit->getQuantity()) {
+                $status = Response::HTTP_UNPROCESSABLE_ENTITY;
+                $message = !$cartHasKit->getKit() ? 'O kit não está disponível' : 'Quantidade indisponível';
+            } else {
+                $cartHasKitManager->save($cartHasKit);
+            }
+        } else {
+            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
             $message = 'Este kit já foi adicionado ao carrinho';
-
-            if ($cartHasKit->getKit() === null) {
-                $message = 'O kit não está disponível';
-            }
-
-            if ($cartHasKit->getQuantity() === null) {
-                $message = 'Quantidade indisponível';
-            }
-
-            return $this->json([
-                'message' => $message
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
+
+        return $this->json([
+            'message' => $message
+        ], $status);
     }
 }
