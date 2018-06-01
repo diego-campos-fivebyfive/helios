@@ -2,10 +2,13 @@
 
 namespace AppBundle\Form\Kit;
 
+use AppBundle\Entity\Kit\Kit;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -34,14 +37,15 @@ class KitType extends AbstractType
             ->add('stock', TextType::class, [
                 'required' => true
             ])
-            ->add('image', TextType::class, [
-                'required' => false
-            ])
             ->add('position', TextType::class, [
                 'required' => true
             ])
             ->add('available', CheckboxType::class, [
                 'required' => false
+            ])
+            ->add('components', null, [
+                'mapped' => false,
+                'required' => true
             ]);
     }
 

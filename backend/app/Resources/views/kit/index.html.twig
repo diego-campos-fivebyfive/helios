@@ -54,7 +54,7 @@
            </a>
 
            {% if member.isPlatformMaster or member.isPlatformAdmin %}
-               <a href="{#{{ path('stringbox_edit', { id: stringBox.id }) }}#}"
+               <a href="{{ path('update_kit', { id: kit.id }) }}"
                   class="btn btn-success">
                    <i class="fa fa-pencil"></i> {{ 'Edit'|trans }}
                </a>
@@ -85,7 +85,7 @@
 
             {% if member.isPlatformMaster %}
             <span class="pull-right col-md-2">
-               <a class="pull-right btn btn-primary" href="{#{{ path('stringbox_create') }}#}">
+               <a class="pull-right btn btn-primary" href="{{ path('create_kit') }}">
                    <i class="fa fa-plus-square" aria-hidden="true"></i> Novo Kit</a>
             </span>
             {% endif %}
