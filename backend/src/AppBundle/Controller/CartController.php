@@ -6,6 +6,7 @@ use AppBundle\Entity\Kit\Cart;
 use AppBundle\Entity\Kit\CartHasKit;
 use AppBundle\Entity\Kit\Kit;
 use AppBundle\Manager\CartManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -19,39 +20,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class CartController extends AbstractController
 {
-    /**
-     * @Route("/show", name="cart_show")
-     * @Method("get")
-     */
-    public function showCartAction()
-    {
-        /** @var CartManager $cartManager */
-        $cartManager = $this->manager('cart');
-
-        /** @var Cart $cart */
-        $cart = $cartManager->findOneBy([
-            'account' => $this->account()
-        ]);
-
-        if (!$cart) {
-            $cart = $cartManager->create();
-
-            $cart->setAccount($this->account());
-
-            $cartManager->save($cart);
-        }
-
-        $cartHasKitManager = $this->manager('cart_has_kit');
-
-        $cartHasKits = $cartHasKitManager->findBy([
-            'cart' => $cart
-        ]);
-
-        return $this->render('cart.view', [
-            'cartHasKits' => $cartHasKits
-        ]);
-    }
-
     /**
      * @Route("/{id}/add_kit", name="cart_add_kit")
      * @Method("post")
@@ -104,5 +72,32 @@ class CartController extends AbstractController
                 'message' => $message
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
+    }
+
+    /**
+     * @Security("has_role('ROLE_OWNER')")
+     *
+     * @Route("/{id}/delete_kit", name="cart_delete_kit")
+     * @Method("delete")
+     */
+    public function deleteKitAction(Kit $kit)
+    {
+        /** @var CartManager $cartManager */
+        $cartManager = $this->manager('cart');
+
+        /** @var Cart $cart */
+        $cart = $cartManager->findOneBy([
+            'account' => $this->account()
+        ]);
+
+        $cartHasKitManager = $this->manager('cart_has_kit');
+        $cartHasKit = $cartHasKitManager->findOneBy([
+            'cart' => $cart,
+            'kit' => $kit
+        ]);
+
+        $cartHasKitManager->delete($cartHasKit);
+
+        return $this->json([]);
     }
 }
