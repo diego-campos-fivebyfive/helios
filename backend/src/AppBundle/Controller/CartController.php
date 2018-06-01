@@ -105,4 +105,41 @@ class CartController extends AbstractController
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
+
+    /**
+     * @Route("/{id}/quantity", name="cart_add_kit")
+     * @Method("put")
+     */
+    public function updateKitQuantityAction(Request $request, Kit $kit)
+    {
+        /** @var CartManager $cartManager */
+        $cartManager = $this->manager('cart');
+
+        /** @var Cart $cart */
+        $cart = $cartManager->findOneBy([
+            'account' => $this->account()
+        ]);
+
+        $quantity = $request->request->getInt('quantity');
+
+        if ($cart && $kit->getStock() >= $quantity) {
+
+            $cartHasKitManager = $this->manager('cart_has_kit');
+
+            $cartHasKit = $cartHasKitManager->findOneBy([
+                'cart' => $cart,
+                'kit' => $kit
+            ]);
+
+            $cartHasKit->setQuantity($quantity);
+
+            $cartHasKitManager->save($cartHasKit);
+
+            return $this->json([], Response::HTTP_OK);
+        }
+
+        return $this->json([
+            'message' => 'Quantidade indisponível'
+        ], Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
 }
