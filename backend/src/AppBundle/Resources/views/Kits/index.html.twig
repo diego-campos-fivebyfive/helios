@@ -230,7 +230,7 @@
                     method: 'post',
                     data: { quantity: kit_quantity.val() },
                     complete: function(xhr){
-                        if(201 == xhr.status || 202 == xhr.status){
+                        if(200 === xhr.status){
                             $('#modal_add_to_cart').modal('hide');
                             toastr.success('Kit adicionado ao carrinho com sucesso', '{{ 'Success'|trans }}', {
                                 positionClass: 'toast-top-center',
