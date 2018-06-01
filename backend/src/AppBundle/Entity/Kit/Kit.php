@@ -290,6 +290,8 @@ class Kit
     {
         if (!isset($this->components[$id])) {
             $this->components[$id] = $component;
+        } else {
+            $this->components[$id]['quantity'] += $component['quantity'];
         }
     }
 
