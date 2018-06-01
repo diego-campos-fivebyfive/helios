@@ -2,39 +2,53 @@
 
 namespace Tests\AppBundle\Entity;
 
-use AppBundle\Entity\Customer;
 use AppBundle\Entity\Kit\Cart;
-use AppBundle\Manager\CustomerManager;
+use AppBundle\Entity\Kit\CartHasKit;
+use AppBundle\Entity\Kit\Kit;
+use AppBundle\Manager\CartHasKitManager;
+use AppBundle\Manager\CartManager;
 use AppBundle\Manager\KitManager;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 
 /**
  * Class CartManagerTest
- * @group cart_manager
+ * @group cart_has_kit_manager
  */
-class CartManagerTest extends WebTestCase
+class CartHasKitManagerTest extends WebTestCase
 {
     public function testSave()
     {
-        /** @var CustomerManager $accountManager */
-        $accountManager = $this->getContainer()->get('customer_manager');
+        /** @var KitManager $kitManager */
+        $kitManager = $this->getContainer()->get('kit_manager');
 
-        /** @var Customer $account */
-        $account = $accountManager->findOneBy([
-            'context' => 'account',
-            'id' => 19
+        /** @var CartManager $cartManager */
+        $cartManager = $this->getContainer()->get('cart_manager');
+
+        /** @var Kit $kit */
+        $kit = $kitManager->findOneBy([
+            'available' => true,
+            'id' => 2
         ]);
 
-        /** @var KitManager $manager */
-        $manager = $this->getContainer()->get('cart_manager');
-
         /** @var Cart $cart */
-        $cart = $manager->create();
+        $cart = $cartManager->findOneBy([
+            'id' => 3
+        ]);
 
-        $cart->setAccount($account);
+        /** @var CartHasKitManager $manager */
+        $manager = $this->getContainer()->get('cart_has_kit_manager');
 
-        $manager->save($cart);
+        /** @var CartHasKit $cartHasKit */
+        $cartHasKit = $manager->create();
 
-        self::assertEquals($cart->getAccount(), $account);
+        $cartHasKit->setQuantity(2);
+        $cartHasKit->setCart($cart);
+        $cartHasKit->setKit($kit);
+
+        $manager->save($cartHasKit);
+
+        self::assertEquals($cartHasKit->getCart(), $cart);
+        self::assertEquals($cartHasKit->getKit(), $kit);
+        self::assertEquals($cartHasKit->getQuantity(), 2);
     }
 }
