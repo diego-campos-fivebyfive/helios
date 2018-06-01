@@ -18,7 +18,7 @@ use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 class KitsController extends AbstractController
 {
     /**
-     * @Route("/", name="kits_index")
+     * @Route("/", name="index_kit")
      * @Method("get")
      */
     public function indexAction(Request $request)
