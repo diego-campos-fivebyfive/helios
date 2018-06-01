@@ -26,7 +26,9 @@ class KitType extends AbstractType
             ->add('description', TextType::class, [
                 'required' => true
             ])
-            ->add('power', TextType::class, [
+            ->add('power', MoneyType::class, [
+                'currency' => false,
+                'scale' => 2,
                 'required' => true
             ])
             ->add('price', MoneyType::class, [
