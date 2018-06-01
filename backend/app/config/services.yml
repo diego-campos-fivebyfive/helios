@@ -34,6 +34,10 @@ services:
         class: AppBundle\Manager\AdditiveManager
         arguments: ['AppBundle\Entity\Misc\Additive', '@doctrine']
 
+    cart_has_kit_manager:
+        class: AppBundle\Manager\CartHasKitManager
+        arguments: ['AppBundle\Entity\Kit\CartHasKit', '@doctrine']
+
     cart_manager:
         class: AppBundle\Manager\CartManager
         arguments: ['AppBundle\Entity\Kit\Cart', '@doctrine']
