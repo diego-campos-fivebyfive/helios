@@ -37,6 +37,10 @@
         .code_kit {
             font-weight: 600;
         }
+
+        .add-cart-buttons {
+            text-align: center;
+        }
     </style>
 {% endblock %}
 
@@ -81,7 +85,7 @@
                         </div>
                     </form>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer add-cart-buttons">
                     <button type="button" class="btn btn-white" data-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-primary" id="add_cart_submit">{{ 'Add'|trans }}</button>
                 </div>
@@ -243,9 +247,6 @@
                     }
                 });
             });
-
-
-
         });
 
     </script>
