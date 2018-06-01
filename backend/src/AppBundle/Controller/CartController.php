@@ -20,6 +20,39 @@ use Symfony\Component\HttpFoundation\Response;
 class CartController extends AbstractController
 {
     /**
+     * @Route("/show", name="cart_show")
+     * @Method("get")
+     */
+    public function showCartAction()
+    {
+        /** @var CartManager $cartManager */
+        $cartManager = $this->manager('cart');
+
+        /** @var Cart $cart */
+        $cart = $cartManager->findOneBy([
+            'account' => $this->account()
+        ]);
+
+        if (!$cart) {
+            $cart = $cartManager->create();
+
+            $cart->setAccount($this->account());
+
+            $cartManager->save($cart);
+        }
+
+        $cartHasKitManager = $this->manager('cart_has_kit');
+
+        $cartHasKits = $cartHasKitManager->findBy([
+            'cart' => $cart
+        ]);
+
+        return $this->render('cart.view', [
+            'cartHasKits' => $cartHasKits
+        ]);
+    }
+
+    /**
      * @Route("/{id}/add_kit", name="cart_add_kit")
      * @Method("post")
      */
