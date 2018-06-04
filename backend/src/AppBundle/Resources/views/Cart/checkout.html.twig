@@ -1,0 +1,285 @@
+{% extends view('layout') %}
+
+{% block body %}
+    <style>
+    </style>
+
+    <div class="row">
+        <div class="ibox-title">
+            <h3>Checkout</h3>
+        </div>
+        <div class="ibox-content">
+            {{ form_start(form, {attr:{id:'checkout_form'}}) }}
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        {{ form_label(form.firstName, 'Nome') }}
+                        {{ form_widget(form.firstName, {attr:{class:'form-control', placeholder:'Nome'}}) }}
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        {{ form_label(form.lastName, 'Sobrenome') }}
+                        {{ form_widget(form.lastName, {attr:{class:'form-control', placeholder:'Sobrenome'}}) }}
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label>Tipo de doc.</label>
+                    <select id="checkout_document_type" class="form-control">
+                        <option value="0" selected>CNPJ</option>
+                        <option value="1">CPF</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label id="document_label">CNPJ</label>
+                        {{ form_widget(form.document, {attr:{class:'form-control', placeholder:'CNPJ'}}) }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="form-group">
+                        {{ form_label(form.email, 'Email') }}
+                        {{ form_widget(form.email, {attr:{class:'form-control', placeholder:'Email'}}) }}
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        {{ form_label(form.phone, 'Telefone') }}
+                        {{ form_widget(form.phone, {attr:{class:'form-control telephone', placeholder:'Telefone'}}) }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        {{ form_label(form.postcode, 'CEP') }}
+                        {{ form_widget(form.postcode, {attr:{class:'form-control', placeholder:'CEP'}}) }}
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        {{ form_label(form.state, 'Estado') }}
+                        {{ form_widget(form.state, {attr:{class:'form-control', placeholder:'Estado'}}) }}
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                        {{ form_label(form.city, 'Cidade') }}
+                        {{ form_widget(form.city, {attr:{class:'form-control', placeholder:'Cidade'}}) }}
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        {{ form_label(form.neighbourhood, 'Bairro') }}
+                        {{ form_widget(form.neighbourhood, {attr:{class:'form-control', placeholder:'Bairro'}}) }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        {{ form_label(form.street, 'Logradouro') }}
+                        {{ form_widget(form.street, {attr:{class:'form-control', placeholder:'Logradouro'}}) }}
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        {{ form_label(form.number, 'Número') }}
+                        {{ form_widget(form.number, {attr:{class:'form-control', placeholder:'Número'}}) }}
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                        {{ form_label(form.complement, 'Complemento') }}
+                        {{ form_widget(form.complement, {attr:{class:'form-control', placeholder:'Complemento'}}) }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="form-group">
+                        {{ form_widget(form.differentDelivery, {attr:{class:'i-checks'}}) }}
+                        {{ form_label(form.differentDelivery, 'Informar um endereço de entrega diferente') }}
+                    </div>
+                </div>
+            </div>
+
+            <div id="different_delivery" class="hidden">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            {{ form_label(form.differentName, 'Nome') }}
+                            {{ form_widget(form.differentName, {attr:{class:'form-control', placeholder:'Nome'}}) }}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            {{ form_label(form.differentEmail, 'Email') }}
+                            {{ form_widget(form.differentEmail, {attr:{class:'form-control', placeholder:'Email'}}) }}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            {{ form_label(form.differentPhone, 'Telefone') }}
+                            {{ form_widget(form.differentPhone, {attr:{class:'form-control telephone', placeholder:'Telefone'}}) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            {{ form_label(form.differentPostcode, 'CEP') }}
+                            {{ form_widget(form.differentPostcode, {attr:{class:'form-control', placeholder:'CEP'}}) }}
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            {{ form_label(form.differentState, 'Estado') }}
+                            {{ form_widget(form.differentState, {attr:{class:'form-control', placeholder:'Estado'}}) }}
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            {{ form_label(form.differentCity, 'Cidade') }}
+                            {{ form_widget(form.differentCity, {attr:{class:'form-control', placeholder:'Cidade'}}) }}
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            {{ form_label(form.differentNeighbourhood, 'Bairro') }}
+                            {{ form_widget(form.differentNeighbourhood, {attr:{class:'form-control', placeholder:'Bairro'}}) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            {{ form_label(form.differentStreet, 'Logradouro') }}
+                            {{ form_widget(form.differentStreet, {attr:{class:'form-control', placeholder:'Logradouro'}}) }}
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            {{ form_label(form.differentNumber, 'Número') }}
+                            {{ form_widget(form.differentNumber, {attr:{class:'form-control', placeholder:'Número'}}) }}
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            {{ form_label(form.differentComplement, 'Complemento') }}
+                            {{ form_widget(form.differentComplement, {attr:{class:'form-control', placeholder:'Complemento'}}) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{ form_end(form) }}
+
+            <div class="row">
+                <a href="{{ path('cart_show') }}" class="btn btn-white" type="button">
+                    <i class="fa fa-arrow-left"></i>
+                    Cancelar
+                </a>
+                <a href="#" class="btn btn-primary pull-right" type="button">
+                    <i class="fa fa-arrow-right"></i>
+                    Avançar
+                </a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block scripts %}
+    {% include view('helper.request') %}
+    {% include view('helper.plugins_js') %}
+
+    <script>
+
+        function showDifferentDelivery() {
+            $('#different_delivery').removeClass('hidden');
+        }
+
+        function hideDifferentDelivery() {
+            $('#different_delivery').addClass('hidden');
+        }
+
+        $('#checkout_differentDelivery').on('change', function () {
+            if ($(this).is(':checked')) {
+                showDifferentDelivery();
+            } else {
+                hideDifferentDelivery();
+            }
+        });
+
+        $('#checkout_postcode').change(function () {
+            $.ajax({
+                url: '{{ path('utils_postcode') }}',
+                method: 'post',
+                data: {postcode: $('#checkout_postcode').val()},
+                complete: function (xhr) {
+                    if (xhr.status == 200 && xhr.responseJSON.status == 200) {
+                        $('#checkout_state').val(xhr.responseJSON.state);
+                        $('#checkout_city').val(xhr.responseJSON.city);
+                        $('#checkout_neighbourhood').val(xhr.responseJSON.neighborhood);
+                        $('#checkout_street').val(xhr.responseJSON.street);
+                        $('#checkout_number').focus();
+                    }
+                }
+            });
+        });
+
+        $('#checkout_differentPostcode').change(function () {
+            console.log('teste');
+            $.ajax({
+                url: '{{ path('utils_postcode') }}',
+                method: 'post',
+                data: {postcode: $('#checkout_differentPostcode').val()},
+                complete: function (xhr) {
+                    if (xhr.status == 200 && xhr.responseJSON.status == 200) {
+                        $('#checkout_differentState').val(xhr.responseJSON.state);
+                        $('#checkout_differentCity').val(xhr.responseJSON.city);
+                        $('#checkout_differentNeighbourhood').val(xhr.responseJSON.neighborhood);
+                        $('#checkout_differentStreet').val(xhr.responseJSON.street);
+                        $('#checkout_differentNumber').focus();
+                    }
+                }
+            });
+        });
+
+        var SPMaskBehavior = function (val) {
+                return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+            },
+            spOptions = {
+                onKeyPress: function(val, e, field, options) {
+                    field.mask(SPMaskBehavior.apply({}, arguments), options);
+                }
+            };
+
+        $('.telephone').mask(SPMaskBehavior, spOptions);
+
+        $('#checkout_document_type').on('change', function () {
+            if ($(this).val() == '0') {
+                $('#checkout_document').mask("99.999.999/9999-99");
+                $('#document_label').html('CNPJ');
+                $('#checkout_document').attr('placeholder', 'CNPJ');
+            } else {
+                $('#checkout_document').mask("999.999.999-99");
+                $('#document_label').html('CPF');
+                $('#checkout_document').attr('placeholder', 'CPF');
+            }
+
+            $('#checkout_document').val('');
+        });
+        $("#checkout_postcode").mask("00000-000");
+        $("#checkout_differentPostcode").mask("00000-000");
+    </script>
+{% endblock %}
