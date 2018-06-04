@@ -5,10 +5,7 @@ namespace AppBundle\Form\Cart;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -52,7 +49,7 @@ class CheckoutType extends AbstractType
                 'mapped' => false,
                 'required' => true,
             ])
-            ->add('neighbourhood', TextType::class, [
+            ->add('neighborhood', TextType::class, [
                 'mapped' => false,
                 'required' => true,
             ])
@@ -74,43 +71,43 @@ class CheckoutType extends AbstractType
             ]);
 
         $builder
-            ->add('differentName', TextType::class, [
+            ->add('shippingName', TextType::class, [
                 'mapped' => false,
                 'required' => false,
             ])
-            ->add('differentEmail', EmailType::class, [
+            ->add('shippingEmail', EmailType::class, [
                 'mapped' => false,
                 'required' => false,
             ])
-            ->add('differentPhone', TextType::class, [
+            ->add('shippingPhone', TextType::class, [
                 'mapped' => false,
                 'required' => false,
             ])
-            ->add('differentPostcode', TextType::class, [
+            ->add('shippingPostcode', TextType::class, [
                 'mapped' => false,
                 'required' => false,
             ])
-            ->add('differentState', TextType::class, [
+            ->add('shippingState', TextType::class, [
                 'mapped' => false,
                 'required' => false,
             ])
-            ->add('differentCity', TextType::class, [
+            ->add('shippingCity', TextType::class, [
                 'mapped' => false,
                 'required' => false,
             ])
-            ->add('differentNeighbourhood', TextType::class, [
+            ->add('shippingNeighborhood', TextType::class, [
                 'mapped' => false,
                 'required' => false,
             ])
-            ->add('differentStreet', TextType::class, [
+            ->add('shippingStreet', TextType::class, [
                 'mapped' => false,
                 'required' => false,
             ])
-            ->add('differentNumber', TextType::class, [
+            ->add('shippingNumber', TextType::class, [
                 'mapped' => false,
                 'required' => false,
             ])
-            ->add('differentComplement', TextType::class, [
+            ->add('shippingComplement', TextType::class, [
                 'mapped' => false,
                 'required' => false,
             ]);
