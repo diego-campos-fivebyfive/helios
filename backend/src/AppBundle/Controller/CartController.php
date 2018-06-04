@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Kit\Cart;
 use AppBundle\Entity\Kit\CartHasKit;
 use AppBundle\Entity\Kit\Kit;
+use AppBundle\Form\Cart\CheckoutType;
 use AppBundle\Manager\CartManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,6 +22,23 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class CartController extends AbstractController
 {
+    /**
+     * @Route("/checkout", name="cart_checkout")
+     */
+    public function getCheckoutAction(Request $request)
+    {
+        $form = $this->createForm(CheckoutType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // TODO: Processar dados do checkout
+        }
+
+        return $this->render('cart.checkout', [
+            'form' => $form->createView()
+        ]);
+    }
+
     /**
      * @Route("/{id}/items", name="cart_items")
      * @Method("get")
