@@ -142,17 +142,6 @@ class KitsController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="kit_show")
-     * @Method("GET")
-     */
-    public function showAction(Kit $kit)
-    {
-        return $this->render('kit/show.html.twig', array(
-            'kit' => $kit
-        ));
-    }
-
-    /**
      *
      * @Security("has_role('ROLE_PLATFORM_ADMIN')")
      *

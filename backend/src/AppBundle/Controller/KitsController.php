@@ -44,7 +44,7 @@ class KitsController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="kit_show_detail")
+     * @Route("/{id}", name="kit_show")
      * @Method("GET")
      */
     public function showAction(Kit $kit)
