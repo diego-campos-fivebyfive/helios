@@ -5,7 +5,6 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Kit\Cart;
 use AppBundle\Entity\Kit\CartHasKit;
 use AppBundle\Entity\Kit\Kit;
-use AppBundle\Form\Ca;
 use AppBundle\Form\Cart\CheckoutType;
 use AppBundle\Manager\CartManager;
 use Symfony\Component\HttpFoundation\Request;
