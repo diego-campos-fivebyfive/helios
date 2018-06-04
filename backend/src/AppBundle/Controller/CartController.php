@@ -166,7 +166,7 @@ class CartController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/quantity", name="cart_add_kit")
+     * @Route("/{id}/quantity", name="quantity_kit")
      * @Method("put")
      */
     public function updateKitQuantityAction(Request $request, Kit $kit)

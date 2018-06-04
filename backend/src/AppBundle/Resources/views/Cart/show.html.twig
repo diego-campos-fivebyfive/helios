@@ -27,11 +27,15 @@
     {% include view('helper.plugins_js') %}
 
     <script>
-        $.ajax({
-            url: "{{ path('cart_items', {id:cart.id}) }}",
-            success: function (response) {
-                $('#cart_items').html(response);
-            }
-        });
+        function loadItemsCart() {
+            $.ajax({
+                url: "{{ path('cart_items', {id:cart.id}) }}",
+                success: function (response) {
+                    $('#cart_items').html(response);
+                }
+            });
+        }
+
+        loadItemsCart();
     </script>
 {% endblock %}
