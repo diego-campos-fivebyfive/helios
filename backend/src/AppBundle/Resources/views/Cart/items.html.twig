@@ -64,7 +64,7 @@
                 </div>
             </div>
             <div class="ibox-content">
-                <button class="btn btn-primary pull-right"><i class="fa fa fa-shopping-cart"></i> Checkout </button>
+                <a href="{{ path('cart_checkout') }}" class="btn btn-primary pull-right"><i class="fa fa fa-shopping-cart"></i> Checkout </a>
                 <a href="{{ path('index_kit') }}" class="btn btn-white"><i class="fa fa-arrow-left"></i> Continuar comprando </a>
             </div>
         </div>
@@ -84,8 +84,8 @@
                 <hr>
                 <div class="m-t-sm">
                     <div class="btn-group">
-                        <a href="#" class="btn btn-primary btn-sm"><i class="fa fa-shopping-cart"></i> Checkout</a>
-                        <a href="#" class="btn btn-white btn-sm"> Cancelar </a>
+                        <a href="{{ path('cart_checkout') }}" class="btn btn-primary btn-sm"><i class="fa fa-shopping-cart"></i> Checkout</a>
+                        <a href="{{ path('index_kit') }}" class="btn btn-white btn-sm"> Cancelar </a>
                     </div>
                 </div>
             </div>
