@@ -121,13 +121,15 @@
                 if(200 === xhr.status){
                     toastr.success('Quantidade atualizada com sucesso', '{{ 'Success'|trans }}', {
                         positionClass: 'toast-top-center',
-                        progressBar: true
+                        progressBar: true,
+                        preventDuplicates: true
                     });
                 }else{
                     var response = xhr.responseJSON;
                     toastr.error(response.message, '{{ 'Error'|trans }}', {
                         positionClass: 'toast-top-center',
-                        progressBar: true
+                        progressBar: true,
+                        preventDuplicates: true
                     });
                 }
 
