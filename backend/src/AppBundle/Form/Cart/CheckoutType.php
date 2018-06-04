@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form\Cart;
 
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -24,6 +25,14 @@ class CheckoutType extends AbstractType
             ->add('lastName', TextType::class, [
                 'mapped' => false,
                 'required' => true,
+            ])
+            ->add('documentType', ChoiceType::class, [
+                'mapped' => false,
+                'required' => true,
+                'choices' => [
+                    0 => 'CNPJ',
+                    1 => 'CPF'
+                ]
             ])
             ->add('document', TextType::class, [
                 'mapped' => false,

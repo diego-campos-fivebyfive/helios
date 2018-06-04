@@ -22,11 +22,8 @@
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <label>Tipo de doc.</label>
-                    <select id="checkout_document_type" class="form-control">
-                        <option value="0" selected>CNPJ</option>
-                        <option value="1">CPF</option>
-                    </select>
+                    {{ form_label(form.documentType, 'Tipo de doc.') }}
+                    {{ form_widget(form.documentType, {attr:{class:'form-control'}}) }}
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
@@ -263,7 +260,8 @@
 
         $('.telephone').mask(SPMaskBehavior, spOptions);
 
-        $('#checkout_document_type').on('change', function () {
+        $('#checkout_document').mask("99.999.999/9999-99");
+        $('#checkout_documentType').on('change', function () {
             if ($(this).val() == '0') {
                 $('#checkout_document').mask("99.999.999/9999-99");
                 $('#document_label').html('CNPJ');
@@ -275,6 +273,7 @@
             }
 
             $('#checkout_document').val('');
+            $('#checkout_document').focus();
         });
         $("#checkout_postcode").mask("00000-000");
         $("#checkout_shippingPostcode").mask("00000-000");
