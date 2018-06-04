@@ -816,6 +816,13 @@ Esclarecimentos gerais relacionados a documentação:
     Github: @mauroandre
     E-mail: eng.mauroandre@gmail.com
     ```
+    - #### Paula Daiane
+    ```
+    Frontend developer
+    Slack: @pauladpm
+    Github: @whypaula
+    E-mail: pauladpm@outlook.com
+    ```
 
     - #### Rafael Kendrik
     ```
