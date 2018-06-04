@@ -36,7 +36,6 @@ class CartPoolManagerTest extends WebTestCase
         ]);
 
         // Dados de Mock para teste da entidade CartPool
-
         $checkout = [
             'firstName' => 'Nome teste',
             'lastName' => 'Sobrenome teste',
@@ -53,7 +52,7 @@ class CartPoolManagerTest extends WebTestCase
                'id' => $cart->getId(),
                'account' => $cart->getAccount()
            ],
-           'checkount' => $checkout
+           'checkout' => $checkout
         ];
 
         $callbacks = [
@@ -82,8 +81,6 @@ class CartPoolManagerTest extends WebTestCase
         self::assertInstanceOf(CartPool::class, $cartPool);
 
         // Teste de atualização do cartPool criado anteriormente
-
-
         $code2 = 'JSGH7324585';
         $callbacks2 = [
             'payment_type' => 'débito',
@@ -102,7 +99,6 @@ class CartPoolManagerTest extends WebTestCase
         self::assertEquals($cartPool->getCode(), 'JSGH7324585');
 
         // Teste de exclusão do cartPool de id = 1
-
         $cartPool3 = $cartPoolManager->find(1);
 
         $cartPoolManager->delete($cartPool3);

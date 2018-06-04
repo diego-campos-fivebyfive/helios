@@ -59,7 +59,8 @@ class CartPool
     }
 
     /**
-     * @inheritdoc
+     * @param $code
+     * @return $this
      */
     public function setCode($code)
     {
@@ -77,7 +78,8 @@ class CartPool
     }
 
     /**
-     * @inheritdoc
+     * @param array $metadata
+     * @return $this
      */
     public function setMetadata(array $metadata = [])
     {
@@ -95,7 +97,8 @@ class CartPool
     }
 
     /**
-     * @inheritdoc
+     * @param array $callbacks
+     * @return $this
      */
     public function setCallbacks(array $callbacks = [])
     {
