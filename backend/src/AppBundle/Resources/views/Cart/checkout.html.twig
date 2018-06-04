@@ -197,56 +197,53 @@
     {% include view('helper.plugins_js') %}
 
     <script>
-
-        function showDifferentDelivery() {
-            $('#different_delivery').removeClass('hidden');
-        }
-
-        function hideDifferentDelivery() {
-            $('#different_delivery').addClass('hidden');
+        function completePostcode(element, childrens) {
+            $.ajax({
+                url: '{{ path('utils_postcode') }}',
+                method: 'post',
+                data: {postcode: element.val()},
+                complete: function (xhr) {
+                    if (xhr.status == 200 && xhr.responseJSON.status == 200) {
+                        childrens['state'].val(xhr.responseJSON.state);
+                        childrens['city'].val(xhr.responseJSON.city);
+                        childrens['neighbourhood'].val(xhr.responseJSON.neighborhood);
+                        childrens['street'].val(xhr.responseJSON.street);
+                        childrens['number'].focus();
+                    }
+                }
+            });
         }
 
         $('#checkout_differentDelivery').on('change', function () {
             if ($(this).is(':checked')) {
-                showDifferentDelivery();
+                $('#different_delivery').removeClass('hidden');
             } else {
-                hideDifferentDelivery();
+                $('#different_delivery').addClass('hidden');
             }
         });
 
         $('#checkout_postcode').change(function () {
-            $.ajax({
-                url: '{{ path('utils_postcode') }}',
-                method: 'post',
-                data: {postcode: $('#checkout_postcode').val()},
-                complete: function (xhr) {
-                    if (xhr.status == 200 && xhr.responseJSON.status == 200) {
-                        $('#checkout_state').val(xhr.responseJSON.state);
-                        $('#checkout_city').val(xhr.responseJSON.city);
-                        $('#checkout_neighbourhood').val(xhr.responseJSON.neighborhood);
-                        $('#checkout_street').val(xhr.responseJSON.street);
-                        $('#checkout_number').focus();
-                    }
-                }
-            });
+            var childrens = {
+                'state': $('#checkout_state'),
+                'city': $('#checkout_city'),
+                'neighbourhood': $('#checkout_neighbourhood'),
+                'street': $('#checkout_street'),
+                'number': $('#checkout_number')
+            };
+
+            completePostcode($(this), childrens);
         });
 
         $('#checkout_shippingPostcode').change(function () {
-            console.log('teste');
-            $.ajax({
-                url: '{{ path('utils_postcode') }}',
-                method: 'post',
-                data: {postcode: $('#checkout_shippingPostcode').val()},
-                complete: function (xhr) {
-                    if (xhr.status == 200 && xhr.responseJSON.status == 200) {
-                        $('#checkout_shippingState').val(xhr.responseJSON.state);
-                        $('#checkout_shippingCity').val(xhr.responseJSON.city);
-                        $('#checkout_shippingNeighborhood').val(xhr.responseJSON.neighborhood);
-                        $('#checkout_shippingStreet').val(xhr.responseJSON.street);
-                        $('#checkout_shippingNumber').focus();
-                    }
-                }
-            });
+            var childrens = {
+                'state': $('#checkout_shippingState'),
+                'city': $('#checkout_shippingCity'),
+                'neighbourhood': $('#checkout_shippingNeighborhood'),
+                'street': $('#checkout_shippingStreet'),
+                'number': $('#checkout_shippingNumber')
+            };
+
+            completePostcode($(this), childrens);
         });
 
         var SPMaskBehavior = function (val) {
@@ -258,16 +255,20 @@
                 }
             };
 
+        var cnpjMask = "99.999.999/9999-99";
+        var cpfMask = "999.999.999-99";
+        var postCodeMask = "00000-000";
+
         $('.telephone').mask(SPMaskBehavior, spOptions);
 
-        $('#checkout_document').mask("99.999.999/9999-99");
+        $('#checkout_document').mask(cnpjMask);
         $('#checkout_documentType').on('change', function () {
             if ($(this).val() == '0') {
-                $('#checkout_document').mask("99.999.999/9999-99");
+                $('#checkout_document').mask(cnpjMask);
                 $('#document_label').html('CNPJ');
                 $('#checkout_document').attr('placeholder', 'CNPJ');
             } else {
-                $('#checkout_document').mask("999.999.999-99");
+                $('#checkout_document').mask(cpfMask);
                 $('#document_label').html('CPF');
                 $('#checkout_document').attr('placeholder', 'CPF');
             }
@@ -275,7 +276,7 @@
             $('#checkout_document').val('');
             $('#checkout_document').focus();
         });
-        $("#checkout_postcode").mask("00000-000");
-        $("#checkout_shippingPostcode").mask("00000-000");
+        $("#checkout_postcode").mask(postCodeMask);
+        $("#checkout_shippingPostcode").mask(postCodeMask);
     </script>
 {% endblock %}

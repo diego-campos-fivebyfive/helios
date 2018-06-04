@@ -17,15 +17,19 @@ class CheckoutType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $required = [
+            'mapped' => false,
+            'required' => true
+        ];
+
+        $notRequired = [
+            'mapped' => false,
+            'required' => false
+        ];
+
         $builder
-            ->add('firstName', TextType::class, [
-                'mapped' => false,
-                'required' => true,
-            ])
-            ->add('lastName', TextType::class, [
-                'mapped' => false,
-                'required' => true,
-            ])
+            ->add('firstName', TextType::class, $required)
+            ->add('lastName', TextType::class, $required)
             ->add('documentType', ChoiceType::class, [
                 'mapped' => false,
                 'required' => true,
@@ -34,92 +38,29 @@ class CheckoutType extends AbstractType
                     1 => 'CPF'
                 ]
             ])
-            ->add('document', TextType::class, [
-                'mapped' => false,
-                'required' => true,
-            ])
-            ->add('email', EmailType::class, [
-                'mapped' => false,
-                'required' => true,
-            ])
-            ->add('phone', TextType::class, [
-                'mapped' => false,
-                'required' => true,
-            ])
-            ->add('postcode', TextType::class, [
-                'mapped' => false,
-                'required' => true,
-            ])
-            ->add('state', TextType::class, [
-                'mapped' => false,
-                'required' => true,
-            ])
-            ->add('city', TextType::class, [
-                'mapped' => false,
-                'required' => true,
-            ])
-            ->add('neighborhood', TextType::class, [
-                'mapped' => false,
-                'required' => true,
-            ])
-            ->add('street', TextType::class, [
-                'mapped' => false,
-                'required' => true,
-            ])
-            ->add('number', TextType::class, [
-                'mapped' => false,
-                'required' => true,
-            ])
-            ->add('complement', TextType::class, [
-                'mapped' => false,
-                'required' => false,
-            ])
-            ->add('differentDelivery', CheckboxType::class, [
-                'mapped' => false,
-                'required' => false,
-            ]);
+            ->add('document', TextType::class, $required)
+            ->add('email', EmailType::class, $required)
+            ->add('phone', TextType::class, $required)
+            ->add('postcode', TextType::class, $required)
+            ->add('state', TextType::class, $required)
+            ->add('city', TextType::class, $required)
+            ->add('neighborhood', TextType::class, $required)
+            ->add('street', TextType::class, $required)
+            ->add('number', TextType::class, $required)
+            ->add('complement', TextType::class, $required)
+            ->add('differentDelivery', CheckboxType::class, $notRequired);
 
         $builder
-            ->add('shippingName', TextType::class, [
-                'mapped' => false,
-                'required' => false,
-            ])
-            ->add('shippingEmail', EmailType::class, [
-                'mapped' => false,
-                'required' => false,
-            ])
-            ->add('shippingPhone', TextType::class, [
-                'mapped' => false,
-                'required' => false,
-            ])
-            ->add('shippingPostcode', TextType::class, [
-                'mapped' => false,
-                'required' => false,
-            ])
-            ->add('shippingState', TextType::class, [
-                'mapped' => false,
-                'required' => false,
-            ])
-            ->add('shippingCity', TextType::class, [
-                'mapped' => false,
-                'required' => false,
-            ])
-            ->add('shippingNeighborhood', TextType::class, [
-                'mapped' => false,
-                'required' => false,
-            ])
-            ->add('shippingStreet', TextType::class, [
-                'mapped' => false,
-                'required' => false,
-            ])
-            ->add('shippingNumber', TextType::class, [
-                'mapped' => false,
-                'required' => false,
-            ])
-            ->add('shippingComplement', TextType::class, [
-                'mapped' => false,
-                'required' => false,
-            ]);
+            ->add('shippingName', TextType::class, $notRequired)
+            ->add('shippingEmail', EmailType::class, $notRequired)
+            ->add('shippingPhone', TextType::class, $notRequired)
+            ->add('shippingPostcode', TextType::class, $notRequired)
+            ->add('shippingState', TextType::class, $notRequired)
+            ->add('shippingCity', TextType::class, $notRequired)
+            ->add('shippingNeighborhood', TextType::class, $notRequired)
+            ->add('shippingStreet', TextType::class, $notRequired)
+            ->add('shippingNumber', TextType::class, $notRequired)
+            ->add('shippingComplement', TextType::class, $notRequired);
     }
 
     /**
