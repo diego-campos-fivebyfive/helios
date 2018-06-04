@@ -49,26 +49,25 @@ class CartController extends AbstractController
             'cart' => $cart
         ]);
 
-        $total = 0;
+        $cartTotal = 0;
         $kits = [];
 
         /** @var CartHasKit $cartHasKit */
         foreach ($cartHasKits as $cartHasKit) {
-            $subTotal = $cartHasKit->getKit()->getPrice() * $cartHasKit->getQuantity();
+            $kitTotal = $cartHasKit->getKit()->getPrice() * $cartHasKit->getQuantity();
+            $cartTotal += $kitTotal;
 
             $kits[] = [
                 'kit' => $cartHasKit->getKit(),
                 'quantity' => $cartHasKit->getQuantity(),
-                'total' => $subTotal
+                'total' => $kitTotal
             ];
-
-            $total += $subTotal;
         }
 
         return $this->render('cart.items', [
             'cart' => $cart,
             'kits' => $kits,
-            'total' => $total,
+            'total' => $cartTotal,
             'kitsQuantity' => count($cartHasKits)
         ]);
     }
@@ -133,24 +132,32 @@ class CartController extends AbstractController
         $status = Response::HTTP_OK;
         $message = 'Kit adicionado com sucesso';
 
-        if (!$cartHasKit) {
-            $cartHasKit = $cartHasKitManager->create();
-
-            $quantity = $request->get('quantity');
-
-            $cartHasKit->setKit($kit);
-            $cartHasKit->setCart($cart);
-            $cartHasKit->setQuantity($quantity);
-
-            if (!$cartHasKit->getKit() || !$cartHasKit->getQuantity()) {
-                $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-                $message = !$cartHasKit->getKit() ? 'O kit não está disponível' : 'Quantidade indisponível';
-            } else {
-                $cartHasKitManager->save($cartHasKit);
-            }
-        } else {
+        if ($cartHasKit) {
             $status = Response::HTTP_UNPROCESSABLE_ENTITY;
             $message = 'Este kit já foi adicionado ao carrinho';
+
+            return $this->json([
+                'message' => $message
+            ], $status);
+        }
+
+        $cartHasKit = $cartHasKitManager->create();
+
+        $quantity = $request->get('quantity');
+
+        $cartHasKit->setKit($kit);
+        $cartHasKit->setCart($cart);
+        $cartHasKit->setQuantity($quantity);
+
+        if ($cartHasKit->getKit() && $cartHasKit->getQuantity()) {
+            $cartHasKitManager->save($cartHasKit);
+
+            return $this->json([], Response::HTTP_OK);
+        }
+
+        if (!$cartHasKit->getKit() || !$cartHasKit->getQuantity()) {
+            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
+            $message = !$cartHasKit->getKit() ? 'O kit não está disponível' : 'Quantidade indisponível';
         }
 
         return $this->json([
