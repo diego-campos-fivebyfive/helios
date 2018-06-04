@@ -1,0 +1,110 @@
+<style>
+    .cart-product-imitation {
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-9">
+        <div class="ibox">
+            <div class="ibox-title">
+                <span class="pull-right">(<strong>{{ kitsQuantity }}</strong>) items</span>
+                <h5>Itens no seu carrinho</h5>
+            </div>
+            <div class="ibox-content">
+                <div class="table-responsive">
+                    <table class="table shoping-cart-table">
+                        <tbody>
+                        {% for kit in kits%}
+                            <tr>
+                                <td width="90">
+                                    <div class="cart-product-imitation" style="background-image: url({{ kit.kit.image|componentFilePath }})">
+                                    </div>
+                                </td>
+                                <td class="desc">
+                                    <h3>
+                                        <a data-url="{{ path('kit_show', { id: kit.kit.id }) }}"
+                                           data-toggle="modal"
+                                           data-target="#modal_details"
+                                           class="text-navy modal_open">
+                                            {{ kit.kit.code }}
+                                        </a>
+                                    </h3>
+                                    <p class="small">
+                                        {{ kit.kit.description }}
+                                    </p>
+
+                                    <div class="m-t-sm">
+                                        <a href="#" class="text-muted"><i class="fa fa-trash"></i> Remover item</a>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    R${{ kit.kit.price|number_format(2, ',', '.') }}
+                                </td>
+                                <td width="65">
+                                    <input class="form-control" placeholder="1" type="text" value="{{ kit.quantity }}">
+                                </td>
+                                <td>
+                                    <h4>
+                                        R${{ kit.total|number_format(2, ',', '.') }}
+                                    </h4>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <p>Nenhum item no carrinho.</p>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <button class="btn btn-primary pull-right"><i class="fa fa fa-shopping-cart"></i> Checkout </button>
+                <a href="{{ path('index_kit') }}" class="btn btn-white"><i class="fa fa-arrow-left"></i> Continuar comprando </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="ibox">
+            <div class="ibox-title">
+                <h5>Sumário do Carrinho</h5>
+            </div>
+            <div class="ibox-content">
+                <span>
+                    Total
+                </span>
+                <h2 class="font-bold">
+                    R$ {{ total|number_format(2, ',', '.') }}
+                </h2>
+                <hr>
+                <div class="m-t-sm">
+                    <div class="btn-group">
+                        <a href="#" class="btn btn-primary btn-sm"><i class="fa fa-shopping-cart"></i> Checkout</a>
+                        <a href="#" class="btn btn-white btn-sm"> Cancelar </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var detail_kit = $('#detail_kit');
+    $('[data-target="#modal_details"]').on('click', function() {
+        var url = $(this).data('url');
+        if (url) {
+            $('#e_modal_details').modal('show');
+            $.ajax({
+                url: url,
+                method: 'get',
+                success: function (response) {
+                    detail_kit.html(response);
+                }
+            });
+        } else {
+            detail_kit.html('<h1> Nenhum kit selecionado para visualização </h1>');
+        }
+    });
+</script>
