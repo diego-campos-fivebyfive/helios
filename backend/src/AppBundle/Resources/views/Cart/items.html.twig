@@ -45,7 +45,7 @@
                                     R${{ kit.kit.price|number_format(2, ',', '.') }}
                                 </td>
                                 <td width="65">
-                                    <input class="form-control" placeholder="1" type="text" value="{{ kit.quantity }}">
+                                    <input class="form-control" placeholder="1" type="text" data-quantity="{{ path('quantity_kit', { id: kit.kit.id }) }}" value="{{ kit.quantity }}">
                                 </td>
                                 <td>
                                     <h4>
@@ -106,5 +106,33 @@
         } else {
             detail_kit.html('<h1> Nenhum kit selecionado para visualização </h1>');
         }
+    });
+
+    $('[data-quantity]').on('change', function () {
+
+        var url = $(this).data('quantity');
+        var quantity = $(this).val();
+
+        $.ajax({
+            url: url,
+            data: {quantity: quantity},
+            method: 'put',
+            complete: function (xhr) {
+                if(200 === xhr.status){
+                    toastr.success('Quantidade atualizada com sucesso', '{{ 'Success'|trans }}', {
+                        positionClass: 'toast-top-center',
+                        progressBar: true
+                    });
+                }else{
+                    var response = xhr.responseJSON;
+                    toastr.error(response.message, '{{ 'Error'|trans }}', {
+                        positionClass: 'toast-top-center',
+                        progressBar: true
+                    });
+                }
+
+                loadItemsCart();
+            }
+        });
     });
 </script>
