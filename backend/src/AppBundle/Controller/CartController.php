@@ -24,7 +24,6 @@ class CartController extends AbstractController
 {
     /**
      * @Route("/checkout", name="cart_checkout")
-     * @Method("get")
      */
     public function getCheckoutAction(Request $request)
     {
