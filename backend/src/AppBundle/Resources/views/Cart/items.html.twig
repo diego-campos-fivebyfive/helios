@@ -37,7 +37,10 @@
                                     </p>
 
                                     <div class="m-t-sm">
-                                        <a href="#" class="text-muted"><i class="fa fa-trash"></i> Remover item</a>
+                                        <a data-delete="{{ path('cart_remove_kit', { id: kit.kit.id}) }}"
+                                           class="btn btn-danger btn-xs">
+                                            <i class="fa fa-trash"></i> Remover Kit
+                                        </a>
                                     </div>
                                 </td>
 
@@ -107,6 +110,47 @@
             detail_kit.html('<h1> Nenhum kit selecionado para visualização </h1>');
         }
     });
+
+    var dataDelete = $('[data-delete]');
+    if(dataDelete.length){
+        dataDelete.on('click', function () {
+            var url = $(this).data('delete');
+            swal({
+                title: "Confirma a remoção deste Kit?",
+                text: null,
+                type: "info",
+                showCancelButton: true,
+                cancelButtonText: "{{ 'Cancel'|trans }}",
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "{{ 'Confirm'|trans }}",
+                closeOnConfirm: false
+            }, function () {
+                swal.close();
+                $.ajax({
+                    url: url,
+                    method: 'post',
+                    data: {_method:'delete'},
+                    complete: function (xhr) {
+                        if (200 == xhr.status) {
+                            swal("", 'Kit removido com sucesso', "success");
+                        } else {
+                            swal("Oops!",'Erro ao remover este kit', "error");
+                        }
+
+                        loadItemsCart();
+                    },
+                    beforeSend: function () {
+                        swal({
+                            title: "Removendo...",
+                            text: "Aguarde",
+                            type: "info",
+                            showConfirmButton: false
+                        });
+                    }
+                });
+            });
+        });
+    }
 
     $('[data-quantity]').on('change', function () {
 

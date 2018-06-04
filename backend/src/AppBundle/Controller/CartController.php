@@ -6,12 +6,12 @@ use AppBundle\Entity\Kit\Cart;
 use AppBundle\Entity\Kit\CartHasKit;
 use AppBundle\Entity\Kit\Kit;
 use AppBundle\Manager\CartManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Symfony\Component\HttpFoundation\Response;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * @Route("cart")
@@ -200,5 +200,32 @@ class CartController extends AbstractController
         return $this->json([
             'message' => 'Quantidade indisponível'
         ], Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * @Security("has_role('ROLE_OWNER')")
+     *
+     * @Route("/{id}/remove_kit", name="cart_remove_kit")
+     * @Method("delete")
+     */
+    public function removeKitAction(Kit $kit)
+    {
+        /** @var CartManager $cartManager */
+        $cartManager = $this->manager('cart');
+
+        /** @var Cart $cart */
+        $cart = $cartManager->findOneBy([
+            'account' => $this->account()
+        ]);
+
+        $cartHasKitManager = $this->manager('cart_has_kit');
+        $cartHasKit = $cartHasKitManager->findOneBy([
+            'cart' => $cart,
+            'kit' => $kit
+        ]);
+
+        $cartHasKitManager->delete($cartHasKit);
+
+        return $this->json([]);
     }
 }
