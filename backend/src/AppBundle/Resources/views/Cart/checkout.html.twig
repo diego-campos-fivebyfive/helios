@@ -204,11 +204,11 @@
                 data: {postcode: element.val()},
                 complete: function (xhr) {
                     if (xhr.status == 200 && xhr.responseJSON.status == 200) {
-                        childrens['state'].val(xhr.responseJSON.state);
-                        childrens['city'].val(xhr.responseJSON.city);
-                        childrens['neighbourhood'].val(xhr.responseJSON.neighborhood);
-                        childrens['street'].val(xhr.responseJSON.street);
-                        childrens['number'].focus();
+                        childrens.state.val(xhr.responseJSON.state);
+                        childrens.city.val(xhr.responseJSON.city);
+                        childrens.neighbourhood.val(xhr.responseJSON.neighborhood);
+                        childrens.street.val(xhr.responseJSON.street);
+                        childrens.number.focus();
                     }
                 }
             });
@@ -263,14 +263,14 @@
 
         $('.telephone').mask(SPMaskBehavior, spOptions);
 
-        $('#checkout_document').mask(masks['cnpj']);
+        $('#checkout_document').mask(masks.cnpj);
         $('#checkout_documentType').on('change', function () {
             if ($(this).val() == '0') {
-                $('#checkout_document').mask(masks['cnpj']);
+                $('#checkout_document').mask(masks.cnpj);
                 $('#document_label').html('CNPJ');
                 $('#checkout_document').attr('placeholder', 'CNPJ');
             } else {
-                $('#checkout_document').mask(masks['cpf']);
+                $('#checkout_document').mask(masks.cpf);
                 $('#document_label').html('CPF');
                 $('#checkout_document').attr('placeholder', 'CPF');
             }
@@ -278,7 +278,7 @@
             $('#checkout_document').val('');
             $('#checkout_document').focus();
         });
-        $("#checkout_postcode").mask(masks['postcode']);
-        $("#checkout_shippingPostcode").mask(masks['postcode']);
+        $("#checkout_postcode").mask(masks.postcode);
+        $("#checkout_shippingPostcode").mask(masks.postcode);
     </script>
 {% endblock %}
