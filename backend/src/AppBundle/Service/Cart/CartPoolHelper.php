@@ -45,10 +45,7 @@ class CartPoolHelper
      */
     public function formatItems(array $items, $checkout = true)
     {
-        $formatedItems = [];
-
-        /** @var CartHasKit $item */
-        foreach ($items as $item) {
+        $formatedItems = array_map(function ($item) use($checkout) {
             $formatedItem = [
                 'name' => $item->getKit()->getCode(),
                 'description' => $item->getKit()->getDescription(),
@@ -62,8 +59,8 @@ class CartPoolHelper
                 $formatedItem['components'] = $item->getKit()->getComponents();
             }
 
-            $formatedItems[] = $formatedItem;
-        }
+            return $formatedItem;
+        }, $items);
 
         return $formatedItems;
     }
