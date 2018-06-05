@@ -94,23 +94,20 @@ class StockController extends AbstractController
             $endAt = new \DateTime($formatDate($date[1]));
         }
 
-        $component = $this->manager($family)->find($id);
-
-        $products = $this->get('stock_converter')->transform([$component]);
-
         $this->overrideGetFilters();
 
+        /** @var \AppBundle\Service\Stock\Query $stockQuery */
         $stockQuery = $this->get('stock_query');
 
         if ($startAt and $endAt)
             $stockQuery->between($startAt, $endAt);
 
-        $product = $stockQuery->product($products[0]);
+        $product = $stockQuery->product($family, $id);
 
         $page = $request->query->getInt('page',1);
 
         return $this->render('admin/stock/transaction_content.html.twig',[
-            'pagination' => $product->pagination($page)
+            'pagination' => $product->paginate($page)
         ]);
     }
 
@@ -130,9 +127,11 @@ class StockController extends AbstractController
 
             $amount = $data['amount'] * $data['mode'];
             $description = $data['description'];
+
+            /** @var \AppBundle\Service\Stock\Component $stockComponent */
             $stockComponent = $this->get('stock_component');
 
-            $stockComponent->add($component, $amount, $description);
+            $stockComponent->add($type, $component->getId(), $amount, $description);
 
             $stockComponent->transact();
 
