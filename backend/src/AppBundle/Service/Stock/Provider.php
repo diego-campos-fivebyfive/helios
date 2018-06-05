@@ -21,7 +21,7 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
  *
  * @author Claudinei Machado <claudinei@kolinalabs.com>
  */
-class LegacyProvider
+class Provider
 {
     /**
      * @var ContainerInterface
