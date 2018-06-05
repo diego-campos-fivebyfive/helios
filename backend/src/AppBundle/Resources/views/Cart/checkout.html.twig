@@ -300,8 +300,10 @@
 
         if (documentType == 'CNPJ') {
             $('#checkout_document').mask(masks.cnpj);
+            $('#document_label').html('CNPJ');
         } else {
             $('#checkout_document').mask(masks.cpf);
+            $('#document_label').html('CPF');
         }
 
         $('#checkout_documentType').on('change', function () {
