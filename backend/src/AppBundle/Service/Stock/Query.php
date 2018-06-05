@@ -8,7 +8,7 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query as DoctrineQuery;
 use Knp\Component\Pager\Pagination\AbstractPagination as Pagination;
 
-class LegacyQuery
+class Query
 {
     /**
      * @var QueryBuilder
@@ -38,8 +38,8 @@ class LegacyQuery
      */
     public function product($family, $identity)
     {
-        $this->qb->andWhere('p.family = :family');
-        $this->qb->andWhere('p.identity = :identity');
+        $this->qb->andWhere('t.family = :family');
+        $this->qb->andWhere('t.identity = :identity');
         $this->parameters['family'] = $family;
         $this->parameters['identity'] = $identity;
 
@@ -94,7 +94,7 @@ class LegacyQuery
     /**
      * @return Pagination
      */
-    public function pagination($page)
+    public function paginate($page)
     {
         $query = $this->get('query');
         return $this->provider->get('knp_paginator')->paginate($query, $page, 10);
@@ -149,7 +149,6 @@ class LegacyQuery
 
         $this->qb->select('t')
             ->from(Transaction::class, 't')
-            ->join('t.product', 'p')
             ->orderBy('t.createdAt', 'desc')
         ;
     }
