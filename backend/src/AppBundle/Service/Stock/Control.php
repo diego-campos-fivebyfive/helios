@@ -11,9 +11,8 @@
 
 namespace AppBundle\Service\Stock;
 
-use AppBundle\Entity\Stock\ProductInterface;
 use AppBundle\Entity\Stock\Transaction;
-use AppBundle\Manager\Stock\ProductManager;
+use AppBundle\Manager\Stock\TransactionManager;
 
 /**
  * Class Provider
@@ -24,7 +23,7 @@ use AppBundle\Manager\Stock\ProductManager;
 class Control
 {
     /**
-     * @var ProductManager
+     * @var TransactionManager
      */
     private $manager;
 
@@ -35,9 +34,9 @@ class Control
 
     /**
      * Control constructor.
-     * @param ProductManager $manager
+     * @param TransactionManager $manager
      */
-    function __construct(ProductManager $manager)
+    function __construct(TransactionManager $manager)
     {
         $this->manager = $manager;
     }
@@ -90,12 +89,13 @@ class Control
         $transaction = new Transaction();
 
         $transaction
-            ->setProduct($operation->getProduct())
+            ->setFamily($operation->getFamily())
+            ->setIdentity($operation->getIdentity())
             ->setAmount($operation->getAmount())
             ->setDescription($operation->getDescription())
         ;
 
-        $this->manager->save($operation->getProduct(), $commit);
+        $this->manager->save($transaction, $commit);
     }
 
     /**
