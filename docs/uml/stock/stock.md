@@ -84,7 +84,7 @@ UPDATE app_stock_transaction SET identity = REPLACE(product_id, 'AppBundle\\Enti
 - Remoção de FOREIGN KEY e INDEX
 
 __Obs:__ Antes de rodar os comandos abaixo, verificar os nomes corretos de
- FK e INDEX na base de dados.
+ FK e IDX na base de dados.
  
 ``` 
 ALTER TABLE app_stock_transaction DROP FOREIGN KEY FK_CBC0E7A4584665A;
