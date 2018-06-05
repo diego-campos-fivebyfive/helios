@@ -3,20 +3,13 @@
 namespace AppBundle\Controller\PublicAccess;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\Kit\CartPool;
-use AppBundle\Entity\Theme;
-use AppBundle\Entity\Order\Order;
 use AppBundle\Manager\CartPoolManager;
-use Knp\Bundle\SnappyBundle\Snappy\LoggableGenerator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Process\Process;
 
 /**
  * @Route("payment")
@@ -46,12 +39,11 @@ class PaymentController extends AbstractController
             ]);
 
             if ($pool && $callback) {
-
                 $pool->addCallback($callback);
 
                 $cartPoolManager->save($pool);
 
-                return JsonResponse::create([], Response::HTTP_OK);
+                return $this->json();
             }
 
             return JsonResponse::create([], Response::HTTP_BAD_REQUEST);
@@ -69,7 +61,7 @@ class PaymentController extends AbstractController
 
                 $cartPoolManager->save($pool);
 
-                return JsonResponse::create([], Response::HTTP_OK);
+                return $this->json();
             }
 
             return JsonResponse::create([], Response::HTTP_BAD_REQUEST);
