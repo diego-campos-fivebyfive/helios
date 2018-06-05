@@ -130,8 +130,8 @@ class StatusChanger
     {
         if(Order::STATUS_DONE != $order->getPreviousStatus()){
             $this->get('order_exporter')->exportCsv($order);
-            $this->get('order_stock')->debit($order);
             $this->generateProforma($order);
+            $this->get('order_stock')->debit($order);
         }
     }
 

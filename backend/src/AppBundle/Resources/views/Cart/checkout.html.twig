@@ -176,18 +176,18 @@
                 </div>
             </div>
 
-            {{ form_end(form) }}
-
             <div class="row">
                 <a href="{{ path('cart_show') }}" class="btn btn-white" type="button">
                     <i class="fa fa-arrow-left"></i>
                     Cancelar
                 </a>
-                <a href="#" class="btn btn-primary pull-right" type="button">
+                <button class="btn btn-primary pull-right" type="submit">
                     <i class="fa fa-arrow-right"></i>
                     Avançar
-                </a>
+                </button>
             </div>
+            {{ form_end(form) }}
+
         </div>
     </div>
 
@@ -265,7 +265,7 @@
 
         $('#checkout_document').mask(masks.cnpj);
         $('#checkout_documentType').on('change', function () {
-            if ($(this).val() == '0') {
+            if ($(this).val() == 'CNPJ') {
                 $('#checkout_document').mask(masks.cnpj);
                 $('#document_label').html('CNPJ');
                 $('#checkout_document').attr('placeholder', 'CNPJ');

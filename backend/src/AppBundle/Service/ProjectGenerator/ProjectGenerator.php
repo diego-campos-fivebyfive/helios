@@ -158,12 +158,13 @@ class ProjectGenerator
             $this->resolveTransformer($project);
 
         }else {
+
             // INVERTERS
             $this->generateInverters($this->project);
-        }
 
-        // AREAS
-        $this->generateAreas($this->project);
+            // AREAS
+            $this->generateAreas($this->project);
+        }
 
         // GROUPS
         $this->generateGroups($this->project);

@@ -1,0 +1,91 @@
+<script>
+    $('#checkout_form').on('submit', function (evt) {
+        evt.preventDefault();
+        /* Holder.addTheme("getnet", {
+        bg: "#4F1A55",
+        fg: "#fff",
+        size: 11,
+        font: "S",
+        fontweight: "normal"
+        });
+        */
+        console.log($(this).serializeArray());
+
+
+
+        createCheckout('');
+    });
+
+    function hashLoad() {
+        return Math.random().toString(36).substring(2);
+    }
+
+    function createCheckout(token) {
+
+        console.log($('#scriptCheckout').data('getnet-token'));
+        //console.log('initGetnet');
+        //console.log(token);
+
+        var getnetIfrm = document.createElement('script'),
+            hash = hashLoad();
+
+        getnetIfrm.setAttribute('id', 'scriptCheckout');
+        getnetIfrm.setAttribute('data-getnet-sellerid', '4609a349-e4b8-4edf-a332-5a45c9fe7d19');
+        // getnetIfrm.setAttribute('data-getnet-token', token);
+        getnetIfrm.setAttribute('data-getnet-method', 'credito');
+        getnetIfrm.setAttribute('data-getnet-amount', '150.00');
+        getnetIfrm.setAttribute('data-getnet-instructions', 'Teste');
+        getnetIfrm.setAttribute('data-getnet-customerid', '4234324');
+        getnetIfrm.setAttribute('data-getnet-orderid', '123456789');
+        getnetIfrm.setAttribute('data-getnet-button-class', 'pay-button-checkout');
+        getnetIfrm.setAttribute('data-getnet-installments', '4');
+        getnetIfrm.setAttribute('data-getnet-customer-first-name', 'JoÃ£o');
+        getnetIfrm.setAttribute('data-getnet-customer-last-name', 'da Silva');
+        getnetIfrm.setAttribute('data-getnet-customer-document-type', 'CPF');
+        getnetIfrm.setAttribute('data-getnet-customer-document-number', '25848505080');
+        getnetIfrm.setAttribute('data-getnet-customer-email', 'teste@teste.com');
+        getnetIfrm.setAttribute('data-getnet-customer-phone-number', '1134562356');
+        getnetIfrm.setAttribute('data-getnet-customer-address-street', 'Av. NaÃ§Ãµes Unidas');
+        getnetIfrm.setAttribute('data-getnet-customer-address-street-number', '11.541');
+        getnetIfrm.setAttribute('data-getnet-customer-address-complementary', '3 andar');
+        getnetIfrm.setAttribute('data-getnet-customer-address-neighborhood', 'Brooklin');
+        getnetIfrm.setAttribute('data-getnet-customer-address-city', 'SÃ£o Paulo');
+        getnetIfrm.setAttribute('data-getnet-customer-address-state', 'SP');
+        getnetIfrm.setAttribute('data-getnet-customer-address-zipcode', '04578000');
+        getnetIfrm.setAttribute('data-getnet-customer-country', 'Brasil');
+        getnetIfrm.setAttribute('data-getnet-items', '[{"name": "","description": "", "value": 0, "quantity": 0,"sku": ""}]');
+        getnetIfrm.setAttribute('data-getnet-url-callback', '');
+
+        getnetIfrm.src = 'https://checkout-homologacao.getnet.com.br/loader.js?' + hash;
+        // document.getElementsByTagName('body')[0].appendChild(getnetIfrm);
+
+        $.ajax({
+            url: "{{ path('authentication_checkout') }}",
+            method: "get",
+            success: function (response) {
+                //$('#scriptCheckout').data('getnet-token', response.token);
+                //$('#scriptCheckout').addAttr('data-getnet-token', token);
+
+                getnetIfrm.setAttribute('data-getnet-token', response.authentication);
+
+                document.getElementsByTagName('body')[0].appendChild(getnetIfrm);
+
+                var count = 0;
+                var interval = setTimeout(function () {
+                    count++;
+                    // if ($('#scriptCheckout').data('getnet-token') != 'undefined') {
+                    console.log('esse');
+                    console.log($('#scriptCheckout').data('getnet-token'));
+
+                    $('#pay-button-checkout').click();
+                    // }
+                    // clearInterval(interval);
+                }, 800);
+                console.log($('#scriptCheckout').data('getnet-token') == undefined);
+                console.log($('#scriptCheckout').data('getnet-token') === undefined);
+                console.log($('#scriptCheckout').data('getnet-token'));
+                console.log(typeof $('#scriptCheckout').data('getnet-token'));
+            }
+        });
+    }
+</script>

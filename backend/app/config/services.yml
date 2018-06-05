@@ -172,9 +172,9 @@ services:
         class: AppBundle\Manager\RankingManager
         arguments: ['AppBundle\Entity\Misc\Ranking', '@doctrine']
 
-    stock_product_manager:
-        class: AppBundle\Manager\Stock\ProductManager
-        arguments: ['AppBundle\Entity\Stock\Product', '@doctrine']
+    stock_transaction_manager:
+        class: AppBundle\Manager\Stock\TransactionManager
+        arguments: ['AppBundle\Entity\Stock\Transaction', '@doctrine']
 
     string_box_manager:
         class: AppBundle\Manager\StringBoxManager
@@ -459,11 +459,11 @@ services:
 
     stock_control:
         class: AppBundle\Service\Stock\Control
-        arguments: ['@stock_product_manager']
+        arguments: ['@stock_transaction_manager']
 
     stock_component:
         class: AppBundle\Service\Stock\Component
-        arguments: ['@stock_provider']
+        arguments: ['@stock_control']
 
     stock_query:
         class: AppBundle\Service\Stock\Query
