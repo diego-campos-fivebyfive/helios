@@ -22,7 +22,7 @@ aplicação não possibilita:
 - Maior confiabilidade dos dados de estoque apresentados no gerenciador.
 - Maior consistência e facilidade de manutenção, por centralização do recurso.
 
-##### Abaixo o código da TRIGGER que deve ser registrada no SGBD:
+##### Código da TRIGGER que deve ser registrada no SGBD:
 
 ```
 
@@ -47,4 +47,34 @@ FOR EACH ROW
   END//
 DELIMITER ;
 
+```
+
+#### Processo de migração (se necessário)
+
+- Atualização da estrutura da tabela
+
+``` 
+ALTER TABLE app_stock_transaction
+  ADD family VARCHAR(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  ADD identity INT DEFAULT NULL;
+```
+
+- Normalização de famílias (coluna 'family')
+
+``` 
+UPDATE app_stock_transaction SET family = 'module' WHERE product_id LIKE "%Module::%";
+UPDATE app_stock_transaction SET family = 'inverter' WHERE product_id LIKE "%Inverter::%";
+UPDATE app_stock_transaction SET family = 'string_box' WHERE product_id LIKE "%StringBox::%";
+UPDATE app_stock_transaction SET family = 'structure' WHERE product_id LIKE "%Structure::%";
+UPDATE app_stock_transaction SET family = 'variety' WHERE product_id LIKE "%Variety::%";  
+```
+
+- Normalização de identities (coluna 'identity')
+
+``` 
+UPDATE app_stock_transaction SET identity = REPLACE(product_id, 'AppBundle\\Entity\\Component\\Module::', '') WHERE family = 'module';
+UPDATE app_stock_transaction SET identity = REPLACE(product_id, 'AppBundle\\Entity\\Component\\Inverter::', '') WHERE family = 'inverter';
+UPDATE app_stock_transaction SET identity = REPLACE(product_id, 'AppBundle\\Entity\\Component\\StringBox::', '') WHERE family = 'string_box';
+UPDATE app_stock_transaction SET identity = REPLACE(product_id, 'AppBundle\\Entity\\Component\\Structure::', '') WHERE family = 'structure';
+UPDATE app_stock_transaction SET identity = REPLACE(product_id, 'AppBundle\\Entity\\Component\\Variety::', '') WHERE family = 'variety';
 ```
