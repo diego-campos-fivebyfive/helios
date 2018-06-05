@@ -206,7 +206,7 @@
                     if (xhr.status == 200 && xhr.responseJSON.status == 200) {
                         childrens.state.val(xhr.responseJSON.state);
                         childrens.city.val(xhr.responseJSON.city);
-                        childrens.neighbourhood.val(xhr.responseJSON.neighborhood);
+                        childrens.neighborhood.val(xhr.responseJSON.neighborhood);
                         childrens.street.val(xhr.responseJSON.street);
                         childrens.number.focus();
                     }
@@ -226,7 +226,7 @@
             var childrens = {
                 'state': $('#checkout_state'),
                 'city': $('#checkout_city'),
-                'neighbourhood': $('#checkout_neighbourhood'),
+                'neighborhood': $('#checkout_neighborhood'),
                 'street': $('#checkout_street'),
                 'number': $('#checkout_number')
             };
@@ -238,7 +238,7 @@
             var childrens = {
                 'state': $('#checkout_shippingState'),
                 'city': $('#checkout_shippingCity'),
-                'neighbourhood': $('#checkout_shippingNeighborhood'),
+                'neighborhood': $('#checkout_shippingNeighborhood'),
                 'street': $('#checkout_shippingStreet'),
                 'number': $('#checkout_shippingNumber')
             };
