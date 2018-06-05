@@ -45,15 +45,16 @@ class PaymentController extends AbstractController
                 'code' => $code
             ]);
 
-            if ($pool) {
+            if ($pool && $callback) {
+
                 $pool->addCallback($callback);
 
                 $cartPoolManager->save($pool);
 
-                return JsonResponse::HTTP_OK;
+                return JsonResponse::create([], Response::HTTP_OK);
             }
 
-            return JsonResponse::HTTP_BAD_REQUEST;
+            return JsonResponse::create([], Response::HTTP_BAD_REQUEST);
         } else {
             $billetCode = $request->query->get('id');
 
@@ -63,15 +64,15 @@ class PaymentController extends AbstractController
             /** @var CartPool $pool */
             $pool = null;
 
-            if ($pool) {
+            if ($pool && $callback) {
                 $pool->addCallback($callback);
 
                 $cartPoolManager->save($pool);
 
-                return JsonResponse::HTTP_OK;
+                return JsonResponse::create([], Response::HTTP_OK);
             }
 
-            return JsonResponse::HTTP_BAD_REQUEST;
+            return JsonResponse::create([], Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -82,6 +83,35 @@ class PaymentController extends AbstractController
      */
     private function formatCallback(array $callback, $mode)
     {
+        $cardKeys = [
+            'acquirer_transaction_id',
+            'amount',
+            'authorization_timestamp',
+            'customer_id',
+            'number_installments',
+            'order_id',
+            'payment_id',
+            'payment_type',
+            'status'
+        ];
+
+        $billetKeys = [
+            'id',
+            'payment_date',
+            'amount',
+            'status'
+        ];
+
+        if ($mode === 'card') {
+            $keys = $cardKeys;
+        } else {
+            $keys = $billetKeys;
+        }
+
+        if (array_diff($keys, array_keys($callback))) {
+            return null;
+        }
+
         if ($mode === 'card') {
             return [
                 'acquirer_transaction_id' => $callback['acquirer_transaction_id'],
