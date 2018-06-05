@@ -209,6 +209,10 @@ services:
         class: AppBundle\Service\Util\AccountTransfer
         arguments: ['@member_manager']
 
+    cart_pool_helper:
+        class: AppBundle\Service\Cart\CartPoolHelper
+        arguments: ['@service_container']
+
     component_collector:
         class: AppBundle\Service\Order\ComponentCollector
         arguments: ['@service_container']
