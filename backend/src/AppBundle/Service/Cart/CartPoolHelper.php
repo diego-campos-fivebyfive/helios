@@ -74,24 +74,41 @@ class CartPoolHelper
      */
     public function formatCheckout(array $checkout)
     {
-        return [
+        $shipping = [
             "first_name" => $checkout['firstName'],
-            "name" => $checkout['firstName'] . " " . $checkout['lastName'],
+            "name" => $checkout['shippingName'],
             "email" => $checkout['email'],
             "phone_number" => $checkout['phone'],
             "shipping_amount" => 10,
             "address" => [
-                "street" => $checkout['differentDelivery'] ? $checkout['shippingStreet'] : $checkout['street'],
-                "complement" => $checkout['differentDelivery'] ? $checkout['shippingComplement'] : $checkout['complement'],
-                "number" => $checkout['differentDelivery'] ? $checkout['shippingNumber'] : $checkout['number'],
-                "district" => $checkout['differentDelivery'] ? $checkout['shippingNeighborhood'] : $checkout['neighborhood'],
-                "city" => $checkout['differentDelivery'] ? $checkout['shippingCity'] : $checkout['city'],
-                "state" => $checkout['differentDelivery'] ? $checkout['shippingState'] : $checkout['state'],
+                "street" => $checkout['shippingStreet'],
+                "complement" => $checkout['shippingComplement'],
+                "number" => $checkout['shippingNumber'],
+                "district" => $checkout['shippingNeighborhood'],
+                "city" => $checkout['shippingCity'],
+                "state" => $checkout['shippingState'],
                 "country" => "Brasil",
-                "postal_code" => $checkout['differentDelivery']
-                    ? str_replace("-", "", $checkout['shippingPostcode'])
-                    : str_replace("-", "", $checkout['postcode'])
+                "postal_code" => str_replace("-", "", $checkout['shippingPostcode'])
             ]
+        ];
+
+        return [
+            "firstName" => $checkout['firstName'],
+            "lastName" => $checkout['lastName'],
+            "documentType" => $checkout['documentType'],
+            "documentNumber" => $checkout['document'],
+            "email" => $checkout['email'],
+            "phone" => $checkout['phone'],
+            "street" => $checkout['street'],
+            "number" => $checkout['number'],
+            "complement" => $checkout['complement'],
+            "neighborhood" => $checkout['neighborhood'],
+            "city" => $checkout['city'],
+            "state" => $checkout['state'],
+            "zipcode" => $checkout['postcode'],
+            "country" => "Brasil",
+            "shipping" => json_encode($shipping),
+            "differentDelivery" => $checkout['differentDelivery']
         ];
     }
 }
