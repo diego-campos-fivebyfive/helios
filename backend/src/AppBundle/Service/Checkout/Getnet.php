@@ -11,8 +11,9 @@
 
 namespace AppBundle\Service\Checkout;
 
+use GuzzleHttp\Client;
 
-class Authentication
+class Getnet
 {
     const PRODUCTION = 1;
     const HOMOLOG = 0;
@@ -53,8 +54,9 @@ class Authentication
     private $client;
 
     /**
-     * GetNet constructor.
+     * Getnet constructor.
      * @param string $env
+     * @throws \Exception
      */
     function __construct(string $env)
     {
