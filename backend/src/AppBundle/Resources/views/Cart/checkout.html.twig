@@ -214,11 +214,44 @@
             });
         }
 
+        var shippingFields = [
+            $('#checkout_shippingName'),
+            $('#checkout_shippingEmail'),
+            $('#checkout_shippingPhone'),
+            $('#checkout_shippingEmail'),
+            $('#checkout_shippingPostcode'),
+            $('#checkout_shippingState'),
+            $('#checkout_shippingCity'),
+            $('#checkout_shippingNeighborhood'),
+            $('#checkout_shippingStreet'),
+            $('#checkout_shippingNumber'),
+        ];
+
+        function applyRequired() {
+            shippingFields.forEach(function (value) {
+               value.attr('required', 'required');
+            });
+        }
+
+        function removeRequired() {
+            shippingFields.forEach(function (value) {
+                value.removeAttr('required');
+            });
+        }
+
+        if ($('#checkout_differentDelivery').is(':checked')) {
+            applyRequired();
+        } else {
+            removeRequired();
+        }
+
         $('#checkout_differentDelivery').on('change', function () {
             if ($(this).is(':checked')) {
                 $('#different_delivery').removeClass('hidden');
+                applyRequired();
             } else {
                 $('#different_delivery').addClass('hidden');
+                removeRequired();
             }
         });
 
@@ -263,7 +296,16 @@
 
         $('.telephone').mask(SPMaskBehavior, spOptions);
 
-        $('#checkout_document').mask(masks.cnpj);
+        var documentType = $('#checkout_documentType').val();
+
+        if (documentType == 'CNPJ') {
+            $('#checkout_document').mask(masks.cnpj);
+            $('#document_label').html('CNPJ');
+        } else {
+            $('#checkout_document').mask(masks.cpf);
+            $('#document_label').html('CPF');
+        }
+
         $('#checkout_documentType').on('change', function () {
             if ($(this).val() == 'CNPJ') {
                 $('#checkout_document').mask(masks.cnpj);
