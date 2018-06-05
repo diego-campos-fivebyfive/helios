@@ -15,6 +15,7 @@ use App\Generator\Core;
 use App\Generator\Structure\Ground;
 use AppBundle\Entity\Component\Inverter;
 use AppBundle\Entity\Component\Module;
+use AppBundle\Entity\Component\ProjectArea;
 use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Component\ProjectInverter;
 use AppBundle\Entity\Component\ProjectStringBox;
@@ -201,14 +202,27 @@ class Bridge
         $serialAndParalell = [];
         foreach ($data['inverters'] as $inverter){
             $serialAndParalell[$inverter['id']] = [
-                'arrangements' => current($inverter['arrangements']),
+                'arrangements' => $inverter['arrangements'],
                 'quantity' => count($inverter['arrangements'])
             ];
         }
 
+        // Configurations for AREAS
+        $latitude = $defaults['latitude'];
+
+        $areaConfig = [
+            'project_module' => $project->getProjectModules()->first(),
+            'latitude' => $latitude,
+            'inclination' => abs($latitude) < 10 ? 10 : (int) abs($latitude),
+            'orientation' => $latitude < 0 ? 0 : 180
+        ];
+
         $powerTransformer = 0;
         /** @var Inverter $inverter */
         foreach ($inverters as $inverter) {
+
+            $operation = 0 == $inverter->getMpptParallel() ?  $inverter->getMpptNumber() : 1 ;
+            $mppts = array_fill(0, $operation, 1);
 
             for ($i = 0; $i < $invertersQuantities[$inverter->getId()]; $i++) {
 
@@ -216,11 +230,15 @@ class Bridge
 
                 $config = $serialAndParalell[$inverter->getId()];
 
-                $projectInverter->setInverter($inverter);
-                $projectInverter->setQuantity($config['quantity']);
-                $projectInverter->setProject($project);
-                $projectInverter->setSerial($config['arrangements']['ser']);
-                $projectInverter->setParallel($config['arrangements']['par']);
+                $projectInverter
+                    ->setLoss(15)
+                    ->setInverter($inverter)
+                    ->setQuantity(1)
+                    ->setOperation(0 == $inverter->getMpptParallel() ? implode('.', $mppts) : $inverter->getMpptNumber())
+                    ->setSerial($config['arrangements'][0]['ser'])
+                    ->setParallel($config['arrangements'][0]['par'])
+                    ->setProject($project)
+                ;
 
                 if (
                     $defaults['voltage'] != $inverter->getPhaseVoltage()
@@ -228,12 +246,39 @@ class Bridge
                 ) {
                         $powerTransformer += $inverter->getNominalPower();
                 }
+
+                $areaConfig['arrangements'] = $config['arrangements'];
+
+                $this->generateAreas($projectInverter, $areaConfig);
             }
         }
 
         $defaults['power_transformer'] = $powerTransformer;
 
         $project->setDefaults($defaults);
+    }
+
+    /**
+     * @param ProjectInverter $projectInverter
+     * @param array $config
+     */
+    private function generateAreas(ProjectInverter $projectInverter, array $config = [])
+    {
+        $projectInverter->getProjectAreas()->clear();
+
+        foreach ($config['arrangements'] as $arragement){
+
+            $projectArea = new ProjectArea();
+
+            $projectArea
+                ->setProjectInverter($projectInverter)
+                ->setProjectModule($config['project_module'])
+                ->setInclination($config['inclination'])
+                ->setOrientation($config['orientation'])
+                ->setStringNumber($arragement['par'])
+                ->setModuleString($arragement['ser'])
+            ;
+        }
     }
 
     /**
