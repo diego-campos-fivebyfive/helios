@@ -93,9 +93,6 @@ class CartController extends AbstractController
             $itemsData = $cartPoolHelper->formatItems($items);
 
             // TODO: Implementação será finalizada em tarefa posterior
-            print_r($checkoutData);
-            print_r($itemsData);
-            die;
         }
 
         return $this->render('cart.checkout', [
