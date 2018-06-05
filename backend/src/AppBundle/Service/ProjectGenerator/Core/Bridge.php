@@ -102,11 +102,14 @@ class Bridge
 
         $result = Core::process($parameters);
 
+        $defaults['voltage'] = $phaseVoltage;
+        $defaults['phases'] = $phaseNumber;
+
+        $project->setDefaults($defaults);
+
         if(empty($result['inverters'])){
 
             $defaults['errors'][] = 'empty_inverters';
-
-            $project->setDefaults($defaults);
 
             return;
         }
@@ -197,7 +200,10 @@ class Bridge
 
         $serialAndParalell = [];
         foreach ($data['inverters'] as $inverter){
-            $serialAndParalell[$inverter['id']] = current($inverter['arrangements']);
+            $serialAndParalell[$inverter['id']] = [
+                'arrangements' => current($inverter['arrangements']),
+                'quantity' => count($inverter['arrangements'])
+            ];
         }
 
         $powerTransformer = 0;
@@ -208,11 +214,13 @@ class Bridge
 
                 $projectInverter = new ProjectInverter();
 
+                $config = $serialAndParalell[$inverter->getId()];
+
                 $projectInverter->setInverter($inverter);
-                $projectInverter->setQuantity(1);
+                $projectInverter->setQuantity($config['quantity']);
                 $projectInverter->setProject($project);
-                $projectInverter->setSerial($serialAndParalell[$inverter->getId()]['ser']);
-                $projectInverter->setParallel($serialAndParalell[$inverter->getId()]['par']);
+                $projectInverter->setSerial($config['arrangements']['ser']);
+                $projectInverter->setParallel($config['arrangements']['par']);
 
                 if (
                     $defaults['voltage'] != $inverter->getPhaseVoltage()
@@ -220,7 +228,6 @@ class Bridge
                 ) {
                         $powerTransformer += $inverter->getNominalPower();
                 }
-
             }
         }
 
@@ -279,7 +286,7 @@ class Bridge
     private function getLevel($defaults)
     {
         if ((isset($defaults['finame']) && $defaults['finame']) || (isset($defaults['is_promotional']) && $defaults['is_promotional'])) {
-            return isset($defaults['finame']) ? 'finame' : 'promotional';
+            return $defaults['finame'] ? 'finame' : 'promotional';
         }
 
         return $defaults['level'];

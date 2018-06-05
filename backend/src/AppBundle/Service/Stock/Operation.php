@@ -11,8 +11,6 @@
 
 namespace AppBundle\Service\Stock;
 
-use AppBundle\Entity\Stock\ProductInterface;
-
 /**
  * Class Component
  * This class generates a operation pattern for stock control
@@ -22,9 +20,14 @@ use AppBundle\Entity\Stock\ProductInterface;
 class Operation
 {
     /**
-     * @var ProductInterface
+     * @var string
      */
-    private $product;
+    private $family;
+
+    /**
+     * @var int
+     */
+    private $identity;
 
     /**
      * @var int
@@ -38,25 +41,35 @@ class Operation
 
     /**
      * Operation constructor.
-     * @param ProductInterface $product
+     * @param $family
+     * @param $identity
      * @param $amount
      * @param $description
      */
-    function __construct(ProductInterface $product, $amount, $description)
+    function __construct($family, $identity, $amount, $description)
     {
         if(!is_int($amount)) throw new \InvalidArgumentException('Invalid amount value type');
 
-        $this->product = $product;
+        $this->family = $family;
+        $this->identity = $identity;
         $this->amount = $amount;
         $this->description = $description;
     }
 
     /**
-     * @return ProductInterface
+     * @return string
      */
-    public function getProduct()
+    public function getFamily()
     {
-        return $this->product;
+        return $this->family;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIdentity()
+    {
+        return $this->identity;
     }
 
     /**
@@ -76,13 +89,14 @@ class Operation
     }
 
     /**
-     * @param ProductInterface $product
+     * @param $family
+     * @param $identity
      * @param $amount
      * @param $description
      * @return Operation
      */
-    public static function create(ProductInterface $product, $amount, $description)
+    public static function create($family, $identity, $amount, $description)
     {
-        return new self($product, $amount, $description);
+        return new self($family, $identity, $amount, $description);
     }
 }

@@ -88,7 +88,6 @@ class OrderStock
 
     /**
      * @param OrderInterface $order
-     * @return array
      */
     private function mappingTransactions(OrderInterface $order, $mode)
     {
@@ -103,17 +102,14 @@ class OrderStock
             $deliveryInfo
         );
 
-        foreach ($order->getElements() as $element){
+        foreach ($order->getElements() as $element) {
 
-            $component = $this->collector->fromCode($element->getCode());
-
-            if($component) {
-                $this->transactions[] = [
-                    'component' =>  $component,
-                    'amount' => ($element->getQuantity() * $mode),
-                    'description' => $description
-                ];
-            }
+            $this->transactions[] = [
+                'family' => $element->getFamily(),
+                'identity' => $element->getMetadata('id'),
+                'amount' => ($element->getQuantity() * $mode),
+                'description' => $description
+            ];
         }
     }
 }

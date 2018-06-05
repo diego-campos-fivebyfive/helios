@@ -11,7 +11,7 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
  * @ORM\Table(name="app_stock_transaction")
  * @ORM\Entity
  */
-class Transaction implements TransactionInterface
+class Transaction
 {
     use ORMBehaviors\Timestampable\Timestampable;
 
@@ -25,6 +25,22 @@ class Transaction implements TransactionInterface
     private $id;
 
     /**
+     * TODO: Remove nullable definition after normalizations
+     * @var string
+     *
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $family;
+
+    /**
+     * TODO: Remove nullable definition after normalizations
+     * @var int
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $identity;
+
+    /**
      * @var string
      *
      * @ORM\Column(type="string")
@@ -32,19 +48,19 @@ class Transaction implements TransactionInterface
     private $description;
 
     /**
-     * @var string
+     * @var int
      *
      * @ORM\Column(type="integer")
      */
     private $amount;
 
     /**
-     * @var ProductInterface
+     * TODO: Remove this property/methods after normalizations
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Product", inversedBy="transactions")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\Column(type="string", nullable=true)
      */
-    private $product;
+    private $productId;
 
     /**
      * @inheritDoc
@@ -52,6 +68,44 @@ class Transaction implements TransactionInterface
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFamily()
+    {
+        return $this->family;
+    }
+
+    /**
+     * @param string $family
+     * @return Transaction
+     */
+    public function setFamily($family)
+    {
+        $this->family = $family;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIdentity()
+    {
+        return $this->identity;
+    }
+
+    /**
+     * @param int $identity
+     * @return Transaction
+     */
+    public function setIdentity($identity)
+    {
+        $this->identity = $identity;
+
+        return $this;
     }
 
     /**
@@ -92,21 +146,21 @@ class Transaction implements TransactionInterface
 
     /**
      * @inheritDoc
+     * @deprecated
      */
-    public function setProduct(ProductInterface $product)
+    public function setProduct($product)
     {
-        $this->product = $product;
-
-        $product->addTransaction($this);
+        $this->productId = $product;
 
         return $this;
     }
 
     /**
      * @inheritDoc
+     * @deprecated
      */
     public function getProduct()
     {
-        return $this->product;
+        return $this->productId;
     }
 }

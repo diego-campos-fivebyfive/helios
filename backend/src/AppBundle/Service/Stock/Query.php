@@ -32,13 +32,16 @@ class Query
     }
 
     /**
-     * @param ProductInterface $product
-     * @return Query
+     * @param $family
+     * @param $identity
+     * @return $this
      */
-    public function product(ProductInterface $product)
+    public function product($family, $identity)
     {
-        $this->qb->andWhere('p.id = :product');
-        $this->parameters['product'] = $product;
+        $this->qb->andWhere('t.family = :family');
+        $this->qb->andWhere('t.identity = :identity');
+        $this->parameters['family'] = $family;
+        $this->parameters['identity'] = $identity;
 
         return $this;
     }
@@ -91,7 +94,7 @@ class Query
     /**
      * @return Pagination
      */
-    public function pagination($page)
+    public function paginate($page)
     {
         $query = $this->get('query');
         return $this->provider->get('knp_paginator')->paginate($query, $page, 10);
@@ -146,7 +149,6 @@ class Query
 
         $this->qb->select('t')
             ->from(Transaction::class, 't')
-            ->join('t.product', 'p')
             ->orderBy('t.createdAt', 'desc')
         ;
     }
