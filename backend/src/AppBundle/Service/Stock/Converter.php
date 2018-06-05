@@ -21,7 +21,7 @@ use AppBundle\Entity\Stock\ProductInterface;
  *
  * @author Claudinei Machado <claudinei@kolinalabs.com>
  */
-class Converter
+class LegacyConverter
 {
     /**
      * @var Provider

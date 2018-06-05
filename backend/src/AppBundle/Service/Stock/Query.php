@@ -8,7 +8,7 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query as DoctrineQuery;
 use Knp\Component\Pager\Pagination\AbstractPagination as Pagination;
 
-class Query
+class LegacyQuery
 {
     /**
      * @var QueryBuilder
@@ -32,13 +32,16 @@ class Query
     }
 
     /**
-     * @param ProductInterface $product
-     * @return Query
+     * @param $family
+     * @param $identity
+     * @return $this
      */
-    public function product(ProductInterface $product)
+    public function product($family, $identity)
     {
-        $this->qb->andWhere('p.id = :product');
-        $this->parameters['product'] = $product;
+        $this->qb->andWhere('p.family = :family');
+        $this->qb->andWhere('p.identity = :identity');
+        $this->parameters['family'] = $family;
+        $this->parameters['identity'] = $identity;
 
         return $this;
     }
