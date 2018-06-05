@@ -51,6 +51,8 @@ DELIMITER ;
 
 #### Processo de migração (se necessário)
 
+Este processo deve ser executado preferencialmente antes das modificações de código da aplicação (deploy)
+
 - Atualização da estrutura da tabela
 
 ``` 
@@ -77,4 +79,14 @@ UPDATE app_stock_transaction SET identity = REPLACE(product_id, 'AppBundle\\Enti
 UPDATE app_stock_transaction SET identity = REPLACE(product_id, 'AppBundle\\Entity\\Component\\StringBox::', '') WHERE family = 'string_box';
 UPDATE app_stock_transaction SET identity = REPLACE(product_id, 'AppBundle\\Entity\\Component\\Structure::', '') WHERE family = 'structure';
 UPDATE app_stock_transaction SET identity = REPLACE(product_id, 'AppBundle\\Entity\\Component\\Variety::', '') WHERE family = 'variety';
+```
+
+- Remoção de FOREIGN KEY e INDEX
+
+__Obs:__ Antes de rodar os comandos abaixo, verificar os nomes corretos de
+ FK e INDEX na base de dados.
+ 
+``` 
+ALTER TABLE app_stock_transaction DROP FOREIGN KEY FK_CBC0E7A4584665A;
+DROP INDEX IDX_CBC0E7A4584665A ON app_stock_transaction;
 ```
