@@ -7,6 +7,7 @@ use AppBundle\Entity\Kit\CartHasKit;
 use AppBundle\Entity\Kit\Kit;
 use AppBundle\Form\Cart\CheckoutType;
 use AppBundle\Manager\CartManager;
+use AppBundle\Service\Checkout\Getnet;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -31,7 +32,46 @@ class CartController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // TODO: Processar dados do checkout
+
+            /** @var Getnet $getNet */
+            $getNet = new GetNet(GetNet::HOMOLOG);
+
+            $accessToken = $getNet->getAccessToken();
+
+            $keys = [
+                "firstName",
+                "lastName",
+                "documentType",
+                "document",
+                "email",
+                "phone",
+                "postcode",
+                "state",
+                "city",
+                "neighborhood",
+                "street",
+                "number",
+                "complement",
+                "differentDelivery",
+                "shippingName",
+                "shippingEmail",
+                "shippingPhone",
+                "shippingPostcode",
+                "shippingState",
+                "shippingCity",
+                "shippingNeighborhood",
+                "shippingStreet",
+                "shippingNumber",
+                "shippingComplement",
+            ];
+
+            $data = [];
+
+            foreach ($keys as $key) {
+                $data[$key] = $form->get($key)->getData();
+            }
+
+            print_r($data);die;
         }
 
         return $this->render('cart.checkout', [

@@ -34,8 +34,8 @@ class CheckoutType extends AbstractType
                 'mapped' => false,
                 'required' => true,
                 'choices' => [
-                    0 => 'CNPJ',
-                    1 => 'CPF'
+                    'CNPJ' => 'CNPJ',
+                    'CPF' => 'CPF'
                 ]
             ])
             ->add('document', TextType::class, $required)
@@ -44,10 +44,10 @@ class CheckoutType extends AbstractType
             ->add('postcode', TextType::class, $required)
             ->add('state', TextType::class, $required)
             ->add('city', TextType::class, $required)
-            ->add('neighborhood', TextType::class, $required)
+            ->add('neighborhood', TextType::class, $notRequired)
             ->add('street', TextType::class, $required)
             ->add('number', TextType::class, $required)
-            ->add('complement', TextType::class, $required)
+            ->add('complement', TextType::class, $notRequired)
             ->add('differentDelivery', CheckboxType::class, $notRequired);
 
         $builder
