@@ -114,4 +114,12 @@ class CartPool
     {
         return $this->callbacks;
     }
+
+    /**
+     * @param array $callback
+     */
+    public function addCallback(array $callback)
+    {
+        $this->callbacks[] = $callback;
+    }
 }
