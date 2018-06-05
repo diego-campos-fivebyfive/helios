@@ -7,6 +7,7 @@ use AppBundle\Entity\Kit\CartHasKit;
 use AppBundle\Entity\Kit\Kit;
 use AppBundle\Form\Cart\CheckoutType;
 use AppBundle\Manager\CartManager;
+use AppBundle\Service\Cart\CartPoolHelper;
 use AppBundle\Service\Checkout\Getnet;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -65,13 +66,33 @@ class CartController extends AbstractController
                 "shippingComplement",
             ];
 
+            /** @var CartManager $cartManager */
+            $cartManager = $this->manager('cart');
+
+            /** @var Cart $cart */
+            $cart = $cartManager->findOneBy([
+                'account' => $this->account()
+            ]);
+
+            $cartHasKitManager = $this->manager('cart_has_kit');
+
+            $items = $cartHasKitManager->findBy([
+                'cart' => $cart
+            ]);
+
             $data = [];
 
             foreach ($keys as $key) {
                 $data[$key] = $form->get($key)->getData();
             }
 
-            print_r($data);die;
+            /** @var CartPoolHelper $cartPoolHelper */
+            $cartPoolHelper = $this->container->get('cart_pool_helper');
+
+            $checkoutData = $cartPoolHelper->formatCheckout($data);
+            $itemsData = $cartPoolHelper->formatItems($items);
+
+            // TODO: Implementação será finalizada em tarefa posterior
         }
 
         return $this->render('cart.checkout', [

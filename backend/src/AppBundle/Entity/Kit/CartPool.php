@@ -28,11 +28,25 @@ class CartPool
     private $code;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $method;
+
+    /**
      * @var array
      *
      * @ORM\Column(type="json", nullable=true)
      */
-    private $metadata;
+    private $account;
+
+    /**
+     * @var array
+     *
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $items;
 
     /**
      * @var array
@@ -42,12 +56,21 @@ class CartPool
     private $callbacks;
 
     /**
+     * @var array
+     *
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $checkout;
+
+    /**
      * @inheritdoc
      */
     public function __construct()
     {
-        $this->metadata = [];
+        $this->account = [];
+        $this->items = [];
         $this->callbacks = [];
+        $this->checkout = [];
     }
 
     /**
@@ -78,12 +101,20 @@ class CartPool
     }
 
     /**
-     * @param array $metadata
+     * @return string
+     */
+    public function getMethod()
+    {
+        return $this->method;
+    }
+
+    /**
+     * @param string $method
      * @return $this
      */
-    public function setMetadata(array $metadata = [])
+    public function setMethod($method)
     {
-        $this->metadata = $metadata;
+        $this->method = $method;
 
         return $this;
     }
@@ -91,9 +122,58 @@ class CartPool
     /**
      * @return array
      */
-    public function getMetadata()
+    public function getAccount()
     {
-        return $this->metadata;
+        return $this->account;
+    }
+
+    /**
+     * @param array $account
+     * @return $this
+     */
+    public function setAccount($account)
+    {
+        $this->account = $account;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getItems()
+    {
+        return $this->items;
+    }
+
+    /**
+     * @param array $items
+     * @return $this
+     */
+    public function setItems($items)
+    {
+        $this->items = $items;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCheckout()
+    {
+        return $this->checkout;
+    }
+
+    /**
+     * @param array $checkout
+     * @return $this
+     */
+    public function setCheckout($checkout)
+    {
+        $this->checkout = $checkout;
+
+        return $this;
     }
 
     /**

@@ -2,7 +2,10 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Kit\Cart;
 use AppBundle\Entity\Order\Order;
+use AppBundle\Manager\CartManager;
+use AppBundle\Service\Cart\CartPoolHelper;
 use AppBundle\Service\Mailer;
 use AppBundle\Service\Order\OrderExporter;
 use AppBundle\Service\Order\OrderFinder;
@@ -12,7 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * @Route("debug")
- * @Security("has_role('ROLE_PLATFORM_MASTER')")
+ * @Security("has_role('ROLE_OWNER')")
  */
 class DebugController extends AbstractController
 {
@@ -67,6 +70,37 @@ class DebugController extends AbstractController
         $mailerService = $this->container->get('app_mailer');
 
         $mailerService->sendOrderMessage($order);
+
+    }
+
+    /**
+     * @Route("/cart_pool")
+     */
+    public function testCartPoolAction()
+    {
+        /** @var CartManager $cartManager */
+        $cartManager = $this->manager('cart');
+
+        /** @var Cart $cart */
+        $cart = $cartManager->findOneBy([
+            'account' => $this->account()
+        ]);
+
+        $cartHasKitManager = $this->manager('cart_has_kit');
+
+        $items = $cartHasKitManager->findBy([
+            'cart' => $cart
+        ]);
+
+        $code = md5(uniqid());
+        $method = 'credito';
+
+        /** @var CartPoolHelper $cartPoolHelper */
+        $cartPoolHelper = $this->container->get('cart_pool_helper');
+
+        $cartPool = $cartPoolHelper->formatItems($items);
+
+        dump(json_encode($cartPool));die;
 
     }
 }
