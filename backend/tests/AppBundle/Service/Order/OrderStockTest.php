@@ -3,19 +3,68 @@
 namespace Tests\AppBundle\Service\Order;
 
 use AppBundle\Entity\Order\Element;
-use AppBundle\Service\Order\ElementResolver;
-use AppBundle\Service\Order\OrderStock;
-use AppBundle\Service\Stock\Identity;
-use Tests\AppBundle\AppTestCase;
-use Tests\AppBundle\Helpers\ObjectHelperTest;
+use Liip\FunctionalTestBundle\Test\WebTestCase;
 
 /**
  * Class OrderStockTest
  * @group order_stock
  */
-class OrderStockTest extends AppTestCase
+class OrderStockTest extends WebTestCase
 {
-    use ObjectHelperTest;
+    /**
+     * @var array
+     */
+    private $families = [
+        'module' => [
+            'components' => [], // Array of components (dynamic)
+            'stocks' => [],     // Array of stock config (dynamic)
+            'create' => 1,      // Qauntity for create component
+            'stock' => 0,       // Quantiy start stock
+            'amount' => 25      // Quantity add order
+        ],
+        'inverter' => [
+            'components' => [],
+            'stocks' => [],
+            'create' => 2,
+            'stock' => 0,
+            'amount' => 25
+        ],
+        'string_box' => [
+            'components' => [],
+            'stocks' => [],
+            'create' => 2,
+            'stock' => 0,
+            'amount' => 25
+        ],
+        'structure' => [
+            'components' => [],
+            'stocks' => [],
+            'create' => 10,
+            'stock' => 0,
+            'amount' => 25
+        ],
+        'variety' => [
+            'components' => [],
+            'stocks' => [],
+            'create' => 5,
+            'stock' => 0,
+            'amount' => 50
+        ]
+    ];
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->createComponents();
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        $this->removeComponents();
+    }
 
     /**
      * Component transactions via Order instance
@@ -24,32 +73,31 @@ class OrderStockTest extends AppTestCase
     {
         $manager = $this->manager('order');
 
-        // Add a master order
+        // create orders
         $master = $manager->create();
-
-        $master->setDeliveryAt(new \DateTime('5 days'));
-
         $order = $manager->create();
-        $components = $this->createComponents(25);
-        $stocks = [];
 
-        foreach ($components as $key => $component){
+        foreach ($this->families as $family => &$config){
 
-            $element = new Element();
+            foreach ($config['components'] as $component) {
 
-            ElementResolver::resolve($element, $component);
+                $element = new Element();
 
-            // Determine identity
-            $identity = Identity::create($component);
-            if(!array_key_exists($identity, $stocks))
-                $stocks[$identity] = 0;
+                $element
+                    ->setCode($component->getCode())
+                    ->setFamily($family)
+                    ->setMetadata([
+                        'id' => $component->getId()
+                    ]);
 
-            $amount = ($key + 1);
+                if (!array_key_exists($component->getId(), $config['stocks']))
+                    $config['stocks'][$component->getId()] = 0;
 
-            $element->setQuantity($amount);
-            $element->setOrder($order);
+                $element->setQuantity($config['amount']);
+                $element->setOrder($order);
 
-            $stocks[$identity] += $amount;
+                $config['stocks'][$component->getId()] += $config['amount'];
+            }
         }
 
         $master->addChildren($order);
@@ -58,85 +106,107 @@ class OrderStockTest extends AppTestCase
 
         $this->service('order_reference')->generate($master);
 
-        // Test elements is added
-        $this->assertCount(count($components), $order->getElements()->toArray());
-
         $orderStock = $this->service('order_stock');
 
-        // Check stock 0
-        foreach ($components as $key => $component){
-            $this->assertEquals(0, $component->getStock());
-        }
+        // Test default stock
+        $this->testStockValuesIsZero();
 
-        // Process debit
+        // process debit stock
         $orderStock->debit($master);
 
         // Check stock updated
-        foreach ($components as $key => $component){
-            // Determine identity
-            $identity = Identity::create($component);
-            // Check stock
-            $this->assertEquals(($stocks[$identity] * -1), $component->getStock());
+        foreach ($this->families as $family => &$config){
+
+            $refresher = $this->manager($family)->getObjectManager();
+
+            foreach ($config['components'] as $component) {
+                $refresher->refresh($component);
+                $this->assertEquals(($config['stocks'][$component->getId()] * -1), $component->getStock());
+            }
         }
 
-        // Process credit
+        // process credit stock
         $orderStock->credit($master);
 
-        // Check stock return to 0
-        foreach ($components as $key => $component){
-            $this->assertEquals(0, $component->getStock());
-        }
+        // test if stock was debited
+        $this->testStockValuesIsZero();
+    }
 
-        $products = $this->service('stock_converter')->transform($components);
+    /**
+     * Check all components have stock=0
+     */
+    private function testStockValuesIsZero()
+    {
+        // Check stock 0
+        foreach ($this->families as $family => $config){
 
-        foreach ($products as $product){
-            foreach ($product->getTransactions() as $transaction){
-                $this->assertContains($master->getReference(), $transaction->getDescription());
+            $refresher = $this->manager($family)->getObjectManager();
+
+            foreach ($config['components'] as $component) {
+
+                $refresher->refresh($component);
+
+                $this->assertEquals(0, $component->getStock());
             }
         }
     }
 
     /**
-     * @param int $count
-     * @return array
+     * Create default components
      */
-    private function createComponents($count = 10)
+    private function createComponents()
     {
-        $components = [];
+        foreach ($this->families as $family => &$config){
 
-        $families = [
-            'inverter' => true,
-            'module' => false,
-            'stringBox' => false,
-            'structure' => false,
-            'variety' => false
-        ];
+            $manager = $this->manager($family);
 
-        $fixturesNamespace = 'Tests\\AppBundle\\Entity\\DataFixtures\\Component\\%sData';
+            for($i = 0; $i < $config['create']; $i++) {
 
-        foreach ($families as $family => $enabled){
+                $component = $manager->create();
 
-            if($enabled) {
-                $manager = $this->manager($family);
-                $fixtureClass = sprintf($fixturesNamespace, ucfirst($family));
+                $component->setCode(md5(uniqid(time())));
+                $component->setStock($config['stock']);
+                $component->setDescription(sprintf('Test of component %s', $family));
 
-                for ($i = 0; $i < $count; $i++) {
+                $manager->save($component);
 
-                    $component = $manager->create();
-
-                    $data = $fixtureClass::getData();
-
-                    self::fluentSetters($component, $data);
-
-                    $component->setCode(md5(uniqid(time())));
-
-                    $manager->save($component);
-
-                    $components[] = $component;
-                }
+                $config['components'][] = $component;
             }
         }
+    }
 
-        return $components;
+    /**
+     * Remove created components
+     */
+    private function removeComponents()
+    {
+        foreach ($this->families as $family => $config){
+
+            $manager = $this->manager($family);
+
+            foreach ($config['components'] as $component) {
+                $manager->delete($component);
+            }
+
+            $manager->flush();
+        }
+    }
+
+    /**
+     * @param $family
+     * @return object|\AppBundle\Manager\AbstractManager
+     */
+    private function manager($family)
+    {
+        return $this->service(sprintf('%s_manager', $family));
+    }
+
+    /**
+     * @param $id
+     * @return object
+     */
+    private function service($id)
+    {
+        return $this->getContainer()->get($id);
     }
 }
