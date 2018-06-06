@@ -27,7 +27,10 @@
 
         const response = this.axios.post(uri, data)
           .then(() => 'Cupom cadastrado com sucesso')
-          .catch(() => Promise.reject('Não foi possível cadastrar cupom'))
+          .catch(() => {
+            const errorMessage = 'Não foi possível cadastrar cupom'
+            return Promise.reject(new Error(errorMessage))
+          })
 
         this.$emit('done', response)
       }
