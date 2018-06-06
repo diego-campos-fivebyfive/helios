@@ -1441,13 +1441,17 @@ class Order implements OrderInterface
      */
     public function getSubTotal()
     {
-        $total = 0;
-        $sources = $this->isMaster() ? $this->childrens : $this->elements;
-        foreach ($sources as $element){
-            $total += $element instanceof Element ? $element->getTotal() : $element->getSubTotal();
+        if (!$this->source === self::SOURCE_KIT) {
+            $total = 0;
+            $sources = $this->isMaster() ? $this->childrens : $this->elements;
+            foreach ($sources as $element) {
+                $total += $element instanceof Element ? $element->getTotal() : $element->getSubTotal();
+            }
+
+            return $total;
         }
 
-        return $total;
+        return $this->total;
     }
 
     /**

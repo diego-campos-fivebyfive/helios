@@ -9,6 +9,7 @@ use AppBundle\Service\Cart\CartPoolHelper;
 use AppBundle\Service\Mailer;
 use AppBundle\Service\Order\OrderExporter;
 use AppBundle\Service\Order\OrderFinder;
+use AppBundle\Service\Order\OrderTransformer;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -70,37 +71,6 @@ class DebugController extends AbstractController
         $mailerService = $this->container->get('app_mailer');
 
         $mailerService->sendOrderMessage($order);
-
-    }
-
-    /**
-     * @Route("/cart_pool")
-     */
-    public function testCartPoolAction()
-    {
-        /** @var CartManager $cartManager */
-        $cartManager = $this->manager('cart');
-
-        /** @var Cart $cart */
-        $cart = $cartManager->findOneBy([
-            'account' => $this->account()
-        ]);
-
-        $cartHasKitManager = $this->manager('cart_has_kit');
-
-        $items = $cartHasKitManager->findBy([
-            'cart' => $cart
-        ]);
-
-        $code = md5(uniqid());
-        $method = 'credito';
-
-        /** @var CartPoolHelper $cartPoolHelper */
-        $cartPoolHelper = $this->container->get('cart_pool_helper');
-
-        $cartPool = $cartPoolHelper->formatItems($items);
-
-        dump(json_encode($cartPool));die;
 
     }
 }

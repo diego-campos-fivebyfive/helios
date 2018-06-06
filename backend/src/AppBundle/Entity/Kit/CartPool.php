@@ -2,6 +2,8 @@
 
 namespace AppBundle\Entity\Kit;
 
+use AppBundle\Entity\AccountInterface;
+use AppBundle\Entity\Customer;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -35,9 +37,8 @@ class CartPool
     private $method;
 
     /**
-     * @var array
-     *
-     * @ORM\Column(type="json", nullable=true)
+     * @var Customer
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Customer")
      */
     private $account;
 
@@ -109,7 +110,7 @@ class CartPool
     }
 
     /**
-     * @param string $method
+     * @param $method
      * @return $this
      */
     public function setMethod($method)
@@ -120,7 +121,7 @@ class CartPool
     }
 
     /**
-     * @return array
+     * @return Customer|array
      */
     public function getAccount()
     {
@@ -128,10 +129,10 @@ class CartPool
     }
 
     /**
-     * @param array $account
+     * @param $account
      * @return $this
      */
-    public function setAccount($account)
+    public function setAccount(AccountInterface $account)
     {
         $this->account = $account;
 
