@@ -33,19 +33,19 @@ class CartPoolHelper
      */
     public function create($code, $method, AccountInterface $account, array $items, array $checkout)
     {
-        /** @var CartPoolManager $cartPoolManager */
-        $cartPoolManager = $this->container->get('cart_pool_manager');
-
-        /** @var CartPool $cartPool */
-        $cartPool = $cartPoolManager->create();
-
-        $cartPool->setCode($code);
-        $cartPool->setMethod($method);
-        $cartPool->setAccount($this->formatAccount($account));
-        $cartPool->setItems($items);
-        $cartPool->setCheckout($checkout);
-
         if ($items) {
+            /** @var CartPoolManager $cartPoolManager */
+            $cartPoolManager = $this->container->get('cart_pool_manager');
+
+            /** @var CartPool $cartPool */
+            $cartPool = $cartPoolManager->create();
+
+            $cartPool->setCode($code);
+            $cartPool->setMethod($method);
+            $cartPool->setAccount($this->formatAccount($account));
+            $cartPool->setItems($items);
+            $cartPool->setCheckout($checkout);
+
             $cartPoolManager->save($cartPool);
 
             return $cartPool;
