@@ -42,7 +42,7 @@ class CartPoolHelper
 
             $cartPool->setCode($code);
             $cartPool->setMethod($method);
-            $cartPool->setAccount($this->formatAccount($account));
+            $cartPool->setAccount($account);
             $cartPool->setItems($items);
             $cartPool->setCheckout($checkout);
 
