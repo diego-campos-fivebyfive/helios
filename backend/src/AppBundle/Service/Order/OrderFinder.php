@@ -188,10 +188,11 @@ class OrderFinder
         }
 
         $exprAgent = null;
-        if ($agent->isPlatformCommercial())
+        if ($agent->isPlatformCommercial()) {
             $exprAgent = $qb->expr()->eq('o.agent', ':agent');
-        else
+        } else {
             unset($this->parameters['agent']);
+        }
 
         $qb
             ->andWhere(
@@ -228,7 +229,7 @@ class OrderFinder
             ->andWhere('o.account = :account')
             ->andWhere(
                 $qb->expr()->orX(
-                    $qb->expr()->eq('o.source', Order::SOURCE_ACCOUNT),
+                    $qb->expr()->in('o.source', [Order::SOURCE_ACCOUNT, Order::SOURCE_KIT]),
                     $qb->expr()->andX(
                         $qb->expr()->eq('o.source', Order::SOURCE_PLATFORM),
                         $qb->expr()->notIn('o.status', [Order::STATUS_BUILDING])
