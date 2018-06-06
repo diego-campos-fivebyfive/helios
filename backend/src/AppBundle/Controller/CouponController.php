@@ -154,6 +154,28 @@ class CouponController extends AbstractController
         $amount = (float) str_replace(',', '.', $amount);
         $accountId = $request->request->get('account');
 
+        $validator = Validation::createValidator();
+
+        $constraint = new Assert\Collection([
+            'name' => new Assert\NotBlank([
+                'message' => 'O campo nome deve estar preenchido'
+            ]),
+            'amount' => new Assert\NotBlank([
+                'message' => 'O campo valor deve estar preenchido'
+            ])
+        ]);
+
+        $violations = $validator->validate(['name' => $name, 'amount'=> $amount], $constraint);
+
+        $errors = [];
+        foreach ($violations as $violation) {
+            $errors[str_replace(['[',']'],'', $violation->getPropertyPath())] = $violation->getMessage();
+        }
+
+        if ($violations->count()) {
+            return $this->json($errors, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
         $account = null;
 
         if ($accountId) {
