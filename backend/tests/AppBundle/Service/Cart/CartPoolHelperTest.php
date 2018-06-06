@@ -1,106 +1,230 @@
 <?php
 
-namespace Tests\AppBundle\Entity;
+namespace Tests\AppBundle\Service\Cart;
 
+use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\Kit\CartPool;
+use AppBundle\Manager\AccountManager;
+use AppBundle\Manager\CartHasKitManager;
 use AppBundle\Manager\CartManager;
-use AppBundle\Manager\CartPoolManager;
-use AppBundle\Manager\CustomerManager;
-use AppBundle\Entity\Customer;
 use AppBundle\Entity\Kit\Cart;
+use AppBundle\Service\Cart\CartPoolHelper;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 
 /**
- * Class CartPoolManagerTest
- * @group cart_pool_manager
+ * Class CartPoolHelperTest
+ * @group cart_pool_helper
  */
-class CartPoolManagerTest extends WebTestCase
+class CartPoolHelperTest extends WebTestCase
 {
-    public function testSave()
+    public function testCreate()
     {
-        /** @var CustomerManager $accountManager */
-        $accountManager = $this->getContainer()->get('customer_manager');
-
-        /** @var Customer $account */
-        $account = $accountManager->findOneBy([
-            'context' => 'account',
-            'id' => 19
-        ]);
-
         /** @var CartManager $cartManager */
         $cartManager = $this->getContainer()->get('cart_manager');
 
         /** @var Cart $cart */
         $cart = $cartManager->findOneBy([
-            'account' => $account->getId()
+            'account' => 2209
         ]);
 
-        // Dados de Mock para teste da entidade CartPool
+        /** @var CartHasKitManager $cartHasKitManager */
+        $cartHasKitManager = $this->getContainer()->get('cart_has_kit_manager');
+
+        // Mock Data
+        $items = $cartHasKitManager->findBy([
+            'cart' => $cart
+        ]);
+        $code = md5(uniqid());
+        $method = 'credito';
+
+        /** @var CartPoolHelper $cartPoolHelper */
+        $cartPoolHelper = $this->getContainer()->get('cart_pool_helper');
+
         $checkout = [
-            'firstName' => 'Nome teste',
-            'lastName' => 'Sobrenome teste',
-            'document' => '02298095216',
-            'email' => 'teste1992@gmail.com',
-            'phone' => '42984354582',
-            'postcode' => '85065140',
-            'state' => 'pr'
+            "firstName" => 'Gianluca',
+            "lastName" => 'Bine',
+            "documentType" => 'CPF',
+            "document" => '088.463.559-70',
+            "email" => 'gian_bine@hotmail.com',
+            "phone" => '(42) 3623-8320',
+            "street" => 'Rua Teste',
+            "number" => '123',
+            "complement" => '',
+            "neighborhood" => 'Teste',
+            "city" => 'Teste',
+            "state" => 'PR',
+            "postcode" => '85015-310',
+            "country" => "Brasil",
+            "shippingName" => 'Gianluca Bine',
+            "shippingStreet" => 'Rua Teste',
+            "shippingComplement" => '',
+            "shippingNumber" => 123,
+            "shippingNeighborhood" => 'Teste',
+            "shippingCity" => 'Teste',
+            "shippingState" => 'PR',
+            "shippingPostcode" => '85015-310',
+            "differentDelivery" => true
         ];
 
-        $code = 'JSGH7327783';
-        $metadata = [
-           'cart' => [
-               'id' => $cart->getId(),
-               'account' => $cart->getAccount()
-           ],
-           'checkout' => $checkout
+        /** @var AccountManager $accountManager */
+        $accountManager = $this->getContainer()->get('account_manager');
+
+        /** @var AccountInterface $account */
+        $account = $accountManager->find(2209);
+
+        $formatedItems = $cartPoolHelper->formatItems($items, false);
+
+        $formatedCheckout = $cartPoolHelper->formatCheckout($checkout);
+
+        $cartPool = $cartPoolHelper->create($code, $method, $account, $formatedItems, $formatedCheckout);
+
+        self::assertTrue($cartPool instanceof CartPool);
+
+        /** @var Cart $cart */
+        $cart = $cartManager->findOneBy([
+            'account' => 2215
+        ]);
+
+        /** @var CartHasKitManager $cartHasKitManager */
+        $cartHasKitManager = $this->getContainer()->get('cart_has_kit_manager');
+
+        // Mock Data
+        $items = $cartHasKitManager->findBy([
+            'cart' => $cart
+        ]);
+        $code = md5(uniqid());
+        $method = 'credito';
+
+        /** @var AccountManager $accountManager */
+        $accountManager = $this->getContainer()->get('account_manager');
+
+        /** @var AccountInterface $account */
+        $account = $accountManager->find(2215);
+
+        $formatedItems = $cartPoolHelper->formatItems($items, false);
+
+        $formatedCheckout = $cartPoolHelper->formatCheckout($checkout);
+
+        $cartPool = $cartPoolHelper->create($code, $method, $account, $formatedItems, $formatedCheckout);
+
+        self::assertNull($cartPool);
+    }
+
+    public function testFormatItems()
+    {
+        /** @var CartManager $cartManager */
+        $cartManager = $this->getContainer()->get('cart_manager');
+
+        /** @var Cart $cart */
+        $cart = $cartManager->findOneBy([
+            'account' => 2209
+        ]);
+
+        /** @var CartHasKitManager $cartHasKitManager */
+        $cartHasKitManager = $this->getContainer()->get('cart_has_kit_manager');
+
+        // Mock Data
+        $items = $cartHasKitManager->findBy([
+            'cart' => $cart
+        ]);
+
+        $keys = [
+            'name',
+            'description',
+            'value',
+            'quantity',
+            'sku'
         ];
 
-        $callbacks = [
-            'payment_type' => 'débito',
-            'customer_id' => 15,
-            'order_id' => 12,
-            'payment_id' => 2,
-            'amount' => 15000,
-            'status' => 'PENDING'
+        /** @var CartPoolHelper $cartPoolHelper */
+        $cartPoolHelper = $this->getContainer()->get('cart_pool_helper');
+
+        $formatedItems = $cartPoolHelper->formatItems($items);
+
+        foreach ($formatedItems as $formatedItem) {
+            self::assertEmpty(array_diff(array_keys($formatedItem), $keys));
+        }
+    }
+
+    public function testFormatAccount()
+    {
+        /** @var AccountManager $accountManager */
+        $accountManager = $this->getContainer()->get('account_manager');
+
+        /** @var AccountInterface $account */
+        $account = $accountManager->find(2209);
+
+        $keys = [
+            'id',
+            'firstname',
+            'lastname',
+            'document',
+            'extraDocument',
+            'email',
+            'phone',
+            'level'
         ];
 
-        /** @var CartPoolManager $cartPoolManager */
-        $cartPoolManager = $this->getContainer()->get('cart_pool_manager');
+        /** @var CartPoolHelper $cartPoolHelper */
+        $cartPoolHelper = $this->getContainer()->get('cart_pool_helper');
 
-        /** @var CartPool $cartPool */
-        $cartPool = $cartPoolManager->create();
-        $cartPool
-            ->setCode($code)
-            ->setMetadata($metadata)
-            ->setCallbacks($callbacks);
+        $formatedAccount = $cartPoolHelper->formatAccount($account);
 
-        $cartPoolManager->save($cartPool);
+        self::assertEmpty(array_diff(array_keys($formatedAccount), $keys));
+    }
 
-        self::assertEquals($cartPool->getCode(), 'JSGH7327783');
-        self::assertNotNull($cartPool->getCode());
-        self::assertInstanceOf(CartPool::class, $cartPool);
-
-        // Teste de atualização do cartPool criado anteriormente
-        $code2 = 'JSGH7324585';
-        $callbacks2 = [
-            'payment_type' => 'débito',
-            'customer_id' => 15,
-            'order_id' => 25,
-            'payment_id' => 2,
-            'amount' => 35000,
-            'status' => 'PENDING'
+    public function testFormatCheckout()
+    {
+        $checkout = [
+            "firstName" => 'Gianluca',
+            "lastName" => 'Bine',
+            "documentType" => 'CPF',
+            "document" => '088.463.559-70',
+            "email" => 'gian_bine@hotmail.com',
+            "phone" => '(42) 3623-8320',
+            "street" => 'Rua Teste',
+            "number" => '123',
+            "complement" => '',
+            "neighborhood" => 'Teste',
+            "city" => 'Teste',
+            "state" => 'PR',
+            "postcode" => '85015-310',
+            "country" => "Brasil",
+            "shippingName" => 'Gianluca Bine',
+            "shippingStreet" => 'Rua Teste',
+            "shippingComplement" => '',
+            "shippingNumber" => 123,
+            "shippingNeighborhood" => 'Teste',
+            "shippingCity" => 'Teste',
+            "shippingState" => 'PR',
+            "shippingPostcode" => '85015-310',
+            "differentDelivery" => true
         ];
 
-        $cartPool->setCode($code2);
-        $cartPool->setCallbacks($callbacks2);
+        $keys = [
+            "firstName",
+            "lastName",
+            "documentType",
+            "documentNumber",
+            "email",
+            "phone",
+            "street",
+            "number",
+            "complement",
+            "neighborhood",
+            "city",
+            "state",
+            "zipcode",
+            "country",
+            "shipping",
+            "differentDelivery"
+        ];
 
-        $cartPoolManager->save($cartPool);
+        /** @var CartPoolHelper $cartPoolHelper */
+        $cartPoolHelper = $this->getContainer()->get('cart_pool_helper');
 
-        self::assertEquals($cartPool->getCode(), 'JSGH7324585');
+        $formatedCheckout = $cartPoolHelper->formatCheckout($checkout);
 
-        // Teste de exclusão do cartPool de id = 1
-        $cartPool3 = $cartPoolManager->find(1);
-
-        $cartPoolManager->delete($cartPool3);
+        self::assertEmpty(array_diff(array_keys($formatedCheckout), $keys));
     }
 }
