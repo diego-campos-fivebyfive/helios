@@ -36,17 +36,16 @@
       payload: {}
     }),
     methods: {
-      notify(message, type) {
-        this.$refs.notification.notify(message, type)
-      },
       done(response) {
+        const { notify } = this.$refs.notification
+
         response
           .then(message => {
             this.$emit('updateList')
-            this.notify(message, 'primary-common')
+            notify(message, 'primary-common')
           })
           .catch(message => {
-            this.notify(message, 'danger-common')
+            notify(message, 'danger-common')
           })
       },
       validate(field) {
@@ -55,7 +54,8 @@
         this.$set(field, 'rejected', rejected)
 
         if (rejected) {
-          this.notify(exception, 'danger-common')
+          const { notify } = this.$refs.notification
+          notify(exception, 'danger-common')
         }
       },
       disableFields({ state, manager }) {
