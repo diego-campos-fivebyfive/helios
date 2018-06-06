@@ -47,6 +47,7 @@ interface OrderInterface
 
     const SOURCE_ACCOUNT = 0;
     const SOURCE_PLATFORM = 1;
+    const SOURCE_KIT = 2;
 
     const DISCOUNT_FIXED = 0;
     const DISCOUNT_PERCENT = 1;
