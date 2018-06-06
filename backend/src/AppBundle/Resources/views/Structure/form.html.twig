@@ -48,6 +48,10 @@
                                             {{ form_label(form.generatorLevels, 'Disponível no gerador') }}
                                             {{ form_widget(form.generatorLevels, {attr:{class:'form-control'}}) }}
                                         </div>
+                                        <div class="form-group col-md-6">
+                                            {{ form_label(form.alternative, 'Estrutura alternativa') }}
+                                            {{ form_widget(form.alternative,{attr:{class:'form-control'}}) }}
+                                        </div>
                                     </div>
                                 </div>
 
@@ -112,12 +116,6 @@
                                                 {{ form_label(form.maxPowerSelection, 'Potência máxima para seleção') }}
                                                 {{ form_widget(form.maxPowerSelection,{attr:{class:'form-control'}}) }}
                                             </div>
-
-                                            <div class="form-group col-md-4">
-                                                {{ form_label(form.alternative, 'Estrutura alternativa') }}
-                                                {{ form_widget(form.alternative,{attr:{class:'form-control'}}) }}
-                                            </div>
-
 
                                             <div class="col-md-12">
                                                 <div class="form-group col-md-6">
