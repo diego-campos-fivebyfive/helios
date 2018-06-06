@@ -27,7 +27,10 @@
 
         const response = this.axios.put(uri, data)
           .then(() => 'Cupom editado com sucesso')
-          .catch(() => Promise.reject('Não foi possível editar cupom'))
+          .catch(() => {
+            const errorMessage = 'Não foi possível editar cupom'
+            return Promise.reject(new Error(errorMessage))
+          })
 
         this.$emit('done', response)
       }
