@@ -48,6 +48,10 @@
                                             {{ form_widget(form.required)}}
                                             {{ form_label(form.required, 'Vincular esta variedade com qualquer sistema gerado.', {label_attr:{class:'check-label'}}) }}
                                         </div>
+                                        <div class="form-group col-md-6">
+                                            {{ form_label(form.alternative, 'Variedade alternativa') }}
+                                            {{ form_widget(form.alternative,{attr:{class:'form-control'}}) }}
+                                        </div>
                                     </div>
                                 </div>
 
@@ -81,12 +85,7 @@
                                                 {{ form_widget(form.maxPowerSelection,{attr:{class:'form-control'}}) }}
                                             </div>
 
-                                            <div class="form-group col-md-4">
-                                                {{ form_label(form.alternative, 'Variedade alternativa') }}
-                                                {{ form_widget(form.alternative,{attr:{class:'form-control'}}) }}
-                                            </div>
-
-                                            <div class="form-group col-md-2">
+                                            <div class="form-group col-md-3">
                                                 {{ form_label(form.position, 'Posição') }}
                                                 {{ form_widget(form.position, {attr:{class:'form-control'}}) }}
                                             </div>
