@@ -4,6 +4,8 @@ namespace AppBundle\Service\Cart;
 
 use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\Kit\CartHasKit;
+use AppBundle\Entity\Kit\CartPool;
+use AppBundle\Manager\CartPoolManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class CartPoolHelper
@@ -22,10 +24,41 @@ class CartPoolHelper
     }
 
     /**
+     * @param $code
+     * @param $method
+     * @param AccountInterface $account
+     * @param array $items
+     * @param array $checkout
+     * @return CartPool
+     */
+    public function create($code, $method, AccountInterface $account, array $items, array $checkout)
+    {
+        /** @var CartPoolManager $cartPoolManager */
+        $cartPoolManager = $this->container->get('cart_pool_manager');
+
+        /** @var CartPool $cartPool */
+        $cartPool = $cartPoolManager->create();
+
+        $cartPool->setCode($code);
+        $cartPool->setMethod($method);
+        $cartPool->setAccount($this->formatAccount($account));
+        $cartPool->setItems($items);
+        $cartPool->setCheckout($checkout);
+
+        if ($items) {
+            $cartPoolManager->save($cartPool);
+
+            return $cartPool;
+        }
+
+        return null;
+    }
+
+    /**
      * @param AccountInterface $account
      * @return array
      */
-    private function formatAccount(AccountInterface $account)
+    public function formatAccount(AccountInterface $account)
     {
         return [
             'id' => $account->getId(),
