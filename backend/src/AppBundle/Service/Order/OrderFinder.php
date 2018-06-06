@@ -198,7 +198,7 @@ class OrderFinder
             ->andWhere(
                 $qb->expr()->orX(
                     $qb->expr()->andX(
-                        $qb->expr()->eq('o.source', Order::SOURCE_ACCOUNT),
+                        $qb->expr()->in('o.source', [Order::SOURCE_ACCOUNT, Order::SOURCE_KIT]),
                         $qb->expr()->notIn('o.status', [Order::STATUS_BUILDING]),
                         $exprAgent
                     ),
