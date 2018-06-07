@@ -4,8 +4,10 @@ namespace AdminBundle\Controller;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Component\ComponentInterface;
+use AppBundle\Entity\Kit\CartHasKit;
 use AppBundle\Entity\Kit\Kit;
 use AppBundle\Form\Kit\KitType;
+use AppBundle\Manager\CartHasKitManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -150,6 +152,20 @@ class KitsController extends AbstractController
      */
     public function deleteAction(Kit $kit)
     {
+        /** @var CartHasKitManager $cartHasKitManager */
+        $cartHasKitManager = $this->container->get('cart_has_kit_manager');
+
+        $cartKits =$cartHasKitManager->findBy([
+            'kit' => $kit
+        ]);
+
+        /** @var CartHasKit $cart */
+        foreach ($cartKits as $cartKit) {
+            $cartHasKitManager->delete($cartKit, false);
+        }
+
+        $cartHasKitManager->flush();
+
         try {
             $this->manager('kit')->delete($kit);
             $message = 'Kit excluído com sucesso';
