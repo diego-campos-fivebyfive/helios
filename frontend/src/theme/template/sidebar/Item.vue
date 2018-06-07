@@ -1,5 +1,7 @@
 <template lang="pug">
-  a.item(:href='item.link', :class='{ "sub-item": subItem }')
+  a.item(
+    :href='item.link',
+    :class='{ "sub-item": subItem, "item-active": item.active }')
     Icon.icon-ui(:name='item.icon')
     | {{ item.name }}
     Icon.icon-arrow(name='angle-right')
@@ -26,6 +28,12 @@
     &:hover {
       color: $ui-white-regular;
     }
+  }
+
+  .item-active {
+    background-color: $ui-gray-dark;
+    border-left: $ui-space-x/6.25 solid $ui-blue-light;
+    color: $ui-white-regular;
   }
 
   .icon-ui {
