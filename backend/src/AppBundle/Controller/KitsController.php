@@ -18,6 +18,7 @@ class KitsController extends AbstractController
 {
     /**
      * @Route("/", name="index_kit")
+     * @Security("has_role('ROLE_OWNER')")
      * @Method("get")
      */
     public function indexAction(Request $request)
