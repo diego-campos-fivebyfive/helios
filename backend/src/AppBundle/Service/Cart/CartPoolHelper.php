@@ -109,8 +109,8 @@ class CartPoolHelper
             [
                 "first_name" => $checkout['firstName'],
                 "name" => $checkout['shippingName'],
-                "email" => $checkout['email'],
-                "phone_number" => $checkout['phone'],
+                "email" => $checkout['shippingEmail'],
+                "phone_number" => $checkout['shippingPhone'],
                 "shipping_amount" => 10,
                 "address" => [
                     "street" => $checkout['shippingStreet'],

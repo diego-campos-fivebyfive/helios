@@ -1,7 +1,7 @@
 <template lang="pug">
   a.item(
     :href='item.link',
-    :class='{ "sub-item": subItem, "item-active": item.active }')
+    :class='{ "item-dropdown": itemDropdown, "item-active": item.active }')
     Icon.icon-ui(:name='item.icon')
     | {{ item.name }}
     Icon.icon-arrow(name='angle-right')
@@ -9,7 +9,10 @@
 
 <script>
   export default {
-    props: ['item', 'subItem']
+    props: [
+      'item',
+      'itemDropdown'
+    ]
   }
 </script>
 
@@ -21,7 +24,7 @@
     transition: all 300ms;
     width: 100%;
 
-    &.sub-item {
+    &.item-dropdown {
       padding: $ui-space-y/2 $ui-space-x/1.5 $ui-space-y/2 $ui-space-x*2;
     }
 

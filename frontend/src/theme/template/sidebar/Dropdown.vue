@@ -1,28 +1,30 @@
 <template lang="pug">
-  div
-    button.item(type='button', v-on:click='itemPress')
-      Icon.icon-ui(:name='item.icon')
-      | {{ item.name }}
+  div(:class='{ "dropdown-active": open }')
+    button.toogle(type='button', v-on:click='toogle')
+      Icon.icon-ui(:name='dropdown.icon')
+      | {{ dropdown.name }}
       Icon.icon-arrow(v-show='open', name='angle-down')
       Icon.icon-arrow(v-show='!open', name='angle-left')
     ul(v-show='open')
-      li(v-for='subItem in item.subItems')
-        Item(:item='subItem', :subItem='true')
+      li(v-for='item in dropdown.subItems')
+        Item(:item='item', :itemDropdown='true')
 </template>
 
 <script>
   import Item from './Item'
 
   export default {
-    props: ['item'],
-    data: () => ({
-      open: false
-    }),
     components: {
       Item
     },
+    props: [
+      'dropdown'
+    ],
+    data: () => ({
+      open: false
+    }),
     methods: {
-      itemPress() {
+      toogle() {
         this.open = !this.open
       }
     }
@@ -30,7 +32,13 @@
 </script>
 
 <style lang="scss" scoped>
-  .item {
+  .dropdown-active {
+    background-color: $ui-gray-dark;
+    border-left: $ui-space-x/6.25 solid $ui-blue-light;
+    color: $ui-white-regular;
+  }
+
+  .toogle {
     color: inherit;
     font-weight: inherit;
     padding: $ui-space-y $ui-space-x/1.5 $ui-space-y $ui-space-x;
