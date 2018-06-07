@@ -233,16 +233,17 @@
                     method: 'post',
                     data: { quantity: kit_quantity.val() },
                     complete: function(xhr){
+                        var message = xhr.responseJSON.message;
+
                         if(200 === xhr.status){
                             $('#modal_add_to_cart').modal('hide');
-                            toastr.success('Kit adicionado ao carrinho com sucesso', '{{ 'Success'|trans }}', {
+                            toastr.success(message, '{{ 'Success'|trans }}', {
                                 positionClass: 'toast-top-center',
                                 progressBar: true
                             });
                         }else{
-                            var response = xhr.responseJSON;
                             $('#modal_add_to_cart').modal('hide');
-                            toastr.error(response.message, '{{ 'Error'|trans }}', {
+                            toastr.error(message, '{{ 'Error'|trans }}', {
                                 positionClass: 'toast-top-center',
                                 progressBar: true
                             });

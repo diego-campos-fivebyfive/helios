@@ -92,14 +92,16 @@ class CartController extends AbstractController
 
         /** @var CartHasKit $cartHasKit */
         foreach ($cartHasKits as $cartHasKit) {
-            $kitTotal = $cartHasKit->getKit()->getPrice() * $cartHasKit->getQuantity();
-            $cartTotal += $kitTotal;
+            if ($cartHasKit->getKit()->isAvailable()) {
+                $kitTotal = $cartHasKit->getKit()->getPrice() * $cartHasKit->getQuantity();
+                $cartTotal += $kitTotal;
 
-            $kits[] = [
-                'kit' => $cartHasKit->getKit(),
-                'quantity' => $cartHasKit->getQuantity(),
-                'total' => $kitTotal
-            ];
+                $kits[] = [
+                    'kit' => $cartHasKit->getKit(),
+                    'quantity' => $cartHasKit->getQuantity(),
+                    'total' => $kitTotal
+                ];
+            }
         }
 
         return $this->render('cart.items', [
@@ -166,9 +168,20 @@ class CartController extends AbstractController
         $status = Response::HTTP_OK;
         $message = 'Kit adicionado com sucesso';
 
+        $quantity = $request->get('quantity');
+
         if ($cartHasKit) {
-            $status = Response::HTTP_UNPROCESSABLE_ENTITY;
-            $message = 'Este kit já foi adicionado ao carrinho';
+            $totalQuantity = $quantity + $cartHasKit->getQuantity();
+
+            if ($totalQuantity > $cartHasKit->getKit()->getStock()) {
+                $status = Response::HTTP_UNPROCESSABLE_ENTITY;
+                $message = 'Quantidade indisponível';
+            } else {
+                $cartHasKit->setQuantity($totalQuantity);
+                $cartHasKitManager->save($cartHasKit);
+                
+                $message = 'Quantidade do kit atualizada no carrinho';
+            }
 
             return $this->json([
                 'message' => $message
@@ -177,8 +190,6 @@ class CartController extends AbstractController
 
         $cartHasKit = $cartHasKitManager->create();
 
-        $quantity = $request->get('quantity');
-
         $cartHasKit->setKit($kit);
         $cartHasKit->setCart($cart);
         $cartHasKit->setQuantity($quantity);
@@ -186,7 +197,9 @@ class CartController extends AbstractController
         if ($cartHasKit->getKit() && $cartHasKit->getQuantity()) {
             $cartHasKitManager->save($cartHasKit);
 
-            return $this->json([], Response::HTTP_OK);
+            return $this->json([
+                'message' => $message
+            ], Response::HTTP_OK);
         }
 
         if (!$cartHasKit->getKit() || !$cartHasKit->getQuantity()) {
@@ -359,14 +372,16 @@ class CartController extends AbstractController
 
         /** @var CartHasKit $cartHasKit */
         foreach ($cartHasKits as $cartHasKit) {
-            $kitTotal = $cartHasKit->getKit()->getPrice() * $cartHasKit->getQuantity();
-            $cartTotal += $kitTotal;
+            if ($cartHasKit->getKit()->isAvailable()) {
+                $kitTotal = $cartHasKit->getKit()->getPrice() * $cartHasKit->getQuantity();
+                $cartTotal += $kitTotal;
 
-            $kits[] = [
-                'kit' => $cartHasKit->getKit(),
-                'quantity' => $cartHasKit->getQuantity(),
-                'total' => $kitTotal
-            ];
+                $kits[] = [
+                    'kit' => $cartHasKit->getKit(),
+                    'quantity' => $cartHasKit->getQuantity(),
+                    'total' => $kitTotal
+                ];
+            }
         }
 
         $data['kits'] = $kits;
