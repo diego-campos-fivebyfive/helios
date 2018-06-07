@@ -12,9 +12,13 @@
           label='Nova Conta',
           pos='first')
         Button(type='primary-strong', icon='random', pos='last')
+      Content(
+        slot='section',
+        :accounts='account')
 </template>
 
 <script>
+  import Content from './list'
   /* Mocked Data */
   const page = {
     title: 'Contas'
@@ -28,6 +32,9 @@
   /* End Mocked Data */
 
   export default {
+    components: {
+      Content
+    },
     data: () => ({
       page: '',
       account: {
