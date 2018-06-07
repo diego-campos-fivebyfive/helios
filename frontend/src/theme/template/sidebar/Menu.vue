@@ -18,8 +18,16 @@
       menu: []
     }),
     mounted() {
-      this.axios.get('api/v1/application/menu').then(response => {
-        this.menu = response.data
+      this.axios.get('api/v1/application/menu').then(({ data }) => {
+        const currentRoute = this.$router.history.current.path
+
+        this.menu = Object.entries(data)
+          .map(([name, item]) => (
+            Object.assign(item, {
+              active: currentRoute === item.link,
+              name
+            })
+          ))
       })
     }
   }
