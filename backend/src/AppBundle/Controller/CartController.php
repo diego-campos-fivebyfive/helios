@@ -250,6 +250,25 @@ class CartController extends AbstractController
     }
 
     /**
+     * @Security("has_role('ROLE_OWNER')")
+     *
+     * @Route("/empty_cart", name="empty_cart")
+     * @Method("delete")
+     */
+    public function emptyCart()
+    {
+        /** @var Cart $cart */
+        $cart = $this->getCart();
+
+        /** @var CartPoolHelper $cartPoolHelper */
+        $cartPoolHelper = $this->container->get('cart_pool_helper');
+
+        $cartPoolHelper->emptyCart($cart);
+
+        return $this->json([]);
+    }
+
+    /**
      * @return null|Cart
      */
     private function getCart()
