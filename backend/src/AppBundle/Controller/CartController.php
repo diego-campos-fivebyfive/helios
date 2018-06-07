@@ -10,6 +10,7 @@ use AppBundle\Manager\CartManager;
 use AppBundle\Service\Cart\CartPoolHelper;
 use AppBundle\Service\Checkout\Getnet;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -34,65 +35,21 @@ class CartController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            /** @var Getnet $getNet */
-            $getNet = new GetNet(GetNet::HOMOLOG);
+            $data = $this->getInfo($form);
 
-            $accessToken = $getNet->getAccessToken();
-
-            $keys = [
-                "firstName",
-                "lastName",
-                "documentType",
-                "document",
-                "email",
-                "phone",
-                "postcode",
-                "state",
-                "city",
-                "neighborhood",
-                "street",
-                "number",
-                "complement",
-                "differentDelivery",
-                "shippingName",
-                "shippingEmail",
-                "shippingPhone",
-                "shippingPostcode",
-                "shippingState",
-                "shippingCity",
-                "shippingNeighborhood",
-                "shippingStreet",
-                "shippingNumber",
-                "shippingComplement",
+            $numbers = [
+                "phone" => $form->get('phone')->getData(),
+                "document" => $form->get('document')->getData(),
             ];
 
-            /** @var CartManager $cartManager */
-            $cartManager = $this->manager('cart');
+            $kits = $data['kits'];
+            unset($data['kits']);
 
-            /** @var Cart $cart */
-            $cart = $cartManager->findOneBy([
-                'account' => $this->account()
+            return $this->render('cart.confirmation', [
+                'data' => $data,
+                'kits' => $kits,
+                'numbers' => $numbers
             ]);
-
-            $cartHasKitManager = $this->manager('cart_has_kit');
-
-            $items = $cartHasKitManager->findBy([
-                'cart' => $cart
-            ]);
-
-            $data = [];
-
-            foreach ($keys as $key) {
-                $data[$key] = $form->get($key)->getData();
-            }
-
-            /** @var CartPoolHelper $cartPoolHelper */
-            $cartPoolHelper = $this->container->get('cart_pool_helper');
-
-            $checkoutData = $cartPoolHelper->formatCheckout($data);
-            $itemsData = $cartPoolHelper->formatItems($items);
-
-            // TODO: Implementação será finalizada em tarefa posterior
         }
 
         return $this->render('cart.checkout', [
@@ -110,9 +67,7 @@ class CartController extends AbstractController
         $cartManager = $this->manager('cart');
 
         /** @var Cart $cart */
-        $cart = $cartManager->findOneBy([
-            'account' => $this->account()
-        ]);
+        $cart = $this->getCart();
 
         if (!$cart) {
             $cart = $cartManager->create();
@@ -161,9 +116,7 @@ class CartController extends AbstractController
         $cartManager = $this->manager('cart');
 
         /** @var Cart $cart */
-        $cart = $cartManager->findOneBy([
-            'account' => $this->account()
-        ]);
+        $cart = $this->getCart();
 
         if (!$cart) {
             $cart = $cartManager->create();
@@ -188,9 +141,7 @@ class CartController extends AbstractController
         $cartManager = $this->manager('cart');
 
         /** @var Cart $cart */
-        $cart = $cartManager->findOneBy([
-            'account' => $this->account()
-        ]);
+        $cart = $this->getCart();
 
         if (!$cart) {
             $cart = $cartManager->create();
@@ -250,13 +201,8 @@ class CartController extends AbstractController
      */
     public function updateKitQuantityAction(Request $request, Kit $kit)
     {
-        /** @var CartManager $cartManager */
-        $cartManager = $this->manager('cart');
-
         /** @var Cart $cart */
-        $cart = $cartManager->findOneBy([
-            'account' => $this->account()
-        ]);
+        $cart = $this->getCart();
 
         $quantity = $request->request->getInt('quantity');
 
@@ -289,13 +235,8 @@ class CartController extends AbstractController
      */
     public function removeKitAction(Kit $kit)
     {
-        /** @var CartManager $cartManager */
-        $cartManager = $this->manager('cart');
-
         /** @var Cart $cart */
-        $cart = $cartManager->findOneBy([
-            'account' => $this->account()
-        ]);
+        $cart = $this->getCart();
 
         $cartHasKitManager = $this->manager('cart_has_kit');
         $cartHasKit = $cartHasKitManager->findOneBy([
@@ -306,5 +247,127 @@ class CartController extends AbstractController
         $cartHasKitManager->delete($cartHasKit);
 
         return $this->json([]);
+    }
+
+    /**
+     * @return null|Cart
+     */
+    private function getCart()
+    {
+        /** @var CartManager $cartManager */
+        $cartManager = $this->manager('cart');
+
+        return $cartManager->findOneBy([
+            'account' => $this->account()
+        ]);
+    }
+
+    /**
+     * @return string
+     */
+    private function getToken()
+    {
+        /** @var Getnet $getNet */
+        $getNet = new GetNet(GetNet::HOMOLOG);
+
+        return "Bearer " . $getNet->getAccessToken();
+    }
+
+    /**
+     * @param Form $form
+     * @return array
+     */
+    private function getInfo(Form $form)
+    {
+        /** @var Cart $cart */
+        $cart = $this->getCart();
+
+        $cartHasKitManager = $this->manager('cart_has_kit');
+
+        $cartHasKits = $cartHasKitManager->findBy([
+            'cart' => $cart
+        ]);
+
+        $dataForm = $this->getData($form);
+
+        /** @var CartPoolHelper $cartPoolHelper */
+        $cartPoolHelper = $this->container->get('cart_pool_helper');
+
+        $data = $cartPoolHelper->formatCheckout($dataForm);
+
+        $items = $cartPoolHelper->formatItems($cartHasKits);
+        $data['items'] = json_encode($items);
+
+        $cartTotal = 0;
+        $kits = [];
+
+        /** @var CartHasKit $cartHasKit */
+        foreach ($cartHasKits as $cartHasKit) {
+            $kitTotal = $cartHasKit->getKit()->getPrice() * $cartHasKit->getQuantity();
+            $cartTotal += $kitTotal;
+
+            $kits[] = [
+                'kit' => $cartHasKit->getKit(),
+                'quantity' => $cartHasKit->getQuantity(),
+                'total' => $kitTotal
+            ];
+        }
+
+        $data['kits'] = $kits;
+
+        $data['amount'] = $cartTotal;
+        $data['token'] = $this->getToken();
+        $data['customerId'] = $this->account()->getId();
+
+        return $data;
+    }
+
+    /**
+     * @param Form $form
+     * @return array
+     */
+    private function getData(Form $form)
+    {
+        $keys = [
+            "firstName",
+            "lastName",
+            "documentType",
+            "email",
+            "postcode",
+            "state",
+            "city",
+            "neighborhood",
+            "street",
+            "number",
+            "complement",
+            "differentDelivery",
+            "shippingName",
+            "shippingEmail",
+            "shippingPostcode",
+            "shippingState",
+            "shippingCity",
+            "shippingNeighborhood",
+            "shippingStreet",
+            "shippingNumber",
+            "shippingComplement",
+        ];
+
+        foreach ($keys as $key) {
+            $dataForm[$key] = $form->get($key)->getData();
+        }
+
+        $formatKeys = [
+            "document",
+            "phone",
+            "shippingPhone"
+        ];
+
+        foreach ($formatKeys as $key) {
+            $data = $form->get($key)->getData();
+
+            $dataForm[$key] = preg_replace("/[ ()-.]/",'', $data);
+        }
+
+        return $dataForm;
     }
 }
