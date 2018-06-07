@@ -259,7 +259,8 @@
 
                                                 {% else %}
 
-                                                    <a class="btn btn-default {{ order.deliveryAddress ? 'validated' }}" data-toggle="modal" data-target="#modal_details"
+                                                    <a class="btn btn-default {{ order.deliveryAddress ? 'validated' }}"
+                                                       data-toggle="modal" {% if order.source != 2 %}data-target="#modal_details"{% endif %}
                                                        data-url="{{ path('order_shipping_info', {id:order.id}) }}"
                                                        data-title="sices">
                                                         <i class="fa fa-truck"></i> <br><small>Frete Sices</small>

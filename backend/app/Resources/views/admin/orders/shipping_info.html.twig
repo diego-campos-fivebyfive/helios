@@ -25,7 +25,7 @@
     </a>
 {% else %}
     <a class="btn btn-default {{ order.deliveryAddress ? 'validated' }}"
-       data-toggle="modal" data-target="#modal_shipping"
+       data-toggle="modal" {% if order.source != 2 %}data-target="#modal_shipping"{% endif %}
        data-shipping="sices"
        data-url="{{ path('order_shipping', {id:order.id}) }}">
         <i class="fa fa-truck"></i><br><small>Frete Sices</small>
@@ -42,17 +42,17 @@
   });
 
   modalShipping.on('show.bs.modal', function (event) {
-    var target = $(event.relatedTarget);
-    var url = target.data('url');
-    $.ajax({
-      url: url,
-      success: function (response) {
-        var title = (shipping == "sices") ? ' Frete Sices' : ' Dados da Transportadora';
-        titleModal.html('<i class="fa fa-truck"> </i>'+ title);
+      var target = $(event.relatedTarget);
+      var url = target.data('url');
+      $.ajax({
+          url: url,
+          success: function (response) {
+              var title = (shipping == "sices") ? ' Frete Sices' : ' Dados da Transportadora';
+              titleModal.html('<i class="fa fa-truck"> </i>'+ title);
 
 
-        modalShipping.find('.modal-body').html(response);
-      }
-    });
+              modalShipping.find('.modal-body').html(response);
+          }
+      });
   });
 </script>
