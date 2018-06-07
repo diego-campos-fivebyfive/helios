@@ -59,7 +59,7 @@ class PaymentController extends AbstractController
             return $this->json();
         }
 
-        return JsonResponse::create([], Response::HTTP_BAD_REQUEST);
+        return $this->json([], Response::HTTP_BAD_REQUEST);
     }
 
     /**
