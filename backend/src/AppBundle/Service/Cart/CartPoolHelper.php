@@ -45,13 +45,14 @@ class CartPoolHelper
      */
     public function formatItems(array $items, $checkout = true)
     {
-        $formatedItems = array_map(function ($item) use($checkout) {
+        $formatedItems = array_map(function (CartHasKit $item) use($checkout) {
             $formatedItem = [
                 'name' => $item->getKit()->getCode(),
                 'description' => $item->getKit()->getDescription(),
                 'value' => round($item->getKit()->getPrice(), 2),
                 'quantity' => $item->getQuantity(),
-                'sku' => $item->getKit()->getId()
+                'sku' => $item->getKit()->getId(),
+                'image' => $item->getKit()->getImage()
             ];
 
             if (!$checkout) {
@@ -72,20 +73,22 @@ class CartPoolHelper
     public function formatCheckout(array $checkout)
     {
         $shipping = [
-            "first_name" => $checkout['firstName'],
-            "name" => $checkout['shippingName'],
-            "email" => $checkout['email'],
-            "phone_number" => $checkout['phone'],
-            "shipping_amount" => 10,
-            "address" => [
-                "street" => $checkout['shippingStreet'],
-                "complement" => $checkout['shippingComplement'],
-                "number" => $checkout['shippingNumber'],
-                "district" => $checkout['shippingNeighborhood'],
-                "city" => $checkout['shippingCity'],
-                "state" => $checkout['shippingState'],
-                "country" => "Brasil",
-                "postal_code" => str_replace("-", "", $checkout['shippingPostcode'])
+            [
+                "first_name" => $checkout['firstName'],
+                "name" => $checkout['shippingName'],
+                "email" => $checkout['email'],
+                "phone_number" => $checkout['phone'],
+                "shipping_amount" => 10,
+                "address" => [
+                    "street" => $checkout['shippingStreet'],
+                    "complement" => $checkout['shippingComplement'],
+                    "number" => $checkout['shippingNumber'],
+                    "district" => $checkout['shippingNeighborhood'],
+                    "city" => $checkout['shippingCity'],
+                    "state" => $checkout['shippingState'],
+                    "country" => "Brasil",
+                    "postal_code" => str_replace("-", "", $checkout['shippingPostcode'])
+                ]
             ]
         ];
 
@@ -104,8 +107,8 @@ class CartPoolHelper
             "state" => $checkout['state'],
             "zipcode" => $checkout['postcode'],
             "country" => "Brasil",
-            "shipping" => json_encode($shipping),
-            "differentDelivery" => $checkout['differentDelivery']
+            "differentDelivery" => $checkout['differentDelivery'],
+            "shipping" => json_encode($shipping)
         ];
     }
 }
