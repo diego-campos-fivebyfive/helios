@@ -22,10 +22,10 @@
         const currentRoute = this.$router.history.current.path
 
         this.menu = Object.entries(data)
-          .map(([keyItemMenu, itemMenu]) => (
+          .map(([itemMenuKey, itemMenu]) => (
             Object.assign(itemMenu, {
               active: currentRoute === itemMenu.link,
-              key: keyItemMenu
+              key: itemMenuKey
             })
           ))
       })
