@@ -37,6 +37,8 @@ class CartController extends AbstractController
 
             $data = $this->getInfo($form);
 
+            $this->updateCheckout($data);
+
             $numbers = [
                 "phone" => $form->get('phone')->getData(),
                 "document" => $form->get('document')->getData(),
@@ -51,6 +53,8 @@ class CartController extends AbstractController
                 'numbers' => $numbers
             ]);
         }
+
+        $this->setDataForm($form);
 
         return $this->render('cart.checkout', [
             'form' => $form->createView()
@@ -247,6 +251,58 @@ class CartController extends AbstractController
         $cartHasKitManager->delete($cartHasKit);
 
         return $this->json([]);
+    }
+
+    /**
+     * @param $data
+     */
+    private function updateCheckout($data)
+    {
+        /** @var Cart $cart */
+        $cart = $this->getCart();
+
+        $manager = $this->manager('cart');
+
+        unset($data['items'], $data['kits'], $data['amount'], $data['token'], $data['customerId']);
+
+        $cart->setCheckout($data);
+
+        $manager->save($cart);
+    }
+
+    private function setDataForm(Form &$form)
+    {
+        /** @var Cart $cart */
+        $cart = $this->getCart();
+
+        if ($checkout = $cart->getCheckout()) {
+            $shipping = json_decode($checkout['shipping'], true)[0];
+
+            $form->get('firstName')->setData($checkout['firstName']);
+            $form->get('lastName')->setData($checkout['lastName']);
+            $form->get('documentType')->setData($checkout['documentType']);
+            $form->get('document')->setData($checkout['documentNumber']);
+            $form->get('email')->setData($checkout['email']);
+            $form->get('phone')->setData($checkout['phone']);
+            $form->get('postcode')->setData($checkout['zipcode']);
+            $form->get('state')->setData($checkout['state']);
+            $form->get('city')->setData($checkout['city']);
+            $form->get('neighborhood')->setData($checkout['neighborhood']);
+            $form->get('street')->setData($checkout['street']);
+            $form->get('number')->setData($checkout['number']);
+            $form->get('complement')->setData($checkout['complement']);
+            $form->get('differentDelivery')->setData($checkout['differentDelivery']);
+            $form->get('shippingName')->setData($shipping['name']);
+            $form->get('shippingEmail')->setData($shipping['email']);
+            $form->get('shippingPhone')->setData($shipping['phone_number']);
+            $form->get('shippingPostcode')->setData($shipping['address']['postal_code']);
+            $form->get('shippingState')->setData($shipping['address']['state']);
+            $form->get('shippingCity')->setData($shipping['address']['city']);
+            $form->get('shippingNeighborhood')->setData($shipping['address']['district']);
+            $form->get('shippingStreet')->setData($shipping['address']['street']);
+            $form->get('shippingNumber')->setData($shipping['address']['number']);
+            $form->get('shippingComplement')->setData($shipping['address']['complement']);
+        }
     }
 
     /**
