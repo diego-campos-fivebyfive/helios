@@ -123,6 +123,9 @@
 
         <div class="row">
             {{ knp_pagination_filter(pagination, {'k.description, k.code':''}) }}
+            <a href="{{ path('cart_show') }}" class="btn btn-default pull-right">
+                <i class="fa fa-shopping-cart"></i> Visualizar carrinho
+            </a>
         </div>
 
         <div class="row" id="real-content">
