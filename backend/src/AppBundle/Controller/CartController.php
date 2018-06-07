@@ -44,6 +44,7 @@ class CartController extends AbstractController
 
             $kits = $data['kits'];
             unset($data['kits']);
+            $data['amount'] = number_format($data['amount'], 2, '.', '');
 
             return $this->render('cart.confirmation', [
                 'data' => $data,
