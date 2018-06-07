@@ -237,14 +237,16 @@
                             $('#modal_add_to_cart').modal('hide');
                             toastr.success('Kit adicionado ao carrinho com sucesso', '{{ 'Success'|trans }}', {
                                 positionClass: 'toast-top-center',
-                                progressBar: true
+                                progressBar: true,
+                                preventDuplicates: true
                             });
                         }else{
                             var response = xhr.responseJSON;
                             $('#modal_add_to_cart').modal('hide');
                             toastr.error(response.message, '{{ 'Error'|trans }}', {
                                 positionClass: 'toast-top-center',
-                                progressBar: true
+                                progressBar: true,
+                                preventDuplicates: true
                             });
                         }
                     }
