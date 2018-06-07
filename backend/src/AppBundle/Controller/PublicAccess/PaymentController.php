@@ -20,6 +20,9 @@ class PaymentController extends AbstractController
     /**
      * @Route("/", name="payment_callback")
      * @Method("get")
+     * @return JsonResponse
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getPaymentAction(Request $request)
     {
@@ -28,55 +31,89 @@ class PaymentController extends AbstractController
         /** @var CartPoolManager $cartPoolManager */
         $cartPoolManager = $this->container->get('cart_pool_manager');
 
-        /** @var OrderTransformer $orderTransformer */
-        $orderTransformer = $this->container->get('order_transformer');
+        $code = $paymentType ? $code = $request->query->get('order_id') : $request->query->get('id');
+
+        /** @var CartPool $pool */
+        $pool = $cartPoolManager->findOneBy([
+            'code' => $code
+        ]);
 
         if (isset($paymentType)) {
-            $code = $request->query->get('order_id');
-
             $callback = $this->formatCallback($request->query->all(), 'card');
-
-            /** @var CartPool $pool */
-            $pool = $cartPoolManager->findOneBy([
-                'code' => $code
-            ]);
-
-            if ($pool && $callback) {
-                $pool->addCallback($callback);
-
-                $cartPoolManager->save($pool);
-
-                if ($callback['status'] === 'APPROVED') {
-                    $orderTransformer->transformFromCartPool($pool);
-                }
-
-                return $this->json();
-            }
-
-            return JsonResponse::create([], Response::HTTP_BAD_REQUEST);
+            $result = $this->processCardCallback($callback, $pool);
         } else {
-            $billetCode = $request->query->get('id');
-
             $callback = $this->formatCallback($request->query->all(), 'billet');
+            $result = $this->processBilletCallback($callback, $pool);
+        }
 
-            // TODO: Usar serviço para buscar no pool pelo id do boleto($billetCode)
-            /** @var CartPool $pool */
-            $pool = null;
+        if ($result['processed']) {
+            $cartPoolManager->save($pool);
 
-            if ($pool && $callback) {
-                $pool->addCallback($callback);
+            if ($result['transform']) {
+                /** @var OrderTransformer $orderTransformer */
+                $orderTransformer = $this->container->get('order_transformer');
 
-                $cartPoolManager->save($pool);
-
-                if ($callback['status'] === 'PAGO') {
-                    $orderTransformer->transformFromCartPool($pool);
-                }
-
-                return $this->json();
+                $orderTransformer->transformFromCartPool($pool);
             }
 
-            return JsonResponse::create([], Response::HTTP_BAD_REQUEST);
+            return $this->json();
         }
+
+        return JsonResponse::create([], Response::HTTP_BAD_REQUEST);
+    }
+
+    /**
+     * @param array $callback
+     * @param CartPool $cartPool
+     * @return array
+     */
+    private function processCardCallback(array $callback, CartPool $cartPool)
+    {
+        if ($callback && $cartPool) {
+            $cartPool->addCallback($callback);
+
+            $transform = false;
+            if ($callback['status'] === 'APPROVED') {
+                $transform = true;
+            }
+
+            return [
+                'processed' => true,
+                'transform' => $transform
+            ];
+        }
+
+        return [
+            'processed' => false,
+            'transform' => false
+        ];
+    }
+
+    /**
+     * @param array $callback
+     * @param CartPool $cartPool
+     * @return array
+     */
+    private function processBilletCallback(array $callback, CartPool $cartPool)
+    {
+        if ($callback && $cartPool) {
+            $cartPool->addCallback($callback);
+
+            $transform = false;
+            if ($callback['status'] === 'PAGO') {
+                $transform = true;
+            }
+
+            return [
+                'processed' => true,
+                'transform' => $transform
+            ];
+        }
+
+        return [
+            'processed' => false,
+            'transform' => false
+        ];
     }
 
     /**
