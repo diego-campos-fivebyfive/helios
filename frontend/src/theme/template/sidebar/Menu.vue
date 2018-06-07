@@ -1,8 +1,8 @@
 <template lang="pug">
   ul.menu
-    li(v-for='item in menu')
-      Dropdown(v-if='item.dropdown', :item='item')
-      Item(v-else, :item='item')
+    li(v-for='itemMenu in menu')
+      Dropdown(v-if='itemMenu.dropdown', :dropdown='itemMenu')
+      Item(v-else, :item='itemMenu', :itemDropdown='false')
 </template>
 
 <script>
@@ -22,10 +22,10 @@
         const currentRoute = this.$router.history.current.path
 
         this.menu = Object.entries(data)
-          .map(([name, item]) => (
-            Object.assign(item, {
-              active: currentRoute === item.link,
-              name
+          .map(([keyItemMenu, itemMenu]) => (
+            Object.assign(itemMenu, {
+              active: currentRoute === itemMenu.link,
+              key: keyItemMenu
             })
           ))
       })
