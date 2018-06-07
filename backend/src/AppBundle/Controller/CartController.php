@@ -315,7 +315,7 @@ class CartController extends AbstractController
 
         $data['kits'] = $kits;
 
-        $data['amount'] = $cartTotal;
+        $data['amount'] = number_format($cartTotal, 2, '.', '');
         $data['token'] = $this->getToken();
         $data['customerId'] = $this->account()->getId();
 
