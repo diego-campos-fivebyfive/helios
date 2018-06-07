@@ -227,32 +227,28 @@
             $('#checkout_shippingNumber'),
         ];
 
-        function applyRequired() {
-            shippingFields.forEach(function (value) {
-               value.attr('required', 'required');
-            });
+        function resolveDifferentDelivery() {
+            if ($('#checkout_differentDelivery').is(':checked')) {
+
+                $('#different_delivery').removeClass('hidden');
+
+                shippingFields.forEach(function (value) {
+                    value.attr('required', 'required');
+                });
+            } else {
+
+                $('#different_delivery').addClass('hidden');
+
+                shippingFields.forEach(function (value) {
+                    value.removeAttr('required');
+                });
+            }
         }
 
-        function removeRequired() {
-            shippingFields.forEach(function (value) {
-                value.removeAttr('required');
-            });
-        }
-
-        if ($('#checkout_differentDelivery').is(':checked')) {
-            applyRequired();
-        } else {
-            removeRequired();
-        }
+        resolveDifferentDelivery();
 
         $('#checkout_differentDelivery').on('change', function () {
-            if ($(this).is(':checked')) {
-                $('#different_delivery').removeClass('hidden');
-                applyRequired();
-            } else {
-                $('#different_delivery').addClass('hidden');
-                removeRequired();
-            }
+            resolveDifferentDelivery();
         });
 
         $('#checkout_postcode').change(function () {
