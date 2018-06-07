@@ -4,13 +4,23 @@
         background-size: contain;
         background-position: center;
     }
+
+    .item-right {
+        margin-right: 10px;
+    }
 </style>
 
 <div class="row">
     <div class="col-md-9">
         <div class="ibox">
             <div class="ibox-title">
-                <span class="pull-right">(<strong>{{ kitsQuantity }}</strong>) item(s)</span>
+                {% if kits %}
+                    <a data-remove="{{ path('empty_cart') }}"
+                       class="btn btn-danger btn-xs pull-right item-right">
+                        <i class="fa fa-trash"></i> Limpar o carrinho
+                    </a>
+                {% endif %}
+                <span class="pull-right item-right">(<strong>{{ kitsQuantity }}</strong>) item(s)</span>
                 <h5>Item(s) no seu carrinho</h5>
             </div>
             <div class="ibox-content">
@@ -142,6 +152,50 @@
                     beforeSend: function () {
                         swal({
                             title: "Removendo...",
+                            text: "Aguarde",
+                            type: "info",
+                            showConfirmButton: false
+                        });
+                    }
+                });
+            });
+        });
+    }
+
+    var dataRemove = $('[data-remove]');
+    if(dataRemove.length){
+        dataRemove.on('click', function () {
+            var url = $(this).data('remove');
+            swal({
+                title: "Confirma  a remoção dos kits do carrinho?",
+                text: null,
+                type: "info",
+                showCancelButton: true,
+                cancelButtonText: "{{ 'Cancel'|trans }}",
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "{{ 'Confirm'|trans }}",
+                closeOnConfirm: false
+            }, function () {
+                swal.close();
+                $.ajax({
+                    url: url,
+                    method: 'post',
+                    data: {_method:'delete'},
+                    complete: function (xhr) {
+                        if (200 == xhr.status) {
+                            swal("", "Kits removidos com sucesso", "success");
+                            window.setTimeout(function(){
+                                swal.close();
+                            }, 1000);
+                        } else {
+                            swal("Oops!", "Erro ao remover os kits do carrinho", "error");
+                        }
+
+                        loadItemsCart();
+                    },
+                    beforeSend: function () {
+                        swal({
+                            title: "Limpando o carrinho...",
                             text: "Aguarde",
                             type: "info",
                             showConfirmButton: false
