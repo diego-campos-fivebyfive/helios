@@ -5,6 +5,7 @@ namespace AppBundle\Controller\PublicAccess;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Kit\CartPool;
 use AppBundle\Manager\CartPoolManager;
+use AppBundle\Service\Order\OrderTransformer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,7 +28,9 @@ class PaymentController extends AbstractController
         /** @var CartPoolManager $cartPoolManager */
         $cartPoolManager = $this->container->get('cart_pool_manager');
 
-        // TODO: Implementar transformação de pool em order quando $callback['status] = APPROVED usando o serviço
+        /** @var OrderTransformer $orderTransformer */
+        $orderTransformer = $this->container->get('order_transformer');
+
         if (isset($paymentType)) {
             $code = $request->query->get('order_id');
 
@@ -42,6 +45,10 @@ class PaymentController extends AbstractController
                 $pool->addCallback($callback);
 
                 $cartPoolManager->save($pool);
+
+                if ($callback['status'] === 'APPROVED') {
+                    $orderTransformer->transformFromCartPool($pool);
+                }
 
                 return $this->json();
             }
@@ -60,6 +67,10 @@ class PaymentController extends AbstractController
                 $pool->addCallback($callback);
 
                 $cartPoolManager->save($pool);
+
+                if ($callback['status'] === 'PAGO') {
+                    $orderTransformer->transformFromCartPool($pool);
+                }
 
                 return $this->json();
             }
