@@ -24,8 +24,9 @@
         <i class="fa fa-truck"></i><br><small>Transport.</small>
     </a>
 {% else %}
+    {% set sourceKit = constant('AppBundle\\Entity\\Order\\Order::SOURCE_KIT') %}
     <a class="btn btn-default {{ order.deliveryAddress ? 'validated' }}"
-       data-toggle="modal" {% if order.source != 2 %}data-target="#modal_shipping"{% endif %}
+       data-toggle="modal" {% if order.source != sourceKit %}data-target="#modal_shipping"{% endif %}
        data-shipping="sices"
        data-url="{{ path('order_shipping', {id:order.id}) }}">
         <i class="fa fa-truck"></i><br><small>Frete Sices</small>
