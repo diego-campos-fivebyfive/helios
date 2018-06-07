@@ -3,6 +3,7 @@
 namespace AppBundle\Service\Cart;
 
 use AppBundle\Entity\AccountInterface;
+use AppBundle\Entity\Kit\Cart;
 use AppBundle\Entity\Kit\CartHasKit;
 use AppBundle\Entity\Kit\CartPool;
 use AppBundle\Manager\CartPoolManager;
@@ -52,6 +53,23 @@ class CartPoolHelper
         }
 
         return null;
+    }
+
+    /**
+     * @param Cart $cart
+     */
+    public function emptyCart(Cart $cart)
+    {
+        /** @var CartHasKit $cartHasKitManager */
+        $cartHasKitManager = $this->container->get('cart_has_kit_manager');
+
+        $cartHasKits = $cartHasKitManager->findBy([
+            'cart' => $cart
+        ]);
+
+        foreach ($cartHasKits as $cartHasKit) {
+            $cartHasKitManager->delete($cartHasKit);
+        }
     }
 
     /**
