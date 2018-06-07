@@ -252,10 +252,10 @@ class CartController extends AbstractController
     /**
      * @Security("has_role('ROLE_OWNER')")
      *
-     * @Route("/empty_cart", name="empty_cart")
+     * @Route("/clear_cart", name="clear_cart")
      * @Method("delete")
      */
-    public function emptyCart()
+    public function clearCart()
     {
         /** @var Cart $cart */
         $cart = $this->getCart();
@@ -263,7 +263,7 @@ class CartController extends AbstractController
         /** @var CartPoolHelper $cartPoolHelper */
         $cartPoolHelper = $this->container->get('cart_pool_helper');
 
-        $cartPoolHelper->emptyCart($cart);
+        $cartPoolHelper->clearCart($cart);
 
         return $this->json([]);
     }

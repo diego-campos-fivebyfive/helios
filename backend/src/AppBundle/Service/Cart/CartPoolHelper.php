@@ -58,7 +58,7 @@ class CartPoolHelper
     /**
      * @param Cart $cart
      */
-    public function emptyCart(Cart $cart)
+    public function clearCart(Cart $cart)
     {
         /** @var CartHasKit $cartHasKitManager */
         $cartHasKitManager = $this->container->get('cart_has_kit_manager');
@@ -68,8 +68,10 @@ class CartPoolHelper
         ]);
 
         foreach ($cartHasKits as $cartHasKit) {
-            $cartHasKitManager->delete($cartHasKit);
+            $cartHasKitManager->delete($cartHasKit, false);
         }
+
+        $cartHasKitManager->flush();
     }
 
     /**
