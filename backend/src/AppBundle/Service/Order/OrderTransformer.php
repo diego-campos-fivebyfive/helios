@@ -162,7 +162,8 @@ class OrderTransformer
         $order->setPower($power);
         $order->setAgent($account->getAgent());
 
-        $deliveryKeys = [
+        /* Todo: Esta parte da funcionalidade ficará comentada temporariamente, até definições posteriores sobre o FRETE*/
+        /*$deliveryKeys = [
             'street' => 'street',
             'city' => 'city',
             'complement' => 'complement',
@@ -174,7 +175,7 @@ class OrderTransformer
 
         $values = $checkout['differentDelivery'] ? $shipping['address'] : $checkout;
 
-        $this->setOrderDelivery($order, $values, $deliveryKeys);
+        $this->setOrderDelivery($order, $values, $deliveryKeys);*/
 
         $items = $cartPool->getItems();
 
