@@ -175,8 +175,7 @@ class CartController extends AbstractController
             } else {
                 $cartHasKit->setQuantity($totalQuantity);
                 $cartHasKitManager->save($cartHasKit);
-
-                $status = Response::HTTP_OK;
+                
                 $message = 'Quantidade do kit atualizada no carrinho';
             }
 

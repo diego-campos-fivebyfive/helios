@@ -155,7 +155,7 @@ class KitsController extends AbstractController
         /** @var CartHasKitManager $cartHasKitManager */
         $cartHasKitManager = $this->container->get('cart_has_kit_manager');
 
-        $cartKits =$cartHasKitManager->findBy([
+        $cartKits = $cartHasKitManager->findBy([
             'kit' => $kit
         ]);
 
@@ -166,16 +166,9 @@ class KitsController extends AbstractController
 
         $cartHasKitManager->flush();
 
-        try {
-            $this->manager('kit')->delete($kit);
-            $message = 'Kit excluído com sucesso';
-            $status = Response::HTTP_OK;
-        } catch (\Exception $exception) {
-            $message = 'Falha ao excluir este Kit';
-            $status = Response::HTTP_CONFLICT;
-        }
+        $this->manager('kit')->delete($kit);
 
-        return $this->json(['message' => $message], $status);
+        return $this->json(['message' => 'Kit excluído com sucesso']);
     }
 
     /**
