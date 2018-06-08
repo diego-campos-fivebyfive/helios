@@ -239,14 +239,18 @@
                             $('#modal_add_to_cart').modal('hide');
                             toastr.success(message, '{{ 'Success'|trans }}', {
                                 positionClass: 'toast-top-center',
-                                progressBar: true
+                                progressBar: true,
+                                preventDuplicates: true
                             });
+                            kit_quantity.val(1);
                         }else{
                             $('#modal_add_to_cart').modal('hide');
                             toastr.error(message, '{{ 'Error'|trans }}', {
                                 positionClass: 'toast-top-center',
-                                progressBar: true
+                                progressBar: true,
+                                preventDuplicates: true
                             });
+                            kit_quantity.val(1);
                         }
                     }
                 });
