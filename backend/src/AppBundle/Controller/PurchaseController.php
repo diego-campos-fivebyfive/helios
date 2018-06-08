@@ -29,27 +29,10 @@ class PurchaseController extends AbstractController
 
         $account = $this->account();
 
-        /** @var Cart $cart */
-        $cart = $this->getCart();
-
-        $cartHasKitManager = $this->manager('cart_has_kit');
-
-        $cartHasKits = $cartHasKitManager->findBy([
-            'cart' => $cart
-        ]);
-
         /** @var CartPoolHelper $cartPoolHelper */
         $cartPoolHelper = $this->container->get('cart_pool_helper');
 
-        $items = $cartPoolHelper->formatItems($cartHasKits);
-
-        $checkout = $cart->getCheckout();
-
-        $cartPool = $cartPoolHelper->createCartPool($code, $account, $items, $checkout);
-
-        if ($cartPool) {
-            $this->clearCart($cart);
-        }
+        $cartPoolHelper->createCartPool($code, $account);
 
         return $this->json();
     }
@@ -57,7 +40,7 @@ class PurchaseController extends AbstractController
     /**
      * @Route("/checkout_feedback", name="checkout_feedback")
      */
-    public function testScreenFeedbackAction()
+    public function checkoutFeedbackAction()
     {
         return $this->render('cart.feedback', []);
     }

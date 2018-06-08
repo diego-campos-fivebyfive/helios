@@ -7,6 +7,7 @@ use AppBundle\Entity\Kit\Cart;
 use AppBundle\Entity\Kit\CartHasKit;
 use AppBundle\Entity\Kit\CartPool;
 use AppBundle\Manager\CartHasKitManager;
+use AppBundle\Manager\CartManager;
 use AppBundle\Manager\CartPoolManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -18,22 +19,35 @@ class CartPoolHelper
     private $container;
 
     /**
+     * @var CartHasKitManager
+     */
+    private $cartHasKitManager;
+
+    /**
      * cartPoolTransform constructor.
      */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
+
+        $this->cartHasKitManager = $this->container->get('cart_has_kit_manager');
     }
 
     /**
      * @param $code
      * @param AccountInterface $account
-     * @param array $items
-     * @param array $checkout
      * @return CartPool
      */
-    public function createCartPool($code, AccountInterface $account, array $items, array $checkout)
+    public function createCartPool($code, AccountInterface $account)
     {
+        $cart = $this->getCart($account);
+
+        $cartHasKits = $this->getCartHasKits($cart);
+
+        $items = $this->formatItems($cartHasKits, true);
+
+        $checkout = $cart->getCheckout();
+
         if ($items) {
             /** @var CartPoolManager $cartPoolManager */
             $cartPoolManager = $this->container->get('cart_pool_manager');
@@ -48,6 +62,8 @@ class CartPoolHelper
 
             $cartPoolManager->save($cartPool);
 
+            $this->clearCart($cart);
+
             return $cartPool;
         }
 
@@ -59,27 +75,22 @@ class CartPoolHelper
      */
     public function clearCart(Cart $cart)
     {
-        /** @var CartHasKitManager $cartHasKitManager */
-        $cartHasKitManager = $this->container->get('cart_has_kit_manager');
-
-        $cartHasKits = $cartHasKitManager->findBy([
-            'cart' => $cart
-        ]);
+        $cartHasKits = $this->getCartHasKits($cart);
 
         foreach ($cartHasKits as $cartHasKit) {
-            $cartHasKitManager->delete($cartHasKit, false);
+            $this->cartHasKitManager->delete($cartHasKit, false);
         }
 
-        $cartHasKitManager->flush();
+        $this->cartHasKitManager->flush();
     }
 
     /**
      * @param array $items
      * @return array
      */
-    public function formatItems(array $items, $checkout = true)
+    public function formatItems(array $items, $cartPool = false)
     {
-        $formatedItems = array_map(function (CartHasKit $item) use($checkout) {
+        $formatedItems = array_map(function (CartHasKit $item) use($cartPool) {
             $formatedItem = [
                 'name' => $item->getKit()->getCode(),
                 'description' => $item->getKit()->getDescription(),
@@ -89,7 +100,7 @@ class CartPoolHelper
                 'image' => $item->getKit()->getImage()
             ];
 
-            if (!$checkout) {
+            if ($cartPool) {
                 $formatedItem['power'] = $item->getKit()->getPower();
                 $formatedItem['components'] = $item->getKit()->getComponents();
             }
@@ -144,5 +155,30 @@ class CartPoolHelper
             "differentDelivery" => $checkout['differentDelivery'],
             "shipping" => json_encode($shipping)
         ];
+    }
+
+    /**
+     * @param AccountInterface $account
+     * @return null|Cart
+     */
+    private function getCart(AccountInterface $account)
+    {
+        /** @var CartManager $cartManager */
+        $cartManager = $this->container->get('cart_manager');
+
+        return $cartManager->findOneBy([
+            'account' => $account
+        ]);
+    }
+
+    /**
+     * @param Cart $cart
+     * @return array
+     */
+    private function getCartHasKits(Cart $cart)
+    {
+        return $this->cartHasKitManager->findBy([
+            'cart' => $cart
+        ]);
     }
 }
