@@ -6,6 +6,7 @@ use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\Kit\Cart;
 use AppBundle\Entity\Kit\CartHasKit;
 use AppBundle\Entity\Kit\CartPool;
+use AppBundle\Manager\CartHasKitManager;
 use AppBundle\Manager\CartPoolManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -26,13 +27,12 @@ class CartPoolHelper
 
     /**
      * @param $code
-     * @param $method
      * @param AccountInterface $account
      * @param array $items
      * @param array $checkout
      * @return CartPool
      */
-    public function create($code, $method, AccountInterface $account, array $items, array $checkout)
+    public function createCartPool($code, AccountInterface $account, array $items, array $checkout)
     {
         if ($items) {
             /** @var CartPoolManager $cartPoolManager */
@@ -42,7 +42,6 @@ class CartPoolHelper
             $cartPool = $cartPoolManager->create();
 
             $cartPool->setCode($code);
-            $cartPool->setMethod($method);
             $cartPool->setAccount($account);
             $cartPool->setItems($items);
             $cartPool->setCheckout($checkout);
@@ -60,7 +59,7 @@ class CartPoolHelper
      */
     public function clearCart(Cart $cart)
     {
-        /** @var CartHasKit $cartHasKitManager */
+        /** @var CartHasKitManager $cartHasKitManager */
         $cartHasKitManager = $this->container->get('cart_has_kit_manager');
 
         $cartHasKits = $cartHasKitManager->findBy([
@@ -72,24 +71,6 @@ class CartPoolHelper
         }
 
         $cartHasKitManager->flush();
-    }
-
-    /**
-     * @param AccountInterface $account
-     * @return array
-     */
-    public function formatAccount(AccountInterface $account)
-    {
-        return [
-            'id' => $account->getId(),
-            'firstname' => $account->getFirstname(),
-            'lastname' => $account->getLastname(),
-            'document' => $account->getDocument(),
-            'extraDocument' => $account->getExtraDocument(),
-            'email' => $account->getEmail(),
-            'phone' => $account->getPhone(),
-            'level' => $account->getLevel()
-        ];
     }
 
     /**

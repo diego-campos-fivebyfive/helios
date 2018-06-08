@@ -239,21 +239,38 @@
                 Confirmation.getnetListener();
             };
         },
+        createCartPool: function (type) {
+
+            $.ajax({
+                url: "{{ path('cart_pool_create') }}",
+                method: "post",
+                data: {code: Confirmation.hash},
+                complete: function (response) {
+                    if (response.status === 200) {
+                        // TODO: redirecionar para tela de feedback
+
+                        if (type === 'success') {
+                            // TODO: rota de crédito
+                        } else {
+                            // TODO: rota de débito e boleto
+                        }
+                        console.log('ok')
+                    }
+                }
+            });
+        },
         getnetListener: function () {
             getnet.subscribe('success', function() {
-                // TODO: criação do POOL
-                console.log("sucesso")
+                Confirmation.createCartPool('success');
             });
 
             getnet.subscribe('pending', function() {
-                // … código deve ser inserido aqui para tratamento do retorno de boleto gerado
-                console.log("ficou pendente")
+                Confirmation.createCartPool('pending');
             });
 
             getnet.subscribe('error', function(status, response) {
                 console.log(status);
                 console.log(response);
-                console.log("Erro")
             });
         },
         init: function () {

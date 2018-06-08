@@ -30,15 +30,8 @@ class CartPool
     private $code;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $method;
-
-    /**
      * @var Customer
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Customer")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Customer")
      */
     private $account;
 
@@ -99,25 +92,6 @@ class CartPool
     public function getCode()
     {
         return $this->code;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMethod()
-    {
-        return $this->method;
-    }
-
-    /**
-     * @param $method
-     * @return $this
-     */
-    public function setMethod($method)
-    {
-        $this->method = $method;
-
-        return $this;
     }
 
     /**

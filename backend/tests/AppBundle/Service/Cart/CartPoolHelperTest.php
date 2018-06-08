@@ -76,7 +76,7 @@ class CartPoolHelperTest extends WebTestCase
 
         $formatedCheckout = $cartPoolHelper->formatCheckout($checkout);
 
-        $cartPool = $cartPoolHelper->create($code, $method, $account, $formatedItems, $formatedCheckout);
+        $cartPool = $cartPoolHelper->createCartPool($code, $method, $account, $formatedItems, $formatedCheckout);
 
         self::assertTrue($cartPool instanceof CartPool);
 
@@ -105,7 +105,7 @@ class CartPoolHelperTest extends WebTestCase
 
         $formatedCheckout = $cartPoolHelper->formatCheckout($checkout);
 
-        $cartPool = $cartPoolHelper->create($code, $method, $account, $formatedItems, $formatedCheckout);
+        $cartPool = $cartPoolHelper->createCartPool($code, $method, $account, $formatedItems, $formatedCheckout);
 
         self::assertNull($cartPool);
     }
@@ -144,33 +144,6 @@ class CartPoolHelperTest extends WebTestCase
         foreach ($formatedItems as $formatedItem) {
             self::assertEmpty(array_diff(array_keys($formatedItem), $keys));
         }
-    }
-
-    public function testFormatAccount()
-    {
-        /** @var AccountManager $accountManager */
-        $accountManager = $this->getContainer()->get('account_manager');
-
-        /** @var AccountInterface $account */
-        $account = $accountManager->find(2209);
-
-        $keys = [
-            'id',
-            'firstname',
-            'lastname',
-            'document',
-            'extraDocument',
-            'email',
-            'phone',
-            'level'
-        ];
-
-        /** @var CartPoolHelper $cartPoolHelper */
-        $cartPoolHelper = $this->getContainer()->get('cart_pool_helper');
-
-        $formatedAccount = $cartPoolHelper->formatAccount($account);
-
-        self::assertEmpty(array_diff(array_keys($formatedAccount), $keys));
     }
 
     public function testFormatCheckout()
