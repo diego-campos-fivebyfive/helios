@@ -55,6 +55,14 @@ class PurchaseController extends AbstractController
     }
 
     /**
+     * @Route("/checkout_feedback", name="checkout_feedback")
+     */
+    public function testScreenFeedbackAction()
+    {
+        return $this->render('cart.feedback', []);
+    }
+
+    /**
      * Function to clean the cart
      * @param Cart $cart
      */
