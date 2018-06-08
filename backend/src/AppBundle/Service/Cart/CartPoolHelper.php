@@ -32,7 +32,7 @@ class CartPoolHelper
      * @param array $checkout
      * @return CartPool
      */
-    public function create($code, $method, AccountInterface $account, array $items, array $checkout)
+    public function createCartPool($code, $method, AccountInterface $account, array $items, array $checkout)
     {
         if ($items) {
             /** @var CartPoolManager $cartPoolManager */
