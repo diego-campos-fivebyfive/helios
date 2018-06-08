@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\File\File;
 class KitsController extends AbstractController
 {
     /**
+     * @Security("has_role('ROLE_PLATFORM_ADMIN')")
      * @Route("/", name="kits_index")
      * @Method("get")
      */

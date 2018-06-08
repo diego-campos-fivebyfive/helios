@@ -130,6 +130,14 @@ class MenuAccount
                 'owner'
             ]
         ],
+        'kits' => [
+            'name' => 'Kits Fixos',
+            'route' => 'index_kit',
+            'icon' => 'cart-plus',
+            'allowedRoles' => [
+                'owner'
+            ]
+        ],
         'order' => [
             'name' => 'Orçamento SICES',
             'route' => 'index_order',
@@ -205,7 +213,7 @@ class MenuAccount
                         ]
                     ],
                     'allowedRoles' => [
-                        'owner'
+                        'owner', 'ownerMaster'
                     ]
                 ],
                 'saleSteps' => [
@@ -218,7 +226,7 @@ class MenuAccount
                         ]
                     ],
                     'allowedRoles' => [
-                        'owner'
+                        'owner', 'ownerMaster'
                     ]
                 ]
             ]

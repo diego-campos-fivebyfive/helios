@@ -179,7 +179,7 @@ class CartController extends AbstractController
             } else {
                 $cartHasKit->setQuantity($totalQuantity);
                 $cartHasKitManager->save($cartHasKit);
-                
+
                 $message = 'Quantidade do kit atualizada no carrinho';
             }
 
@@ -267,6 +267,25 @@ class CartController extends AbstractController
     }
 
     /**
+     * @Security("has_role('ROLE_OWNER')")
+     *
+     * @Route("/clear_cart", name="clear_cart")
+     * @Method("delete")
+     */
+    public function clearCartAction()
+    {
+        /** @var Cart $cart */
+        $cart = $this->getCart();
+
+        /** @var CartPoolHelper $cartPoolHelper */
+        $cartPoolHelper = $this->container->get('cart_pool_helper');
+
+        $cartPoolHelper->clearCart($cart);
+
+        return $this->json([]);
+    }
+
+    /**
      * @param $data
      */
     private function updateCheckout($data)
@@ -283,6 +302,9 @@ class CartController extends AbstractController
         $manager->save($cart);
     }
 
+    /**
+     * @param Form $form
+     */
     private function setDataForm(Form &$form)
     {
         /** @var Cart $cart */
