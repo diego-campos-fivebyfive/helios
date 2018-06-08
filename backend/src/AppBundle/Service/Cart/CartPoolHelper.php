@@ -6,6 +6,7 @@ use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\Kit\Cart;
 use AppBundle\Entity\Kit\CartHasKit;
 use AppBundle\Entity\Kit\CartPool;
+use AppBundle\Manager\CartHasKitManager;
 use AppBundle\Manager\CartPoolManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -58,7 +59,7 @@ class CartPoolHelper
      */
     public function clearCart(Cart $cart)
     {
-        /** @var CartHasKit $cartHasKitManager */
+        /** @var CartHasKitManager $cartHasKitManager */
         $cartHasKitManager = $this->container->get('cart_has_kit_manager');
 
         $cartHasKits = $cartHasKitManager->findBy([
