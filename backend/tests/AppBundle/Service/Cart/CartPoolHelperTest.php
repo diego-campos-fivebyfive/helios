@@ -19,52 +19,11 @@ class CartPoolHelperTest extends WebTestCase
 {
     public function testCreate()
     {
-        /** @var CartManager $cartManager */
-        $cartManager = $this->getContainer()->get('cart_manager');
-
-        /** @var Cart $cart */
-        $cart = $cartManager->findOneBy([
-            'account' => 2209
-        ]);
-
-        /** @var CartHasKitManager $cartHasKitManager */
-        $cartHasKitManager = $this->getContainer()->get('cart_has_kit_manager');
-
-        // Mock Data
-        $items = $cartHasKitManager->findBy([
-            'cart' => $cart
-        ]);
         $code = md5(uniqid());
-        $method = 'credito';
 
         /** @var CartPoolHelper $cartPoolHelper */
         $cartPoolHelper = $this->getContainer()->get('cart_pool_helper');
 
-        $checkout = [
-            "firstName" => 'Gianluca',
-            "lastName" => 'Bine',
-            "documentType" => 'CPF',
-            "document" => '088.463.559-70',
-            "email" => 'gian_bine@hotmail.com',
-            "phone" => '(42) 3623-8320',
-            "street" => 'Rua Teste',
-            "number" => '123',
-            "complement" => '',
-            "neighborhood" => 'Teste',
-            "city" => 'Teste',
-            "state" => 'PR',
-            "postcode" => '85015-310',
-            "country" => "Brasil",
-            "shippingName" => 'Gianluca Bine',
-            "shippingStreet" => 'Rua Teste',
-            "shippingComplement" => '',
-            "shippingNumber" => 123,
-            "shippingNeighborhood" => 'Teste',
-            "shippingCity" => 'Teste',
-            "shippingState" => 'PR',
-            "shippingPostcode" => '85015-310',
-            "differentDelivery" => true
-        ];
 
         /** @var AccountManager $accountManager */
         $accountManager = $this->getContainer()->get('account_manager');
@@ -72,28 +31,11 @@ class CartPoolHelperTest extends WebTestCase
         /** @var AccountInterface $account */
         $account = $accountManager->find(2209);
 
-        $formatedItems = $cartPoolHelper->formatItems($items, false);
-
-        $formatedCheckout = $cartPoolHelper->formatCheckout($checkout);
-
-        $cartPool = $cartPoolHelper->createCartPool($code, $method, $account, $formatedItems, $formatedCheckout);
+        $cartPool = $cartPoolHelper->createCartPool($code, $account);
 
         self::assertTrue($cartPool instanceof CartPool);
 
-        /** @var Cart $cart */
-        $cart = $cartManager->findOneBy([
-            'account' => 2215
-        ]);
-
-        /** @var CartHasKitManager $cartHasKitManager */
-        $cartHasKitManager = $this->getContainer()->get('cart_has_kit_manager');
-
-        // Mock Data
-        $items = $cartHasKitManager->findBy([
-            'cart' => $cart
-        ]);
         $code = md5(uniqid());
-        $method = 'credito';
 
         /** @var AccountManager $accountManager */
         $accountManager = $this->getContainer()->get('account_manager');
@@ -101,11 +43,8 @@ class CartPoolHelperTest extends WebTestCase
         /** @var AccountInterface $account */
         $account = $accountManager->find(2215);
 
-        $formatedItems = $cartPoolHelper->formatItems($items, false);
 
-        $formatedCheckout = $cartPoolHelper->formatCheckout($checkout);
-
-        $cartPool = $cartPoolHelper->createCartPool($code, $method, $account, $formatedItems, $formatedCheckout);
+        $cartPool = $cartPoolHelper->createCartPool($code, $account);
 
         self::assertNull($cartPool);
     }
