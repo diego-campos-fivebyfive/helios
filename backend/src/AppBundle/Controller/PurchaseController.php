@@ -29,53 +29,11 @@ class PurchaseController extends AbstractController
 
         $account = $this->account();
 
-        /** @var Cart $cart */
-        $cart = $this->getCart();
-
-        $cartHasKitManager = $this->manager('cart_has_kit');
-
-        $cartHasKits = $cartHasKitManager->findBy([
-            'cart' => $cart
-        ]);
-
         /** @var CartPoolHelper $cartPoolHelper */
         $cartPoolHelper = $this->container->get('cart_pool_helper');
 
-        $items = $cartPoolHelper->formatItems($cartHasKits);
-
-        $checkout = $cart->getCheckout();
-
-        $cartPool = $cartPoolHelper->createCartPool($code, $account, $items, $checkout);
-
-        if ($cartPool) {
-            $this->clearCart($cart);
-        }
+        $cartPoolHelper->createCartPool($code, $account);
 
         return $this->json();
-    }
-
-    /**
-     * Function to clean the cart
-     * @param Cart $cart
-     */
-    private function clearCart(Cart $cart)
-    {
-        /** @var CartPoolHelper $cartPoolHelper */
-        $cartPoolHelper = $this->container->get('cart_pool_helper');
-
-        $cartPoolHelper->clearCart($cart);
-    }
-
-    /**
-     * @return null|Cart
-     */
-    private function getCart()
-    {
-        /** @var CartManager $cartManager */
-        $cartManager = $this->manager('cart');
-
-        return $cartManager->findOneBy([
-            'account' => $this->account()
-        ]);
     }
 }
