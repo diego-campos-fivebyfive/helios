@@ -31,7 +31,7 @@ class CartPool
 
     /**
      * @var Customer
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Customer")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Customer")
      */
     private $account;
 
