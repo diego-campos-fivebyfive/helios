@@ -436,7 +436,7 @@ class CartController extends AbstractController
         foreach ($formatKeys as $key) {
             $data = $form->get($key)->getData();
 
-            $dataForm[$key] = preg_replace("/[ ()-.]/",'', $data);
+            $dataForm[$key] = preg_replace("/[ ()-.\/]/",'', $data);
         }
 
         return $dataForm;
