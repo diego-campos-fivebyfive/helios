@@ -76,7 +76,7 @@ class CartPoolHelperTest extends WebTestCase
 
         $formatedCheckout = $cartPoolHelper->formatCheckout($checkout);
 
-        $cartPool = $cartPoolHelper->create($code, $method, $account, $formatedItems, $formatedCheckout);
+        $cartPool = $cartPoolHelper->createCartPool($code, $method, $account, $formatedItems, $formatedCheckout);
 
         self::assertTrue($cartPool instanceof CartPool);
 
@@ -105,7 +105,7 @@ class CartPoolHelperTest extends WebTestCase
 
         $formatedCheckout = $cartPoolHelper->formatCheckout($checkout);
 
-        $cartPool = $cartPoolHelper->create($code, $method, $account, $formatedItems, $formatedCheckout);
+        $cartPool = $cartPoolHelper->createCartPool($code, $method, $account, $formatedItems, $formatedCheckout);
 
         self::assertNull($cartPool);
     }
