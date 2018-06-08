@@ -38,35 +38,10 @@ class PurchaseController extends AbstractController
     }
 
     /**
-     * @Route("/checkout_feedback", name="checkout_feedback")
+     * @Route("/payment_feedback", name="payment_feedback")
      */
-    public function checkoutFeedbackAction()
+    public function paymentFeedbackAction()
     {
         return $this->render('cart.feedback', []);
-    }
-
-    /**
-     * Function to clean the cart
-     * @param Cart $cart
-     */
-    private function clearCart(Cart $cart)
-    {
-        /** @var CartPoolHelper $cartPoolHelper */
-        $cartPoolHelper = $this->container->get('cart_pool_helper');
-
-        $cartPoolHelper->clearCart($cart);
-    }
-
-    /**
-     * @return null|Cart
-     */
-    private function getCart()
-    {
-        /** @var CartManager $cartManager */
-        $cartManager = $this->manager('cart');
-
-        return $cartManager->findOneBy([
-            'account' => $this->account()
-        ]);
     }
 }
