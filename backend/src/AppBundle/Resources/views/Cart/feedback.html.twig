@@ -1,0 +1,63 @@
+{% extends view('layout') %}
+
+{% block body %}
+
+    <style>
+        .feedback-content {
+            align-items: center;
+            background-color: #fff;
+            color: #676a6c;
+            display: flex;
+            flex-flow: column;
+            justify-content: center;
+            min-height: 85vh;
+            padding: 15px 25px;
+            text-align: center;
+        }
+        .feedback-title {
+            font-weight: 600;
+        }
+        .feedback-icon {
+            color: #5de56c;
+            padding: 10px;
+        }
+        .feedback-sub-title {
+            color: #007BF8;
+        }
+        .feedback-group-buttons {
+            margin-top: 10px;
+        }
+        .feedback-button {
+            box-shadow: 0px 8px 15px #87898C;
+        }
+    </style>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="feedback-content">
+                                <div class="col-md-12 text-center">
+                                    <h2 class="feedback-title">Compra efetuada com sucesso!</h2>
+                                    <i class="fa fa-check-circle feedback-icon" style="font-size: 10rem"></i>
+                                    <h3 class="feedback-sub-title">Aguardando a confirmação do pagamento.</h3>
+                                </div>
+                                <div class="col-md-12 text-center feedback-group-buttons">
+                                    <a href="{{ path('index_kit') }}" class="btn btn-primary feedback-button">
+                                        <i class="fa fa-shopping-cart"></i>
+                                        Continuar comprando
+                                    </a>
+                                    <a href="{{ path('app_index') }}" class="btn btn-primary feedback-button">
+                                        <i class="fa fa-home"></i>
+                                        Voltar para o início
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

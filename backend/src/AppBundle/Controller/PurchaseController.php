@@ -36,4 +36,12 @@ class PurchaseController extends AbstractController
 
         return $this->json();
     }
+
+    /**
+     * @Route("/payment_feedback", name="payment_feedback")
+     */
+    public function paymentFeedbackAction()
+    {
+        return $this->render('cart.feedback', []);
+    }
 }

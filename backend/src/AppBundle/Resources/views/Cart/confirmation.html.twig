@@ -247,14 +247,7 @@
                 data: {code: Confirmation.hash},
                 complete: function (response) {
                     if (response.status === 200) {
-                        // TODO: redirecionar para tela de feedback
-
-                        if (type === 'success') {
-                            // TODO: rota de crédito
-                        } else {
-                            // TODO: rota de débito e boleto
-                        }
-                        console.log('ok')
+                        window.location = '{{ path("payment_feedback") }}';
                     }
                 }
             });
