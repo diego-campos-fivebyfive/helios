@@ -26,13 +26,12 @@ class CartPoolHelper
 
     /**
      * @param $code
-     * @param $method
      * @param AccountInterface $account
      * @param array $items
      * @param array $checkout
      * @return CartPool
      */
-    public function createCartPool($code, $method, AccountInterface $account, array $items, array $checkout)
+    public function createCartPool($code, AccountInterface $account, array $items, array $checkout)
     {
         if ($items) {
             /** @var CartPoolManager $cartPoolManager */
@@ -42,7 +41,6 @@ class CartPoolHelper
             $cartPool = $cartPoolManager->create();
 
             $cartPool->setCode($code);
-            $cartPool->setMethod($method);
             $cartPool->setAccount($account);
             $cartPool->setItems($items);
             $cartPool->setCheckout($checkout);
@@ -72,24 +70,6 @@ class CartPoolHelper
         }
 
         $cartHasKitManager->flush();
-    }
-
-    /**
-     * @param AccountInterface $account
-     * @return array
-     */
-    public function formatAccount(AccountInterface $account)
-    {
-        return [
-            'id' => $account->getId(),
-            'firstname' => $account->getFirstname(),
-            'lastname' => $account->getLastname(),
-            'document' => $account->getDocument(),
-            'extraDocument' => $account->getExtraDocument(),
-            'email' => $account->getEmail(),
-            'phone' => $account->getPhone(),
-            'level' => $account->getLevel()
-        ];
     }
 
     /**
