@@ -4,8 +4,10 @@ namespace AdminBundle\Controller;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Component\ComponentInterface;
+use AppBundle\Entity\Kit\CartHasKit;
 use AppBundle\Entity\Kit\Kit;
 use AppBundle\Form\Kit\KitType;
+use AppBundle\Manager\CartHasKitManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -150,16 +152,23 @@ class KitsController extends AbstractController
      */
     public function deleteAction(Kit $kit)
     {
-        try {
-            $this->manager('kit')->delete($kit);
-            $message = 'Kit excluído com sucesso';
-            $status = Response::HTTP_OK;
-        } catch (\Exception $exception) {
-            $message = 'Falha ao excluir este Kit';
-            $status = Response::HTTP_CONFLICT;
+        /** @var CartHasKitManager $cartHasKitManager */
+        $cartHasKitManager = $this->container->get('cart_has_kit_manager');
+
+        $cartKits = $cartHasKitManager->findBy([
+            'kit' => $kit
+        ]);
+
+        /** @var CartHasKit $cart */
+        foreach ($cartKits as $cartKit) {
+            $cartHasKitManager->delete($cartKit, false);
         }
 
-        return $this->json(['message' => $message], $status);
+        $cartHasKitManager->flush();
+
+        $this->manager('kit')->delete($kit);
+
+        return $this->json(['message' => 'Kit excluído com sucesso']);
     }
 
     /**

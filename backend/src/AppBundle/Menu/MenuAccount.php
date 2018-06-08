@@ -205,7 +205,7 @@ class MenuAccount
                         ]
                     ],
                     'allowedRoles' => [
-                        'owner'
+                        'owner', 'ownerMaster'
                     ]
                 ],
                 'saleSteps' => [
@@ -218,7 +218,7 @@ class MenuAccount
                         ]
                     ],
                     'allowedRoles' => [
-                        'owner'
+                        'owner', 'ownerMaster'
                     ]
                 ]
             ]
