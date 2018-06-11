@@ -9,7 +9,8 @@ abstract class AbstractLoader {
     /** @var array  */
     protected $config = [
         'manager' => null,
-        'maker' => null
+        'maker' => null,
+        'power' => null
     ];
 
     /**
