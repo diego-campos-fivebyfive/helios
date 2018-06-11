@@ -3,10 +3,9 @@
     div(slot='header')
       nav.menu
         Button(
-          type='primary-common',
-          icon='plus-square',
-          label='Memorial',
-          pos='single')
+          class='primary-common',
+          label='Memorial')
+          Icon(name='plus-square')
     List(
       slot='section',
       :memorials='memorials',

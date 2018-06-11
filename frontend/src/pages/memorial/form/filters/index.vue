@@ -4,21 +4,19 @@
       ref='copyModal',
       :level='queryParams.level')
     Button.prev(
-      type='default-bordered',
-      icon='arrow-left',
-      label='voltar',
-      pos='single')
+      class='default-bordered',
+      label='voltar')
+      Icon(name='arrow-left')
     Memorials.col-memorial(v-on:updateMemorialQuery='updateMemorialQuery')
     Levels(v-on:updateLevelQuery='updateLevelQuery')
     Components(
       :families='queryParams.families',
       v-on:updateFamiliesQuery='updateFamiliesQuery')
     Button.copy(
-      type='primary-common',
-      icon='copy',
+      class='primary-common',
       label='Copiar',
-      pos='single',
-      v-on:click.native='show')
+      :action='show')
+      Icon(name='copy')
 </template>
 
 <script>

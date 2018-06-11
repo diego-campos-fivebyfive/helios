@@ -9,16 +9,15 @@
           | Gerenciamento de Cupons
         nav.menu
           Button(
-            type='primary-common',
-            icon='plus-square',
+            class='primary-common',
             label='Novo Cupom',
-            pos='single',
-            v-on:click.native='show("create")')
-      Content(
+            :action='showCreateForm')
+            Icon(name='plus-square')
+      List(
         slot='section',
         :coupons='coupons',
         v-on:getCoupons='getCoupons',
-        v-on:show='show')
+        v-on:showUpdateForm='showUpdateForm')
       Paginator(
         slot='footer',
         :pagination='pagination',
@@ -26,12 +25,12 @@
 </template>
 
 <script>
-  import Content from './list'
+  import List from './list'
   import Form from './form'
 
   export default {
     components: {
-      Content,
+      List,
       Form
     },
     data: () => ({
@@ -39,8 +38,11 @@
       pagination: {}
     }),
     methods: {
-      show(action, coupon = {}) {
-        this.$refs.form.show(action, coupon)
+      showCreateForm() {
+        this.$refs.form.show('create')
+      },
+      showUpdateForm(coupon) {
+        this.$refs.form.show('edit', coupon)
       },
       getCoupons(pageNumber = 1) {
         const uri = `/api/v1/coupon?page=${pageNumber}`

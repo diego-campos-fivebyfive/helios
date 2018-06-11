@@ -2,20 +2,20 @@
   .collection-action-bar
     Button.collection-action-bar-left(
       v-for='button in buttons.left',
-      v-on:click.native='button.click',
+      :action='button.click',
       :key='button.icon',
-      :icon='button.icon',
       :label='button.label || ""',
       :pos='button.position',
-      type='default-bordered')
+      class='default-bordered')
+      Icon(:name='button.icon')
     Button.collection-action-bar-right(
       v-for='button in buttons.right',
-      v-on:click.native='button.click',
+      :action='button.click',
       :key='button.icon',
-      :icon='button.icon',
       :label='button.label || ""',
       :pos='button.position',
-      type='default-bordered')
+      class='default-bordered')
+      Icon(:name='button.icon')
     label.collection-action-bar-text
       | Página {{ pagination.current }} de {{ pagination.total }}
 </template>

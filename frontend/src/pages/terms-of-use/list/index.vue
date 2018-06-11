@@ -17,15 +17,15 @@
         td.col-published {{ formatDate(term.publishedAt) }}
         td.col-action
           Button(
-            type='primary-common',
-            icon='pencil',
+            class='primary-common',
             pos='first',
-            v-on:click.native='$emit("show", "edit", term)')
+            :action='() =>$emit("show", "edit", term)')
+            Icon(name='pencil')
           Button(
-            type='danger-common',
-            icon='trash',
+            class='danger-common',
             pos='last',
-            v-on:click.native='$refs.confirm.show(term.id)')
+            :action='() => $refs.confirm.show(term.id)')
+            Icon(name='trash')
 </template>
 
 <script>

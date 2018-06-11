@@ -8,12 +8,11 @@
         | {{ totalOfMessages }}
     nav.menu
       Button(
-        type='default-common',
-        icon='sign-out',
+        class='default-common',
         link='/logout',
-        refresh='true',
         label='Sair',
         pos='first')
+        Icon(name='sign-out')
 </template>
 
 <script>

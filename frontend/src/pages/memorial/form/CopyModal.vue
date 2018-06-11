@@ -19,11 +19,11 @@
             :value='option.value')
             | {{ option.text }}
         Button.copy(
-          type='primary-common',
-          icon='copy',
+          class='primary-common',
           label='Copiar',
           pos='last',
-          v-on:click.native='$refs.confirm.show(target)')
+          :action='$refs.confirm.show(target)')
+          Icon(name='copy')
 </template>
 
 <script>

@@ -6,12 +6,15 @@
         | Contas encontradas: {{ account.info.total }}
       nav.menu
         Button(
-          type='primary-common',
-          icon='plus-square',
-          link='#linkB',
+          class='primary-common',
           label='Nova Conta',
-          pos='first')
-        Button(type='primary-strong', icon='random', pos='last')
+          pos='first',
+          link='#')
+          Icon(name='plus-square')
+        Button(
+          class='primary-strong',
+          pos='last')
+          Icon(name='random')
       Content(
         slot='section',
         :accounts='account')

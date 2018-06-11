@@ -6,17 +6,15 @@
       slot(name='content')
     footer.collection-modal-confirm-footer
       Button(
-        v-on:click.native='hide',
-        icon='times-circle-o',
-        type='default-bordered',
-        label='Fechar',
-        pos='single')
+        :action='hide',
+        class='default-bordered',
+        label='Fechar')
+        Icon(name='times-circle-o')
       Button(
-        v-on:click.native='removeItem',
-        icon='trash',
-        type='danger-common',
-        label='Confirmar',
-        pos='single')
+        :action='removeItem',
+        class='danger-common',
+        label='Confirmar')
+        Icon(name='trash')
 </template>
 
 <script>

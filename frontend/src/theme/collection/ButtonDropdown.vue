@@ -1,21 +1,20 @@
 <template lang="pug">
   .collection-dropdown
     Button.collection-dropdown-button(
-      v-on:click.native='open = !open',
-      type='primary-common',
-      icon='arrow-down',
-      label='Operações',
-      pos='single')
+      :action='() => open = !open',
+      class='primary-common',
+      label='Operações')
+      Icon(name='arrow-down')
     nav.collection-dropdown-content(v-show='open')
       ul.collection-dropdown-content-separator(v-for='group in groups')
         li(v-for='button in group')
           Button(
             :pos='button.position',
             :key='button.icon',
-            :icon='button.icon',
             :label='button.label',
-            type='default-common',
-            v-on:click.native='button.click')
+            class='default-common',
+            :action='button.click')
+            Icon(:name='button.icon')
 </template>
 
 <script>

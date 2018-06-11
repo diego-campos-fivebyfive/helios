@@ -10,11 +10,10 @@
           | Gerenciamento de Termos de Uso
         nav.menu
           Button(
-            type='primary-common',
-            icon='plus-square',
+            class='primary-common',
             label='Novo Termo',
-            pos='single',
-            v-on:click.native='show("create")')
+            :action='() => show("create")')
+            Icon(name='plus-square')
       List(
         slot='section',
         :terms='terms',
