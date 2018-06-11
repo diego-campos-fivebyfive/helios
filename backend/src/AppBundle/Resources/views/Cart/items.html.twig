@@ -11,7 +11,7 @@
 </style>
 
 <div class="row">
-    <div class="{% if kits %} col-md-9 {% else %} col-md-12 {% endif %}">
+    <div class="{{ kits ? 'col-md-9' : 'col-md-12' }}">
         <div class="ibox">
             <div class="ibox-title">
                 {% if kits %}
