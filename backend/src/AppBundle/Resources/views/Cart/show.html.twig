@@ -29,7 +29,7 @@
     <script>
         function loadItemsCart() {
             $.ajax({
-                url: "{{ path('cart_items', {id:cart.id}) }}",
+                url: "{{ path('cart_items') }}",
                 success: function (response) {
                     $('#cart_items').html(response);
                 }
