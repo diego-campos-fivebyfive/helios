@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Cart Pool
  * @ORM\Entity
  * @ORM\Table(name="app_cart_pool")
+ * @ORM\HasLifecycleCallbacks()
  */
 class CartPool
 {
@@ -55,6 +56,20 @@ class CartPool
      * @ORM\Column(type="json", nullable=true)
      */
     private $checkout;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created_at", type="datetime", nullable=true)
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     */
+    private $updatedAt;
 
     /**
      * @inheritdoc
@@ -177,4 +192,38 @@ class CartPool
     {
         $this->callbacks[] = $callback;
     }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function prePersist()
+    {
+        $this->createdAt = new \DateTime;
+        $this->updatedAt = new \DateTime;
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function preUpdate()
+    {
+        $this->updatedAt = new \DateTime;
+    }
+
 }
