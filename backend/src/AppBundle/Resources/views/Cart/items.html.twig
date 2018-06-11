@@ -11,7 +11,7 @@
 </style>
 
 <div class="row">
-    <div class="col-md-9">
+    <div class="{% if kits %} col-md-9 {% else %} col-md-12 {% endif %}">
         <div class="ibox">
             <div class="ibox-title">
                 {% if kits %}
@@ -67,40 +67,44 @@
                                 </td>
                             </tr>
                         {% else %}
-                            <p>Nenhum item no carrinho.</p>
+                            <h2 class="text-center">Nenhum item no carrinho.</h2>
                         {% endfor %}
                         </tbody>
                     </table>
                 </div>
             </div>
             <div class="ibox-content">
-                <a href="{{ path('cart_checkout') }}" class="btn btn-primary pull-right"><i class="fa fa fa-shopping-cart"></i> Checkout </a>
+                {% if kits %}
+                    <a href="{{ path('cart_checkout') }}" class="btn btn-primary pull-right"><i class="fa fa fa-shopping-cart"></i> Checkout </a>
+                {% endif %}
                 <a href="{{ path('index_kit') }}" class="btn btn-white"><i class="fa fa-arrow-left"></i> Continuar comprando </a>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="ibox">
-            <div class="ibox-title">
-                <h5>Sumário do Carrinho</h5>
-            </div>
-            <div class="ibox-content">
-                <span>
-                    Total
-                </span>
-                <h2 class="font-bold">
-                    R$ {{ total|number_format(2, ',', '.') }}
-                </h2>
-                <hr>
-                <div class="m-t-sm">
-                    <div class="btn-group">
-                        <a href="{{ path('cart_checkout') }}" class="btn btn-primary btn-sm"><i class="fa fa-shopping-cart"></i> Checkout</a>
-                        <a href="{{ path('index_kit') }}" class="btn btn-white btn-sm"> Cancelar </a>
+    {% if kits %}
+        <div class="col-md-3">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>Sumário do Carrinho</h5>
+                </div>
+                <div class="ibox-content">
+                    <span>
+                        Total
+                    </span>
+                    <h2 class="font-bold">
+                        R$ {{ total|number_format(2, ',', '.') }}
+                    </h2>
+                    <hr>
+                    <div class="m-t-sm">
+                        <div class="btn-group">
+                            <a href="{{ path('cart_checkout') }}" class="btn btn-primary btn-sm"><i class="fa fa-shopping-cart"></i> Checkout</a>
+                            <a href="{{ path('index_kit') }}" class="btn btn-white btn-sm"> Cancelar </a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    {% endif %}
 </div>
 
 <script>
