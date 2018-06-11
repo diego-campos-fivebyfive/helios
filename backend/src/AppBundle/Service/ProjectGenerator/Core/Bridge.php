@@ -66,7 +66,8 @@ class Bridge
 
         $inverterLoader = new InverterLoader([
             'manager' => $inverterManager,
-            'maker' => $inverterMakerId
+            'maker' => $inverterMakerId,
+            'power' => $power
         ]);
 
         $invertersArray = $inverterLoader->filter($level);

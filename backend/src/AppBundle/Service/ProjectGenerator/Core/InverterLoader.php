@@ -27,8 +27,21 @@ class InverterLoader extends AbstractLoader
 
         $qb->select($this->properties)
             ->where('i.maker = :maker')
+            ->andWhere(
+                $qb->expr()->andX(
+                    $qb->expr()->orX(
+                        $qb->expr()->isNull('i.minPowerSelection'),
+                        $qb->expr()->lte('i.minPowerSelection', ':power')
+                    ),
+                    $qb->expr()->orX(
+                        $qb->expr()->isNull('i.maxPowerSelection'),
+                        $qb->expr()->gte('i.maxPowerSelection', ':power')
+                    )
+                )
+            )
             ->orderBy('i.nominalPower', 'ASC')
-            ->setParameter('maker', $this->config['maker']);
+            ->setParameter('maker', $this->config['maker'])
+            ->setParameter('power', $this->config['power']);
 
         return $this->formatKeys($qb->getQuery()->getResult());
     }
@@ -59,8 +72,21 @@ class InverterLoader extends AbstractLoader
                     ),
                     'i.maker != :maker'
                 ))
+                ->andWhere(
+                    $qb->expr()->andX(
+                        $qb->expr()->orX(
+                            $qb->expr()->isNull('i.minPowerSelection'),
+                            $qb->expr()->lte('i.minPowerSelection', ':power')
+                        ),
+                        $qb->expr()->orX(
+                            $qb->expr()->isNull('i.maxPowerSelection'),
+                            $qb->expr()->gte('i.maxPowerSelection', ':power')
+                        )
+                    )
+                )
                 ->orderBy('i.nominalPower', 'ASC')
                 ->setParameter('maker', $this->config['maker'])
+                ->setParameter('power', $this->config['power'])
                 ->getQuery()->getResult();
 
             return $this->formatKeys($results);
