@@ -62,30 +62,12 @@ class CartController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/items", name="cart_items")
+     * @Route("/items", name="cart_items")
      * @Method("get")
      */
-    public function getCartItemsAction(Cart $cart)
+    public function getCartItemsAction()
     {
-        /** @var CartManager $cartManager */
-        $cartManager = $this->manager('cart');
-
-        /** @var Cart $cart */
-        $cart = $this->getCart();
-
-        if (!$cart) {
-            $cart = $cartManager->create();
-
-            $cart->setAccount($this->account());
-
-            $cartManager->save($cart);
-        }
-
-        $cartHasKitManager = $this->manager('cart_has_kit');
-
-        $cartHasKits = $cartHasKitManager->findBy([
-            'cart' => $cart
-        ]);
+        $cartHasKits = $this->getCartHasKits();
 
         $cartTotal = 0;
         $kits = [];
@@ -105,7 +87,6 @@ class CartController extends AbstractController
         }
 
         return $this->render('cart.items', [
-            'cart' => $cart,
             'kits' => $kits,
             'total' => $cartTotal,
             'kitsQuantity' => count($cartHasKits)
@@ -118,23 +99,7 @@ class CartController extends AbstractController
      */
     public function showCartAction()
     {
-        /** @var CartManager $cartManager */
-        $cartManager = $this->manager('cart');
-
-        /** @var Cart $cart */
-        $cart = $this->getCart();
-
-        if (!$cart) {
-            $cart = $cartManager->create();
-
-            $cart->setAccount($this->account());
-
-            $cartManager->save($cart);
-        }
-
-        return $this->render('cart.show', [
-            'cart' => $cart
-        ]);
+        return $this->render('cart.show');
     }
 
     /**
@@ -143,19 +108,8 @@ class CartController extends AbstractController
      */
     public function addKitAction(Request $request, Kit $kit)
     {
-        /** @var CartManager $cartManager */
-        $cartManager = $this->manager('cart');
-
         /** @var Cart $cart */
         $cart = $this->getCart();
-
-        if (!$cart) {
-            $cart = $cartManager->create();
-
-            $cart->setAccount($this->account());
-
-            $cartManager->save($cart);
-        }
 
         $cartHasKitManager = $this->manager('cart_has_kit');
 
@@ -199,7 +153,7 @@ class CartController extends AbstractController
 
             return $this->json([
                 'message' => $message
-            ], Response::HTTP_OK);
+            ]);
         }
 
         if (!$cartHasKit->getKit() || !$cartHasKit->getQuantity()) {
@@ -223,7 +177,7 @@ class CartController extends AbstractController
 
         $quantity = $request->request->getInt('quantity');
 
-        if ($cart && $kit->getStock() >= $quantity) {
+        if ($kit->getStock() >= $quantity) {
 
             $cartHasKitManager = $this->manager('cart_has_kit');
 
@@ -286,6 +240,24 @@ class CartController extends AbstractController
     }
 
     /**
+     * @return Cart|mixed|object
+     */
+    private function createCart()
+    {
+        /** @var CartManager $cartManager */
+        $cartManager = $this->manager('cart');
+
+        /** @var Cart $cart */
+        $cart = $cartManager->create();
+
+        $cart->setAccount($this->account());
+
+        $cartManager->save($cart);
+
+        return $cart;
+    }
+
+    /**
      * @param $data
      */
     private function updateCheckout($data)
@@ -341,15 +313,32 @@ class CartController extends AbstractController
     }
 
     /**
-     * @return null|Cart
+     * @return Cart
      */
     private function getCart()
     {
         /** @var CartManager $cartManager */
         $cartManager = $this->manager('cart');
 
-        return $cartManager->findOneBy([
+        /** @var Cart $cart */
+        $cart = $cartManager->findOneBy([
             'account' => $this->account()
+        ]);
+
+        return $cart ?? $this->createCart();
+    }
+
+    /**
+     * @return array
+     */
+    private function getCartHasKits()
+    {
+        $cart = $this->getCart();
+
+        $cartHasKitManager = $this->manager('cart_has_kit');
+
+        return $cartHasKitManager->findBy([
+            'cart' => $cart
         ]);
     }
 
@@ -370,14 +359,7 @@ class CartController extends AbstractController
      */
     private function getInfo(Form $form)
     {
-        /** @var Cart $cart */
-        $cart = $this->getCart();
-
-        $cartHasKitManager = $this->manager('cart_has_kit');
-
-        $cartHasKits = $cartHasKitManager->findBy([
-            'cart' => $cart
-        ]);
+        $cartHasKits = $this->getCartHasKits();
 
         $dataForm = $this->getData($form);
 
