@@ -6,11 +6,10 @@
       slot(name='section')
     footer.collection-modal-footer
       Button(
-        v-on:click.native='hide',
-        icon='times-circle-o',
-        type='default-bordered',
+        class='default-bordered',
         label='Fechar',
-        pos='single')
+        :action='hide')
+        Icon(name='times-circle-o')
       slot(name='buttons')
 </template>
 

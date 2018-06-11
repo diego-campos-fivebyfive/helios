@@ -20,18 +20,17 @@
         td.col-status {{ coupon.applied ? 'Aplicado' : 'Não Aplicado' }}
         td.col-amount R$ {{ coupon.amount }}
         td.col-action
-          Button(
-            v-if='!coupon.applied',
-            type='primary-common',
-            icon='pencil',
-            pos='first',
-            v-on:click.native='$emit("show", "edit", coupon)')
-          Button(
-            v-if='!coupon.applied',
-            type='danger-common',
-            icon='trash',
-            pos='last',
-            v-on:click.native='$refs.confirm.show(coupon.id)')
+          nav(v-if='!coupon.applied')
+            Button(
+              class='primary-common',
+              pos='first',
+              :action='() => $emit("showUpdateForm", coupon)')
+              Icon(name='pencil')
+            Button(
+              class='danger-common',
+              pos='last',
+              :action='() => $refs.confirm.show(coupon.id)')
+              Icon(name='trash')
 </template>
 
 <script>

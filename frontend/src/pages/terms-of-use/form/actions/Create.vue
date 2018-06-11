@@ -1,11 +1,10 @@
 <template lang="pug">
   Button(
     slot='buttons',
-    icon='save',
-    type='primary-strong',
+    class='primary-strong',
     label='Salvar',
-    pos='single',
-    v-on:click.native='createTerm')
+    :action='createTerm')
+    Icon(name='save')
 </template>
 
 <script>

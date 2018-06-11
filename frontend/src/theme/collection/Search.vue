@@ -3,8 +3,8 @@
     v-on:keypress.enter.prevent='')
     input.collection-search-input(v-model='termSearch')
     Button.collection-search-button(
-      v-on:click.native='$emit("updateList")',
-      type='primary-common',
+      :action='() => $emit("updateList")',
+      class='primary-common',
       label='Pesquisar',
       pos='last')
 </template>

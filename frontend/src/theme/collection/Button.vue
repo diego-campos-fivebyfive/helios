@@ -1,27 +1,56 @@
 <template lang="pug">
   router-link.collection-button(
-    v-if='link && !refresh',
+    v-if='link',
     :to='link',
-    :class='[type, pos, { labeled: label }]')
-    Icon(v-if='icon', :name='icon')
+    :class='[pos, { labeled: label }]')
+    slot
     | {{ label }}
   a.collection-button(
-    v-else-if='link && refresh',
-    :href='link',
-    :class='[type, pos, { labeled: label }]')
-    Icon(v-if='icon', :name='icon')
+    v-else-if='redirect',
+    :href='redirect',
+    :class='[pos, { labeled: label }]')
+    slot
     | {{ label }}
   button.collection-button(
     v-else,
     type='button',
-    :class='[type, pos, { labeled: label }]')
-    Icon(v-if='icon', :name='icon')
+    v-on:click='action',
+    :class='[pos, { labeled: label }]')
+    slot
     | {{ label }}
 </template>
 
 <script>
   export default {
-    props: ['type', 'icon', 'link', 'refresh', 'label', 'pos']
+    props: {
+      label: {
+        type: String,
+        required: false
+      },
+      type: {
+        type: String,
+        required: false,
+        default: 'common'
+      },
+      pos: {
+        type: String,
+        required: false,
+        default: 'single'
+      },
+      action: {
+        type: Function,
+        required: false,
+        default: () => {}
+      },
+      link: {
+        type: String,
+        required: false
+      },
+      redirect: {
+        type: String,
+        required: false
+      }
+    }
   }
 </script>
 

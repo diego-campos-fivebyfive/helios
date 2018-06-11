@@ -10,17 +10,15 @@
       td.col-published {{ formatDate(term.publishedAt) }}
       td.col-action
         Button(
-          :class='{ "button-active": term.isAgree }',
-          type='default-bordered',
+          :class='[{ "button-active": term.isAgree }, "default-bordered"]',
           label='Aceito',
           pos='first',
-          v-on:click.native='accept(term)')
+          :action='() => accept(term.id)')
         Button(
-          :class='{ "button-active": !term.isAgree }',
-          type='default-bordered',
+          :class='[{ "button-active": !term.isAgree }, "default-bordered"]',
           label='Não Aceito',
           pos='last',
-          v-on:click.native='noAccept(term)')
+          :action='() => noAccept(term.id)')
 </template>
 
 <script>
@@ -35,15 +33,15 @@
         const moment = this.$moment(date, 'YYYY-MM-DD, hh:mm a')
         return moment.format('DD/MM/YYYY, hh:mm a')
       },
-      accept(term) {
-        const uri = `/api/v1/terms/agree/${term.id}`
+      accept(termId) {
+        const uri = `/api/v1/terms/agree/${termId}`
 
         this.axios.post(uri).then(() => {
           this.$emit('getTerms', this.pagination.current)
         })
       },
-      noAccept(term) {
-        const uri = `/api/v1/terms/disagree/${term.id}`
+      noAccept(termId) {
+        const uri = `/api/v1/terms/disagree/${termId}`
 
         this.axios.post(uri).then(() => {
           this.$emit('getTerms', this.pagination.current)
