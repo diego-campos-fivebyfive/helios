@@ -96,8 +96,8 @@
 
                 <div class="ibox">
                     <div class="ibox-title">
-                        <span class="pull-right">(<strong>{{ kits|length }}</strong>) itens</span>
-                        <h5>Revise seus itens</h5>
+                        <span class="pull-right">(<strong>{{ kits|length }}</strong>) item(s)</span>
+                        <h5>Revise seu(s) item(s)</h5>
                     </div>
                     <div class="ibox-content">
                         {% for kit in kits %}
@@ -105,31 +105,28 @@
                                 <table class="table shoping-cart-table">
                                     <tbody>
                                     <tr>
-                                        <td width="90">
+                                        <td class="col-md-1">
                                             <div class="cart-product-imitation" style="background-image: url({{ kit.kit.image|componentFilePath }})">
                                             </div>
                                         </td>
                                         <td class="desc col-md-6">
                                             <h3>
-                                                <a data-url="{{ path('kit_show', { id: kit.kit.id }) }}"
-                                                   data-toggle="modal"
-                                                   data-target="#modal_details"
-                                                   class="text-navy modal_open">
+                                                <span class="text-navy">
                                                     {{ kit.kit.code }}
-                                                </a>
+                                                </span>
                                             </h3>
                                             <p class="small">
                                                 {{ kit.kit.description }}
                                             </p>
                                         </td>
 
-                                        <td>
+                                        <td class="col-md-2">
                                             <div class="text-center">
                                                 Valor
                                                 <h4>R${{ kit.kit.price|number_format(2, ',', '.') }}</h4>
                                             </div>
                                         </td>
-                                        <td>
+                                        <td class="col-md-1">
                                             <div class="text-center">
                                                 Quantidade
                                                 <h4>
@@ -137,7 +134,7 @@
                                                 </h4>
                                             </div>
                                         </td>
-                                        <td>
+                                        <td class="col-md-2">
                                             <div class="text-center">
                                                 Total
                                                 <h4>

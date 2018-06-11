@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
 class CartController extends AbstractController
 {
     /**
+     * @Breadcrumb("Confirmação")
      * @Route("/checkout", name="cart_checkout")
      */
     public function getCheckoutAction(Request $request)
