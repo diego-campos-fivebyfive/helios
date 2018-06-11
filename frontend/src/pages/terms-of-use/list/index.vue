@@ -19,7 +19,7 @@
           Button(
             class='primary-common',
             pos='first',
-            :action='() =>$emit("show", "edit", term)')
+            :action='() => $emit("show", "edit", term)')
             Icon(name='pencil')
           Button(
             class='danger-common',

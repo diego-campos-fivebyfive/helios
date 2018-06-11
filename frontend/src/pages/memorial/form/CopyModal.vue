@@ -22,7 +22,7 @@
           class='primary-common',
           label='Copiar',
           pos='last',
-          :action='$refs.confirm.show(target)')
+          :action='() => $refs.confirm.show(target)')
           Icon(name='copy')
 </template>
 
