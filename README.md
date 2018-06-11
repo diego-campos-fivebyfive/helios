@@ -761,17 +761,9 @@ Esclarecimentos gerais relacionados a documentação:
   <a name="sobre--equipe"></a><a name="11.1"></a>
   - [11.1](#sobre--equipe) **A equipe**:
 
-    - #### Alisson Alves
-    ```
-    Full-stack developer
-    Slack: @alissonalmachado
-    Github: @alissonam
-    E-mail: alissonalmachado@gmail.com
-    ```
-
     - #### Claudinei Machado
     ```
-    Full-stack developer
+    Software Engineer
     Slack: @cjchamado
     Github: @cjchamado
     E-mail: cjchamado@gmail.com
@@ -779,7 +771,7 @@ Esclarecimentos gerais relacionados a documentação:
 
     - #### Fabio Dukievicz
     ```
-    Full-stack developer
+    Backend developer
     Slack: @fabiojd47
     Github: @kascat
     E-mail: fabiojd47@gmail.com
@@ -795,7 +787,7 @@ Esclarecimentos gerais relacionados a documentação:
 
     - #### João Zaqueu Chereta
     ```
-    Full-stack developer
+    Backend developer
     Slack: @joaozaqueuchereta
     Github: @joaozaqueu
     E-mail: joaozaqueuchereta@gmail.com
@@ -809,6 +801,14 @@ Esclarecimentos gerais relacionados a documentação:
     E-mail: marcelomarco1981@gmail.com
     ```
 
+    - #### Mauricio Paz Pacheco
+    ```
+    Frontend developer
+    Slack: @mauriciopazp
+    Github: @mauriciopazpp
+    E-mail: mauriciopazdev@gmail.com
+    ```
+
     - #### Mauro André
     ```
     Product manager
@@ -816,6 +816,7 @@ Esclarecimentos gerais relacionados a documentação:
     Github: @mauroandre
     E-mail: eng.mauroandre@gmail.com
     ```
+
     - #### Paula Daiane
     ```
     Frontend developer
@@ -826,7 +827,7 @@ Esclarecimentos gerais relacionados a documentação:
 
     - #### Rafael Kendrik
     ```
-    Full-stack developer
+    Software Engineer
     Slack: @rafaelkendrik
     Github: @rafamikovski
     E-mail: rafamikovski@hotmail.com
