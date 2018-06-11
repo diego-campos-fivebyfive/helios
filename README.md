@@ -801,6 +801,14 @@ Esclarecimentos gerais relacionados a documentação:
     E-mail: marcelomarco1981@gmail.com
     ```
 
+    - #### Mauricio Paz Pacheco
+    ```
+    Frontend developer
+    Slack: @mauriciopazp
+    Github: @mauriciopazpp
+    E-mail: mauriciopazdev@gmail.com
+    ```
+
     - #### Mauro André
     ```
     Product manager
