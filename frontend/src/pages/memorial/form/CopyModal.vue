@@ -46,7 +46,7 @@
       copyMemorial(target) {
         this.$refs.confirm.hide()
 
-        const id = this.$route.params.id
+        const { id } = this.$route.params
         const uri = `admin/api/v1/memorials/${id}/copy_level`
 
         this.axios.put(uri, { source: this.level, target })

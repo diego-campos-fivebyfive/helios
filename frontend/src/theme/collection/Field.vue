@@ -1,5 +1,6 @@
 <template lang="pug">
-  label.collection-field(:class='{ "danger-common": field.rejected }')
+  label.collection-field(
+    :class='{ "danger-common": field.rejected }')
     | {{ field.label }}
     slot
     Icon.collection-field-icon(

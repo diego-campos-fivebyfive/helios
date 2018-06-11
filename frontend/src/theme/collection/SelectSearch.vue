@@ -3,7 +3,7 @@
     input.field(
       v-on:input='requestOptions($event.target.value)',
       :value='selected.text')
-    div.options(v-if='this.show')
+    .options(v-if='this.show')
       ul
         li(
           v-on:click='updateOption($event.target.value)',
