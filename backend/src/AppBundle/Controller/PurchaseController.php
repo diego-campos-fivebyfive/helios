@@ -78,39 +78,33 @@ class PurchaseController extends AbstractController
 
      /**
      * @Route("/cart_pool/{id}", name="cart_pool_detail")
-     * @Security("has_role('ROLE_OWNER') or has_role('ROLE_PLATFORM_ADMIN')")
      */
     public function showCartPoolAction(CartPool $cartPool)
     {
-        $isPlatform = $this->user()->isPlatformAdmin() || $this->user()->isPlatformMaster();
-        $isAccountOwner = $cartPool->getAccount() === $this->account();
+        $this->denyAccessUnlessGranted('view', $cartPool);
 
-        if ($isPlatform || $isAccountOwner) {
-            $cartPoolTotal = 0;
-            $kits = [];
+        $cartPoolTotal = 0;
+        $kits = [];
 
-            foreach ($cartPool->getItems() as $item) {
-                $kitTotal = $item['value'] * $item['quantity'];
-                $cartPoolTotal += $kitTotal;
+        foreach ($cartPool->getItems() as $item) {
+            $kitTotal = $item['value'] * $item['quantity'];
+            $cartPoolTotal += $kitTotal;
 
-                $kits[] = [
-                    'item' => $item,
-                    'quantity' => $item['quantity'],
-                    'total' => $kitTotal
-                ];
-            }
-
-            $shipping = json_decode($cartPool->getCheckout()['shipping'], true)[0];
-
-            return $this->render('cart.cart_pool_detail', [
-                'cartPool' => $cartPool,
-                'kits' => $kits,
-                'total' => $cartPoolTotal,
-                'shipping' => $shipping
-            ]);
-        } else {
-            $this->denyAccessUnlessGranted('view', $cartPool);
+            $kits[] = [
+                'item' => $item,
+                'quantity' => $item['quantity'],
+                'total' => $kitTotal
+            ];
         }
+
+        $shipping = json_decode($cartPool->getCheckout()['shipping'], true)[0];
+
+        return $this->render('cart.cart_pool_detail', [
+            'cartPool' => $cartPool,
+            'kits' => $kits,
+            'total' => $cartPoolTotal,
+            'shipping' => $shipping
+        ]);
 
     }
 }
