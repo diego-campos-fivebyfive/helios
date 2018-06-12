@@ -342,6 +342,9 @@ class CartPool
         ];
     }
 
+    /**
+     * @return array
+     */
     public static function getStatusNames()
     {
         return [
@@ -357,11 +360,13 @@ class CartPool
         ];
     }
 
+    /**
+     * @return mixed
+     */
     public function getStatusName()
     {
         $statusNames = self::getStatusNames();
 
-        //dump($statusNames, $this->status);die;
         return $statusNames[$this->status];
     }
 
