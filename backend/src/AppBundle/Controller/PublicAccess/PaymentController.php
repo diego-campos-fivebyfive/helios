@@ -20,9 +20,11 @@ class PaymentController extends AbstractController
     /**
      * @Route("/card", name="payment_callback_card")
      * @Method("get")
+     * @param Request $request
      * @return JsonResponse
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\RuntimeException
      */
     public function getPaymentCardAction(Request $request)
     {
@@ -58,9 +60,11 @@ class PaymentController extends AbstractController
     /**
      * @Route("/billet/register", name="payment_callback_billet_register")
      * @Method("get")
+     * @param Request $request
      * @return JsonResponse
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\RuntimeException
      */
     public function getPaymentBilletRegisterAction(Request $request)
     {
@@ -96,9 +100,11 @@ class PaymentController extends AbstractController
     /**
      * @Route("/billet", name="payment_callback_billet")
      * @Method("get")
+     * @param Request $request
      * @return JsonResponse
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\RuntimeException
      */
     public function getPaymentBilletAction(Request $request)
     {
