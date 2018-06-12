@@ -11,22 +11,11 @@
     <ul class="dropdown-menu"  style="max-height: 250px; overflow: auto">
         {% for key, status in statusList %}
             <li>
-                <a href="#" class="small" data-value="{{ key }}" data-status="true" tabIndex="-1">
+                <a href="#" class="small" data-value="{{ key }}" tabIndex="-1">
                     <input value="{{ key }}" type="checkbox" {% if status.checked %}checked{% set quantity = quantity + 1 %}{% endif %}>
-                    {{ status.name|trans }}
+                    {{ status.name }}
                 </a>
             </li>
-
-            {% if subStatusList[key] is defined %}
-                {% for key2, subStatus in subStatusList[key] %}
-                    <li>
-                        <a href="#" class="small" data-value="{{ key ~ key2 }}" data-substatus="true" tabIndex="-1" >
-                            <input value="{{ key ~ key2 }}" type="checkbox" {% if subStatus.checked %}checked{% set quantity = quantity + 1 %}{% endif %}>
-                            {{ status.name|trans ~ " / " ~ subStatus.name }}
-                        </a>
-                    </li>
-                {% endfor %}
-            {% endif %}
         {% endfor %}
     </ul>
 </div>
@@ -41,7 +30,6 @@
         var filter_status = $('#filter-status');
 
         form_filtration.append($('<input type="hidden" name="status"/>').val(getStatus()));
-        form_filtration.append($('<input type="hidden" name="substatus"/>').val(getSubStatus()));
 
         $filterStatusHasChanges = false;
 
@@ -53,10 +41,9 @@
                 .from(options)
                 .forEach(function (option) {
                     var key = option.getAttribute('data-value');
-                    var statusLabel = option.getAttribute('data-status');
                     var checked = option.querySelector('input').checked;
 
-                    if (checked && statusLabel === "true") {
+                    if (checked) {
                         status.push(key);
                     }
                 });
@@ -64,39 +51,17 @@
             return status;
         }
 
-        function getSubStatus() {
-            var options = $('#filter-status .dropdown-menu a');
-            var subStatus = [];
-
-            Array
-                .from(options)
-                .forEach(function (option) {
-                    var key = option.getAttribute('data-value');
-                    var substatus = option.getAttribute('data-substatus');
-                    var checked = option.querySelector('input').checked;
-
-                    if (checked && substatus === "true") {
-                        subStatus.push(key);
-                    }
-
-
-                });
-
-            return subStatus;
-        }
-
-        function filterStatusAndSubStatus() {
+        function filterStatus() {
             $('#filter-status .dropdown-menu').on('click', function(event) {
                 $filterStatusHasChanges = true;
                 event.stopPropagation();
             });
 
             $(document).one('click', function(event) {
-                document.removeEventListener('click', filterStatusAndSubStatus);
+                document.removeEventListener('click', filterStatus);
 
                 if ($filterStatusHasChanges) {
                     $('input[name="status"]').val(getStatus());
-                    $('input[name="substatus"]').val(getSubStatus());
                     form_filtration.trigger('submit');
                     $filterStatusHasChanges = false;
                 }
@@ -104,7 +69,7 @@
         }
 
         filter_status.on('click', function() {
-            document.addEventListener('click', filterStatusAndSubStatus);
+            document.addEventListener('click', filterStatus);
         });
     }
 </script>
