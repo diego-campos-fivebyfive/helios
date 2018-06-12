@@ -67,9 +67,16 @@ class CartPool
     /**
      * @var float
      *
-     * @ORM\Column(type="float", nullable=true)
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
      */
     private $amount;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $status;
 
     /**
      * @var \DateTime
@@ -195,6 +202,25 @@ class CartPool
     public function setAmount($amount)
     {
         $this->amount = $amount;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param $status
+     * @return $this
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
 
         return $this;
     }
