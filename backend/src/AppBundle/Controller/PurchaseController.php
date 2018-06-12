@@ -44,4 +44,29 @@ class PurchaseController extends AbstractController
     {
         return $this->render('cart.feedback', []);
     }
+
+    /**
+     * @Route("/list_cart_pool", name="list_cart_pool")
+     * @Method("get")
+     */
+    public function listCartPoolAction(Request $request)
+    {
+        $manager = $this->manager('cart_pool');
+
+        $qb = $manager->createQueryBuilder();
+
+        $qb
+            ->orderBy('c.id', 'asc');
+
+        $this->overrideGetFilters();
+
+        $pagination = $this->getPaginator()->paginate(
+            $qb->getQuery(),
+            $request->query->getInt('page', 1), 10
+        );
+
+        return $this->render('cart.cart_pool_list', array(
+            'pagination' => $pagination
+        ));
+    }
 }
