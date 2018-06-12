@@ -138,7 +138,6 @@ class PaymentController extends AbstractController
      */
     private function processCardCallback(array $callback, CartPool $cartPool)
     {
-
         if ($callback && $cartPool) {
             $status = CartPool::getCardStatuses()[$callback['status']];
 
