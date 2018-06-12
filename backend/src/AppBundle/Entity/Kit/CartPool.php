@@ -65,6 +65,13 @@ class CartPool
     private $billetId;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $amount;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
@@ -169,6 +176,25 @@ class CartPool
     public function setCheckout($checkout)
     {
         $this->checkout = $checkout;
+
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getAmount()
+    {
+        return $this->amount;
+    }
+
+    /**
+     * @param $amount
+     * @return $this
+     */
+    public function setAmount($amount)
+    {
+        $this->amount = $amount;
 
         return $this;
     }
