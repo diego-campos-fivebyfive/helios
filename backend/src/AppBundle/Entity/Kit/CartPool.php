@@ -58,6 +58,13 @@ class CartPool
     private $checkout;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $billetId;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
@@ -191,6 +198,25 @@ class CartPool
     public function addCallback(array $callback)
     {
         $this->callbacks[] = $callback;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBilletId()
+    {
+        return $this->billetId;
+    }
+
+    /**
+     * @param string $billetId
+     * @return CartPool
+     */
+    public function setBilletId($billetId)
+    {
+        $this->billetId = $billetId;
+
+        return $this;
     }
 
     /**
