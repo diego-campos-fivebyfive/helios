@@ -51,7 +51,7 @@ class PurchaseController extends AbstractController
      * @Route("/cart_pool/{id}", name="cart_pool_detail")
      * @Security("has_role('ROLE_OWNER') or has_role('ROLE_PLATFORM_ADMIN')")
      */
-    public function showSingleCartPoolAction(CartPool $cartPool)
+    public function showCartPoolAction(CartPool $cartPool)
     {
         $isPlatform = $this->user()->isPlatformAdmin() || $this->user()->isPlatformMaster();
         $isAccountOwner = $cartPool->getAccount() === $this->account();

@@ -7,6 +7,9 @@
             background-size: contain;
             background-position: center;
         }
+        .pool-total {
+            padding-top: 10px;
+        }
     </style>
 
     <div class="wrapper wrapper-content animated fadeInRight">
@@ -219,9 +222,10 @@
                         {% endfor %}
                     </div>
                     <div class="ibox-footer">
-                        <div class="row pull-right">
-                            <strong>Total: </strong> {{ total|currency }}
-                        </div>
+                        Resumo
+                        <span class="pull-right">
+                          <strong>Total:</strong> {{ total|currency }}
+                        </span>
                     </div>
                 </div>
             </div>
