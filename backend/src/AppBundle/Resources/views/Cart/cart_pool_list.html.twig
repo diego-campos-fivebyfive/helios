@@ -52,7 +52,13 @@
 
             <div class="ibox">
                 <div class="ibox-title">
-
+                  <div class="row">
+                      <form id="form-filter">
+                          <div class="col-md-2">
+                              {% include view('cart.cart_pool_status_filter') %}
+                          </div>
+                      </form>
+                  </div>
                 </div>
                 <div class="ibox-content">
                     <table class="table table-striped table-hover">
@@ -114,4 +120,20 @@
         </div>
     </div>
 
+{% endblock %}
+
+{% block scripts %}
+
+    {% include view('helper.request') %}
+    {% include view('helper.plugins_js') %}
+
+    <script>
+        var form_filtration = $("#form-filter");
+
+        console.log(form_filtration);
+
+        if(form_filtration.length){
+            StatusFilter(form_filtration);
+        }
+    </script>
 {% endblock %}
