@@ -139,7 +139,10 @@ class PaymentController extends AbstractController
     private function processCardCallback(array $callback, CartPool $cartPool)
     {
         if ($callback && $cartPool) {
+            $status = CartPool::getCardStatuses()[$callback['status']];
+
             $cartPool->addCallback($callback);
+            $cartPool->setStatus($status);
 
             return [
                 'processed' => true,
@@ -161,7 +164,10 @@ class PaymentController extends AbstractController
     private function processPaymentBilletCallback(array $callback, CartPool $cartPool)
     {
         if ($callback && $cartPool) {
+            $status = CartPool::getBilletStatuses()[$callback['status']];
+
             $cartPool->addCallback($callback);
+            $cartPool->setStatus($status);
 
             return [
                 'processed' => true,
@@ -183,8 +189,10 @@ class PaymentController extends AbstractController
     private function processBilletCallback(array $callback, CartPool $cartPool)
     {
         if ($callback && $cartPool) {
-            $cartPool->addCallback($callback);
+            $status = CartPool::getBilletStatuses()[$callback['status']];
 
+            $cartPool->addCallback($callback);
+            $cartPool->setStatus($status);
             $cartPool->setBilletId($callback['id']);
 
             return [

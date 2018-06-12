@@ -60,6 +60,7 @@ class CartPoolHelper
             $cartPool->setAmount($this->getAmount($cart));
             $cartPool->setItems($items);
             $cartPool->setCheckout($checkout);
+            $cartPool->setStatus(CartPool::STATUS_CREATED);
 
             $cartPoolManager->save($cartPool);
 
