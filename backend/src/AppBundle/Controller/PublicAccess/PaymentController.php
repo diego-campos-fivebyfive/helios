@@ -18,33 +18,102 @@ use Symfony\Component\HttpFoundation\Response;
 class PaymentController extends AbstractController
 {
     /**
-     * @Route("/", name="payment_callback")
+     * @Route("/card", name="payment_callback_card")
      * @Method("get")
      * @return JsonResponse
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getPaymentAction(Request $request)
+    public function getPaymentCardAction(Request $request)
     {
-        $paymentType = $request->query->get('payment_type');
-
         /** @var CartPoolManager $cartPoolManager */
         $cartPoolManager = $this->container->get('cart_pool_manager');
 
-        $code = $paymentType ? $code = $request->query->get('order_id') : $request->query->get('id');
+        $code = $request->query->get('order_id');
 
         /** @var CartPool $pool */
         $pool = $cartPoolManager->findOneBy([
             'code' => $code
         ]);
 
-        if (isset($paymentType)) {
-            $callback = $this->formatCallback($request->query->all(), 'card');
-            $result = $this->processCardCallback($callback, $pool);
-        } else {
-            $callback = $this->formatCallback($request->query->all(), 'billet');
-            $result = $this->processBilletCallback($callback, $pool);
+        $callback = $this->formatCallback($request->query->all(), 'card');
+        $result = $this->processCardCallback($callback, $pool);
+
+        if ($result['processed']) {
+            $cartPoolManager->save($pool);
+
+            if ($result['transform']) {
+                /** @var OrderTransformer $orderTransformer */
+                $orderTransformer = $this->container->get('order_transformer');
+
+                $orderTransformer->transformFromCartPool($pool);
+            }
+
+            return $this->json();
         }
+
+        return $this->json([], Response::HTTP_BAD_REQUEST);
+    }
+
+    /**
+     * @Route("/billet/register", name="payment_callback_billet_register")
+     * @Method("get")
+     * @return JsonResponse
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getPaymentBilletRegisterAction(Request $request)
+    {
+        /** @var CartPoolManager $cartPoolManager */
+        $cartPoolManager = $this->container->get('cart_pool_manager');
+
+        $code = $request->query->get('order_id');
+
+        /** @var CartPool $pool */
+        $pool = $cartPoolManager->findOneBy([
+            'code' => $code
+        ]);
+
+        $callback = $this->formatCallback($request->query->all(), 'billet');
+        $result = $this->processBilletCallback($callback, $pool);
+
+        if ($result['processed']) {
+            $cartPoolManager->save($pool);
+
+            if ($result['transform']) {
+                /** @var OrderTransformer $orderTransformer */
+                $orderTransformer = $this->container->get('order_transformer');
+
+                $orderTransformer->transformFromCartPool($pool);
+            }
+
+            return $this->json();
+        }
+
+        return $this->json([], Response::HTTP_BAD_REQUEST);
+    }
+
+    /**
+     * @Route("/billet", name="payment_callback_billet")
+     * @Method("get")
+     * @return JsonResponse
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getPaymentBilletAction(Request $request)
+    {
+        /** @var CartPoolManager $cartPoolManager */
+        $cartPoolManager = $this->container->get('cart_pool_manager');
+
+        $billetId = $request->query->get('id');
+
+        /** @var CartPool $pool */
+        $pool = $cartPoolManager->findOneBy([
+            'billetId' => $billetId
+        ]);
+
+        $callback = $this->formatCallback($request->query->all(), 'paymentBillet');
+        $result = $this->processPaymentBilletCallback($callback, $pool);
 
         if ($result['processed']) {
             $cartPoolManager->save($pool);
@@ -72,14 +141,31 @@ class PaymentController extends AbstractController
         if ($callback && $cartPool) {
             $cartPool->addCallback($callback);
 
-            $transform = false;
-            if ($callback['status'] === 'APPROVED') {
-                $transform = true;
-            }
+            return [
+                'processed' => true,
+                'transform' => $callback['status'] === 'APPROVED'
+            ];
+        }
+
+        return [
+            'processed' => false,
+            'transform' => false
+        ];
+    }
+
+    /**
+     * @param array $callback
+     * @param CartPool $cartPool
+     * @return array
+     */
+    private function processPaymentBilletCallback(array $callback, CartPool $cartPool)
+    {
+        if ($callback && $cartPool) {
+            $cartPool->addCallback($callback);
 
             return [
                 'processed' => true,
-                'transform' => $transform
+                'transform' => $callback['status'] === 'PAID'
             ];
         }
 
@@ -99,14 +185,11 @@ class PaymentController extends AbstractController
         if ($callback && $cartPool) {
             $cartPool->addCallback($callback);
 
-            $transform = false;
-            if ($callback['status'] === 'PAGO') {
-                $transform = true;
-            }
+            $cartPool->setBilletId($callback['id']);
 
             return [
                 'processed' => true,
-                'transform' => $transform
+                'transform' => false
             ];
         }
 
@@ -136,41 +219,83 @@ class PaymentController extends AbstractController
         ];
 
         $billetKeys = [
+            'payment_type',
+            'order_id',
+            'id',
+            'amount',
+            'status',
+            'bank',
+            'our_number',
+            'typeful_line',
+            'issue_date'
+        ];
+
+        $paymentBilletKeys = [
             'id',
             'payment_date',
             'amount',
             'status'
         ];
 
-        if ($mode === 'card') {
-            $keys = $cardKeys;
-        } else {
-            $keys = $billetKeys;
-        }
+        $keys = [
+            'card' => $cardKeys,
+            'billet' => $billetKeys,
+            'paymentBillet' => $paymentBilletKeys
+        ];
 
-        if (array_diff($keys, array_keys($callback))) {
+        if (array_diff($keys[$mode], array_keys($callback))) {
             return null;
         }
 
-        if ($mode === 'card') {
-            return [
-                'acquirer_transaction_id' => $callback['acquirer_transaction_id'],
-                'amount' => $callback['amount'],
-                'authorization_timestamp' => $callback['authorization_timestamp'],
-                'customer_id' => $callback['customer_id'],
-                'number_installments' => $callback['number_installments'],
-                'order_id' => $callback['order_id'],
-                'payment_id' => $callback['payment_id'],
-                'payment_type' => $callback['payment_type'],
-                'status' => $callback['status']
-            ];
+        return $this->getFormat($mode, $callback);
+    }
+
+    /**
+     * @param $mode
+     * @param array $callback
+     * @return mixed
+     */
+    private function getFormat($mode, array $callback)
+    {
+        $format = [];
+
+        switch ($mode) {
+            case 'card':
+                $format = [
+                    'acquirerTransactionId' => $callback['acquirer_transaction_id'],
+                    'amount' => $callback['amount'],
+                    'authorizationTimestamp' => $callback['authorization_timestamp'],
+                    'customerId' => $callback['customer_id'],
+                    'numberInstallments' => $callback['number_installments'],
+                    'orderId' => $callback['order_id'],
+                    'paymentId' => $callback['payment_id'],
+                    'paymentType' => $callback['payment_type'],
+                    'status' => $callback['status']
+                ];
+                break;
+            case 'billet':
+                $format = [
+                    'paymentType' =>  $callback['payment_type'],
+                    'orderId' => $callback['order_id'],
+                    'id' => $callback['id'],
+                    'amount' => $callback['amount'],
+                    'status' => $callback['status'],
+                    'bank' => $callback['bank'],
+                    'ourNumber' => $callback['our_number'],
+                    'typefulLine' => $callback['typeful_line'],
+                    'issueDate' => $callback['issue_date']
+                ];
+                break;
+            case 'paymentBillet':
+                $format = [
+                    'id' => $callback['id'],
+                    'paymentDate' => $callback['payment_date'],
+                    'amount' => $callback['amount'],
+                    'status' => $callback['status']
+                ];
+                break;
         }
 
-        return [
-            'id' => $callback['id'],
-            'payment_date' => $callback['payment_date'],
-            'amount' => $callback['amount'],
-            'status' => $callback['status']
-        ];
+        return $format;
     }
 }
