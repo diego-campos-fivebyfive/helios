@@ -94,7 +94,7 @@
                                 <td> {{ item.createdAt|date('d/m/Y') }} </td>
                                 <td> {{ item.amount|currency }}</td>
                                 <td class="text-center">
-                                    <a href="" class="btn btn-default">
+                                    <a href="{{ path('cart_pool_detail', { id: item.id }) }}" class="btn btn-default">
                                         <i class="fa fa-eye"></i>
                                         {{ 'View'|trans }}
                                     </a>
