@@ -182,14 +182,15 @@ class CartPool
     }
 
     /**
-     * @param float $amount
+     * @param $amount
+     * @return $this
      */
     public function setAmount($amount)
     {
         $this->amount = $amount;
+
+        return $this;
     }
-
-
 
     /**
      * @param array $callbacks
