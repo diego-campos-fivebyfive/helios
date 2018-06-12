@@ -22,7 +22,7 @@ class PurchaseController extends AbstractController
     /**
      * @Route("/create_cart_pool", name="cart_pool_create")
      * @Security("has_role('ROLE_OWNER')")
-     * //@Method("post")
+     * @Method("post")
      */
     public function createCartPoolAction(Request $request)
     {
@@ -58,8 +58,7 @@ class PurchaseController extends AbstractController
 
         $qb = $manager->createQueryBuilder();
 
-        $qb
-            ->orderBy('c.id', 'desc');
+        $qb->orderBy('c.id', 'desc');
 
         if (!$this->member()->isPlatformUser()) {
             $qb->andWhere($qb->expr()->eq('c.account', $this->account()->getId()));
