@@ -57,6 +57,7 @@ class CartPoolHelper
 
             $cartPool->setCode($code);
             $cartPool->setAccount($account);
+            $cartPool->setAmount($this->getAmount($cart));
             $cartPool->setItems($items);
             $cartPool->setCheckout($checkout);
 
@@ -155,6 +156,21 @@ class CartPoolHelper
             "differentDelivery" => $checkout['differentDelivery'],
             "shipping" => json_encode($shipping)
         ];
+    }
+
+    /**
+     * @param Cart $cart
+     * @return mixed
+     */
+    private function getAmount(Cart $cart)
+    {
+        $cartHasKits = $this->getCartHasKits($cart);
+
+        return array_reduce($cartHasKits, function ($carry, $cartHasKit) {
+            $kit = $cartHasKit->getKit();
+            $carry += $kit->getPrice() * $cartHasKit->getQuantity();
+            return $carry;
+        }, 0);
     }
 
     /**
