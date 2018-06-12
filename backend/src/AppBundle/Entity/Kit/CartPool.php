@@ -342,4 +342,27 @@ class CartPool
         ];
     }
 
+    public static function getStatusNames()
+    {
+        return [
+            self::STATUS_CREATED => 'criado',
+            self::STATUS_BILLET_PENDING => 'boleto - pendente',
+            self::STATUS_BILLET_PAID => 'boleto - pago',
+            self::STATUS_BILLET_CANCELED => 'boleto - cancelado',
+            self::STATUS_CARD_PENDING => 'cartão - pendente',
+            self::STATUS_CARD_CANCELED => 'cartão - cancelado',
+            self::STATUS_CARD_APPROVED => 'cartão - aprovado',
+            self::STATUS_CARD_DENIED => 'cartão - negado',
+            self::STATUS_CARD_AUTHORIZED => 'cartão - autorizado'
+        ];
+    }
+
+    public function getStatusName()
+    {
+        $statusNames = self::getStatusNames();
+
+        //dump($statusNames, $this->status);die;
+        return $statusNames[$this->status];
+    }
+
 }
