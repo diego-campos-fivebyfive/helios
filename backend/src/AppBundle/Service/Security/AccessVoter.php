@@ -17,6 +17,7 @@ use AppBundle\Entity\Category;
 use AppBundle\Entity\CategoryInterface;
 use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\Customer;
+use AppBundle\Entity\Kit\CartPool;
 use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\User;
@@ -207,6 +208,27 @@ class AccessVoter extends Voter
     }
 
     /**
+     * @param CartPool $cartPool
+     * @param TokenInterface $token
+     * @return bool
+     */
+    private function voteViewCartPool(CartPool $cartPool, TokenInterface $token)
+    {
+        $user = $token->getUser();
+
+        $isPlatform = $user->isPlatformAdmin() || $user->isPlatformMaster();
+
+        $isAccountOwner = $user->isOwnerMaster() || $user->isOwner();
+
+        /** @var MemberInterface $member */
+        $member = $user->getInfo();
+
+        $account = $cartPool->getAccount();
+
+        return ($isPlatform || ($isAccountOwner && $account === $member->getAccount()));
+    }
+
+    /**
      * @param $object
      * @return bool
      */
@@ -214,6 +236,7 @@ class AccessVoter extends Voter
     {
         return in_array(get_class($object), [
             Category::class,
+            CartPool::class,
             Customer::class,
             Coupon::class,
             Order::class,
