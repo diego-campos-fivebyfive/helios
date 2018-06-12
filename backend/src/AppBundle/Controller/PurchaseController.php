@@ -64,7 +64,27 @@ class PurchaseController extends AbstractController
             $qb->andWhere($qb->expr()->eq('c.account', $this->account()->getId()));
         }
 
+        if (-1 != $status = $request->get('status')) {
+            $status = explode(',', $status);
+            $arrayStatus = array_filter($status, 'strlen');
+            if (!empty($arrayStatus)) {
+                $qb->andWhere($qb->expr()->in('c.status', $arrayStatus));
+            }
+        }
+
         $this->overrideGetFilters();
+
+        $getStates = function ($statusList, $arrayStatus) {
+            $finalOptions = [];
+            foreach ($statusList as $key => $status) {
+                $finalOptions[$key] = [
+                    'name' => $status,
+                    'checked' => in_array($key, $arrayStatus)
+                ];
+            }
+
+            return $finalOptions;
+        };
 
         $pagination = $this->getPaginator()->paginate(
             $qb->getQuery(),
@@ -72,7 +92,8 @@ class PurchaseController extends AbstractController
         );
 
         return $this->render('cart.cart_pool_list', array(
-            'pagination' => $pagination
+            'pagination' => $pagination,
+            'statusList' => $getStates(CartPool::getStatusNames(), $arrayStatus)
         ));
     }
 
