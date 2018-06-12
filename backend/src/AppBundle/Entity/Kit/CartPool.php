@@ -14,6 +14,18 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CartPool
 {
+    const STATUS_CREATED = 0;
+
+    const STATUS_BILLET_PENDING = 1;
+    const STATUS_BILLET_PAID = 2;
+    const STATUS_BILLET_CANCELED = 3;
+
+    const STATUS_CARD_PENDING = 4;
+    const STATUS_CARD_CANCELED = 5;
+    const STATUS_CARD_APPROVED = 6;
+    const STATUS_CARD_DENIED = 7;
+    const STATUS_CARD_AUTHORIZED = 8;
+
     /**
      * @var int
      *
@@ -302,6 +314,32 @@ class CartPool
     public function preUpdate()
     {
         $this->updatedAt = new \DateTime;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getCardStatuses()
+    {
+        return [
+            'PENDING' => self::STATUS_CARD_PENDING,
+            'CANCELED' => self::STATUS_CARD_CANCELED,
+            'APPROVED' => self::STATUS_CARD_APPROVED,
+            'DENIED' => self::STATUS_CARD_DENIED,
+            'AUTHORIZED' => self::STATUS_CARD_AUTHORIZED
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getBilletStatuses()
+    {
+        return [
+            'PENDING' => self::STATUS_BILLET_PENDING,
+            'PAID' => self::STATUS_BILLET_PAID,
+            'CANCELED' => self::STATUS_BILLET_CANCELED
+        ];
     }
 
 }
