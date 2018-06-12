@@ -17,9 +17,12 @@
     components: {
       Item
     },
-    props: [
-      'dropdown'
-    ],
+    props: {
+      dropdown: {
+        type: Object,
+        required: true
+      }
+    },
     data: () => ({
       open: false
     }),

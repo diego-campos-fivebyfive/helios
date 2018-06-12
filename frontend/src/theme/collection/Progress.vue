@@ -7,7 +7,12 @@
 
 <script>
   export default {
-    props: ['percent']
+    props: {
+      percent: {
+        type: Number,
+        required: true
+      }
+    }
   }
 </script>
 

@@ -18,12 +18,26 @@
     components: {
       Field
     },
-    props: [
-      'field',
-      'disabled',
-      'options',
-      'selected'
-    ],
+    props: {
+      field: {
+        type: Object,
+        required: true
+      },
+      disabled: {
+        type: Boolean,
+        required: false,
+        default: false
+      },
+      options: {
+        type: Array,
+        required: true
+      },
+      selected: {
+        type: Object,
+        required: false,
+        defautl: false
+      }
+    },
     methods: {
       updateOption(selectedOption) {
         const currentOption = this.options.find(eachOption => (

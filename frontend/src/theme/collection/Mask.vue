@@ -22,9 +22,12 @@
     components: {
       Field
     },
-    props: [
-      'field'
-    ],
+    props: {
+      field: {
+        type: Object,
+        required: true
+      }
+    },
     directives: { mask },
     methods: {
       getMask(type) {

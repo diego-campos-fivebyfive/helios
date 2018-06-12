@@ -11,9 +11,12 @@
 
 <script>
   export default {
-    props: [
-      'families'
-    ],
+    props: {
+      families: {
+        type: Array,
+        required: true
+      }
+    },
     data: () => ({
       components: {
         module: {

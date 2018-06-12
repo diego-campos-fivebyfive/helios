@@ -9,10 +9,16 @@
 
 <script>
   export default {
-    props: [
-      'item',
-      'itemDropdown'
-    ]
+    props: {
+      item: {
+        type: Object,
+        required: true
+      },
+      itemDropdown: {
+        type: Boolean,
+        required: true
+      }
+  }
   }
 </script>
 

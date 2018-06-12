@@ -11,9 +11,10 @@
   import payload from '@/theme/payload'
 
   export default {
-    props: [
-      'payload'
-    ],
+    props: {
+      payload: Array,
+      required: true
+    },
     methods: {
       editCoupon() {
         if (!payload.available(this.payload)) {

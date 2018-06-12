@@ -19,9 +19,12 @@
     components: {
       Field
     },
-    props: [
-      'field'
-    ],
+    props: {
+      field: {
+        type: Object,
+        required: true
+      }
+    },
     mounted() {
       this.placeholder = this.$refs.field.getPlaceholder()
     }

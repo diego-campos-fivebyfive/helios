@@ -33,9 +33,12 @@
 
 <script>
   export default {
-    props: [
-      'memorials'
-    ],
+    props: {
+      memorials: {
+        type: Array,
+        required: true
+      }
+    },
     methods: {
       getButtons(memorial) {
         const { show: showConfirm } = this.$refs.confirm

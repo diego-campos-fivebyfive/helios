@@ -26,9 +26,12 @@
   import Memorials from './Memorials'
 
   export default {
-    props: [
-      'setMemorialId'
-    ],
+    props: {
+      setMemorialId: {
+        type: Function,
+        required: true
+      }
+    },
     data: () => ({
       queryParams: {
         families: [],

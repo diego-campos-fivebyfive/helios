@@ -11,9 +11,12 @@
   import payload from '@/theme/payload'
 
   export default {
-    props: [
-      'payload'
-    ],
+    props: {
+      payload: {
+        type: Array,
+        required: true
+      }
+    },
     methods: {
       createAccoutn() {
         if (!payload.available(this.payload)) {
