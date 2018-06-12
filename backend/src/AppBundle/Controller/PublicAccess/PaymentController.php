@@ -110,11 +110,9 @@ class PaymentController extends AbstractController
         if ($callback && $cartPool) {
             $cartPool->addCallback($callback);
 
-            $transform = ($callback['status'] === 'APPROVED') ? true : false;
-
             return [
                 'processed' => true,
-                'transform' => $transform
+                'transform' => $callback['status'] === 'APPROVED'
             ];
         }
 
@@ -134,11 +132,9 @@ class PaymentController extends AbstractController
         if ($callback && $cartPool) {
             $cartPool->addCallback($callback);
 
-            $transform = ($callback['status'] === 'PAID') ? true : false;
-
             return [
                 'processed' => true,
-                'transform' => $transform
+                'transform' => $callback['status'] === 'PAID'
             ];
         }
 
