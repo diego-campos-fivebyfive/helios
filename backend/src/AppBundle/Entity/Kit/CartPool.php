@@ -345,9 +345,9 @@ class CartPool
     /**
      * @return array
      */
-    public static function getStatusNames()
+    public static function getStatusNames($keys = false)
     {
-        return [
+        $statuses =  [
             self::STATUS_CREATED => 'criado',
             self::STATUS_BILLET_PENDING => 'boleto - pendente',
             self::STATUS_BILLET_PAID => 'boleto - pago',
@@ -358,6 +358,8 @@ class CartPool
             self::STATUS_CARD_DENIED => 'cartão - negado',
             self::STATUS_CARD_AUTHORIZED => 'cartão - autorizado'
         ];
+
+        return $keys ? array_keys($statuses) : $statuses ;
     }
 
     /**
