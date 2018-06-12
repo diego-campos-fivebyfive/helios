@@ -84,9 +84,9 @@ class CartPool
     private $amount;
 
     /**
-     * @var string
+     * @var integer
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $status;
 
@@ -219,7 +219,7 @@ class CartPool
     }
 
     /**
-     * @return string
+     * @return integer
      */
     public function getStatus()
     {
