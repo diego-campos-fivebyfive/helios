@@ -74,7 +74,7 @@ class PurchaseController extends AbstractController
 
         $this->overrideGetFilters();
 
-        $getStates = function ($statusList, $arrayStatus) {
+        $getStatuses = function ($statusList, $arrayStatus) {
             $finalOptions = [];
             foreach ($statusList as $key => $status) {
                 $finalOptions[$key] = [
@@ -93,7 +93,7 @@ class PurchaseController extends AbstractController
 
         return $this->render('cart.cart_pool_list', array(
             'pagination' => $pagination,
-            'statusList' => $getStates(CartPool::getStatusNames(), $arrayStatus)
+            'statusList' => $getStatuses(CartPool::getStatusNames(), $arrayStatus)
         ));
     }
 

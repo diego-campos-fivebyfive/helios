@@ -343,6 +343,7 @@ class CartPool
     }
 
     /**
+     * @param bool $keys
      * @return array
      */
     public static function getStatusNames($keys = false)
@@ -367,9 +368,7 @@ class CartPool
      */
     public function getStatusName()
     {
-        $statusNames = self::getStatusNames();
-
-        return $statusNames[$this->status];
+        return self::getStatusNames()[$this->status];
     }
 
 }

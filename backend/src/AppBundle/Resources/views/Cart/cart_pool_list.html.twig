@@ -123,16 +123,10 @@
 {% endblock %}
 
 {% block scripts %}
-
-    {% include view('helper.request') %}
-    {% include view('helper.plugins_js') %}
-
     <script>
         var form_filtration = $("#form-filter");
 
-        console.log(form_filtration);
-
-        if(form_filtration.length){
+        if(form_filtration.length) {
             StatusFilter(form_filtration);
         }
     </script>

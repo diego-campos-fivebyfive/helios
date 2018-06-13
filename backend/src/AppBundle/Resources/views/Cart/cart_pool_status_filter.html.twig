@@ -22,8 +22,9 @@
 <script>
 
     var quantity = {{ quantity }};
-    if (quantity)
+    if (quantity) {
         $('#quantity-status').html('('+quantity+')');
+    }
 
     function StatusFilter(form_filtration) {
 
