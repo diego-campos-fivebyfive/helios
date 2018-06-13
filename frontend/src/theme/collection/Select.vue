@@ -35,7 +35,7 @@
       selected: {
         type: Object,
         required: false,
-        defautl: false
+        default: false
       }
     },
     methods: {
