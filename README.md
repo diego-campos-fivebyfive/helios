@@ -131,7 +131,7 @@ Esclarecimentos gerais relacionados a documentação:
     - **TEST**: a notificação de TEST, é direcionada para o channel correto, e também direcionada para o slackboot do Product_Tester.
 
     `Ex.: @here: _joaozaqueuchereta_ needs a *REVIEW*: https://github.com/sices/sices/pull/1863/files`
-    
+
     > **Nota**: Para o Product_Tester é direcionada a notificação e também, caso incluida, uma possível descrição adicional do teste.
 
     Para responder uma solicitação utilizamos por padrão o nome de usuário junto a resposta.
@@ -332,7 +332,7 @@ Esclarecimentos gerais relacionados a documentação:
 
   <a name="tarefas--waffle"></a><a name="5.2"></a>
   - [5.2](#tarefas--colunas-estagios) **Colunas e estágios (stage)**:
-  
+
       - `To do`:
         - `General`: Utilizada para issues de contexto geral.
         - `Backend`: Utilizada para issues de contexto backend
@@ -384,7 +384,7 @@ Esclarecimentos gerais relacionados a documentação:
     - #### Legenda:
     ```
     TD: General, Backend, Frontend, Devops
-    
+
     IP: In progress           B: Blocked
     TI: Testing I             R: Review
     TII: Testing II           D: Done
@@ -821,7 +821,7 @@ Esclarecimentos gerais relacionados a documentação:
     ```
     Frontend developer
     Slack: @pauladpm
-    Github: @whypaula
+    Github: @pauladpm
     E-mail: pauladpm@outlook.com
     ```
 
