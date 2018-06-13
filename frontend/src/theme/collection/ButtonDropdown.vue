@@ -19,9 +19,13 @@
 
 <script>
   export default {
-    props: [
-      'groups'
-    ],
+    props: {
+      groups: {
+        type: Array,
+        required: true,
+        default: () => {}
+      }
+    },
     data: () => ({
       open: false
     })

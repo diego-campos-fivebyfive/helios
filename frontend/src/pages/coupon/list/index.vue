@@ -35,9 +35,12 @@
 
 <script>
   export default {
-    props: [
-      'coupons'
-    ],
+    props: {
+      coupons: {
+        type: Array,
+        required: true
+      }
+    },
     methods: {
       removeCoupon(id) {
         this.$refs.confirm.hide()

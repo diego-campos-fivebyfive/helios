@@ -9,7 +9,9 @@
       h1.copy-modal-title(slot='header')
         Icon.icon(name='copy', scale='2')
         | Copiar configurações de markup
-        h4.sub {{ subTitle }}
+        h4.sub
+          | Atenção! Ao efetuar a cópia, todos os
+          | registros do nível atual são substituídos.
       .copy-modal-content(slot='section')
         span.description Selecione o nível de desconto a ser copiado
         select.levels(
@@ -30,17 +32,18 @@
   import Select from '@/theme/collection/Select'
 
   export default {
-    props: [
-      'level'
-    ],
+    props: {
+      level: {
+        type: Array,
+        required: true
+      }
+    },
     components: {
       Select
     },
     data: () => ({
       options: [],
-      target: '',
-      subTitle: 'Atenção! Ao efetuar a cópia, todos os' +
-        'registros do nível atual são substituídos.'
+      target: ''
     }),
     methods: {
       copyMemorial(target) {

@@ -23,11 +23,20 @@
 
 <script>
   export default {
-    props: [
-      'notification',
-      'pagination',
-      'terms'
-    ],
+    props: {
+      notification: {
+        type: Object,
+        required: false
+      },
+      pagination: {
+        type: Object,
+        required: true
+      },
+      terms: {
+        type: Array,
+        required: true
+      }
+    },
     methods: {
       formatDate(date) {
         const moment = this.$moment(date, 'YYYY-MM-DD, hh:mm a')

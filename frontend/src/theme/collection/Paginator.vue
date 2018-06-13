@@ -18,9 +18,12 @@
 
 <script>
   export default {
-    props: [
-      'pagination'
-    ],
+    props: {
+      pagination: {
+        type: Object,
+        required: true
+      }
+    },
     methods: {
       paginate(pageNumber) {
         this.$emit('paginate', pageNumber)

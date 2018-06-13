@@ -21,9 +21,12 @@
         text: 'Não vinculada'
       }
     }),
-    props: [
-      'field'
-    ],
+    props: {
+      field: {
+        type: Object,
+        required: true
+      }
+    },
     methods: {
       updateAgent(select) {
         this.$set(this.field, 'value', select.value)
