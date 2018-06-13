@@ -50,6 +50,7 @@ class PurchaseController extends AbstractController
     /**
      * @Route("/list_cart_pool", name="list_cart_pool")
      * @Security("has_role('ROLE_OWNER') or has_role('ROLE_PLATFORM_ADMIN')")
+     * @Breadcrumb("Pedidos Pendentes")
      * @Method("get")
      */
     public function listCartPoolAction(Request $request)
@@ -99,6 +100,7 @@ class PurchaseController extends AbstractController
 
      /**
      * @Route("/cart_pool/{id}", name="cart_pool_detail")
+     * @Breadcrumb("Detalhes do Pedido")
      */
     public function showCartPoolAction(CartPool $cartPool)
     {
