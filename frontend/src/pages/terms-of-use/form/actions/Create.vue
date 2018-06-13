@@ -11,9 +11,11 @@
   import payload from '@/theme/payload'
 
   export default {
-    props: {
-      payload: Function,
-      required: true
+    props:  {
+      payload: {
+        type: Function,
+        required: true
+      }
     },
     methods: {
       createTerm() {

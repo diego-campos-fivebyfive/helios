@@ -12,8 +12,10 @@
 
   export default {
     props: {
-      payload: Function,
-      required: true
+      payload: {
+        type: Function,
+        required: true
+      }
     },
     methods: {
       editCoupon() {
