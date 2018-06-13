@@ -1,13 +1,14 @@
 <template lang="pug">
-  div(:class='{ "dropdown-active": open }')
+  .dropdown(
+    :class='[{ "dropdown-active": open }, sidebarType]')
     button.toogle(type='button', v-on:click='toogle')
       Icon.icon-ui(:name='dropdown.icon')
-      | {{ dropdown.name }}
+      span {{ dropdown.name }}
       Icon.icon-arrow(v-show='open', name='angle-down')
       Icon.icon-arrow(v-show='!open', name='angle-left')
     ul(v-show='open')
       li(v-for='item in dropdown.subItems')
-        Item(:item='item', :itemDropdown='true')
+        Item(:item='item', :itemDropdown='true', :sidebarType='sidebarType')
 </template>
 
 <script>
@@ -20,6 +21,10 @@
     props: {
       dropdown: {
         type: Object,
+        required: true
+      },
+      sidebarType: {
+        type: String,
         required: true
       }
     },
@@ -35,9 +40,36 @@
 </script>
 
 <style lang="scss" scoped>
+  $dropdown-border-size: 4px;
+
+  .dropdown {
+    &.collapse {
+      position: relative;
+
+      span {
+        display: none;
+      }
+
+      .icon-arrow {
+        display: none;
+      }
+
+      ul {
+        background-color: $ui-gray-dark;
+        left: $ui-sidebar-collapse-x - $dropdown-border-size;
+        position: absolute;
+        top: 0;
+      }
+    }
+
+    &.common {
+      padding-bottom: $ui-space-y/2;
+    }
+  }
+
   .dropdown-active {
     background-color: $ui-gray-dark;
-    border-left: $ui-space-x/6.25 solid $ui-blue-light;
+    border-left: $dropdown-border-size solid $ui-blue-light;
     color: $ui-white-regular;
   }
 
@@ -66,6 +98,5 @@
 
   ul {
     list-style: none;
-    padding-bottom: $ui-space-y/2;
   }
 </style>

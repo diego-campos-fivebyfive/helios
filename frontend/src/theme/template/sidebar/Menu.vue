@@ -1,8 +1,15 @@
 <template lang="pug">
   ul.menu
     li(v-for='itemMenu in menu')
-      Dropdown(v-if='itemMenu.dropdown', :dropdown='itemMenu')
-      Item(v-else, :item='itemMenu', :itemDropdown='false')
+      Dropdown(
+        v-if='itemMenu.dropdown',
+        :dropdown='itemMenu',
+        :sidebarType='sidebarType')
+      Item(
+        v-else,
+        :item='itemMenu',
+        :itemDropdown='false',
+        :sidebarType='sidebarType')
 </template>
 
 <script>
@@ -17,6 +24,11 @@
     data: () => ({
       menu: []
     }),
+    computed: {
+      sidebarType() {
+        return this.$route.meta.sidebar || 'common'
+      }
+    },
     mounted() {
       this.axios.get('api/v1/application/menu').then(({ data }) => {
         const currentRoute = this.$router.history.current.path
