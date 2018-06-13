@@ -19,6 +19,20 @@ class InverterLoader extends AbstractLoader
         i.mpptNumber, i.mpptMin, i.inProtection, i.maxDcVoltage, i.mpptMaxDcCurrent';
 
     /**
+     * @inheritDoc
+     */
+    public function filter($level)
+    {
+        $inverters = parent::filter($level);
+
+        uasort($inverters, function($a, $b){
+            return $a['nominal_power'] > $b['nominal_power'];
+        });
+
+        return array_values($inverters);
+    }
+
+    /**
      * @return array
      */
     public function all()
