@@ -83,12 +83,16 @@
                 </select>
             </div>
 
-            {% if member.isPlatformMaster %}
-            <span class="pull-right col-md-2">
-               <a class="pull-right btn btn-primary" href="{{ path('create_kit') }}">
-                   <i class="fa fa-plus-square" aria-hidden="true"></i> Novo Kit</a>
-            </span>
-            {% endif %}
+            <div class="pull-right">
+                <a href="{{ path('list_cart_pool') }}" class="btn btn-default">
+                    <i class="fa fa-exclamation-circle"></i> Pedidos Pendentes
+                </a>
+                {% if member.isPlatformMaster %}
+                    <a class="btn btn-primary" href="{{ path('create_kit') }}">
+                    <i class="fa fa-plus-square" aria-hidden="true"></i> Novo Kit</a>
+                {% endif %}
+            </div>
+
         </div>
 
         <div class="row" id="real-content">
