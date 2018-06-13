@@ -2,80 +2,75 @@
 
 {% block styles %}
     <style>
-        .product-imitation {
-            background-repeat: no-repeat;
-            background-size: contain;
-            background-position: center;
+        .label.label-status {
+            background-color: #f2f2f2;
+            border: 1px solid #b2b2b2;
+            color: #555;
         }
 
-        #form_filtration > .form-group > .col-sm-2 {
-            display: none;
+        .label.status-0 i {
+            color: #898989;
         }
 
-        .price {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            background-color: #00A7EC;
-            padding: 3px 5px;
-            color: #FFF;
+        .label.status-1 i {
+            color: #ff7701;
         }
 
-        .description {
-            height: 22px;
-            font-size: 1rem;
+        .label.status-2 i {
+            color: #00a157;
         }
 
-        .add-to-cart-title {
-            font-size: 20px !important;
+        .label.status-3 i {
+            color: #ed4646;
         }
 
-        .modal_add_to_cart {
-            margin-top: 50%;
+        .label.status-4 i {
+            color: #ff9119;
         }
 
-        .code_kit {
-            font-weight: 600;
+        .label.status-5 i {
+            color: #ed4646;
         }
 
-        .add-cart-buttons {
-            text-align: center;
+        .label.status-6 i {
+            color: #1aa10f;
+        }
+
+        .label.status-7 i {
+            color: #ed0a20;
+        }
+
+        .label.status-8 i {
+            color: #43ecec;
         }
     </style>
 {% endblock %}
 
 {% block body %}
-
-    <div class="modal inmodal fade" id="e_modal_details" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-body" id="detail_kit"></div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-white" data-dismiss="modal">
-                        {{ 'Close'|trans }}
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="wrapper wrapper-content  animated fadeInRight">
         <div class="row">
 
             <div class="ibox">
                 <div class="ibox-title">
-
+                  <div class="row">
+                      <form id="form-filter">
+                          <div class="col-md-2">
+                              {% include view('cart.cart_pool_status_filter') %}
+                          </div>
+                      </form>
+                  </div>
                 </div>
                 <div class="ibox-content">
                     <table class="table table-striped table-hover">
                         <thead>
                         <tr>
-                            <th class="col-md-3"> Código </th>
+                            <th class="col-md-2"> Código </th>
                             {% if member.isPlatformUser %}
-                                <th class="col-md-3"> Conta </th>
+                                <th class="col-md-2"> Conta </th>
                             {% endif %}
                             <th class="col-md-2"> Data de criação </th>
                             <th class="col-md-2"> Valor </th>
+                            <th class="col-md-2 text-center"> Status </th>
                             <th class="col-md-2 text-center">
                                 <i class="fa fa-search-plus"></i>
                                 &nbsp Mais Detalhes
@@ -93,6 +88,14 @@
                                 {% endif %}
                                 <td> {{ item.createdAt|date('d/m/Y') }} </td>
                                 <td> {{ item.amount|currency }}</td>
+                                <td class="text-center">
+                                    <span class="label label-status status-{{ item.status }}">
+                                        <i class="fa fa-circle"></i> {{ item.statusName|upper }}:
+                                        {% if item.updatedAt %}
+                                            {{ item.updatedAt|date('d/m/Y') }}
+                                        {% endif %}
+                                    </span>
+                                </td>
                                 <td class="text-center">
                                     <a href="{{ path('cart_pool_detail', { id: item.id }) }}" class="btn btn-default">
                                         <i class="fa fa-eye"></i>
@@ -117,4 +120,14 @@
         </div>
     </div>
 
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        var form_filtration = $("#form-filter");
+
+        if(form_filtration.length) {
+            StatusFilter(form_filtration);
+        }
+    </script>
 {% endblock %}
