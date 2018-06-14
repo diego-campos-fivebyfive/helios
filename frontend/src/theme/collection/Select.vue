@@ -25,8 +25,7 @@
       },
       disabled: {
         type: Boolean,
-        required: false,
-        default: false
+        required: true
       },
       options: {
         type: Array,
@@ -34,8 +33,7 @@
       },
       selected: {
         type: Object,
-        required: false,
-        default: false
+        required: true
       }
     },
     methods: {
