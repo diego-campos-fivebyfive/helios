@@ -20,9 +20,11 @@ class PaymentController extends AbstractController
     /**
      * @Route("/card", name="payment_callback_card")
      * @Method("get")
+     * @param Request $request
      * @return JsonResponse
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\RuntimeException
      */
     public function getPaymentCardAction(Request $request)
     {
@@ -58,9 +60,11 @@ class PaymentController extends AbstractController
     /**
      * @Route("/billet/register", name="payment_callback_billet_register")
      * @Method("get")
+     * @param Request $request
      * @return JsonResponse
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\RuntimeException
      */
     public function getPaymentBilletRegisterAction(Request $request)
     {
@@ -96,9 +100,11 @@ class PaymentController extends AbstractController
     /**
      * @Route("/billet", name="payment_callback_billet")
      * @Method("get")
+     * @param Request $request
      * @return JsonResponse
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\RuntimeException
      */
     public function getPaymentBilletAction(Request $request)
     {
@@ -139,7 +145,10 @@ class PaymentController extends AbstractController
     private function processCardCallback(array $callback, CartPool $cartPool)
     {
         if ($callback && $cartPool) {
+            $status = CartPool::getCardStatuses()[$callback['status']];
+
             $cartPool->addCallback($callback);
+            $cartPool->setStatus($status);
 
             return [
                 'processed' => true,
@@ -161,7 +170,10 @@ class PaymentController extends AbstractController
     private function processPaymentBilletCallback(array $callback, CartPool $cartPool)
     {
         if ($callback && $cartPool) {
+            $status = CartPool::getBilletStatuses()[$callback['status']];
+
             $cartPool->addCallback($callback);
+            $cartPool->setStatus($status);
 
             return [
                 'processed' => true,
@@ -183,8 +195,10 @@ class PaymentController extends AbstractController
     private function processBilletCallback(array $callback, CartPool $cartPool)
     {
         if ($callback && $cartPool) {
-            $cartPool->addCallback($callback);
+            $status = CartPool::getBilletStatuses()[$callback['status']];
 
+            $cartPool->addCallback($callback);
+            $cartPool->setStatus($status);
             $cartPool->setBilletId($callback['id']);
 
             return [

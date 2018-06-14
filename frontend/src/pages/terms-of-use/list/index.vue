@@ -30,10 +30,16 @@
 
 <script>
   export default {
-    props: [
-      'terms',
-      'notification'
-    ],
+    props: {
+      terms: {
+        type: Array,
+        required: true
+      },
+      notification: {
+        type: Object,
+        required: false
+      }
+    },
     methods: {
       formatDate(date) {
         const moment = this.$moment(date, 'YYYY-MM-DD, hh:mm a')

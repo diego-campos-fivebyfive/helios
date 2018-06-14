@@ -22,13 +22,28 @@
 
 <script>
   export default {
-    props: [
-      'getMessages',
-      'clearCheckedMessages',
-      'incrementCheckedMessages',
-      'messages',
-      'pagination'
-    ],
+    props: {
+      getMessages: {
+        type: Function,
+        required: true
+      },
+      clearCheckedMessages: {
+        type: Function,
+        required: true
+      },
+      incrementCheckedMessages: {
+        type: Function,
+        required: true
+      },
+      messages: {
+        type: Array,
+        required: true
+      },
+      pagination: {
+        type: Object,
+        required: true
+      }
+    },
     data() {
       const {
         refreshPage,

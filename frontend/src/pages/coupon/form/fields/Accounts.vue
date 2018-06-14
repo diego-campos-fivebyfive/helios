@@ -22,9 +22,12 @@
         text: 'Não vinculada'
       }
     }),
-    props: [
-      'field'
-    ],
+    props: {
+      field: {
+        type: Object,
+        required: true
+      }
+    },
     methods: {
       requestAccount(search = '') {
         this.selected = {

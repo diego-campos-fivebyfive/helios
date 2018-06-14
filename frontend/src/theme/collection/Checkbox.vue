@@ -19,9 +19,12 @@
 
 <script>
   export default {
-    props: [
-      'field'
-    ]
+    props: {
+      field: {
+        type: Object,
+        required: true
+      }
+    }
   }
 </script>
 

@@ -1,7 +1,7 @@
 <template lang="pug">
-  aside.sidebar
+  aside.sidebar(:class='sidebarType')
     nav
-      Head
+      Head(:sidebarType='sidebarType')
       Menu
 </template>
 
@@ -13,6 +13,11 @@
     components: {
       Head,
       Menu
+    },
+    computed: {
+      sidebarType() {
+        return this.$route.meta.sidebar || 'common'
+      }
     }
   }
 </script>
@@ -22,11 +27,19 @@
     background-color: $ui-gray-darken;
     display: block;
     left: 0;
-    max-width: $ui-sidebar-x;
     min-height: 100%;
     position: absolute;
     overflow: hidden;
     top: 0;
     width: 100%;
+    z-index: 25;
+
+    &.collapse {
+      max-width: $ui-sidebar-collapse-x;
+    }
+
+    &.common {
+      max-width: $ui-sidebar-common-x;
+    }
   }
 </style>

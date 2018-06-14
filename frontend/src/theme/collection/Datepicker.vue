@@ -21,9 +21,12 @@
     data: () => ({
       language: ptBR
     }),
-    props: [
-      'field'
-    ],
+    props: {
+      field: {
+        type: Object,
+        required: true
+      }
+    },
     methods: {
       customFormatter(date) {
         return this.$moment(date).format('DD/MM/YYYY')

@@ -11,9 +11,12 @@
   import payload from '@/theme/payload'
 
   export default {
-    props: [
-      'payload'
-    ],
+    props:  {
+      payload: {
+        type: Function,
+        required: true
+      }
+    },
     methods: {
       createTerm() {
         if (!payload.available(this.payload)) {

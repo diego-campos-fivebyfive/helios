@@ -17,9 +17,12 @@
     data: () => ({
       options: []
     }),
-    props: [
-      'field'
-    ],
+    props: {
+      field: {
+        type: Object,
+        required: true
+      }
+    },
     methods: {
       updateLevel(select) {
         this.$set(this.field, 'value', select.value)

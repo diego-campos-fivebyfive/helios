@@ -50,6 +50,7 @@ class PurchaseController extends AbstractController
     /**
      * @Route("/list_cart_pool", name="list_cart_pool")
      * @Security("has_role('ROLE_OWNER') or has_role('ROLE_PLATFORM_ADMIN')")
+     * @Breadcrumb("Pedidos Pendentes")
      * @Method("get")
      */
     public function listCartPoolAction(Request $request)
@@ -64,7 +65,27 @@ class PurchaseController extends AbstractController
             $qb->andWhere($qb->expr()->eq('c.account', $this->account()->getId()));
         }
 
+        if (-1 != $status = $request->get('status')) {
+            $status = explode(',', $status);
+            $arrayStatus = array_filter($status, 'strlen');
+            if (!empty($arrayStatus)) {
+                $qb->andWhere($qb->expr()->in('c.status', $arrayStatus));
+            }
+        }
+
         $this->overrideGetFilters();
+
+        $getStatuses = function ($statusList, $arrayStatus) {
+            $finalOptions = [];
+            foreach ($statusList as $key => $status) {
+                $finalOptions[$key] = [
+                    'name' => $status,
+                    'checked' => in_array($key, $arrayStatus)
+                ];
+            }
+
+            return $finalOptions;
+        };
 
         $pagination = $this->getPaginator()->paginate(
             $qb->getQuery(),
@@ -72,12 +93,14 @@ class PurchaseController extends AbstractController
         );
 
         return $this->render('cart.cart_pool_list', array(
-            'pagination' => $pagination
+            'pagination' => $pagination,
+            'statusList' => $getStatuses(CartPool::getStatusNames(), $arrayStatus)
         ));
     }
 
      /**
      * @Route("/cart_pool/{id}", name="cart_pool_detail")
+     * @Breadcrumb("Detalhes do Pedido")
      */
     public function showCartPoolAction(CartPool $cartPool)
     {

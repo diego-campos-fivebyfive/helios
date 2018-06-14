@@ -7,11 +7,20 @@
 
 <script>
   export default {
-    props: [
-      'title',
-      'message',
-      'type',
-      'icon']
+    props: {
+      title: {
+        type: String,
+        required: true
+      },
+      message: {
+        type: String,
+        required: true
+      },
+      icon: {
+        type: String,
+        required: true
+      }
+    }
   }
 </script>
 

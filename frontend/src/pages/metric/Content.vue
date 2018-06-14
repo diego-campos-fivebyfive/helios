@@ -27,9 +27,12 @@
 
 <script>
   export default {
-    props: [
-      'milestones'
-    ],
+    props: {
+      milestones: {
+        type: Array,
+        required: true
+      }
+    },
     data: () => ({
       metric: {
         title: '',

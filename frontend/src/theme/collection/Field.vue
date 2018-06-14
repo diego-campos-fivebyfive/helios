@@ -10,9 +10,12 @@
 
 <script>
   export default {
-    props: [
-      'field'
-    ],
+    props: {
+      field: {
+        type: Object,
+        required: true
+      }
+    },
     methods: {
       getPlaceholder() {
         const text = this.field.placeholder || this.field.label

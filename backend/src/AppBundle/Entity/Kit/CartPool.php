@@ -14,6 +14,18 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CartPool
 {
+    const STATUS_CREATED = 0;
+
+    const STATUS_BILLET_PENDING = 1;
+    const STATUS_BILLET_PAID = 2;
+    const STATUS_BILLET_CANCELED = 3;
+
+    const STATUS_CARD_PENDING = 4;
+    const STATUS_CARD_CANCELED = 5;
+    const STATUS_CARD_APPROVED = 6;
+    const STATUS_CARD_DENIED = 7;
+    const STATUS_CARD_AUTHORIZED = 8;
+
     /**
      * @var int
      *
@@ -67,9 +79,16 @@ class CartPool
     /**
      * @var float
      *
-     * @ORM\Column(type="float", nullable=true)
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
      */
     private $amount;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $status;
 
     /**
      * @var \DateTime
@@ -200,6 +219,25 @@ class CartPool
     }
 
     /**
+     * @return integer
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param $status
+     * @return $this
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
      * @param array $callbacks
      * @return $this
      */
@@ -276,6 +314,61 @@ class CartPool
     public function preUpdate()
     {
         $this->updatedAt = new \DateTime;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getCardStatuses()
+    {
+        return [
+            'PENDING' => self::STATUS_CARD_PENDING,
+            'CANCELED' => self::STATUS_CARD_CANCELED,
+            'APPROVED' => self::STATUS_CARD_APPROVED,
+            'DENIED' => self::STATUS_CARD_DENIED,
+            'AUTHORIZED' => self::STATUS_CARD_AUTHORIZED
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getBilletStatuses()
+    {
+        return [
+            'PENDING' => self::STATUS_BILLET_PENDING,
+            'PAID' => self::STATUS_BILLET_PAID,
+            'CANCELED' => self::STATUS_BILLET_CANCELED
+        ];
+    }
+
+    /**
+     * @param bool $keys
+     * @return array
+     */
+    public static function getStatusNames($keys = false)
+    {
+        $statuses =  [
+            self::STATUS_CREATED => 'criado',
+            self::STATUS_BILLET_PENDING => 'boleto - pendente',
+            self::STATUS_BILLET_PAID => 'boleto - pago',
+            self::STATUS_BILLET_CANCELED => 'boleto - cancelado',
+            self::STATUS_CARD_PENDING => 'cartão - pendente',
+            self::STATUS_CARD_CANCELED => 'cartão - cancelado',
+            self::STATUS_CARD_APPROVED => 'cartão - aprovado',
+            self::STATUS_CARD_DENIED => 'cartão - negado',
+            self::STATUS_CARD_AUTHORIZED => 'cartão - autorizado'
+        ];
+
+        return $keys ? array_keys($statuses) : $statuses ;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatusName()
+    {
+        return self::getStatusNames()[$this->status];
     }
 
 }

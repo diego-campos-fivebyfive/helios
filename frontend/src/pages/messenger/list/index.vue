@@ -25,10 +25,16 @@
   import Checkbox from '@/theme/collection/Checkbox'
 
   export default {
-    props: [
-      'checkedMessages',
-      'messages'
-    ],
+    props: {
+      checkedMessages: {
+        type: Array,
+        required: true
+      },
+      messages: {
+        type: Array,
+        required: true
+      }
+    },
     components: {
       Checkbox
     },

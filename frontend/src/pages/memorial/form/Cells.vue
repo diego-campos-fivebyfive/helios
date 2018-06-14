@@ -56,10 +56,16 @@
 
 <script>
   export default {
-    props: [
-      'groups',
-      'getQueryParams'
-    ],
+    props: {
+      groups: {
+        type: Array,
+        required: true
+      },
+      getQueryParams: {
+        type: Function,
+        required: true
+      }
+    },
     data: () => ({
       ranges: [],
       rangesCount: null

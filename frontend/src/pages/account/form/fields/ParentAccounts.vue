@@ -20,9 +20,12 @@
         text: 'Não vinculada'
       }
     }),
-    props: [
-      'field'
-    ],
+    props: {
+      field: {
+        type: Object,
+        required: true
+      }
+    },
     methods: {
       setDisabledState(select) {
         this.$emit('disableFields', {
