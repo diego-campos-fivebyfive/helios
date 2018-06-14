@@ -100,6 +100,11 @@ export const routes = [
     component: Metric
   },
   {
+    path: '/project',
+    name: 'Projetos',
+    component: FrameView
+  },
+  {
     path: '/terms-of-use',
     name: 'Termos de Uso',
     component: TermsOfUse
