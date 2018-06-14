@@ -40,7 +40,11 @@
     position: relative;
 
     &.common {
-      padding-left: $ui-sidebar-x;
+      padding-left: $ui-sidebar-common-x;
+    }
+
+    &.collapse {
+      padding-left: $ui-sidebar-collapse-x;
     }
   }
 

@@ -45,7 +45,10 @@ export const routes = [
       },
       {
         path: ':id/config',
-        component: MemorialConfig
+        component: MemorialConfig,
+        meta: {
+          sidebar: 'collapse'
+        }
       }
     ]
   },
