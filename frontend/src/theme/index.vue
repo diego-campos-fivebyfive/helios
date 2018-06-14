@@ -3,7 +3,8 @@
     Sidebar(v-if='sidebar !== "none"')
     main.app-page-main
       Mainbar(v-if='mainbar !== "none"')
-      router-view
+      .app-page-main-wrapper
+        router-view
 </template>
 
 <script>
@@ -46,5 +47,10 @@
 
   .app-page-main {
     @include clearfix;
+  }
+
+  .app-page-main-wrapper {
+    height: calc(100vh - #{$ui-mainbar-y});
+    overflow-y: auto;
   }
 </style>

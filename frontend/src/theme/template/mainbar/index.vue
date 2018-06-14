@@ -87,14 +87,18 @@
 </script>
 
 <style lang="scss" scoped>
+  $head-border-size: 1px;
   .bar {
     background-color: $ui-white-regular;
-    border-bottom: 1px solid $ui-divider-color;
+    border-bottom: $head-border-size solid $ui-divider-color;
     color: $ui-text-main;
     display: block;
+    height: $ui-mainbar-y;
+    max-height: $ui-mainbar-y - $head-border-size;
     padding: $ui-space-y $ui-space-x;
     text-align: right;
     width: 100%;
+    position: relative;
 
     @include clearfix;
 
