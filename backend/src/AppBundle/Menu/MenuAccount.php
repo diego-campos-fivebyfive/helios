@@ -10,7 +10,7 @@ class MenuAccount
     private static $menuMap = [
         'dashboard' => [
             'name' => 'Dashboard',
-            'route' => 'app_index',
+            'link' => '/',
             'icon' => 'dashboard',
             'allowedRoles' => '*'
         ],
