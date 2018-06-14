@@ -46,12 +46,25 @@
     &.collapse {
       position: relative;
 
+      &:hover {
+        span {
+          display: inline-block;
+        }
+      }
+
       span {
         display: none;
+        background-color: $ui-gray-darken;
+        left: $ui-sidebar-collapse-x;
+        padding: $ui-space-y+$ui-space-y/6 $ui-space-x;
+        position: absolute;
+        top: 0;
+        white-space: nowrap;
       }
 
       .icon-arrow {
-        display: none;
+        margin-top: $ui-space-y/10;
+        margin-right: -$ui-space-y/2;
       }
 
       ul {
@@ -71,6 +84,12 @@
     background-color: $ui-gray-dark;
     border-left: $dropdown-border-size solid $ui-blue-light;
     color: $ui-white-regular;
+
+    &.collapse {
+      .icon-arrow {
+        display: none;
+      }
+    }
   }
 
   .toogle {

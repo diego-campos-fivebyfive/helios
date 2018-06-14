@@ -27,7 +27,7 @@
 </script>
 
 <style lang="scss" scoped>
-  $item-dropdown-x: 140px;
+  $item-dropdown-x: 145px;
 
   .item {
     color: inherit;
@@ -70,10 +70,10 @@
         }
 
         span {
-          background-color: $ui-gray-dark;
+          background-color: $ui-gray-darken;
           display: none;
           left: $ui-sidebar-collapse-x;
-          padding: $ui-space-y $ui-space-x;
+          padding: $ui-space-y+$ui-space-y/9 $ui-space-x;
           position: absolute;
           top: 0;
           white-space: nowrap;
