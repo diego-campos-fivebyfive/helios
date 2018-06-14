@@ -34,8 +34,12 @@
 </script>
 
 <style lang="scss" scoped>
+  $menu-head-height: 120px;
   ul {
     list-style: none;
+    margin-right: - $ui-space-x/2;
+    max-height: calc(100vh - #{$menu-head-height});
+    overflow-y: auto;
   }
 
   li {
