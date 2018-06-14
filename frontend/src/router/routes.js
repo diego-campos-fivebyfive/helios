@@ -13,6 +13,33 @@ const RouterView = {
   template: '<router-view></router-view>'
 }
 
+const FrameView = {
+  template: '<div :style="frameWrapper"><iframe :style="frame" :src="getRoute"></iframe></div>',
+  data: () => ({
+    frame: {
+      border: 0,
+      height: '100%',
+      width: '100%'
+    },
+    frameWrapper: {
+      height: '100%',
+      overflow: 'hidden'
+    }
+  }),
+  computed: {
+    getRoutePath() {
+      const currentPath = this.$route.path
+      const homePath = '/dashboard'
+      return (currentPath === '/') ? homePath : currentPath
+    },
+    getRoute() {
+      const twigBaseUri = `${process.env.API_URL}/twig`
+      const routePath = this.getRoutePath
+      return `${twigBaseUri}${routePath}`
+    }
+  }
+}
+
 export const routes = [
   {
     path: '/account',
