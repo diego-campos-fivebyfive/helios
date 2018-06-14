@@ -1,6 +1,6 @@
 <template lang="pug">
-  a.item(
-    :href='item.link',
+  router-link.item(
+    :to='item.link',
     :class='{ "item-dropdown": itemDropdown, "item-active": item.active }')
     Icon.icon-ui(:name='item.icon')
     | {{ item.name }}
