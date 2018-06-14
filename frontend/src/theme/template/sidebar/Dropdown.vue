@@ -1,9 +1,9 @@
 <template lang="pug">
   .dropdown(
     :class='[{ "dropdown-active": open }, sidebarType]')
-    button.toogle(type='button', v-on:click='toogle')
+    button.dropdown-toogle(type='button', v-on:click='toogle')
       Icon.icon-ui(:name='dropdown.icon')
-      span {{ dropdown.name }}
+      .dropdown-toogle-label {{ dropdown.name }}
       Icon.icon-arrow(v-show='open', name='angle-down')
       Icon.icon-arrow(v-show='!open', name='angle-left')
     ul(v-show='open')
@@ -42,29 +42,37 @@
 <style lang="scss" scoped>
   $dropdown-border-size: 4px;
 
+  ul {
+    list-style: none;
+  }
+
+  .icon-arrow {
+    float: right;
+  }
+
   .dropdown {
     &.collapse {
       position: relative;
 
-      &:hover {
-        span {
-          display: inline-block;
-        }
-      }
-
-      span {
-        display: none;
+      .dropdown-toogle-label {
         background-color: $ui-gray-darken;
+        display: none;
         left: $ui-sidebar-collapse-x;
-        padding: $ui-space-y+$ui-space-y/6 $ui-space-x;
+        padding: $ui-space-y + $ui-space-y/6 $ui-space-x;
         position: absolute;
         top: 0;
         white-space: nowrap;
       }
 
+      &:hover {
+        .dropdown-toogle-label {
+          display: inline-block;
+        }
+      }
+
       .icon-arrow {
-        margin-top: $ui-space-y/10;
         margin-right: -$ui-space-y/2;
+        margin-top: $ui-space-y/10;
       }
 
       ul {
@@ -92,7 +100,7 @@
     }
   }
 
-  .toogle {
+  .dropdown-toogle {
     color: inherit;
     font-weight: inherit;
     padding: $ui-space-y $ui-space-x/1.5 $ui-space-y $ui-space-x;
@@ -109,13 +117,5 @@
     margin-right: $ui-space-x/3;
     vertical-align: bottom;
     width: 1rem;
-  }
-
-  .icon-arrow {
-    float: right;
-  }
-
-  ul {
-    list-style: none;
   }
 </style>

@@ -1,7 +1,9 @@
 <template lang="pug">
   a.item(
     :href='item.link',
-    :class='[{ "item-dropdown": itemDropdown, "item-active": item.active }, sidebarType]')
+    :class='[{ "item-dropdown": itemDropdown,\
+      "item-active": item.active }, \
+      sidebarType]')
     Icon.icon-ui(:name='item.icon')
     span {{ item.name }}
     Icon.icon-arrow(name='angle-right')
@@ -28,6 +30,10 @@
 
 <style lang="scss" scoped>
   $item-dropdown-x: 145px;
+
+  .icon-arrow {
+    float: right;
+  }
 
   .item {
     color: inherit;
@@ -56,18 +62,11 @@
       &.common {
         padding: $ui-space-y/2 $ui-space-x/1.5 $ui-space-y/2 $ui-space-x*2;
       }
-      
     }
 
     &:not(.item-dropdown) {
       &.collapse {
         position: relative;
-
-        &:hover {
-          span {
-            display: inline-block;
-          }
-        }
 
         span {
           background-color: $ui-gray-darken;
@@ -79,12 +78,17 @@
           white-space: nowrap;
         }
 
+        &:hover {
+          span {
+            display: inline-block;
+          }
+        }
+
         .icon-arrow {
           display: none;
         }
       }
     }
-
   }
 
   .item-active {
@@ -97,9 +101,5 @@
     margin-right: $ui-space-x/3;
     vertical-align: bottom;
     width: 1rem;
-  }
-
-  .icon-arrow {
-    float: right;
   }
 </style>
