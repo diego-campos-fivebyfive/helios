@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 class AppController extends AbstractController
 {
     /**
-     * @Route("/", name="app_index")
+     * @Route("/twig/dashboard", name="app_index")
      * @Breadcrumb("Dashboard")
      */
     public function indexAction(Request $request)

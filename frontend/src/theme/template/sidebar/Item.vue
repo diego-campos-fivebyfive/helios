@@ -1,8 +1,9 @@
 <template lang="pug">
-  a.item(
-    :href='item.link',
-    :class='[{ "item-dropdown": itemDropdown,\
-      "item-active": item.active }, \
+  router-link.item(
+    :to='item.link',
+    :class='[{\
+      "item-dropdown": itemDropdown,\
+      "item-active": item.active },\
       sidebarType]')
     Icon.icon-ui(:name='item.icon')
     span {{ item.name }}

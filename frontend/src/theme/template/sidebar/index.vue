@@ -29,6 +29,7 @@
     left: 0;
     min-height: 100%;
     position: absolute;
+    overflow: hidden;
     top: 0;
     width: 100%;
     z-index: 25;

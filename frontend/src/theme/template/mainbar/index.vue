@@ -1,6 +1,6 @@
 <template lang="pug">
   header.bar
-    h1.title {{ getPageTitle }}
+    h1.title {{ pageTitle }}
     h2.info {{ date }}
     a.messages(v-if='$global.user.sices', href='/messenger')
       Icon.messages-icon(name='envelope')
@@ -54,6 +54,7 @@
   export default {
     data: () => ({
       date: '',
+      pageTitle: '',
       totalOfMessages: null
     }),
     sockets: {
@@ -61,12 +62,19 @@
         this.totalOfMessages = this.totalOfMessages + data
       }
     },
-    computed: {
-      getPageTitle() {
-        return this.$router.history.current.name
+    methods: {
+      setPageTitle() {
+        this.pageTitle = this.$router.history.current.name
+      }
+    },
+    watch:{
+      $route() {
+        this.setPageTitle()
       }
     },
     mounted() {
+      this.setPageTitle()
+
       const uri = '/admin/api/v1/orders/messages/unread_count'
       this.axios.get(uri)
         .then(response => {
@@ -79,14 +87,18 @@
 </script>
 
 <style lang="scss" scoped>
+  $head-border-size: 1px;
   .bar {
     background-color: $ui-white-regular;
-    border-bottom: 1px solid $ui-divider-color;
+    border-bottom: $head-border-size solid $ui-divider-color;
     color: $ui-text-main;
     display: block;
+    height: $ui-mainbar-y;
+    max-height: $ui-mainbar-y - $head-border-size;
     padding: $ui-space-y $ui-space-x;
     text-align: right;
     width: 100%;
+    position: relative;
 
     @include clearfix;
 
