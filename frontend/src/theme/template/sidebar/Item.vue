@@ -1,5 +1,6 @@
 <template lang="pug">
   router-link.item(
+    v-on:click.native='forceReload',
     :to='item.link',
     :class='[{\
       "item-dropdown": itemDropdown,\
@@ -24,6 +25,24 @@
       sidebarType: {
         type: String,
         required: true
+      }
+    },
+    methods: {
+      forceReload() {
+        const getInitialPath = Promise.resolve(this.$router.history.current.path)
+
+        const redirectToDifferentPath = initialPath => {
+          this.$router.push({ path: '/' })
+          return initialPath
+        }
+
+        const redirectToInitialPath = initialPath => {
+          this.$router.push({ path: initialPath })
+        }
+
+        getInitialPath
+          .then(redirectToDifferentPath)
+          .then(redirectToInitialPath)
       }
     }
   }
