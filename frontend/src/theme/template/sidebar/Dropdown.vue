@@ -3,7 +3,7 @@
     :class='[{ "dropdown-active": open }, sidebarType]')
     button.dropdown-toogle(type='button', v-on:click='toogle')
       Icon.icon-ui(:name='dropdown.icon')
-      .dropdown-toogle-label {{ dropdown.name }}
+      span.dropdown-toogle-label {{ dropdown.name }}
       Icon.icon-arrow(v-show='open', name='angle-down')
       Icon.icon-arrow(v-show='!open', name='angle-left')
     ul(v-show='open')
@@ -81,10 +81,6 @@
         position: absolute;
         top: 0;
       }
-    }
-
-    &.common {
-      padding-bottom: $ui-space-y/2;
     }
   }
 
