@@ -42,6 +42,11 @@ const FrameView = {
 
 export const routes = [
   {
+    path: '/',
+    name: 'Dashboard',
+    component: FrameView
+  },
+  {
     path: '/account',
     name: 'Contas',
     component: RouterView,
@@ -60,6 +65,11 @@ export const routes = [
     path: '/coupon',
     name: 'Cupons',
     component: Coupon
+  },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: FrameView
   },
   {
     path: '/memorial',
