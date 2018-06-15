@@ -63,7 +63,7 @@ class MenuAccount
             'subItems' => [
                 'modules' => [
                     'name' => 'Módulos',
-                    'route' => 'components',
+                    'link' => '/components/module/',
                     'icon' => 'modules',
                     'custom' => [
                         'routeParameters' => [
@@ -74,7 +74,7 @@ class MenuAccount
                 ],
                 'inverters' => [
                     'name' => 'Inversores',
-                    'route' => 'components',
+                    'link' => '/components/inverter/',
                     'icon' => 'inverters',
                     'custom' => [
                         'routeParameters' => [
@@ -85,19 +85,19 @@ class MenuAccount
                 ],
                 'structures' => [
                     'name' => 'Estruturas',
-                    'route' => 'structure_index',
+                    'link' => '/structure',
                     'icon' => 'structure',
                     'allowedRoles' => '*'
                 ],
                 'stringBox' => [
                     'name' => 'String Box',
-                    'route' => 'stringbox_index',
+                    'link' => '/stringbox',
                     'icon' => 'stringbox',
                     'allowedRoles' => '*'
                 ],
                 'varieties' => [
                     'name' => 'Variedades',
-                    'route' => 'variety_index',
+                    'link' => '/variety',
                     'icon' => 'variety',
                     'allowedRoles' => '*'
                 ]
