@@ -123,7 +123,7 @@ class MenuAccount
         ],
         'ranking' => [
             'name' => 'Fidelidade SICES',
-            'route' => 'ranking_index',
+            'link' => '/ranking',
             'icon' => 'trophy',
             'allowedRoles' => [
                 'ownerMaster',
