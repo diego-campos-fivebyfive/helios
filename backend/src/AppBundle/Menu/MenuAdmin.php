@@ -159,7 +159,7 @@ class MenuAdmin
         ],
        'insurance' => [
             'name' => 'Seguros',
-            'route' => 'insurance_index',
+            'link' => '/admin/insurance',
             'icon' => 'insurance',
             'allowedRoles' => [
                 'admin',

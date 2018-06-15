@@ -18,7 +18,7 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
  *
  * @Breadcrumb("Seguros")
  *
- * @Route("/insurance")
+ * @Route("twig/insurance")
  */
 class InsuranceController extends AbstractController
 {
