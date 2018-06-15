@@ -48,7 +48,7 @@ class OptimizerTest extends WebTestCase
 
         self::assertEquals(0, count($project->getProjectVarieties()));
 
-        $isSolarEdge = (bool) preg_match("/solaredge/i", $inverter->getDescription());
+        $isSolarEdge = (bool) preg_match(SolarEdgeResolver::SOLAR_EDGE_EXPRESSION, $inverter->getDescription());
 
         self::assertTrue($isSolarEdge);
 
@@ -96,7 +96,7 @@ class OptimizerTest extends WebTestCase
 
         self::assertEquals(0, count($project->getProjectVarieties()));
 
-        $isSolarEdge = (bool) preg_match("/solaredge/i", $inverter->getDescription());
+        $isSolarEdge = (bool) preg_match(SolarEdgeResolver::SOLAR_EDGE_EXPRESSION, $inverter->getDescription());
 
         self::assertFalse($isSolarEdge);
 
