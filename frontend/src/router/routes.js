@@ -77,22 +77,6 @@ export const routes = [
     }
   },
   {
-    path: '/admin/ranking',
-    name: 'Contas',
-    component: FrameView,
-    meta: {
-        absolutePath: '/twig/ranking'
-    }
-  },
-  {
-    path: '/admin/components/module',
-    name: 'Módulos',
-    component: FrameView,
-    meta: {
-        absolutePath: '/twig/components/module'
-    }
-  },
-  {
     path: '/admin/memorials',
     name: 'Memoriais',
     component: FrameView,
