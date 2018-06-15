@@ -140,7 +140,7 @@ class MenuAccount
         ],
         'order' => [
             'name' => 'Orçamento SICES',
-            'route' => 'index_order',
+            'link' => '/orders',
             'id' => 'idPedidos',
             'icon' => 'my-requests',
             'custom' => [
