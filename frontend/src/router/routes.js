@@ -72,6 +72,11 @@ export const routes = [
     component: FrameView
   },
   {
+      path: '/item',
+      name: 'Meus Itens',
+      component: FrameView
+  },
+  {
     path: '/memorial',
     name: 'Memoriais',
     component: RouterView,
