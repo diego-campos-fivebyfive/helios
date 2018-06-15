@@ -30,7 +30,7 @@ class MenuAdmin
         ],
         'ranking' => [
             'name' => 'Fidelidade SICES',
-            'link' => '/admin/ranking',
+            'link' => '/ranking',
             'icon' => 'trophy',
             'allowedRoles' => '*'
         ],
@@ -71,7 +71,7 @@ class MenuAdmin
             'subItems' => [
                 'modules' => [
                     'name' => 'Módulos',
-                    'link' => 'admin/components/module',
+                    'link' => '/components/module',
                     'icon' => 'modules',
                     'custom' => [
                         'routeParameters' => [
@@ -82,7 +82,7 @@ class MenuAdmin
                 ],
                 'inverters' => [
                     'name' => 'Inversores',
-                    'route' => 'components',
+                    'link' => '/components/inverter',
                     'icon' => 'inverters',
                     'custom' => [
                         'routeParameters' => [
@@ -93,19 +93,19 @@ class MenuAdmin
                 ],
                 'structures' => [
                     'name' => 'Estruturas',
-                    'route' => 'structure_index',
+                    'link' => '/structure',
                     'icon' => 'structure',
                     'allowedRoles' => '*'
                 ],
                 'stringBox' => [
                     'name' => 'String Box',
-                    'route' => 'stringbox_index',
+                    'link' => '/stringbox',
                     'icon' => 'stringbox',
                     'allowedRoles' => '*'
                 ],
                 'varieties' => [
                     'name' => 'Variedades',
-                    'route' => 'variety_index',
+                    'link' => '/variety',
                     'icon' => 'variety',
                     'allowedRoles' => '*'
                 ],
