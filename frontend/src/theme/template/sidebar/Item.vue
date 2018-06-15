@@ -1,6 +1,7 @@
 <template lang="pug">
   a.item(
     :href='item.link',
+    :style='item.customStyle'
     :class='[{ "item-dropdown": itemDropdown,\
       "item-active": item.active }, \
       sidebarType]')
