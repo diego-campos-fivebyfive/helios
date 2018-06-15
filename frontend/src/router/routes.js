@@ -117,6 +117,11 @@ export const routes = [
     component: FrameView
   },
   {
+    path: '/member',
+    name: 'Usuários',
+    component: FrameView
+  },
+  {
     path: '/memorial',
     name: 'Memoriais',
     component: RouterView,
