@@ -133,6 +133,14 @@ export const routes = [
     }
   },
   {
+    path: '/admin/settings',
+    name: 'Parâmetros da Plataforma',
+    component: FrameView,
+    meta: {
+      absolutePath: '/admin/twig/settings'
+    }
+  },
+  {
     path: '/contact/:id',
     name: 'Contato',
     component: FrameView
