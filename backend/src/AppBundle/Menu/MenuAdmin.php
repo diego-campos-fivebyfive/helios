@@ -193,13 +193,13 @@ class MenuAdmin
             'subItems' => [
                 'myData' => [
                     'name' => 'Meus Dados',
-                    'route' => 'member_profile',
+                    'link' => '/member/profile',
                     'icon' => 'profile',
                     'allowedRoles' => '*'
                 ],
                 'parameters' => [
                     'name' => 'Parâmetros',
-                    'route' => 'platform_settings',
+                    'link' => '/admin/settings',
                     'icon' => 'sliders',
                     'allowedRoles' => [
                         'admin',
