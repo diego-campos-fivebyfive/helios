@@ -30,9 +30,16 @@ const FrameView = {
     getRoutePath() {
       const currentPath = this.$route.path
       const homePath = '/dashboard'
+
       return (currentPath === '/') ? homePath : currentPath
     },
     getRoute() {
+      const { absolutePath } = this.$route.meta
+
+      if (absolutePath) {
+        return `${process.env.API_URL}${absolutePath}`
+      }
+
       const twigBaseUri = `${process.env.API_URL}/twig`
       const routePath = this.getRoutePath
       return `${twigBaseUri}${routePath}`
@@ -95,6 +102,14 @@ export const routes = [
     path: '/variety',
     name: 'Variedades',
     component: FrameView
+  },
+  {
+    path: '/settings/nasa',
+    name: 'Dados Climáticos',
+    component: FrameView,
+    meta: {
+      absolutePath: '/settings/twig/nasa'
+    }
   },
   {
     path: '/item',
