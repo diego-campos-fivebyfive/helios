@@ -62,6 +62,11 @@ export const routes = [
     ]
   },
   {
+      path: '/contact/:id',
+      name: 'Contato',
+      component: FrameView
+  },
+  {
     path: '/coupon',
     name: 'Cupons',
     component: Coupon
@@ -70,6 +75,11 @@ export const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: FrameView
+  },
+  {
+      path: '/item',
+      name: 'Meus Itens',
+      component: FrameView
   },
   {
     path: '/memorial',
@@ -100,8 +110,18 @@ export const routes = [
     component: Metric
   },
   {
+      path: '/price',
+      name: 'Preço de Venda',
+      component: FrameView
+  },
+  {
     path: '/project',
     name: 'Projetos',
+    component: FrameView
+  },
+  {
+    path: '/tasks/m',
+    name: 'Tarefas',
     component: FrameView
   },
   {

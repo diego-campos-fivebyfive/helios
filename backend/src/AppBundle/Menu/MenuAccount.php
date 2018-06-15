@@ -16,7 +16,7 @@ class MenuAccount
         ],
         'contacts' => [
             'name' => 'Contatos',
-            'route' => 'contact_index',
+            'link' => '/contact/person',
             'custom' => [
                 'routeParameters' => [
                     'context' => 'person'
@@ -27,7 +27,7 @@ class MenuAccount
         ],
         'tasks' => [
             'name' => 'Tarefas',
-            'route' => 'task_index',
+            'link' => '/tasks/m',
             'icon' => 'tasks',
             'allowedRoles' => '*'
         ],
@@ -39,7 +39,7 @@ class MenuAccount
         ],
         'myItems' => [
             'name' => 'Meus Itens',
-            'route' => 'extras_index',
+            'link' => '/item',
             'icon' => 'extras',
             'allowedRoles' => [
                 'ownerMaster',
@@ -48,7 +48,7 @@ class MenuAccount
         ],
         'sellPrice' => [
             'name' => 'Preço de Venda',
-            'route' => 'kit_index',
+            'link' => '/price',
             'icon' => 'money',
             'allowedRoles' => [
                 'ownerMaster',
