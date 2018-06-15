@@ -122,7 +122,12 @@ export const routes = [
     component: FrameView
   },
   {
-    path: '/memorial',
+    path: '/ranking',
+    name: 'Pontuações',
+    component: FrameView
+  },
+  {
+    path: '/memorial',S
     name: 'Memoriais',
     component: RouterView,
     children: [
