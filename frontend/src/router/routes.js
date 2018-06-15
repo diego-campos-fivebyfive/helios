@@ -93,6 +93,14 @@ export const routes = [
     }
   },
   {
+    path: '/admin/memorials',
+    name: 'Memoriais',
+    component: FrameView,
+    meta: {
+        absolutePath: '/admin/twig/memorials'
+    }
+  },
+  {
     path: '/admin/orders',
     name: 'Orçamentos',
     component: FrameView,
