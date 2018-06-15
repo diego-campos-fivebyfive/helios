@@ -93,6 +93,14 @@ export const routes = [
     }
   },
   {
+    path: '/admin/stock',
+    name: 'Gestão de estoque',
+    component: FrameView,
+    meta: {
+        absolutePath: '/admin/twig/stock'
+    }
+  },
+  {
     path: '/admin/orders',
     name: 'Orçamentos',
     component: FrameView,
