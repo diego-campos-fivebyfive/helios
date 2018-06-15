@@ -132,7 +132,7 @@ class MenuAccount
         ],
         'kits' => [
             'name' => 'Kits Fixos',
-            'route' => 'index_kit',
+            'link' => '/kit',
             'icon' => 'cart-plus',
             'allowedRoles' => [
                 'owner'
