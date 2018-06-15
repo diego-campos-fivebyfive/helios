@@ -132,6 +132,11 @@ export const routes = [
     component: FrameView
   },
   {
+    path: '/orders',
+    name: 'Meus Pedidos',
+    component: FrameView
+  },
+  {
     path: '/memorial',
     name: 'Memoriais',
     component: RouterView,
