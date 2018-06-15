@@ -130,7 +130,7 @@ class MenuAdmin
         ],
         'stock' => [
             'name' => 'Estoque',
-            'route' => 'stock',
+            'link' => '/admin/stock',
             'icon' => 'kits',
             'allowedRoles' => [
                 'admin',
