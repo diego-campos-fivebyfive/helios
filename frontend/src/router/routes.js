@@ -137,6 +137,37 @@ export const routes = [
     component: FrameView
   },
   {
+    path: '/member/timezone',
+    name: 'Fuso Horário',
+    component: FrameView
+  },
+  {
+    path: '/member/profile',
+    name: 'Meus Dados',
+    component: FrameView
+  },
+  {
+    path: '/member/business',
+    name: 'Meu Negócio',
+    component: FrameView
+  },
+  {
+    path: '/settings/categories/contact_category/',
+    name: 'Categorias',
+    component: FrameView,
+    meta: {
+      absolutePath: '/settings/twig/categories/contact_category/'
+    }
+  },
+  {
+    path: '/settings/categories/sale_stage/',
+    name: 'Etapas de Venda',
+    component: FrameView,
+    meta: {
+        absolutePath: '/settings/twig/categories/sale_stage/'
+    }
+  },
+  {
     path: '/memorial',
     name: 'Memoriais',
     component: RouterView,
