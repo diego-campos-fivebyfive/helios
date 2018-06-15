@@ -69,6 +69,38 @@ export const routes = [
     ]
   },
   {
+    path: '/admin/account/',
+    name: 'Contas',
+    component: FrameView,
+    meta: {
+        absolutePath: '/admin/twig/account'
+    }
+  },
+  {
+    path: '/admin/ranking',
+    name: 'Contas',
+    component: FrameView,
+    meta: {
+        absolutePath: '/twig/ranking'
+    }
+  },
+  {
+    path: '/admin/components/module',
+    name: 'Módulos',
+    component: FrameView,
+    meta: {
+        absolutePath: '/twig/components/module'
+    }
+  },
+  {
+    path: '/admin/orders',
+    name: 'Orçamentos',
+    component: FrameView,
+    meta: {
+        absolutePath: '/admin/twig/orders'
+    }
+  },
+  {
     path: '/contact/:id',
     name: 'Contato',
     component: FrameView

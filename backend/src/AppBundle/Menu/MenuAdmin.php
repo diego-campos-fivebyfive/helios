@@ -16,7 +16,7 @@ class MenuAdmin
         ],
         'accounts' => [
             'name' => 'Contas',
-            'route' => 'account_index',
+            'link' => '/admin/account',
             'icon' => 'accounts',
             'allowedRoles' => [
                 'admin',
@@ -30,7 +30,7 @@ class MenuAdmin
         ],
         'ranking' => [
             'name' => 'Fidelidade SICES',
-            'route' => 'ranking_index',
+            'link' => '/admin/ranking',
             'icon' => 'trophy',
             'allowedRoles' => '*'
         ],
@@ -54,7 +54,7 @@ class MenuAdmin
         ],
         'orders' => [
             'name' => 'Orçamentos',
-            'route' => 'orders',
+            'link' => '/admin/orders',
             'icon' => 'orders',
             'allowedRoles' => '*'
         ],
@@ -71,7 +71,7 @@ class MenuAdmin
             'subItems' => [
                 'modules' => [
                     'name' => 'Módulos',
-                    'route' => 'components',
+                    'link' => 'admin/components/module',
                     'icon' => 'modules',
                     'custom' => [
                         'routeParameters' => [
