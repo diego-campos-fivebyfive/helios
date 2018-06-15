@@ -1363,7 +1363,7 @@ class Project implements ProjectInterface
             $count += $projectModule->getQuantity();
         }
 
-        return $count;
+        return (int) $count;
     }
 
     /**
