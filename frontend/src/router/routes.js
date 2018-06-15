@@ -110,6 +110,11 @@ export const routes = [
     component: FrameView
   },
   {
+    path: '/tasks/m',
+    name: 'Tarefas',
+    component: FrameView
+  },
+  {
     path: '/terms-of-use',
     name: 'Termos de Uso',
     component: TermsOfUse
