@@ -18,7 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * @Security("has_role('ROLE_PLATFORM_ADMIN')")
- * @Route("memorials")
+ * @Route("twig/memorials")
  */
 class MemorialController extends AdminController
 {

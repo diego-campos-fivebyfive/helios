@@ -45,7 +45,7 @@ class MenuAdmin
         ],
         'memorials' => [
             'name' => 'Memoriais',
-            'route' => 'memorials',
+            'link' => '/admin/memorials',
             'icon' => 'bars',
             'allowedRoles' => [
                 'admin',
