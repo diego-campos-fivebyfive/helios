@@ -9,8 +9,10 @@ use AppBundle\Entity\Component\ProjectInterface;
 use AppBundle\Entity\Component\ProjectInverter;
 use AppBundle\Entity\Component\ProjectModule;
 use AppBundle\Entity\Component\VarietyInterface;
+use AppBundle\Manager\ProjectManager;
 use AppBundle\Service\ProjectGenerator\Core\Bridge;
 use AppBundle\Service\ProjectGenerator\Dependency\Resolver;
+use AppBundle\Service\ProjectGenerator\Resolver\SolarEdgeResolver;
 use AppBundle\Service\ProjectProcessor;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -179,6 +181,9 @@ class ProjectGenerator
 
         // CABLES AND CONNECTORS
         $this->generateVarieties($this->project);
+
+        // SOLAR_EDGE RESOLVE
+        $this->solarEdgeResolve($project);
 
         // STRING BOXES
         if(!$useBridge) {
@@ -912,6 +917,16 @@ class ProjectGenerator
         }
 
         return $this;
+    }
+
+    /**
+     * @param ProjectInterface $project
+     */
+    private function solarEdgeResolve(ProjectInterface $project)
+    {
+        $solarEdgeResolver = new SolarEdgeResolver($this->container);
+
+        $solarEdgeResolver->resolve($project);
     }
 
     /**
