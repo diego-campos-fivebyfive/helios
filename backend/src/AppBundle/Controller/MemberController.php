@@ -20,7 +20,7 @@ use AppBundle\Form\MemberType;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Route("member")
+ * @Route("twig/member")
  * @Security("has_role('ROLE_USER')")
  *
  * @Breadcrumb("Dashboard", route={"name"="app_index"})
@@ -131,7 +131,7 @@ class MemberController extends AbstractController
     public function updateAction(Request $request, Customer $member)
     {
         $this->checkAccess($member);
-        
+
         $form = $this->createForm(MemberType::class, $member, [
             'current_member' => $this->getCurrentMember()
         ]);

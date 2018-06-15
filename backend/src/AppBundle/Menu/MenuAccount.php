@@ -114,7 +114,7 @@ class MenuAccount
         ],
         'users' => [
             'name' => 'Usuários',
-            'route' => 'member_index',
+            'link' => '/member',
             'icon' => 'users',
             'allowedRoles' => [
                 'ownerMaster',
