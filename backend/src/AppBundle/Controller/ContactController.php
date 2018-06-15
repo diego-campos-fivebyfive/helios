@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 
 /**
- * @Route("contact/{context}")
+ * @Route("twig/contact/{context}")
  *
  * @Breadcrumb("Dashboard", routeName="app_index")
  * @Breadcrumb("Contacts", routeName="contact_index", routeParameters={"context"="{context}"})
@@ -277,7 +277,7 @@ class ContactController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $manager = $this->manager('customer');
-            
+
             foreach ($employees as $employee) {
                 if (!$contact->getEmployees()->contains($employee)) {
                     if ($this->employeesAsContact) {

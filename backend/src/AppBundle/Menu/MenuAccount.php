@@ -16,7 +16,7 @@ class MenuAccount
         ],
         'contacts' => [
             'name' => 'Contatos',
-            'route' => 'contact_index',
+            'link' => '/contact/person',
             'custom' => [
                 'routeParameters' => [
                     'context' => 'person'
