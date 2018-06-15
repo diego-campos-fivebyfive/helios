@@ -39,7 +39,7 @@ class MenuAccount
         ],
         'myItems' => [
             'name' => 'Meus Itens',
-            'route' => 'extras_index',
+            'link' => '/item',
             'icon' => 'extras',
             'allowedRoles' => [
                 'ownerMaster',
