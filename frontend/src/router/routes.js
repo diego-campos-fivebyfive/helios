@@ -73,7 +73,7 @@ export const routes = [
     name: 'Contas',
     component: FrameView,
     meta: {
-        absolutePath: '/admin/twig/account'
+      absolutePath: '/admin/twig/account'
     }
   },
   {
@@ -81,7 +81,7 @@ export const routes = [
     name: 'Memoriais',
     component: FrameView,
     meta: {
-        absolutePath: '/admin/twig/memorials'
+      absolutePath: '/admin/twig/memorials'
     }
   },
   {
@@ -89,7 +89,7 @@ export const routes = [
     name: 'Kits Fixos',
     component: FrameView,
     meta: {
-        absolutePath: '/admin/twig/kit'
+      absolutePath: '/admin/twig/kit'
     }
   },
   {
@@ -97,7 +97,7 @@ export const routes = [
     name: 'Gestão de estoque',
     component: FrameView,
     meta: {
-        absolutePath: '/admin/twig/stock'
+      absolutePath: '/admin/twig/stock'
     }
   },
   {
@@ -105,7 +105,7 @@ export const routes = [
     name: 'Orçamentos',
     component: FrameView,
     meta: {
-        absolutePath: '/admin/twig/orders'
+      absolutePath: '/admin/twig/orders'
     }
   },
   {
@@ -113,7 +113,7 @@ export const routes = [
     name: 'Usuários Sices',
     component: FrameView,
     meta: {
-        absolutePath: '/admin/twig/users'
+      absolutePath: '/admin/twig/users'
     }
   },
   {
@@ -121,7 +121,15 @@ export const routes = [
     name: 'Condições de pagamento',
     component: FrameView,
     meta: {
-        absolutePath: '/admin/twig/payment-methods'
+      absolutePath: '/admin/twig/payment-methods'
+    }
+  },
+  {
+    path: '/admin/insurance',
+    name: 'Seguros',
+    component: FrameView,
+    meta: {
+      absolutePath: '/admin/twig/insurance'
     }
   },
   {
