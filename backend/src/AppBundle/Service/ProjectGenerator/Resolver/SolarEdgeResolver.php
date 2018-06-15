@@ -28,11 +28,6 @@ class SolarEdgeResolver
     const SOLAR_EDGE_EXPRESSION = "/solaredge/i";
 
     /**
-     * @var ProjectManager
-     */
-    private $projectManager;
-
-    /**
      * @var ContainerInterface
      */
     private $container;
@@ -44,8 +39,6 @@ class SolarEdgeResolver
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-
-        $this->projectManager = $this->container->get('project_manager');
     }
 
     /**
