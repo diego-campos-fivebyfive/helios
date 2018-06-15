@@ -62,9 +62,9 @@ export const routes = [
     ]
   },
   {
-      path: '/contact/:id',
-      name: 'Contato',
-      component: FrameView
+    path: '/contact/:id',
+    name: 'Contato',
+    component: FrameView
   },
   {
     path: '/coupon',
@@ -77,9 +77,29 @@ export const routes = [
     component: FrameView
   },
   {
-      path: '/item',
-      name: 'Meus Itens',
-      component: FrameView
+    path: '/structure',
+    name: 'Estruturas',
+    component: FrameView
+  },
+  {
+    path: '/stringbox',
+    name: 'String Box',
+    component: FrameView
+  },
+  {
+    path: '/components/inverter',
+    name: 'Inversores',
+    component: FrameView
+  },
+  {
+    path: '/variety',
+    name: 'Variedades',
+    component: FrameView
+  },
+  {
+    path: '/item',
+    name: 'Meus Itens',
+    component: FrameView
   },
   {
     path: '/memorial',
@@ -108,6 +128,11 @@ export const routes = [
     path: '/metrics',
     name: 'Métricas',
     component: Metric
+  },
+  {
+    path: '/components/module',
+    name: 'Módulos',
+    component: FrameView
   },
   {
       path: '/price',
