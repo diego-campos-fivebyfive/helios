@@ -121,7 +121,7 @@ class MenuAdmin
         ],
         'kits' => [
             'name' => 'Kits Fixos',
-            'route' => 'kits_index',
+            'link' => '/admin/kit',
             'icon' => 'list',
             'allowedRoles' => [
                 'master',
