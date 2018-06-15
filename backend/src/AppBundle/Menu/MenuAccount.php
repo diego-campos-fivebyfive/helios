@@ -27,7 +27,7 @@ class MenuAccount
         ],
         'tasks' => [
             'name' => 'Tarefas',
-            'route' => 'task_index',
+            'link' => '/tasks/m',
             'icon' => 'tasks',
             'allowedRoles' => '*'
         ],
