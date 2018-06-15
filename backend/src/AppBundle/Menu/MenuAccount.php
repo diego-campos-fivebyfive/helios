@@ -48,7 +48,7 @@ class MenuAccount
         ],
         'sellPrice' => [
             'name' => 'Preço de Venda',
-            'route' => 'kit_index',
+            'link' => '/price',
             'icon' => 'money',
             'allowedRoles' => [
                 'ownerMaster',
