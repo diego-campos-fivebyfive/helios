@@ -255,7 +255,7 @@
   td {
     &:not(.col-range):not(.col-group-name-off) {
       display: table-cell;
-      position: sticupdateLevelcopyupdateLevelcopyky;
+      position: sticky;
     }
   }
 
