@@ -39,7 +39,7 @@
     position: absolute;
     top: 0;
     width: 100%;
-    z-index: 1;
+    z-index: 5;
   }
 
   .collection-checkbox-wrapper-checker-field {
@@ -50,7 +50,7 @@
     top: 0;
     transition: opacity 0.1s ease-in;
     width: 100%;
-    z-index: 2;
+    z-index: 10;
 
     &:checked {
       + .collection-checkbox-wrapper-checker-icon {

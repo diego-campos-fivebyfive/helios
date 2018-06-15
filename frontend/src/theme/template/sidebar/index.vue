@@ -31,7 +31,7 @@
     position: absolute;
     top: 0;
     width: 100%;
-    z-index: 25;
+    z-index: 100;
 
     &.collapse {
       max-width: $ui-sidebar-collapse-x;
