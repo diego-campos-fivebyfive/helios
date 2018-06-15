@@ -141,7 +141,7 @@ class MenuAdmin
         ],
         'users' => [
             'name' => 'Usuários Sices',
-            'link' => '/admin/users/',
+            'link' => '/admin/users',
             'icon' => 'users',
             'allowedRoles' => [
                 'admin',
@@ -150,7 +150,7 @@ class MenuAdmin
         ],
         'paymentMethods' => [
             'name' => 'Cond. Pagamento',
-            'route' => 'payment_methods',
+            'link' => '/admin/payment-methods',
             'icon' => 'signature',
             'allowedRoles' => [
                 'admin',

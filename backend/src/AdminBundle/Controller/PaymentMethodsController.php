@@ -12,7 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 /**
  * @Security("has_role('ROLE_PLATFORM_ADMIN')")
  *
- * @Route("payment-methods")
+ * @Route("twig/payment-methods")
  */
 class PaymentMethodsController extends AdminController
 {
