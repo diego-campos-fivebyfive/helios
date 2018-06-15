@@ -110,6 +110,11 @@ export const routes = [
     component: Metric
   },
   {
+      path: '/price',
+      name: 'Preço de Venda',
+      component: FrameView
+  },
+  {
     path: '/project',
     name: 'Projetos',
     component: FrameView
