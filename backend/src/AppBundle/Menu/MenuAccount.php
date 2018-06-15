@@ -33,7 +33,7 @@ class MenuAccount
         ],
         'projects' => [
             'name' => 'Projetos',
-            'route' => 'project_index',
+            'link' => '/project',
             'icon' => 'projects',
             'allowedRoles' => '*'
         ],

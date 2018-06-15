@@ -27,7 +27,7 @@ use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 
 /**
  * Class ProjectController
- * @Route("project")
+ * @Route("twig/project")
  * @Breadcrumb("Projetos")
  */
 class ProjectController extends AbstractController
