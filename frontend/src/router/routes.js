@@ -117,6 +117,14 @@ export const routes = [
     }
   },
   {
+    path: '/admin/payment-methods',
+    name: 'Condições de pagamento',
+    component: FrameView,
+    meta: {
+        absolutePath: '/admin/twig/payment-methods'
+    }
+  },
+  {
     path: '/contact/:id',
     name: 'Contato',
     component: FrameView
