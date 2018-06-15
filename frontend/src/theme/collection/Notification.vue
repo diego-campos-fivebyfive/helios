@@ -35,7 +35,7 @@
     right: 0;
     text-align: center;
     top: 0;
-    z-index: 5;
+    z-index: 200;
   }
 
   .collection-notification-message {
