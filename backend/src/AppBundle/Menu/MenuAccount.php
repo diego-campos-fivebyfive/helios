@@ -105,7 +105,7 @@ class MenuAccount
         ],
         'weather' => [
             'name' => 'Dados Climáticos',
-            'route' => 'nasa',
+            'link' => '/settings/nasa',
             'icon' => 'sun',
             'allowedRoles' => [
                 'ownerMaster',
