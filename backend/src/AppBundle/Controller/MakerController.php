@@ -105,7 +105,7 @@ class MakerController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $manager->save($maker);
-            $this->setNotice("Fabricante Atualizado com sucesso !");
+            $this->setNotice("Fabricante atualizado com sucesso !");
             return $this->redirectToRoute('maker_index');
         }
 
@@ -130,7 +130,7 @@ class MakerController extends AbstractController
         $makerManager = $this->manager('maker');
 
         if (count($components) > 0) {
-            $this->setNotice("-Este fabricante possui um ou mais produtos<br>-Remova os produtos antes de efetuar a remoção do fabricante", "error");
+            $this->setNotice("Este fabricante possui um ou mais produtos, remova os produtos antes de efetuar a remoção do fabricante", "error");
             return $this->redirectToRoute("maker_index");
         }
         $makerManager->delete($maker);
