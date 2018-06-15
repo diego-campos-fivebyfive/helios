@@ -62,6 +62,11 @@ export const routes = [
     ]
   },
   {
+      path: '/contact/:id',
+      name: 'Contato',
+      component: FrameView
+  },
+  {
     path: '/coupon',
     name: 'Cupons',
     component: Coupon
