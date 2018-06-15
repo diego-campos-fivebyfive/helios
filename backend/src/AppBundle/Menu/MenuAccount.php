@@ -180,24 +180,19 @@ class MenuAccount
             'subItems' => [
                 'timezone' => [
                     'name' => 'Fuso Horário',
-                    'route' => 'member_timezone',
+                    'link' => '/member/timezone',
                     'icon' => 'globe',
-                    'custom' => [
-                        'routeParameters' => [
-                            'type' => 'module'
-                        ]
-                    ],
                     'allowedRoles' => '*'
                 ],
                 'myData' => [
                     'name' => 'Meus Dados',
-                    'route' => 'member_profile',
+                    'link' => '/member/profile',
                     'icon' => 'profile',
                     'allowedRoles' => '*'
                 ],
                 'myBusiness' => [
                     'name' => 'Meu Negócio',
-                    'route' => 'member_business',
+                    'link' => '/member/business',
                     'icon' => 'business',
                     'allowedRoles' => [
                         'ownerMaster'
@@ -205,7 +200,7 @@ class MenuAccount
                 ],
                 'categories' => [
                     'name' => 'Categorias',
-                    'route' => 'categories',
+                    'link' => '/settings/categories/contact_category/',
                     'icon' => 'categories',
                     'custom' => [
                         'routeParameters' => [
@@ -218,7 +213,7 @@ class MenuAccount
                 ],
                 'saleSteps' => [
                     'name' => 'Etapas de Venda',
-                    'route' => 'categories',
+                    'link' => '/settings/categories/sale_stage/',
                     'icon' => 'sale_stages',
                     'custom' => [
                         'routeParameters' => [
