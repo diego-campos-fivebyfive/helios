@@ -109,6 +109,14 @@ export const routes = [
     }
   },
   {
+    path: '/admin/users',
+    name: 'Usuários Sices',
+    component: FrameView,
+    meta: {
+        absolutePath: '/admin/twig/users'
+    }
+  },
+  {
     path: '/contact/:id',
     name: 'Contato',
     component: FrameView
