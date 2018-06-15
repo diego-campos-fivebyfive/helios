@@ -141,7 +141,7 @@ class MenuAdmin
         ],
         'users' => [
             'name' => 'Usuários Sices',
-            'route' => 'user_index',
+            'link' => '/admin/users/',
             'icon' => 'users',
             'allowedRoles' => [
                 'admin',
