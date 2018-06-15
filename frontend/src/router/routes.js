@@ -85,6 +85,14 @@ export const routes = [
     }
   },
   {
+    path: '/admin/kit',
+    name: 'Kits Fixos',
+    component: FrameView,
+    meta: {
+        absolutePath: '/admin/twig/kit'
+    }
+  },
+  {
     path: '/admin/orders',
     name: 'Orçamentos',
     component: FrameView,
