@@ -127,6 +127,11 @@ export const routes = [
     component: FrameView
   },
   {
+    path: '/kit',
+    name: 'Kits Fixos',
+    component: FrameView
+  },
+  {
     path: '/memorial',
     name: 'Memoriais',
     component: RouterView,
