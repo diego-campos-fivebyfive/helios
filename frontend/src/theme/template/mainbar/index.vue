@@ -96,9 +96,10 @@
     height: $ui-mainbar-y;
     max-height: $ui-mainbar-y - $head-border-size;
     padding: $ui-space-y $ui-space-x;
+    position: relative;
     text-align: right;
     width: 100%;
-    position: relative;
+    z-index: 100;
 
     @include clearfix;
 
@@ -132,7 +133,7 @@
 
     .messages-icon {
       display: inline-block;
-      z-index: 1;
+      z-index: 105;
     }
 
     .messages-label {
@@ -145,7 +146,7 @@
       position: absolute;
       right: 7.75rem;
       top: 0.8rem;
-      z-index: 2;
+      z-index: 105;
     }
   }
 

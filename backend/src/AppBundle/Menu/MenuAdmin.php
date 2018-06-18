@@ -175,6 +175,10 @@ class MenuAdmin
                     'id' => 'idUtils'
                 ]
             ],
+            'customStyle' => [
+                'background-color' => '#f4a21a',
+                'color' => '#ffffff'
+            ],
             'allowedRoles' => '*',
         ],
         'terms' => [

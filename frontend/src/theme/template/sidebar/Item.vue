@@ -2,6 +2,7 @@
   router-link.item(
     v-on:click.native='forceReload',
     :to='item.link',
+    :style='item.customStyle'
     :class='[{\
       "item-dropdown": itemDropdown,\
       "item-active": item.active },\
@@ -67,16 +68,22 @@
     }
 
     &.item-dropdown {
+      color: $ui-sidebar-color;
+
       &.collapse {
         min-width: $item-dropdown-x;
 
         &:hover {
           background-color: $ui-gray-darken;
         }
+      }
 
-        .icon-arrow {
+      .icon-arrow {
           display: none;
         }
+
+      &:hover {
+        color: $ui-white-regular;
       }
 
       &.common {

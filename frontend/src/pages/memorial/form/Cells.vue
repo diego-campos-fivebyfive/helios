@@ -256,7 +256,6 @@
     &:not(.col-range):not(.col-group-name-off) {
       display: table-cell;
       position: sticky;
-      z-index: 5;
     }
   }
 
