@@ -130,14 +130,15 @@ class MenuAccount
                 'owner'
             ]
         ],
-        'kits' => [
-            'name' => 'Kits Fixos',
-            'link' => '/kit',
-            'icon' => 'cart-plus',
-            'allowedRoles' => [
-                'owner'
-            ]
-        ],
+//      'kits' => [
+//          'name' => 'Kits Fixos',
+//          'link' => '/kit',
+//          'route' => 'index_kit',
+//          'icon' => 'cart-plus',
+//          'allowedRoles' => [
+//              'owner'
+//          ]
+//      ],
         'order' => [
             'name' => 'Orçamento SICES',
             'link' => '/orders',

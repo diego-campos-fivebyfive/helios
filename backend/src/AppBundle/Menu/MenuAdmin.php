@@ -119,15 +119,16 @@ class MenuAdmin
                 ]
             ]
         ],
-        'kits' => [
-            'name' => 'Kits Fixos',
-            'link' => '/admin/kit',
-            'icon' => 'list',
-            'allowedRoles' => [
-                'master',
-                'admin'
-            ]
-        ],
+//      'kits' => [
+//          'name' => 'Kits Fixos',
+//          'link' => '/admin/kit',
+//          'route' => 'kits_index',
+//          'icon' => 'list',
+//          'allowedRoles' => [
+//              'master',
+//              'admin'
+//          ]
+//      ],
         'stock' => [
             'name' => 'Estoque',
             'link' => '/admin/stock',
