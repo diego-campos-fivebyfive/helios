@@ -19,7 +19,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 /**
  * @Security("has_role('ROLE_PLATFORM_ADMIN')")
  *
- * @Route("users")
+ * @Route("twig/users")
  *
  * @Breadcrumb("Sices")
  */

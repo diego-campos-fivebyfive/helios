@@ -16,7 +16,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 /**
  * @Security("has_role('ROLE_PLATFORM_COMMERCIAL') or has_role('ROLE_PLATFORM_EXPANSE')")
  *
- * @Route("stock")
+ * @Route("twig/stock")
  * @Breadcrumb("Gestão de estoque")
  */
 class StockController extends AbstractController

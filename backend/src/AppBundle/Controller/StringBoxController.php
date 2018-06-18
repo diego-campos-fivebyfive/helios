@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Stringbox controller.
  *
- * @Route("stringbox")
+ * @Route("twig/stringbox")
  * @Breadcrumb("String Box")
  *
  */

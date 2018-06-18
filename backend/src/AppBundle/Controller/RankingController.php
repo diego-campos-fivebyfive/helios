@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 
 /**
- * @Route("/ranking")
+ * @Route("twig/ranking")
  * @Breadcrumb("Pontuações")
  */
 class RankingController extends AbstractController

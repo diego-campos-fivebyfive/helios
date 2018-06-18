@@ -30,9 +30,16 @@ const FrameView = {
     getRoutePath() {
       const currentPath = this.$route.path
       const homePath = '/dashboard'
+
       return (currentPath === '/') ? homePath : currentPath
     },
     getRoute() {
+      const { absolutePath } = this.$route.meta
+
+      if (absolutePath) {
+        return `${process.env.API_URL}${absolutePath}`
+      }
+
       const twigBaseUri = `${process.env.API_URL}/twig`
       const routePath = this.getRoutePath
       return `${twigBaseUri}${routePath}`
@@ -62,9 +69,81 @@ export const routes = [
     ]
   },
   {
-      path: '/contact/:id',
-      name: 'Contato',
-      component: FrameView
+    path: '/admin/account/',
+    name: 'Contas',
+    component: FrameView,
+    meta: {
+      absolutePath: '/admin/twig/account'
+    }
+  },
+  {
+    path: '/admin/memorials',
+    name: 'Memoriais',
+    component: FrameView,
+    meta: {
+      absolutePath: '/admin/twig/memorials'
+    }
+  },
+  {
+    path: '/admin/kit',
+    name: 'Kits Fixos',
+    component: FrameView,
+    meta: {
+      absolutePath: '/admin/twig/kit'
+    }
+  },
+  {
+    path: '/admin/stock',
+    name: 'Gestão de estoque',
+    component: FrameView,
+    meta: {
+      absolutePath: '/admin/twig/stock'
+    }
+  },
+  {
+    path: '/admin/orders',
+    name: 'Orçamentos',
+    component: FrameView,
+    meta: {
+      absolutePath: '/admin/twig/orders'
+    }
+  },
+  {
+    path: '/admin/users',
+    name: 'Usuários Sices',
+    component: FrameView,
+    meta: {
+      absolutePath: '/admin/twig/users'
+    }
+  },
+  {
+    path: '/admin/payment-methods',
+    name: 'Condições de pagamento',
+    component: FrameView,
+    meta: {
+      absolutePath: '/admin/twig/payment-methods'
+    }
+  },
+  {
+    path: '/admin/insurance',
+    name: 'Seguros',
+    component: FrameView,
+    meta: {
+      absolutePath: '/admin/twig/insurance'
+    }
+  },
+  {
+    path: '/admin/settings',
+    name: 'Parâmetros da Plataforma',
+    component: FrameView,
+    meta: {
+      absolutePath: '/admin/twig/settings'
+    }
+  },
+  {
+    path: '/contact/:id',
+    name: 'Contato',
+    component: FrameView
   },
   {
     path: '/coupon',
@@ -77,9 +156,88 @@ export const routes = [
     component: FrameView
   },
   {
-      path: '/item',
-      name: 'Meus Itens',
-      component: FrameView
+    path: '/structure',
+    name: 'Estruturas',
+    component: FrameView
+  },
+  {
+    path: '/stringbox',
+    name: 'String Box',
+    component: FrameView
+  },
+  {
+    path: '/components/inverter',
+    name: 'Inversores',
+    component: FrameView
+  },
+  {
+    path: '/variety',
+    name: 'Variedades',
+    component: FrameView
+  },
+  {
+    path: '/settings/nasa',
+    name: 'Dados Climáticos',
+    component: FrameView,
+    meta: {
+      absolutePath: '/settings/twig/nasa'
+    }
+  },
+  {
+    path: '/item',
+    name: 'Meus Itens',
+    component: FrameView
+  },
+  {
+    path: '/member',
+    name: 'Usuários',
+    component: FrameView
+  },
+  {
+    path: '/ranking',
+    name: 'Pontuações',
+    component: FrameView
+  },
+  {
+    path: '/kit',
+    name: 'Kits Fixos',
+    component: FrameView
+  },
+  {
+    path: '/orders',
+    name: 'Meus Pedidos',
+    component: FrameView
+  },
+  {
+    path: '/member/timezone',
+    name: 'Fuso Horário',
+    component: FrameView
+  },
+  {
+    path: '/member/profile',
+    name: 'Meus Dados',
+    component: FrameView
+  },
+  {
+    path: '/member/business',
+    name: 'Meu Negócio',
+    component: FrameView
+  },
+  {
+    path: '/settings/categories/contact_category/',
+    name: 'Categorias',
+    component: FrameView,
+    meta: {
+      absolutePath: '/settings/twig/categories/contact_category/'
+    }
+  },
+  {
+    path: '/settings/categories/sale_stage/',
+    name: 'Etapas de Venda',
+    component: FrameView,
+    meta: {
+        absolutePath: '/settings/twig/categories/sale_stage/'
+    }
   },
   {
     path: '/memorial',
@@ -108,6 +266,11 @@ export const routes = [
     path: '/metrics',
     name: 'Métricas',
     component: Metric
+  },
+  {
+    path: '/components/module',
+    name: 'Módulos',
+    component: FrameView
   },
   {
       path: '/price',

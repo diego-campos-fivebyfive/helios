@@ -29,7 +29,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
  * @Breadcrumb("Dashboard", route={"name"="app_index"})
  * @Breadcrumb("Accounts", route={"name"="account_index"})
  *
- * @Route("account")
+ * @Route("twig/account")
  */
 class AccountController extends AdminController
 {
