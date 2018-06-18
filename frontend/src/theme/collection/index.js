@@ -12,6 +12,7 @@ import Panel from './Panel'
 import Progress from './Progress'
 import Search from './Search'
 import Table from './Table'
+import Level from './Level'
 
 export default {
   Icon,
@@ -25,5 +26,6 @@ export default {
   Panel,
   Progress,
   Search,
-  Table
+  Table,
+  Level
 }
