@@ -1441,7 +1441,7 @@ class Order implements OrderInterface
      */
     public function getSubTotal()
     {
-        if (!$this->source === self::SOURCE_KIT) {
+        if (!$this->source !== self::SOURCE_KIT) {
             $total = 0;
             $sources = $this->isMaster() ? $this->childrens : $this->elements;
             foreach ($sources as $element) {
