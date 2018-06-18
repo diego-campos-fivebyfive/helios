@@ -148,6 +148,10 @@ class MenuAccount
                     'id' => 'idPedidos'
                 ]
             ],
+            'customStyle' => [
+                'background-color' => '#00a7ec',
+                'color' => '#ffffff'
+            ],
             'allowedRoles' => [
                 'ownerMaster',
                 'owner'
@@ -161,6 +165,10 @@ class MenuAccount
                 'attributes' => [
                     'id' => 'idUtils'
                 ]
+            ],
+            'customStyle' => [
+                'background-color' => '#f4a21a',
+                'color' => '#ffffff'
             ],
             'allowedRoles' => '*',
         ],

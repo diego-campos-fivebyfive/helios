@@ -44,7 +44,8 @@ class Skeleton extends AbstractMenu
         return [
             'name' => $item['name'],
             'link' => $this->getMenuItemLink($item),
-            'icon' => $this->getIcon($item['icon'])
+            'icon' => $this->getIcon($item['icon']),
+            'customStyle' => $item['customStyle'] ?? null
         ];
     }
 
