@@ -9,10 +9,6 @@ import NotFound from '@/pages/notfound'
 import Terms from '@/pages/terms'
 import TermsOfUse from '@/pages/terms-of-use'
 
-const RouterView = {
-  template: '<router-view></router-view>'
-}
-
 export const routes = [
   {
     path: '/account',
