@@ -48,16 +48,22 @@
     }
 
     &.item-dropdown {
+      color: $ui-sidebar-color;
+
       &.collapse {
         min-width: $item-dropdown-x;
 
         &:hover {
           background-color: $ui-gray-darken;
         }
+      }
 
-        .icon-arrow {
+      .icon-arrow {
           display: none;
         }
+
+      &:hover {
+        color: $ui-white-regular;
       }
 
       &.common {
