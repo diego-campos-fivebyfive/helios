@@ -2,7 +2,7 @@
   header.bar
     h1.title {{ getPageTitle }}
     span.ranking {{ $global.user.ranking }} pontos
-    Level
+    Badge
     span.info {{ date }}
     a.messages(v-if='$global.user.sices', href='/messenger')
       Icon.messages-icon(name='envelope')

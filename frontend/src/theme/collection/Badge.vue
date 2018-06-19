@@ -1,10 +1,10 @@
 <template lang="pug">
-  .collection-level(:style='getLevelBackground()')
-    img.collection-level-logo(
+  .collection-badge(:style='getBadgeBackground()')
+    img.collection-badge-logo(
       src='~@/theme/assets/media/logo-inverse.png')
-    .collection-level-label
-      .label-level Sices
-      .label-level {{ $global.user.level }}
+    .collection-badge-label
+      | Sices
+      span {{ $global.user.level }}
 </template>
 
 <script>
@@ -12,9 +12,10 @@
 
   export default {
     methods: {
-      getLevelBackground() {
+      getBadgeBackground() {
         const { level: userLevel } = this.$global.user
-        const levelsBackground = {
+
+        const badgesBackground = {
           black: '#6d6d6d',
           partner: '#e7b042',
           platinum: '#c6c6c6',
@@ -22,44 +23,40 @@
           titanium: `url(${titaniumCover})`
         }
 
-        return `background: ${levelsBackground[userLevel]};`
+        return `background: ${badgesBackground[userLevel]};`
       }
     }
   }
 </script>
 
 <style lang="scss" scoped>
-  $level-size: 28px;
+  $badges-size: 28px;
 
-  .collection-level {
+  .collection-badge {
     border-radius: $ui-corner/2;
     display: inline-flex;
-    font-size: $level-size;
+    font-size: $badges-size;
     height: 1.25em;
     padding: 0.25em;
 
-    .collection-level-logo {
+    .collection-badge-logo {
       border-right: 0.03em solid $ui-white-regular;
       height: 100%;
       padding-right: $ui-space-x/8;
     }
 
-    .collection-level-label {
+    .collection-badge-label {
+      color: $ui-white-regular;
+      font-size: 0.3em;
+      font-weight: 600;
       padding-left: $ui-space-x/8;
+      text-align: left;
+      text-transform: uppercase;
 
-      .label-level {
-        color: $ui-white-regular;
+      span {
         display: block;
-        font-size: 0.3em;
-        font-weight: 600;
-        text-align: left;
-        text-transform: uppercase;
-
-        &:last-child {
-          font-size: 0.35em;
-        }
+        font-size: 1.25em;
       }
     }
-
   }
 </style>
