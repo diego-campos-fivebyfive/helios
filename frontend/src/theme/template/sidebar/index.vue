@@ -1,6 +1,6 @@
 <template lang="pug">
   aside.sidebar(:class='sidebarType')
-    nav
+    nav.menu
       Button.toogle(
         class='primary-common',
         :action='updateSidebarType')
@@ -41,7 +41,6 @@
     left: 0;
     min-height: 100%;
     position: absolute;
-    overflow: hidden;
     top: 0;
     width: 100%;
     z-index: 100;
@@ -52,6 +51,10 @@
 
     &.common {
       max-width: $ui-sidebar-common-x;
+    }
+
+    .menu {
+      overflow-y: hidden;
     }
   }
 
