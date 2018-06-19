@@ -1,14 +1,15 @@
 <template lang="pug">
   router-link.item(
-    v-on:click.native='forceReload',
     :to='item.link',
-    :style='item.customStyle'
+    :style='item.customStyle',
     :class='[{\
       "item-dropdown": itemDropdown,\
       "item-active": item.active },\
-      sidebarType]')
+      sidebarType]',
+    v-on:click.native='forceReload',
+    v-on:mouseover.native='setLabelPosition')
     Icon.icon-ui(:name='item.icon')
-    span {{ item.name }}
+    span(:style='labelPosition.top') {{ item.name }}
     Icon.icon-arrow(name='angle-right')
 </template>
 
@@ -28,6 +29,9 @@
         required: true
       }
     },
+    data: () => ({
+      labelPosition: {}
+    }),
     methods: {
       forceReload() {
         const getInitialPath = Promise.resolve(this.$router.history.current.path)
@@ -44,6 +48,12 @@
         getInitialPath
           .then(redirectToDifferentPath)
           .then(redirectToInitialPath)
+      },
+      setLabelPosition(event) {
+        if (event.target.href) {
+          const targetPosition = event.target.getBoundingClientRect()
+          this.$set(this.labelPosition, 'top', `top: ${targetPosition.y}px`)
+        }
       }
     },
     watch: {
@@ -103,7 +113,7 @@
           display: none;
           left: $ui-sidebar-collapse-x;
           padding: $ui-space-y+$ui-space-y/9 $ui-space-x;
-          position: absolute;
+          position: fixed;
           top: 0;
           white-space: nowrap;
         }
