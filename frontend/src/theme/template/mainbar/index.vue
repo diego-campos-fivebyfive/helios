@@ -12,7 +12,7 @@
     nav.menu
       Button(
         class='default-common',
-        link='/logout',
+        redirect='/logout',
         label='Sair',
         pos='first')
         Icon(name='sign-out')

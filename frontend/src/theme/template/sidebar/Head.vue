@@ -1,5 +1,5 @@
 <template lang="pug">
-  a.header(href='/', :class='sidebarType')
+  router-link.header(to='/', :class='sidebarType')
     img(
       src='@/theme/assets/media/logo-small.png',
       alt='Sices Solar Logo')
