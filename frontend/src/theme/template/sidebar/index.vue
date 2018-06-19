@@ -54,7 +54,7 @@
     }
 
     .menu {
-      overflow-y: hidden;
+      overflow-x: hidden;
     }
   }
 
