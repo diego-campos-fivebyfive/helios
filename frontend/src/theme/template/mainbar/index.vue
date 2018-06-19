@@ -1,7 +1,9 @@
 <template lang="pug">
   header.bar
     h1.title {{ getPageTitle }}
-    h2.info {{ date }}
+    span.ranking {{ $global.user.ranking }} pontos
+    Badge
+    span.info {{ date }}
     a.messages(v-if='$global.user.sices', href='/messenger')
       Icon.messages-icon(name='envelope')
       label.messages-label(v-if='totalOfMessages')
@@ -105,6 +107,10 @@
     text-align: left;
   }
 
+  .ranking {
+    margin-right: $ui-space-x/2;
+  }
+
   .info {
     display: inline-block;
     font-size: 1rem;
@@ -114,7 +120,8 @@
   }
 
   .menu {
-    display: inline-block;
+    display: flex;
+    float: right;
   }
 
   .messages {
