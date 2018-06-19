@@ -28,11 +28,19 @@
         this.sidebarType = (this.sidebarType === 'collapse')
           ? 'common'
           : 'collapse'
+      },
+      setDefaultSidebarType() {
+        this.sidebarType = this.$route.meta.sidebar || this.sidebarType
+        this.mainbarType = this.$route.meta.mainbar || this.mainbarType
       }
     },
     mounted() {
-      this.sidebarType = this.$route.meta.sidebar || this.sidebarType
-      this.mainbarType = this.$route.meta.mainbar || this.mainbarType
+      this.setDefaultSidebarType()
+    },
+    watch: {
+      $route() {
+        this.setDefaultSidebarType()
+      }
     }
   }
 </script>
