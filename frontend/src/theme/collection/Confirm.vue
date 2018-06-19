@@ -49,7 +49,7 @@
     position: fixed;
     right: 0;
     top: 0;
-    z-index: 205;
+    z-index: 305;
 
     &:before {
       content: "";
