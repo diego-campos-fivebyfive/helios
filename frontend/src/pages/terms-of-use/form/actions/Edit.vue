@@ -13,7 +13,7 @@
   export default {
     props: {
       payload: {
-        type: Function,
+        type: Array,
         required: true
       }
     },

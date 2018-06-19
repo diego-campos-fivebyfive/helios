@@ -35,6 +35,9 @@
       toogle() {
         this.open = !this.open
       }
+    },
+    watch: {
+      sidebarType() {}
     }
   }
 </script>

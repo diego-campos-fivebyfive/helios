@@ -1,8 +1,12 @@
 <template lang="pug">
   aside.sidebar(:class='sidebarType')
     nav
+      Button.toogle(
+        class='primary-common',
+        :action='updateSidebarType')
+        Icon(name='bars')
       Head(:sidebarType='sidebarType')
-      Menu
+      Menu(:sidebarType='sidebarType')
 </template>
 
 <script>
@@ -14,10 +18,18 @@
       Head,
       Menu
     },
-    computed: {
-      sidebarType() {
-        return this.$route.meta.sidebar || 'common'
+    props: {
+      sidebarType: {
+        type: String,
+        required: true
+      },
+      updateSidebarType: {
+        type: Function,
+        required: true
       }
+    },
+    watch: {
+      sidebarType() {}
     }
   }
 </script>
@@ -41,5 +53,11 @@
     &.common {
       max-width: $ui-sidebar-common-x;
     }
+  }
+
+  .toogle {
+    position: absolute;
+    right: -($ui-sidebar-toogle-x + $ui-space-x);
+    top: $ui-space-y;
   }
 </style>

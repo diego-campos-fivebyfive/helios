@@ -45,6 +45,9 @@
           .then(redirectToDifferentPath)
           .then(redirectToInitialPath)
       }
+    },
+    watch: {
+      sidebarType() {}
     }
   }
 </script>
@@ -79,8 +82,8 @@
       }
 
       .icon-arrow {
-          display: none;
-        }
+        display: none;
+      }
 
       &:hover {
         color: $ui-white-regular;

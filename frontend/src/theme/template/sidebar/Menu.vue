@@ -24,9 +24,10 @@
     data: () => ({
       menu: []
     }),
-    computed: {
-      sidebarType() {
-        return this.$route.meta.sidebar || 'common'
+    props: {
+      sidebarType: {
+        type: String,
+        required: true
       }
     },
     mounted() {
@@ -41,6 +42,9 @@
             })
           ))
       })
+    },
+    watch: {
+      sidebarType() {}
     }
   }
 </script>
