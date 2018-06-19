@@ -148,5 +148,8 @@ FRONTEND
 6 - Layout
   - **z-index**:
     - Root: 0 to 50
-    - Sidebar and navbar: 100 to 150
-    - Modals: 200 to 250
+    - Navbar: 100 to 150
+    - Sidebar: 200 to 250
+    - Modals and floating components: 300 to 350
+
+
