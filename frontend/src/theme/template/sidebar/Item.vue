@@ -34,20 +34,20 @@
     }),
     methods: {
       forceReload() {
-        const getInitialPath = Promise.resolve(this.$router.history.current.path)
+        const getInitPath = Promise.resolve(this.$router.history.current.path)
 
-        const redirectToDifferentPath = initialPath => {
+        const redirectToDifferentPath = initPath => {
           this.$router.push({ path: '/' })
-          return initialPath
+          return initPath
         }
 
-        const redirectToInitialPath = initialPath => {
-          this.$router.push({ path: initialPath })
+        const redirectToInitPath = initPath => {
+          this.$router.push({ path: initPath })
         }
 
-        getInitialPath
+        getInitPath
           .then(redirectToDifferentPath)
-          .then(redirectToInitialPath)
+          .then(redirectToInitPath)
       },
       setLabelPosition(event) {
         if (event.target.href) {

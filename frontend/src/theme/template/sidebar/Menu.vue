@@ -51,6 +51,7 @@
 
 <style lang="scss" scoped>
   $menu-head-height: 120px;
+
   ul {
     list-style: none;
     margin-right: - $ui-space-x/2;
