@@ -6,8 +6,8 @@
       :updateSidebarType='updateSidebarType')
     main.app-page-main
       Mainbar(v-if='mainbarType !== "none"')
-        .app-page-main-wrapper
-          router-view
+      .app-page-main-wrapper
+        router-view
 </template>
 
 <script>
