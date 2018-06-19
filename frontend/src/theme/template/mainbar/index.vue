@@ -1,7 +1,8 @@
 <template lang="pug">
   header.bar
     h1.title {{ getPageTitle }}
-    span.ranking {{ $global.user.ranking }} pontos
+    span.ranking(v-if='$global.user.ranking')
+      | {{ $global.user.ranking }} pontos
     Badge
     span.info {{ date }}
     a.messages(v-if='$global.user.sices', href='/messenger')
