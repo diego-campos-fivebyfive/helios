@@ -1,6 +1,9 @@
 <template lang="pug">
   aside.sidebar(:class='sidebarType')
     nav
+      Button.toogle(
+        class='primary-common')
+        Icon(name='bars')
       Head(:sidebarType='sidebarType')
       Menu
 </template>
@@ -40,5 +43,11 @@
     &.common {
       max-width: $ui-sidebar-common-x;
     }
+  }
+
+  .toogle {
+    position: absolute;
+    right: -($ui-sidebar-toogle-x + $ui-space-x);
+    top: $ui-space-y;
   }
 </style>

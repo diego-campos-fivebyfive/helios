@@ -101,6 +101,7 @@
     float: left;
     font-size: 2rem;
     font-weight: 300;
+    margin-left: $ui-sidebar-toogle-x + $ui-space-x;
     text-align: left;
   }
 
