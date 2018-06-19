@@ -6,7 +6,7 @@
         :action='updateSidebarType')
         Icon(name='bars')
       Head(:sidebarType='sidebarType')
-      Menu
+      Menu(:sidebarType='sidebarType')
 </template>
 
 <script>
@@ -18,18 +18,18 @@
       Head,
       Menu
     },
-    data: () => ({
-      sidebarType: ''
-    }),
-    methods: {
-      updateSidebarType() {
-        this.sidebarType = (this.sidebarType === 'collapse')
-          ? 'common'
-          : 'collapse'
+    props: {
+      sidebarType: {
+        type: String,
+        required: true
+      },
+      updateSidebarType: {
+        type: Function,
+        required: true
       }
     },
-    mounted() {
-      this.sidebarType = this.$route.meta.sidebar || 'common'
+    watch: {
+      sidebarType() {}
     }
   }
 </script>
