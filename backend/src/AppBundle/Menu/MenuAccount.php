@@ -16,7 +16,7 @@ class MenuAccount
         ],
         'contacts' => [
             'name' => 'Contatos',
-            'route' => 'contact_index',
+            'link' => '/contact/person',
             'custom' => [
                 'routeParameters' => [
                     'context' => 'person'
@@ -27,19 +27,19 @@ class MenuAccount
         ],
         'tasks' => [
             'name' => 'Tarefas',
-            'route' => 'task_index',
+            'link' => '/tasks/m',
             'icon' => 'tasks',
             'allowedRoles' => '*'
         ],
         'projects' => [
             'name' => 'Projetos',
-            'route' => 'project_index',
+            'link' => '/project',
             'icon' => 'projects',
             'allowedRoles' => '*'
         ],
         'myItems' => [
             'name' => 'Meus Itens',
-            'route' => 'extras_index',
+            'link' => '/item',
             'icon' => 'extras',
             'allowedRoles' => [
                 'ownerMaster',
@@ -48,7 +48,7 @@ class MenuAccount
         ],
         'sellPrice' => [
             'name' => 'Preço de Venda',
-            'route' => 'kit_index',
+            'link' => '/price',
             'icon' => 'money',
             'allowedRoles' => [
                 'ownerMaster',
@@ -63,7 +63,7 @@ class MenuAccount
             'subItems' => [
                 'modules' => [
                     'name' => 'Módulos',
-                    'route' => 'components',
+                    'link' => '/components/module/',
                     'icon' => 'modules',
                     'custom' => [
                         'routeParameters' => [
@@ -74,7 +74,7 @@ class MenuAccount
                 ],
                 'inverters' => [
                     'name' => 'Inversores',
-                    'route' => 'components',
+                    'link' => '/components/inverter/',
                     'icon' => 'inverters',
                     'custom' => [
                         'routeParameters' => [
@@ -85,19 +85,19 @@ class MenuAccount
                 ],
                 'structures' => [
                     'name' => 'Estruturas',
-                    'route' => 'structure_index',
+                    'link' => '/structure',
                     'icon' => 'structure',
                     'allowedRoles' => '*'
                 ],
                 'stringBox' => [
                     'name' => 'String Box',
-                    'route' => 'stringbox_index',
+                    'link' => '/stringbox',
                     'icon' => 'stringbox',
                     'allowedRoles' => '*'
                 ],
                 'varieties' => [
                     'name' => 'Variedades',
-                    'route' => 'variety_index',
+                    'link' => '/variety',
                     'icon' => 'variety',
                     'allowedRoles' => '*'
                 ]
@@ -105,7 +105,7 @@ class MenuAccount
         ],
         'weather' => [
             'name' => 'Dados Climáticos',
-            'route' => 'nasa',
+            'link' => '/settings/nasa',
             'icon' => 'sun',
             'allowedRoles' => [
                 'ownerMaster',
@@ -114,7 +114,7 @@ class MenuAccount
         ],
         'users' => [
             'name' => 'Usuários',
-            'route' => 'member_index',
+            'link' => '/member',
             'icon' => 'users',
             'allowedRoles' => [
                 'ownerMaster',
@@ -123,30 +123,35 @@ class MenuAccount
         ],
         'ranking' => [
             'name' => 'Fidelidade SICES',
-            'route' => 'ranking_index',
+            'link' => '/ranking',
             'icon' => 'trophy',
             'allowedRoles' => [
                 'ownerMaster',
                 'owner'
             ]
         ],
-        'kits' => [
-            'name' => 'Kits Fixos',
-            'route' => 'index_kit',
-            'icon' => 'cart-plus',
-            'allowedRoles' => [
-                'owner'
-            ]
-        ],
+//      'kits' => [
+//          'name' => 'Kits Fixos',
+//          'link' => '/kit',
+//          'route' => 'index_kit',
+//          'icon' => 'cart-plus',
+//          'allowedRoles' => [
+//              'owner'
+//          ]
+//      ],
         'order' => [
             'name' => 'Orçamento SICES',
-            'route' => 'index_order',
+            'link' => '/orders',
             'id' => 'idPedidos',
             'icon' => 'my-requests',
             'custom' => [
                 'attributes' => [
                     'id' => 'idPedidos'
                 ]
+            ],
+            'customStyle' => [
+                'background-color' => '#00a7ec',
+                'color' => '#ffffff'
             ],
             'allowedRoles' => [
                 'ownerMaster',
@@ -161,6 +166,10 @@ class MenuAccount
                 'attributes' => [
                     'id' => 'idUtils'
                 ]
+            ],
+            'customStyle' => [
+                'background-color' => '#f4a21a',
+                'color' => '#ffffff'
             ],
             'allowedRoles' => '*',
         ],
@@ -180,24 +189,19 @@ class MenuAccount
             'subItems' => [
                 'timezone' => [
                     'name' => 'Fuso Horário',
-                    'route' => 'member_timezone',
+                    'link' => '/member/timezone',
                     'icon' => 'globe',
-                    'custom' => [
-                        'routeParameters' => [
-                            'type' => 'module'
-                        ]
-                    ],
                     'allowedRoles' => '*'
                 ],
                 'myData' => [
                     'name' => 'Meus Dados',
-                    'route' => 'member_profile',
+                    'link' => '/member/profile',
                     'icon' => 'profile',
                     'allowedRoles' => '*'
                 ],
                 'myBusiness' => [
                     'name' => 'Meu Negócio',
-                    'route' => 'member_business',
+                    'link' => '/member/business',
                     'icon' => 'business',
                     'allowedRoles' => [
                         'ownerMaster'
@@ -205,7 +209,7 @@ class MenuAccount
                 ],
                 'categories' => [
                     'name' => 'Categorias',
-                    'route' => 'categories',
+                    'link' => '/settings/categories/contact_category/',
                     'icon' => 'categories',
                     'custom' => [
                         'routeParameters' => [
@@ -218,7 +222,7 @@ class MenuAccount
                 ],
                 'saleSteps' => [
                     'name' => 'Etapas de Venda',
-                    'route' => 'categories',
+                    'link' => '/settings/categories/sale_stage/',
                     'icon' => 'sale_stages',
                     'custom' => [
                         'routeParameters' => [

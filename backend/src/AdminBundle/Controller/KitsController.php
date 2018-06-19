@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\File;
 
 /**
- * @Route("kit")
+ * @Route("twig/kit")
  *
  * @Breadcrumb("Kits Fixos")
  */

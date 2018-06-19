@@ -21,7 +21,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 
 /**
- * @Route("components/{type}")
+ * @Route("twig/components/{type}")
  *
  *
  * @Breadcrumb("Dashboard", route={"name"="app_index"})

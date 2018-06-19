@@ -31,7 +31,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 
 /**
- * @Route("orders")
+ * @Route("twig/orders")
  * @Breadcrumb("Meus Pedidos")
  */
 class OrderController extends AbstractController

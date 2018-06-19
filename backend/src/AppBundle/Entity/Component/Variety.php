@@ -228,7 +228,8 @@ class Variety implements VarietyInterface, ComponentInterface
             self::TYPE_CONNECTOR,
             self::TYPE_TRANSFORMER,
             self::TYPE_MONITOR,
-            self::TYPE_FUSE
+            self::TYPE_FUSE,
+            self::TYPE_OPTIMIZER
         ];
 
         return array_combine($types, $types);

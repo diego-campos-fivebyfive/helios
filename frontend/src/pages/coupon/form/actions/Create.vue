@@ -11,9 +11,11 @@
   import payload from '@/theme/payload'
 
   export default {
-    props: {
-      payload: Array,
-      required: true
+     props: {
+      payload: {
+        type: Array,
+        required: true
+      }
     },
     methods: {
       createCoupon() {

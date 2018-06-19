@@ -793,6 +793,14 @@ Esclarecimentos gerais relacionados a documentação:
     E-mail: joaozaqueuchereta@gmail.com
     ```
 
+    - #### Jonadabe de Souza Nascimento
+    ```
+    Backend developer
+    Slack: @Jonadabe
+    Github: @jhonndabi
+    E-mail: jhonndabi.s.n@gmail.com
+    ```
+
     - #### Marcelo Marco
     ```
     Sysadmin

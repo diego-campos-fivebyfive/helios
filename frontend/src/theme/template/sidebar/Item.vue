@@ -1,6 +1,8 @@
 <template lang="pug">
   router-link.item(
+    v-on:click.native='forceReload',
     :to='item.link',
+    :style='item.customStyle'
     :class='[{\
       "item-dropdown": itemDropdown,\
       "item-active": item.active },\
@@ -25,6 +27,27 @@
         type: String,
         required: true
       }
+    },
+    methods: {
+      forceReload() {
+        const getInitialPath = Promise.resolve(this.$router.history.current.path)
+
+        const redirectToDifferentPath = initialPath => {
+          this.$router.push({ path: '/' })
+          return initialPath
+        }
+
+        const redirectToInitialPath = initialPath => {
+          this.$router.push({ path: initialPath })
+        }
+
+        getInitialPath
+          .then(redirectToDifferentPath)
+          .then(redirectToInitialPath)
+      }
+    },
+    watch: {
+      sidebarType() {}
     }
   }
 </script>
@@ -48,16 +71,22 @@
     }
 
     &.item-dropdown {
+      color: $ui-sidebar-color;
+
       &.collapse {
         min-width: $item-dropdown-x;
 
         &:hover {
           background-color: $ui-gray-darken;
         }
+      }
 
-        .icon-arrow {
-          display: none;
-        }
+      .icon-arrow {
+        display: none;
+      }
+
+      &:hover {
+        color: $ui-white-regular;
       }
 
       &.common {

@@ -1,7 +1,10 @@
 <template lang="pug">
   header.bar
     h1.title {{ pageTitle }}
-    h2.info {{ date }}
+    span.ranking(v-if='$global.user.ranking')
+      | {{ $global.user.ranking }} pontos
+    Badge
+    span.info {{ date }}
     a.messages(v-if='$global.user.sices', href='/messenger')
       Icon.messages-icon(name='envelope')
       label.messages-label(v-if='totalOfMessages')
@@ -96,9 +99,10 @@
     height: $ui-mainbar-y;
     max-height: $ui-mainbar-y - $head-border-size;
     padding: $ui-space-y $ui-space-x;
+    position: relative;
     text-align: right;
     width: 100%;
-    position: relative;
+    z-index: 100;
 
     @include clearfix;
 
@@ -112,7 +116,12 @@
     float: left;
     font-size: 2rem;
     font-weight: 300;
+    margin-left: $ui-sidebar-toogle-x + $ui-space-x;
     text-align: left;
+  }
+
+  .ranking {
+    margin-right: $ui-space-x/2;
   }
 
   .info {
@@ -124,7 +133,8 @@
   }
 
   .menu {
-    display: inline-block;
+    display: flex;
+    float: right;
   }
 
   .messages {
@@ -132,7 +142,7 @@
 
     .messages-icon {
       display: inline-block;
-      z-index: 1;
+      z-index: 105;
     }
 
     .messages-label {
@@ -145,7 +155,7 @@
       position: absolute;
       right: 7.75rem;
       top: 0.8rem;
-      z-index: 2;
+      z-index: 105;
     }
   }
 

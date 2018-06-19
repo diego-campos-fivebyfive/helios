@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Variety controller.
  *
- * @Route("variety")
+ * @Route("twig/variety")
  * @Breadcrumb("Variedades")
  *
  */

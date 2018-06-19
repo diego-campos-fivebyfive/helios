@@ -17,7 +17,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 /**
  * @Security("has_role('ROLE_OWNER')")
  *
- * @Route("categories")
+ * @Route("twig/categories")
  * @Breadcrumb("Dashboard", route={"name"="app_index"})
  * @Breadcrumb("Settings")
  */
@@ -40,7 +40,7 @@ class CategoryController extends AbstractController
                 'categories' => $categories
             ]);
         }
-        
+
         return $this->render('settings.categories\index', [
             'context' => $context
         ]);

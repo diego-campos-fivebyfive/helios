@@ -97,7 +97,7 @@ FRONTEND
     - All routed components (`router-vue`)
     - Uses scoped styles
     - Does not use BEM nomenclatures
-    
+
     4.3.1. Application
 
       - Componentes "genéricos" da aplicação, são incluidos na pasta application, onde são alocados por grupo (pasta) e por dados (arquivo).
@@ -145,3 +145,8 @@ FRONTEND
       }
     })
     ```
+6 - Layout
+  - **z-index**:
+    - Root: 0 to 50
+    - Sidebar and navbar: 100 to 150
+    - Modals: 200 to 250

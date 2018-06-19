@@ -25,6 +25,9 @@ interface VarietyInterface
     const TYPE_FUSE = 'fusível';
     const TYPE_STRING_BOX = 'string_box';
     const TYPE_ABB_EXTRA = 'abb-extra';
+    const TYPE_OPTIMIZER = 'optimizer';
+
+    const SUBTYPE_SOLAR_EDGE = 'solar_edge';
 
     /**
      * @return int
