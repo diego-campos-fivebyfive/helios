@@ -75,7 +75,6 @@
       // position: absolute;
       width: 100%;
       top: 0;
-      z-index: 305;
     }
 
     li {
