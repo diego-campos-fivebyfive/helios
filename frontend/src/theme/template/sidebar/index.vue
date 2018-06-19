@@ -2,7 +2,8 @@
   aside.sidebar(:class='sidebarType')
     nav
       Button.toogle(
-        class='primary-common')
+        class='primary-common',
+        :action='updateSidebarType')
         Icon(name='bars')
       Head(:sidebarType='sidebarType')
       Menu
@@ -17,10 +18,18 @@
       Head,
       Menu
     },
-    computed: {
-      sidebarType() {
-        return this.$route.meta.sidebar || 'common'
+    data: () => ({
+      sidebarType: ''
+    }),
+    methods: {
+      updateSidebarType() {
+        this.sidebarType = (this.sidebarType === 'collapse')
+          ? 'common'
+          : 'collapse'
       }
+    },
+    mounted() {
+      this.sidebarType = this.$route.meta.sidebar || 'common'
     }
   }
 </script>
