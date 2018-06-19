@@ -18,6 +18,9 @@
         type: String,
         required: true
       }
+    },
+    watch: {
+      sidebarType() {}
     }
   }
 </script>

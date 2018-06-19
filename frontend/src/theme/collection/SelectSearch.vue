@@ -34,7 +34,7 @@
         required: true
       },
       selected: {
-        type: Object,
+        type: Boolean,
         required: false,
         defautl: false
       }

@@ -34,7 +34,7 @@
   export default {
     props: {
       level: {
-        type: Array,
+        type: String,
         required: true
       }
     },

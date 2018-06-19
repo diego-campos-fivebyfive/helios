@@ -12,8 +12,10 @@
 
   export default {
     props: {
-      payload: Array,
-      required: true
+      payload: {
+        type: Array,
+        required: true
+      }
     },
     methods: {
       editCoupon() {

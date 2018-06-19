@@ -27,7 +27,8 @@ class UserController extends AbstractController
             'company' => $account->getFirstname(),
             'level' => $account->getLevel(),
             'token' => $member->getToken(),
-            'sices' => $member->isPlatformUser()
+            'sices' => $member->isPlatformUser(),
+            'ranking' => $account->getRanking()
         ]);
     }
 }
