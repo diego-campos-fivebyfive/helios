@@ -4,13 +4,13 @@
     button.dropdown-toogle(
       type='button',
       v-on:click='toogleList',
-      v-on:mouseover='setLabelPosition')
+      v-on:mouseover='showLabel')
       Icon.icon-ui(:name='dropdown.icon')
-      span.dropdown-toogle-label(:style='labelPosition.top')
+      span.dropdown-toogle-label(:style='style.labelTopPosition')
         | {{ dropdown.name }}
       Icon.icon-arrow(v-show='open', name='angle-down')
       Icon.icon-arrow(v-show='!open', name='angle-left')
-    ul(v-show='open', :style='listPosition.top')
+    ul(v-show='open', :style='style.listTopPosition')
       li(v-for='item in dropdown.subItems')
         Item(:item='item', :itemDropdown='true', :sidebarType='sidebarType')
 </template>
@@ -34,23 +34,24 @@
     },
     data: () => ({
       open: false,
-      labelPosition: {},
-      listPosition: {}
+      style: {
+        labelTopPosition: '',
+        listTopPosition: ''
+      }
     }),
     methods: {
-      toogleList(event) {
+      updateElementPosition(event, element) {
         if (event.target.type === 'button') {
           const targetPosition = event.target.getBoundingClientRect()
-          this.$set(this.listPosition, 'top', `top: ${targetPosition.y}px`)
+          this.$set(this.style, element, `top: ${targetPosition.y}px`)
         }
-
+      },
+      toogleList(event) {
+        this.updateElementPosition(event, 'listTopPosition')
         this.open = !this.open
       },
-      setLabelPosition(event) {
-        if (event.target.type === 'button') {
-          const targetPosition = event.target.getBoundingClientRect()
-          this.$set(this.labelPosition, 'top', `top: ${targetPosition.y}px`)
-        }
+      showLabel(event) {
+        this.updateElementPosition(event, 'labelTopPosition')
       }
     },
     watch: {
