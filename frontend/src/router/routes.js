@@ -187,7 +187,10 @@ export const routes = [
   {
     path: '/ranking',
     name: 'Pontuações',
-    component: FrameView
+    component: FrameView,
+    meta: {
+      sidebar: 'collapse'
+    }
   },
   {
     path: '/kit',
