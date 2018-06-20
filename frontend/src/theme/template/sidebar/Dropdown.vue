@@ -1,12 +1,16 @@
 <template lang="pug">
   .dropdown(
     :class='[{ "dropdown-active": open }, sidebarType]')
-    button.dropdown-toogle(type='button', v-on:click='toogle')
+    button.dropdown-toogle(
+      type='button',
+      v-on:click='toogleList',
+      v-on:mouseover='showLabel')
       Icon.icon-ui(:name='dropdown.icon')
-      span.dropdown-toogle-label {{ dropdown.name }}
+      span.dropdown-toogle-label(:style='style.labelTopPosition')
+        | {{ dropdown.name }}
       Icon.icon-arrow(v-show='open', name='angle-down')
       Icon.icon-arrow(v-show='!open', name='angle-left')
-    ul(v-show='open')
+    ul(v-show='open', :style='style.listTopPosition')
       li(v-for='item in dropdown.subItems')
         Item(:item='item', :itemDropdown='true', :sidebarType='sidebarType')
 </template>
@@ -29,11 +33,25 @@
       }
     },
     data: () => ({
-      open: false
+      open: false,
+      style: {
+        labelTopPosition: '',
+        listTopPosition: ''
+      }
     }),
     methods: {
-      toogle() {
+      updateElementPosition(event, element) {
+        if (event.target.type === 'button') {
+          const targetPosition = event.target.getBoundingClientRect()
+          this.$set(this.style, element, `top: ${targetPosition.y}px`)
+        }
+      },
+      toogleList(event) {
+        this.updateElementPosition(event, 'listTopPosition')
         this.open = !this.open
+      },
+      showLabel(event) {
+        this.updateElementPosition(event, 'labelTopPosition')
       }
     },
     watch: {
@@ -62,7 +80,7 @@
         display: none;
         left: $ui-sidebar-collapse-x;
         padding: $ui-space-y + $ui-space-y/6 $ui-space-x;
-        position: absolute;
+        position: fixed;
         top: 0;
         white-space: nowrap;
       }
@@ -80,8 +98,8 @@
 
       ul {
         background-color: $ui-gray-dark;
-        left: $ui-sidebar-collapse-x - $dropdown-border-size;
-        position: absolute;
+        left: $ui-sidebar-collapse-x;
+        position: fixed;
         top: 0;
       }
     }

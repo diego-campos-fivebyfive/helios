@@ -70,7 +70,7 @@
         this.pageTitle = this.$router.history.current.name
       }
     },
-    watch:{
+    watch: {
       $route() {
         this.setPageTitle()
       }
@@ -91,6 +91,7 @@
 
 <style lang="scss" scoped>
   $head-border-size: 1px;
+
   .bar {
     background-color: $ui-white-regular;
     border-bottom: $head-border-size solid $ui-divider-color;
