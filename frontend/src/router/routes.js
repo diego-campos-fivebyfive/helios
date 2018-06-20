@@ -227,7 +227,7 @@ export const routes = [
     name: 'Etapas de Venda',
     component: FrameView,
     meta: {
-        absolutePath: '/settings/twig/categories/sale_stage/'
+      absolutePath: '/settings/twig/categories/sale_stage/'
     }
   },
   {
@@ -259,9 +259,9 @@ export const routes = [
     component: FrameView
   },
   {
-      path: '/price',
-      name: 'Preço de Venda',
-      component: FrameView
+    path: '/price',
+    name: 'Preço de Venda',
+    component: FrameView
   },
   {
     path: '/project',
