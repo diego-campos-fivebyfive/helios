@@ -19,6 +19,7 @@
         $('.task-edit').on('click', function () {
             //get_task_form($(this).data('url'));
             TaskManager.form.load($(this).data('url'));
+            TaskManager.modal.element.find('.modal-header').html("<h3>Editar</h3>");
         });
 
         $('.task-delete').on('click', function () {

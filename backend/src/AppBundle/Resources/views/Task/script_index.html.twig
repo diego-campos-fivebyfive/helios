@@ -157,6 +157,7 @@
 
     $('#task_add').on('click', function(){
         TaskManager.form.load('{{ path('task_create') }}');
+        TaskManager.modal.element.find('.modal-header').html("<h3>Adicionar</h3>");
     });
 
     TaskManager.init();
