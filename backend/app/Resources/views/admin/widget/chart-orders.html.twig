@@ -39,6 +39,14 @@
     .ibox-title > .col-md-2 {
         margin-top: -4px;
         /*padding-right: 0;*/
+    }    
+    .btn-outline {
+        border: 1px solid #00A7EC;
+        color: #00A7EC;
+    }
+    .btn-outline.active {
+        background: #00A7EC;
+        color: white;
     }
     .ibox-title select {
         width: 33.3%;
@@ -90,14 +98,12 @@
 
 <div class="ibox float-e-margins">
     <div class="ibox-title">
-        <div class="col-md-4">
-            <h5> Histórico de orçamentos emitidos </h5>
-        </div>
+        <h5> Histórico de orçamentos emitidos </h5>
     </div>
     <div class="ibox-content">
         <div class="row">
             <div class="col-md-10">
-                <div class="form-group">
+                <div class="form-group row">
                     <div class="col-md-8">
                         <select id="proposal-status" data-placeholder="Status" multiple class="form-control sel chosen-select">
                             {% for key, name in status %}
@@ -125,22 +131,22 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-2 btn-group" style="padding-left: 0;">
-                <button data-group="month" class="btn btn-sm btn-outline btn-primary col-md-6">
+            <div class="col-md-2 btn-group">
+                <button data-group="month" class="btn btn-sm btn-outline col-md-6">
                     Mês
                 </button>
-                <button data-group="year" class="btn btn-sm btn-outline btn-primary col-md-6">
+                <button data-group="year" class="btn btn-sm btn-outline col-md-6">
                     Ano
                 </button>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-9">
+            <div class="col-xs-9">
                 <div class="flot-chart flow-h">
                     <div class="flot-chart-content flow-lg" id="proposals-chart"></div>
                 </div>
             </div>
-            <div class="col-lg-3">
+            <div class="col-xs-3">
                 <ul class="stat-list">
                     <li>
                         <h2 class="no-margins" id="issued-proposals"></h2>
