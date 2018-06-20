@@ -36,6 +36,10 @@
     },
     mounted() {
       this.setDefaultSidebarType()
+
+      window.updateVueRoute = path => {
+        this.$router.push({ path })
+      }
     },
     watch: {
       $route() {
