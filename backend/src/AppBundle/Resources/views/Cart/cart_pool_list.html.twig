@@ -80,7 +80,6 @@
                         <tbody>
 
                         {% for item in pagination.items %}
-
                             <tr>
                                 <td> {{ item.code }} </td>
                                 {% if member.isPlatformUser %}
@@ -103,11 +102,18 @@
                                     </a>
                                 </td>
                             </tr>
-
                         {% endfor %}
 
                         </tbody>
                     </table>
+
+                    <div class="row">
+                        {% set path = app.user.isPlatform ? path('kits_index') : path('index_kit') %}
+                        <a href="{{ path }}" class="btn btn-white" type="button">
+                            <i class="fa fa-arrow-left"></i>
+                            Voltar
+                        </a>
+                    </div>
                 </div>
             </div>
 
