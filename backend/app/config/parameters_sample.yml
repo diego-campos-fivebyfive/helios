@@ -1,6 +1,7 @@
 # This file is auto-replaced during the sices app config command execution
 parameters:
     platform_host: ${CES_SICES_HOST}
+    platform_port: ${CES_SICES_PORT}
     database_host: ${CES_SICES_DATABASE_HOST}
     database_port: ${CES_SICES_DATABASE_PORT}
     database_name: ${CES_SICES_DATABASE_NAME}
