@@ -12,6 +12,7 @@ sample=backend/app/config/parameters_sample.yml
 
 sed " \
   s|\${CES_SICES_HOST}|$CES_SICES_HOST|g; \
+  s|\${CES_SICES_PORT}|$CES_SICES_PORT|g; \
   s|\${CES_SICES_DATABASE_HOST}|$CES_SICES_DATABASE_HOST|g; \
   s|\${CES_SICES_DATABASE_PORT}|$CES_SICES_DATABASE_PORT|g; \
   s|\${CES_SICES_DATABASE_NAME}|$CES_SICES_DATABASE_NAME|g; \

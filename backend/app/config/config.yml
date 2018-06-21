@@ -34,6 +34,7 @@ twig:
     globals:
         socket_port: "%socket_port%"
         platform_host: "%platform_host%"
+        platform_port: "%platform_port%"
 
 doctrine:
     dbal:
