@@ -43,6 +43,10 @@ const FrameView = {
   }
 }
 
+const externalLinks = {
+  utils: 'https://suporte.plataformasicessolar.com.br/faq/links-uteis'
+}
+
 export const routes = [
   {
     path: '/',
@@ -88,7 +92,8 @@ export const routes = [
     name: 'Gestão de estoque',
     component: FrameView,
     meta: {
-      absolutePath: '/admin/twig/stock'
+      absolutePath: '/admin/twig/stock',
+      sidebar: 'collapse'
     }
   },
   {
@@ -187,7 +192,10 @@ export const routes = [
   {
     path: '/ranking',
     name: 'Pontuações',
-    component: FrameView
+    component: FrameView,
+    meta: {
+      sidebar: 'collapse'
+    }
   },
   {
     path: '/kit',
@@ -282,6 +290,12 @@ export const routes = [
     path: '/terms',
     name: 'Termos de Uso ',
     component: Terms
+  },
+  {
+    path: `/${externalLinks.utils}`,
+    beforeEnter() {
+      window.location = externalLinks.utils
+    }
   },
   {
     path: '*',
