@@ -20,7 +20,7 @@ use AppBundle\Form\Component\MakerType;
  * MakerController
  * @author Claudinei Machado <claudinei@kolinalabs.com>
  *
- * @Route("maker")
+ * @Route("twig/maker")
  *
  * @Security("has_role('ROLE_PLATFORM_MASTER')")
  *
