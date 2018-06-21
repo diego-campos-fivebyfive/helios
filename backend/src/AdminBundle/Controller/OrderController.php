@@ -625,6 +625,7 @@ class OrderController extends AbstractController
         $dateAt = $data['dateAt'];
         $optionDate = $data['optionsAt'];
         $antecipatedBilling = $data['antecipatedBilling'];
+        $fixedKits = $data['fixedKits'];
 
         $formatDateAt = function($dateAt){
             return implode('-', array_reverse(explode('/', $dateAt)));
@@ -714,6 +715,10 @@ class OrderController extends AbstractController
 
         if ($antecipatedBilling) {
             $qb->andWhere($qb->expr()->eq('o.antecipatedBilling', $antecipatedBilling));
+        }
+
+        if ($fixedKits) {
+            $qb->andWhere($qb->expr()->eq('o.source', OrderInterface::SOURCE_KIT));
         }
 
         if ($this->member()->isPlatformExpanse()) {
@@ -875,7 +880,7 @@ class OrderController extends AbstractController
     private function checkFilter($data) {
 
         if ($data['status'] || $data['like'] || $data['dateAt'] || isset($data['agent'])
-            || $data['valueMin'] || $data['valueMax'] || $data['antecipatedBilling']) {
+            || $data['valueMin'] || $data['valueMax'] || $data['antecipatedBilling'] || $data['fixedKits']) {
             return true;
         }
 
