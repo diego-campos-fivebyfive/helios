@@ -68,11 +68,56 @@ export const routes = [
     }
   },
   {
+    path: '/admin/account/create',
+    name: 'Contas',
+    component: FrameView,
+    meta: {
+      absolutePath: '/admin/twig/account/create'
+    }
+  },
+  {
+    path: '/admin/account/:id/update',
+    name: 'Contas',
+    component: FrameView,
+    meta: {
+      absolutePath: '/admin/twig/account/:id/update'
+    }
+  },
+  {
+    path: '/admin/account/:id',
+    name: 'Contas',
+    component: FrameView
+  },
+  {
     path: '/admin/memorials',
     name: 'Memoriais',
     component: FrameView,
     meta: {
       absolutePath: '/admin/twig/memorials'
+    }
+  },
+  {
+    path: '/admin/memorials/:id/update',
+    name: 'Memoriais',
+    component: FrameView,
+    meta: {
+      absolutePath: '/admin/twig/memorials/:id/update'
+    }
+  },
+  {
+    path: '/admin/memorials/:id/config',
+    name: 'Memoriais',
+    component: FrameView,
+    meta: {
+      absolutePath: 'admin/twig/memorials/:id/config'
+    }
+  },
+  {
+    path: '/admin/memorials/create',
+    name: 'Memoriais',
+    component: FrameView,
+    meta: {
+      absolutePath: 'admin/twig/memorials/create'
     }
   },
   {
@@ -100,11 +145,43 @@ export const routes = [
     }
   },
   {
+    path: '/admin/orders/:id/export',
+    name: 'Orçamentos',
+    component: FrameView,
+    meta: {
+      absolutePath: '/admin/twig/orders/:id/export'
+    }
+  },
+  {
     path: '/admin/users',
     name: 'Usuários Sices',
     component: FrameView,
     meta: {
       absolutePath: '/admin/twig/users'
+    }
+  },
+  {
+    path: '/admin/users/update/:id',
+    name: 'Usuários Sices',
+    component: FrameView,
+    meta: {
+      absolutePath: '/admin/twig/users/update/:id'
+    }
+  },
+  {
+    path: '/admin/users/create',
+    name: 'Usuários Sices',
+    component: FrameView,
+    meta: {
+      absolutePath: '/admin/twig/users/create'
+    }
+  },
+  {
+    path: '/admin/users/:id',
+    name: 'Usuários Sices',
+    component: FrameView,
+    meta: {
+      absolutePath: '/admin/twig/users/:id'
     }
   },
   {
@@ -132,7 +209,27 @@ export const routes = [
     }
   },
   {
-    path: '/contact/:id',
+    path: '/contact/:context',
+    name: 'Contato',
+    component: FrameView
+  },
+  {
+    path: '/contact/:context',
+    name: 'Contato',
+    component: FrameView
+  },
+  {
+    path: '/contact/:context/:token/show',
+    name: 'Contato',
+    component: FrameView
+  },
+  {
+    path: '/contact/:context/create',
+    name: 'Contato',
+    component: FrameView
+  },
+  {
+    path: '/contact/:context/:token/update',
     name: 'Contato',
     component: FrameView
   },
@@ -200,6 +297,11 @@ export const routes = [
     component: FrameView
   },
   {
+    path: '/orders/:id/show',
+    name: 'Meus Pedidos',
+    component: FrameView
+  },
+  {
     path: '/member/timezone',
     name: 'Fuso Horário',
     component: FrameView
@@ -259,6 +361,71 @@ export const routes = [
     component: FrameView
   },
   {
+    path: '/components/module/:id/update',
+    name: 'Módulos',
+    component: FrameView
+  },
+  {
+    path: '/components/module/create',
+    name: 'Módulos',
+    component: FrameView
+  },
+  {
+    path: '/components/inverter/:id/update',
+    name: 'Módulos',
+    component: FrameView
+  },
+  {
+    path: '/components/inverter/create',
+    name: 'Módulos',
+    component: FrameView
+  },
+  {
+    path: '/structure/:id/update',
+    name: 'Módulos',
+    component: FrameView
+  },
+  {
+    path: '/structure/create',
+    name: 'Módulos',
+    component: FrameView
+  },
+  {
+    path: '/stringbox/:id/update',
+    name: 'Módulos',
+    component: FrameView
+  },
+  {
+    path: '/stringbox/create',
+    name: 'Módulos',
+    component: FrameView
+  },
+  {
+    path: '/variety/:id/update',
+    name: 'Módulos',
+    component: FrameView
+  },
+  {
+    path: '/variety/create',
+    name: 'Módulos',
+    component: FrameView
+  },
+  {
+    path: '/maker',
+    name: 'Módulos',
+    component: FrameView
+  },
+  {
+    path: '/maker/update/:id',
+    name: 'Módulos',
+    component: FrameView
+  },
+  {
+    path: '/maker/create',
+    name: 'Módulos',
+    component: FrameView
+  },
+  {
     path: '/price',
     name: 'Preço de Venda',
     component: FrameView
@@ -269,7 +436,32 @@ export const routes = [
     component: FrameView
   },
   {
+    path: '/project/generator',
+    name: 'Projetos',
+    component: FrameView
+  },
+  {
+    path: '/project/generator/:id',
+    name: 'Projetos',
+    component: FrameView
+  },
+  {
+    path: '/project/create',
+    name: 'Projetos',
+    component: FrameView
+  },
+  {
+    path: '/project/:id/update',
+    name: 'Projetos',
+    component: FrameView
+  },
+  {
     path: '/tasks/m',
+    name: 'Tarefas',
+    component: FrameView
+  },
+  {
+    path: '/tasks/m/calendar',
     name: 'Tarefas',
     component: FrameView
   },
