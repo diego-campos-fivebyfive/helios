@@ -1,5 +1,9 @@
 <template lang="pug">
   header.bar
+    transition(name='fade')
+      .header-cover(
+        v-show='handleTwigModal.state',
+        v-on:click='handleTwigModal.toogle')
     h1.title {{ pageTitle }}
     span.ranking(v-if='$global.user.ranking')
       | {{ $global.user.ranking }} pontos
@@ -55,6 +59,12 @@
   }
 
   export default {
+    props: {
+      handleTwigModal: {
+        type: Object,
+        required: true
+      }
+    },
     data: () => ({
       date: '',
       pageTitle: '',
@@ -91,6 +101,16 @@
 
 <style lang="scss" scoped>
   $head-border-size: 1px;
+
+  .header-cover {
+    background-color: rgba(0,0,0,0.5);
+    height: calc(100% + 1px);
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 250;
+  }
 
   .bar {
     background-color: $ui-white-regular;
@@ -162,5 +182,13 @@
 
   a {
     color: $ui-gray-regular;
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: all 150ms ease;
+  }
+
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
   }
 </style>

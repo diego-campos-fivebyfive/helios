@@ -8,7 +8,7 @@
 
     <script>
         // this script pushes Twig paths to Vue router
-         if (top) {
+         if (window.self !== window.top) {
              const parentPath = top.window.location.pathname
                  .replace(/\/$/g, '');
 
@@ -90,6 +90,28 @@
 
     {% endif %}
 
+<script>
+    // This script calls the coverTwigModal covering Vue sidebar and mainbar while any Twig modal has been shown
+    if (window.self !== window.top) {
+        $(window).on('shown.bs.modal', function (event) {
+            const closeModal = function() {
+              $(event.target).modal('hide');
+            }
+
+            top.handleTwigModal({
+                state: true,
+                toogle: closeModal
+            });
+        });
+
+        $(window).on('hidden.bs.modal', function (event) {
+            top.handleTwigModal({
+                state: false,
+                toogle: () => {}
+            });
+        });
+    }
+</script>
 </head>
 <style>
     .navbar-default .support_link a {
