@@ -73,10 +73,11 @@ class CouponController extends AbstractController
      */
     public function createAction(Request $request)
     {
-        $name = $request->request->get('name');
-        $amount = str_replace('.', '', $request->request->get('amount'));
+        $name = $request->get('name');
+        $amount = str_replace('.', '', $request->get('amount'));
         $amount = (float) str_replace(',', '.', $amount);
-        $accountId = $request->request->get('account');
+        $amount = $amount > 0 ? $amount : null;
+        $accountId = $request->get('account');
 
         $validator = Validation::createValidator();
 
