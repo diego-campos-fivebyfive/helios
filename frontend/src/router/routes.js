@@ -43,6 +43,10 @@ const FrameView = {
   }
 }
 
+const externalLinks = {
+  utils: 'https://suporte.plataformasicessolar.com.br/faq/links-uteis'
+}
+
 export const routes = [
   {
     path: '/',
@@ -285,6 +289,12 @@ export const routes = [
     path: '/terms',
     name: 'Termos de Uso ',
     component: Terms
+  },
+  {
+    path: `/${externalLinks.utils}`,
+    beforeEnter() {
+      window.location = externalLinks.utils
+    }
   },
   {
     path: '*',
