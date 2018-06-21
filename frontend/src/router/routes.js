@@ -92,7 +92,8 @@ export const routes = [
     name: 'Gestão de estoque',
     component: FrameView,
     meta: {
-      absolutePath: '/admin/twig/stock'
+      absolutePath: '/admin/twig/stock',
+      sidebar: 'collapse'
     }
   },
   {
