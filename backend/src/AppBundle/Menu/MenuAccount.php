@@ -190,11 +190,6 @@ class MenuAccount
                     'name' => 'Fuso Horário',
                     'route' => 'member_timezone',
                     'icon' => 'globe',
-                    'custom' => [
-                        'routeParameters' => [
-                            'type' => 'module'
-                        ]
-                    ],
                     'allowedRoles' => '*'
                 ],
                 'myData' => [
