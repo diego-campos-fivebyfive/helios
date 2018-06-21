@@ -881,6 +881,10 @@ class OrderController extends AbstractController
      */
     private function checkFilter($data)
     {
+        if (!$data) {
+            return false;
+        }
+
         return (isset($data['agent']) || in_array(self::FILTERS, $data));
     }
 
