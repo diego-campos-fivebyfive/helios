@@ -1,5 +1,9 @@
 <template lang="pug">
   aside.sidebar(:class='sidebarType')
+    transition(name='fade')
+      .sidebar-cover(
+        v-show='handleTwigModal.state',
+        v-on:click='handleTwigModal.toogle')
     nav.menu
       Button.toogle(
         class='primary-common',
@@ -19,6 +23,10 @@
       Menu
     },
     props: {
+      handleTwigModal: {
+        type: Object,
+        required: true
+      },
       sidebarType: {
         type: String,
         required: true
@@ -58,9 +66,27 @@
     }
   }
 
+  .sidebar-cover {
+    background-color: rgba(0,0,0,0.5);
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 250;
+  }
+
   .toogle {
     position: absolute;
     right: -($ui-sidebar-toogle-x + $ui-space-x);
     top: $ui-space-y;
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: all 150ms ease;
+  }
+
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
   }
 </style>

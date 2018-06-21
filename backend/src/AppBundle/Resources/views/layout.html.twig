@@ -5,6 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title> {{ app_title()|raw }}  </title>
+
+    <script>
+        // this script pushes Twig paths to Vue router
+         if (window.self !== window.top) {
+             const parentPath = top.window.location.pathname
+                 .replace(/\/$/g, '');
+
+             const destinationPath = window.location.pathname
+                 .replace(/\/twig/, '')
+                 .replace(/\/$/g, '');
+
+             if (parentPath !== destinationPath) {
+                 top.updateVueRoute(destinationPath);
+             }
+         }
+    </script>
+
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}" type="image/x-icon">
     <link rel="icon" href="{{ asset('assets/images/favicon.ico') }}" type="image/x-icon">
     <script>
@@ -92,6 +109,28 @@
 
     {% endif %}
 
+<script>
+    // This script calls the coverTwigModal covering Vue sidebar and mainbar while any Twig modal has been shown
+    if (window.self !== window.top) {
+        $(window).on('shown.bs.modal', function (event) {
+            const closeModal = function() {
+              $(event.target).modal('hide');
+            }
+
+            top.handleTwigModal({
+                state: true,
+                toogle: closeModal
+            });
+        });
+
+        $(window).on('hidden.bs.modal', function (event) {
+            top.handleTwigModal({
+                state: false,
+                toogle: () => {}
+            });
+        });
+    }
+</script>
 </head>
 <style>
     .navbar-default .support_link a {
