@@ -20,8 +20,8 @@
       Mainbar
     },
     data: () => ({
-      sidebarType: 'common',
-      mainbarType: 'common'
+      sidebarType: '',
+      mainbarType: ''
     }),
     methods: {
       updateSidebarType() {
@@ -30,8 +30,8 @@
           : 'collapse'
       },
       setDefaultSidebarType() {
-        this.sidebarType = this.$route.meta.sidebar || this.sidebarType
-        this.mainbarType = this.$route.meta.mainbar || this.mainbarType
+        this.sidebarType = this.$route.meta.sidebar || 'common'
+        this.mainbarType = this.$route.meta.mainbar || 'common'
       }
     },
     mounted() {
