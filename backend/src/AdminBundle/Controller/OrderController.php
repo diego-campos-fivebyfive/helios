@@ -43,6 +43,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class OrderController extends AbstractController
 {
+    const FILTERS = ['status', 'like', 'dateAt', 'valueMin', 'valueMax', 'antecipatedBilling', 'fixedKits'];
+
     /**
      * @Route("/", name="orders")
      */
@@ -877,14 +879,9 @@ class OrderController extends AbstractController
      * @param $data
      * @return bool
      */
-    private function checkFilter($data) {
-
-        if ($data['status'] || $data['like'] || $data['dateAt'] || isset($data['agent'])
-            || $data['valueMin'] || $data['valueMax'] || $data['antecipatedBilling'] || $data['fixedKits']) {
-            return true;
-        }
-
-        return false;
+    private function checkFilter($data)
+    {
+        return (isset($data['agent']) || in_array(self::FILTERS, $data));
     }
 
 }
