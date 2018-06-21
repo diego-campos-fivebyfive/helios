@@ -43,6 +43,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class OrderController extends AbstractController
 {
+    const FILTERS = ['status', 'like', 'dateAt', 'valueMin', 'valueMax', 'antecipatedBilling', 'fixedKits'];
+
     /**
      * @Route("/", name="orders")
      */
@@ -625,6 +627,7 @@ class OrderController extends AbstractController
         $dateAt = $data['dateAt'];
         $optionDate = $data['optionsAt'];
         $antecipatedBilling = $data['antecipatedBilling'];
+        $fixedKits = $data['fixedKits'];
 
         $formatDateAt = function($dateAt){
             return implode('-', array_reverse(explode('/', $dateAt)));
@@ -714,6 +717,10 @@ class OrderController extends AbstractController
 
         if ($antecipatedBilling) {
             $qb->andWhere($qb->expr()->eq('o.antecipatedBilling', $antecipatedBilling));
+        }
+
+        if ($fixedKits) {
+            $qb->andWhere($qb->expr()->eq('o.source', OrderInterface::SOURCE_KIT));
         }
 
         if ($this->member()->isPlatformExpanse()) {
@@ -872,14 +879,9 @@ class OrderController extends AbstractController
      * @param $data
      * @return bool
      */
-    private function checkFilter($data) {
-
-        if ($data['status'] || $data['like'] || $data['dateAt'] || isset($data['agent'])
-            || $data['valueMin'] || $data['valueMax'] || $data['antecipatedBilling']) {
-            return true;
-        }
-
-        return false;
+    private function checkFilter($data)
+    {
+        return (isset($data['agent']) || in_array(self::FILTERS, $data));
     }
 
 }

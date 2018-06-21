@@ -80,6 +80,10 @@ class FilterType extends AppFilterType
         $builder->add('antecipatedBilling', CheckboxType::class, [
             'required' => false
         ]);
+
+        $builder->add('fixedKits', CheckboxType::class, [
+            'required' => false
+        ]);
     }
 
     /**
