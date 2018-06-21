@@ -189,6 +189,11 @@ class OrderTransformer
 
         $this->manager->save($order);
         $kitManager->flush();
+
+        /** @var OrderReference $orderReference */
+        $orderReference = $this->container->get('order_reference');
+
+        $orderReference->generate($order);
     }
 
     /**
