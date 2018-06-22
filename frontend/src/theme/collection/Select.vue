@@ -25,17 +25,18 @@
       },
       disabled: {
         type: Boolean,
-        required: false,
-        default: false
+        required: true
       },
       options: {
         type: Array,
         required: true
       },
       selected: {
-        type: Boolean,
-        required: false,
-        defautl: false
+        type: [
+          Number,
+          Boolean
+        ],
+        required: false
       }
     },
     methods: {

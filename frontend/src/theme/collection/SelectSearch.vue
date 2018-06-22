@@ -34,9 +34,11 @@
         required: true
       },
       selected: {
-        type: Boolean,
+        type: Object,
         required: false,
-        defautl: false
+        default: () => ({
+          text: ''
+        })
       }
     },
     data: () => ({
