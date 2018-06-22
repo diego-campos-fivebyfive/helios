@@ -1,13 +1,16 @@
 <template lang="pug">
   aside.sidebar(:class='sidebarType')
     transition(name='fade')
-      .sidebar-cover(
+      .sidebar-toggle-cover(
         v-show='handleTwigModal.state',
         v-on:click='handleTwigModal.toogle')
     nav.menu
       Button.toogle(
         class='primary-common',
         :action='updateSidebarType')
+        .sidebar-toggle-cover(
+          v-show='handleTwigModal.state',
+          v-on:click='handleTwigModal.toogle')
         Icon(name='bars')
       Head(:sidebarType='sidebarType')
       Menu(:sidebarType='sidebarType')
@@ -66,8 +69,8 @@
     }
   }
 
-  .sidebar-cover {
-    background-color: rgba(0,0,0,0.5);
+  .sidebar-toggle-cover {
+    background-color: rgba(0, 0, 0, 0.5);
     height: 100%;
     left: 0;
     position: absolute;
@@ -82,11 +85,13 @@
     top: $ui-space-y;
   }
 
-  .fade-enter-active, .fade-leave-active {
+  .fade-enter-active,
+  .fade-leave-active {
     transition: all 150ms ease;
   }
 
-  .fade-enter, .fade-leave-to {
+  .fade-enter,
+  .fade-leave-to {
     opacity: 0;
   }
 </style>
