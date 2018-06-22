@@ -35,7 +35,10 @@
       },
       selected: {
         type: Object,
-        default: false
+        required: false,
+        default: () => ({
+          text: ''
+        })
       }
     },
     data: () => ({

@@ -34,7 +34,8 @@
       selected: {
         type: [
           Number,
-          Boolean],
+          Boolean
+        ],
         required: false
       }
     },
