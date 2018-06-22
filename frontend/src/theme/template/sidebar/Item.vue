@@ -120,7 +120,7 @@
 
         &:hover {
           span {
-            display: inline-block;
+            display: none; /*inline-block*/
           }
         }
 

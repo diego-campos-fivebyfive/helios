@@ -87,7 +87,7 @@
 
       &:hover {
         .dropdown-toogle-label {
-          display: inline-block;
+          display: none; /*inline-block*/
         }
       }
 
