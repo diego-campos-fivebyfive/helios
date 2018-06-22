@@ -90,7 +90,10 @@ export const routes = [
   {
     path: '/admin/account/:id',
     name: 'Contas',
-    component: FrameView
+    component: FrameView,
+    meta: {
+      absolutePath: 'admin/twig/account/:id'
+    }
   },
   {
     path: '/admin/memorials',
