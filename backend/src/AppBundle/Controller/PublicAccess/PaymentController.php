@@ -147,12 +147,14 @@ class PaymentController extends AbstractController
         if ($callback && $cartPool) {
             $status = CartPool::getCardStatuses()[$callback['status']];
 
+            $transform = ($callback['status'] === 'APPROVED') && ($cartPool->getStatus() !== CartPool::STATUS_CARD_APPROVED);
+
             $cartPool->addCallback($callback);
             $cartPool->setStatus($status);
 
             return [
                 'processed' => true,
-                'transform' => $callback['status'] === 'APPROVED'
+                'transform' => $transform
             ];
         }
 
@@ -172,12 +174,14 @@ class PaymentController extends AbstractController
         if ($callback && $cartPool) {
             $status = CartPool::getBilletStatuses()[$callback['status']];
 
+            $transform = ($callback['status'] === 'PAID') && ($cartPool->getStatus() !== CartPool::STATUS_BILLET_PAID);
+
             $cartPool->addCallback($callback);
             $cartPool->setStatus($status);
 
             return [
                 'processed' => true,
-                'transform' => $callback['status'] === 'PAID'
+                'transform' => $transform
             ];
         }
 

@@ -4059,6 +4059,11 @@ a.close-canvas-menu:hover {
 }
 .modal {
   z-index: 2050 !important;
+  transition: opacity 0.5s linear !important;
+}
+.modal-dialog {
+  max-height: calc(100vh - 65px);
+  overflow-y: auto;
 }
 .spiner-example {
   height: 200px;

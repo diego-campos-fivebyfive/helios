@@ -10,6 +10,7 @@
 
     <div class="form-group">
         <div class="col-sm-12">
+            <label>Tipo</label>
             <div class="btn-group btn-group-justified" data-toggle="buttons">
                 {% for type in form.type %}
                     <label class="btn btn-default btn-tag {{ type.vars.checked ? 'active' }}">
@@ -24,7 +25,7 @@
     </div>
     <div class="form-group  has-success">
         <div class="col-md-12">
-            {#{{ form_label(form.description, 'Descrição da tarefa') }}#}
+            {{ form_label(form.description, 'Descrição') }}
             {{ form_widget(form.description, {'attr':{'class':'form-control', 'placeholder' : 'Descrição da tarefa'}}) }}
             <div class="hr-line-dashed"></div>
         </div>
@@ -49,7 +50,7 @@
 
     <div class="form-group">
         <div class="col-md-12">
-            {#{{ form_label(form.members, 'Incluir usuários na tarefa') }}#}
+            {{ form_label(form.members, 'Incluir usuários na tarefa') }}
             {{ form_widget(form.members , {'attr':{'class':'form-control', 'data-placeholder':'Incluir usuários na tarefa'}}) }}
         </div>
         <div class="col-md-12">
@@ -153,6 +154,4 @@
     $('#task_contact').chosen({
         width:'100% !important'
     });
-
-
 </script>

@@ -3,9 +3,12 @@
     Sidebar(
       v-if='sidebarType !== "none"',
       :sidebarType='sidebarType',
-      :updateSidebarType='updateSidebarType')
+      :updateSidebarType='updateSidebarType',
+      :handleTwigModal='handleTwigModal')
     main.app-page-main
-      Mainbar(v-if='mainbarType !== "none"')
+      Mainbar(
+        v-if='mainbarType !== "none"',
+        :handleTwigModal='handleTwigModal')
       .app-page-main-wrapper
         router-view
 </template>
@@ -21,7 +24,11 @@
     },
     data: () => ({
       sidebarType: '',
-      mainbarType: ''
+      mainbarType: '',
+      handleTwigModal: {
+        state: false,
+        toogle: () => {}
+      }
     }),
     methods: {
       updateSidebarType() {
@@ -39,6 +46,10 @@
 
       window.updateVueRoute = path => {
         this.$router.push({ path })
+      }
+
+      window.handleTwigModal = handler => {
+        this.handleTwigModal = handler
       }
     },
     watch: {
