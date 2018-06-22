@@ -46,7 +46,7 @@
       padding: $ui-space-x/2 0;
       text-align: left;
       text-shadow: none;
-      z-index: 1000;
+      z-index: 5;
 
       li {
         display: block;

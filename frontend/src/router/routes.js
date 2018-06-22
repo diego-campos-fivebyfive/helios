@@ -9,25 +9,16 @@ import NotFound from '@/pages/notfound'
 import Terms from '@/pages/terms'
 import TermsOfUse from '@/pages/terms-of-use'
 
-const RouterView = {
-  template: '<router-view></router-view>'
-}
-
 export const routes = [
   {
     path: '/account',
     name: 'Contas',
-    component: RouterView,
-    children: [
-      {
-        path: '',
-        component: Account
-      },
-      {
-        path: 'create',
-        component: AccountForm
-      }
-    ]
+    component: Account
+  },
+  {
+    path: '/account/create',
+    name: 'Cadastro de Conta',
+    component: AccountForm
   },
   {
     path: '/coupon',
@@ -37,17 +28,15 @@ export const routes = [
   {
     path: '/memorial',
     name: 'Memoriais',
-    component: RouterView,
-    children: [
-      {
-        path: '',
-        component: Memorial
-      },
-      {
-        path: ':id/config',
-        component: MemorialConfig
-      }
-    ]
+    component: Memorial
+  },
+  {
+    path: '/memorial/:id/config',
+    name: 'Gestão de Memorial',
+    component: MemorialConfig,
+    meta: {
+      sidebar: 'collapse'
+    }
   },
   {
     path: '/messenger',
@@ -66,7 +55,7 @@ export const routes = [
   },
   {
     path: '/terms',
-    name: 'Termos de Uso',
+    name: 'Termos de Uso ',
     component: Terms
   },
   {

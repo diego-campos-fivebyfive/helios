@@ -28,6 +28,7 @@
             method: $(this).attr('method'),
             data: $(this).serialize(),
             complete: function (xhr) {
+                TransactionRanking.modalTransaction.modal('hide');
                 Ranking.reloadContent();
             }
         });

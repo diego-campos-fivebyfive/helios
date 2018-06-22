@@ -130,14 +130,14 @@ class MenuAccount
                 'owner'
             ]
         ],
-        'kits' => [
-            'name' => 'Kits Fixos',
-            'route' => 'index_kit',
-            'icon' => 'cart-plus',
-            'allowedRoles' => [
-                'owner'
-            ]
-        ],
+//        'kits' => [
+//            'name' => 'Kits Fixos',
+//            'route' => 'index_kit',
+//            'icon' => 'cart-plus',
+//            'allowedRoles' => [
+//                'owner'
+//            ]
+//        ],
         'order' => [
             'name' => 'Orçamento SICES',
             'route' => 'index_order',
@@ -147,6 +147,10 @@ class MenuAccount
                 'attributes' => [
                     'id' => 'idPedidos'
                 ]
+            ],
+            'customStyle' => [
+                'background-color' => '#00a7ec',
+                'color' => '#ffffff'
             ],
             'allowedRoles' => [
                 'ownerMaster',
@@ -161,6 +165,10 @@ class MenuAccount
                 'attributes' => [
                     'id' => 'idUtils'
                 ]
+            ],
+            'customStyle' => [
+                'background-color' => '#f4a21a',
+                'color' => '#ffffff'
             ],
             'allowedRoles' => '*',
         ],
@@ -182,11 +190,6 @@ class MenuAccount
                     'name' => 'Fuso Horário',
                     'route' => 'member_timezone',
                     'icon' => 'globe',
-                    'custom' => [
-                        'routeParameters' => [
-                            'type' => 'module'
-                        ]
-                    ],
                     'allowedRoles' => '*'
                 ],
                 'myData' => [

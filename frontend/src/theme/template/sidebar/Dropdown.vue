@@ -1,13 +1,14 @@
 <template lang="pug">
-  div(:class='{ "dropdown-active": open }')
-    button.toogle(type='button', v-on:click='toogle')
+  .dropdown(
+    :class='[{ "dropdown-active": open }, sidebarType]')
+    button.dropdown-toogle(type='button', v-on:click='toogle')
       Icon.icon-ui(:name='dropdown.icon')
-      | {{ dropdown.name }}
+      span.dropdown-toogle-label {{ dropdown.name }}
       Icon.icon-arrow(v-show='open', name='angle-down')
       Icon.icon-arrow(v-show='!open', name='angle-left')
     ul(v-show='open')
       li(v-for='item in dropdown.subItems')
-        Item(:item='item', :itemDropdown='true')
+        Item(:item='item', :itemDropdown='true', :sidebarType='sidebarType')
 </template>
 
 <script>
@@ -21,6 +22,10 @@
       dropdown: {
         type: Object,
         required: true
+      },
+      sidebarType: {
+        type: String,
+        required: true
       }
     },
     data: () => ({
@@ -30,18 +35,71 @@
       toogle() {
         this.open = !this.open
       }
+    },
+    watch: {
+      sidebarType() {}
     }
   }
 </script>
 
 <style lang="scss" scoped>
-  .dropdown-active {
-    background-color: $ui-gray-dark;
-    border-left: $ui-space-x/6.25 solid $ui-blue-light;
-    color: $ui-white-regular;
+  $dropdown-border-size: 4px;
+
+  ul {
+    list-style: none;
   }
 
-  .toogle {
+  .icon-arrow {
+    float: right;
+  }
+
+  .dropdown {
+    &.collapse {
+      position: relative;
+
+      .dropdown-toogle-label {
+        background-color: $ui-gray-darken;
+        display: none;
+        left: $ui-sidebar-collapse-x;
+        padding: $ui-space-y + $ui-space-y/6 $ui-space-x;
+        position: absolute;
+        top: 0;
+        white-space: nowrap;
+      }
+
+      &:hover {
+        .dropdown-toogle-label {
+          display: inline-block;
+        }
+      }
+
+      .icon-arrow {
+        margin-right: -$ui-space-y/2;
+        margin-top: $ui-space-y/10;
+      }
+
+      ul {
+        background-color: $ui-gray-dark;
+        left: $ui-sidebar-collapse-x - $dropdown-border-size;
+        position: absolute;
+        top: 0;
+      }
+    }
+  }
+
+  .dropdown-active {
+    background-color: $ui-gray-dark;
+    border-left: $dropdown-border-size solid $ui-blue-light;
+    color: $ui-white-regular;
+
+    &.collapse {
+      .icon-arrow {
+        display: none;
+      }
+    }
+  }
+
+  .dropdown-toogle {
     color: inherit;
     font-weight: inherit;
     padding: $ui-space-y $ui-space-x/1.5 $ui-space-y $ui-space-x;
@@ -58,14 +116,5 @@
     margin-right: $ui-space-x/3;
     vertical-align: bottom;
     width: 1rem;
-  }
-
-  .icon-arrow {
-    float: right;
-  }
-
-  ul {
-    list-style: none;
-    padding-bottom: $ui-space-y/2;
   }
 </style>

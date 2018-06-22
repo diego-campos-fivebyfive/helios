@@ -34,8 +34,7 @@
         required: true
       },
       selected: {
-        type: Number,
-        required: false,
+        type: Object,
         default: false
       }
     },
@@ -72,10 +71,8 @@
       border-top: 0;
       left: 0;
       list-style: none;
-      // position: absolute;
       width: 100%;
       top: 0;
-      z-index: 5;
     }
 
     li {

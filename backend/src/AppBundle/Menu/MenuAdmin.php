@@ -119,15 +119,15 @@ class MenuAdmin
                 ]
             ]
         ],
-        'kits' => [
-            'name' => 'Kits Fixos',
-            'route' => 'kits_index',
-            'icon' => 'list',
-            'allowedRoles' => [
-                'master',
-                'admin'
-            ]
-        ],
+//        'kits' => [
+//            'name' => 'Kits Fixos',
+//            'route' => 'kits_index',
+//            'icon' => 'list',
+//            'allowedRoles' => [
+//                'master',
+//                'admin'
+//            ]
+//        ],
         'stock' => [
             'name' => 'Estoque',
             'route' => 'stock',
@@ -174,6 +174,10 @@ class MenuAdmin
                 'attributes' => [
                     'id' => 'idUtils'
                 ]
+            ],
+            'customStyle' => [
+                'background-color' => '#f4a21a',
+                'color' => '#ffffff'
             ],
             'allowedRoles' => '*',
         ],

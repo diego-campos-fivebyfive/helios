@@ -53,7 +53,7 @@
     right: 0;
     top: 0;
     width: 100%;
-    z-index: 1;
+    z-index: 300;
     display: flex;
     justify-content: center;
     flex-flow: column;

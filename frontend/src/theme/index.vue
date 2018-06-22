@@ -1,8 +1,11 @@
 <template lang="pug">
-  .app-page(:class='sidebar')
-    Sidebar(v-if='sidebar !== "none"')
+  .app-page(:class='sidebarType')
+    Sidebar(
+      v-if='sidebarType !== "none"',
+      :sidebarType='sidebarType',
+      :updateSidebarType='updateSidebarType')
     main.app-page-main
-      Mainbar(v-if='mainbar !== "none"')
+      Mainbar(v-if='mainbarType !== "none"')
       router-view
 </template>
 
@@ -15,13 +18,20 @@
       Sidebar,
       Mainbar
     },
-    computed: {
-      sidebar() {
-        return this.$route.meta.sidebar || 'common'
-      },
-      mainbar() {
-        return this.$route.meta.mainbar || 'common'
+    data: () => ({
+      sidebarType: 'common',
+      mainbarType: 'common'
+    }),
+    methods: {
+      updateSidebarType() {
+        this.sidebarType = (this.sidebarType === 'collapse')
+          ? 'common'
+          : 'collapse'
       }
+    },
+    mounted() {
+      this.sidebarType = this.$route.meta.sidebar || this.sidebarType
+      this.mainbarType = this.$route.meta.mainbar || this.mainbarType
     }
   }
 </script>
@@ -40,7 +50,11 @@
     position: relative;
 
     &.common {
-      padding-left: $ui-sidebar-x;
+      padding-left: $ui-sidebar-common-x;
+    }
+
+    &.collapse {
+      padding-left: $ui-sidebar-collapse-x;
     }
   }
 

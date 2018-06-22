@@ -79,11 +79,11 @@
 
 <style lang="scss" scoped>
   .copy-modal {
-    z-index: 6;
+    z-index: 300;
   }
 
   .copy-confirm {
-    z-index: 7;
+    z-index: 305;
   }
 
   .copy-modal-title {

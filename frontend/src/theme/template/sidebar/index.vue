@@ -1,8 +1,12 @@
 <template lang="pug">
-  aside.sidebar
+  aside.sidebar(:class='sidebarType')
     nav
-      Head
-      Menu
+      Button.toogle(
+        class='primary-common',
+        :action='updateSidebarType')
+        Icon(name='bars')
+      Head(:sidebarType='sidebarType')
+      Menu(:sidebarType='sidebarType')
 </template>
 
 <script>
@@ -13,6 +17,19 @@
     components: {
       Head,
       Menu
+    },
+    props: {
+      sidebarType: {
+        type: String,
+        required: true
+      },
+      updateSidebarType: {
+        type: Function,
+        required: true
+      }
+    },
+    watch: {
+      sidebarType() {}
     }
   }
 </script>
@@ -22,10 +39,24 @@
     background-color: $ui-gray-darken;
     display: block;
     left: 0;
-    max-width: $ui-sidebar-x;
     min-height: 100%;
     position: absolute;
     top: 0;
     width: 100%;
+    z-index: 200;
+
+    &.collapse {
+      max-width: $ui-sidebar-collapse-x;
+    }
+
+    &.common {
+      max-width: $ui-sidebar-common-x;
+    }
+  }
+
+  .toogle {
+    position: absolute;
+    right: -($ui-sidebar-toogle-x + $ui-space-x);
+    top: $ui-space-y;
   }
 </style>

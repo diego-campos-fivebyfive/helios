@@ -32,8 +32,10 @@
         required: true
       },
       selected: {
-        type: Object,
-        required: true
+        type: [
+          Number,
+          Boolean],
+        required: false
       }
     },
     methods: {

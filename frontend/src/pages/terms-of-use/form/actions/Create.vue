@@ -11,7 +11,7 @@
   import payload from '@/theme/payload'
 
   export default {
-    props:  {
+    props: {
       payload: {
         type: Array,
         required: true
