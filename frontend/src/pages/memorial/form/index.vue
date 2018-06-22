@@ -23,7 +23,7 @@
       Filters
     },
     data: () => ({
-      groups: [],
+      groups: {},
       memorial: {}
     }),
     methods: {

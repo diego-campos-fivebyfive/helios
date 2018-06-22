@@ -2,7 +2,6 @@
   Select(
     :field='{ label: "Nível de Desconto" }',
     :options='options',
-    :selected='true',
     v-on:update='$emit("updateLevelQuery", $event)')
 </template>
 
