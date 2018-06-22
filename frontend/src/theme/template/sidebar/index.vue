@@ -1,17 +1,20 @@
 <template lang="pug">
   aside.sidebar(:class='sidebarType')
     transition(name='fade')
-      .sidebar-toggle-cover(
+      .sidebar-cover(
+        class='modal-cover',
         v-show='handleTwigModal.state',
         v-on:click='handleTwigModal.toogle')
     nav.menu
-      Button.toogle(
-        class='primary-common',
-        :action='updateSidebarType')
-        .sidebar-toggle-cover(
+      .toogle
+        .toggle-cover(
+          class='modal-cover',
           v-show='handleTwigModal.state',
           v-on:click='handleTwigModal.toogle')
-        Icon(name='bars')
+        Button.toogle-button(
+          class='primary-common',
+          :action='updateSidebarType')
+          Icon(name='bars')
       Head(:sidebarType='sidebarType')
       Menu(:sidebarType='sidebarType')
 </template>
@@ -69,7 +72,7 @@
     }
   }
 
-  .sidebar-toggle-cover {
+  .modal-cover {
     background-color: rgba(0, 0, 0, 0.5);
     height: 100%;
     left: 0;
