@@ -28,6 +28,11 @@ class UserController extends AbstractController
             'level' => $account->getLevel(),
             'token' => $member->getToken(),
             'sices' => $member->isPlatformUser(),
+            'type' => $account->isChildAccount()
+                ? 'child'
+                : ($account->isParentAccount())
+                    ? 'parent'
+                    : 'single',
             'ranking' => $account->getRanking()
         ]);
     }

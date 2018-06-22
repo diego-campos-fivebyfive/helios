@@ -1,9 +1,11 @@
 <template lang="pug">
   header.bar
     h1.title {{ getPageTitle }}
-    span.ranking(v-if='$global.user.ranking')
+    span.ranking(v-if="$global.user.ranking\
+      && $global.user.type !== 'child'\
+      && !this.$global.user.sices")
       | {{ $global.user.ranking }} pontos
-    Badge
+    Badge(v-if='this.$global.user.sices')
     span.info {{ date }}
     a.messages(v-if='$global.user.sices', href='/messenger')
       Icon.messages-icon(name='envelope')
