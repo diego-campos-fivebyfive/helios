@@ -232,18 +232,11 @@ class CartPoolHelper
         /** @var CartPoolManager $cartPoolManager */
         $cartPoolManager = $this->container->get('cart_pool_manager');
 
-        $cart = $this->getCart($account);
-
-        $cartHasKits = $this->getCartHasKits($cart);
-
-        $items = $this->formatItems($cartHasKits, true);
-
         /** @var CartPool $cartPool */
         $cartPool = $cartPoolManager->create();
         $cartPool
             ->setAccount($account)
             ->setStatus(CartPool::STATUS_CREATED)
-            ->setItems($items)
             ->setConfirmed(false);
 
         $cartPoolManager->save($cartPool);
