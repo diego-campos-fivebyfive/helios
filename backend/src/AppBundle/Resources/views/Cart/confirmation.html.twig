@@ -14,7 +14,7 @@
             <div class="col-md-9">
                 <div class="ibox">
                     <div class="ibox-title">
-                        <h5>Revise seus dados</h5>
+                        <h5>Dados do comprador</h5>
                         <a href="{{ path('cart_checkout') }}" class="pull-right">
                             Editar informações
                         </a>
@@ -224,10 +224,6 @@
             getnetIfrm.setAttribute('data-getnet-customer-country', '{{ data.country }}');
             getnetIfrm.setAttribute('data-getnet-items', '{{ data.items|raw }}');
             getnetIfrm.setAttribute('data-getnet-url-callback', '');
-
-            {% if data.differentDelivery %}
-            getnetIfrm.setAttribute('data-getnet-shipping-address', '{{ data.shipping|raw }}');
-            {% endif %}
 
             getnetIfrm.src = 'https://checkout-homologacao.getnet.com.br/loader.js?' + Confirmation.hash;
             document.querySelector('body').appendChild(getnetIfrm);
