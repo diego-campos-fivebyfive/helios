@@ -1,19 +1,14 @@
 <template lang="pug">
   header.bar
-<<<<<<< HEAD
-    h1.title {{ getPageTitle }}
-    span.ranking(v-if="$global.user.ranking\
-      && $global.user.type !== 'child'\
-      && !this.$global.user.sices")
-=======
     transition(name='fade')
       .header-cover(
         v-show='handleTwigModal.state',
         v-on:click='handleTwigModal.toogle')
-    h1.title {{ pageTitle }}
-    span.ranking(v-if='$global.user.ranking')
->>>>>>> b6f510a3d2ab7cbec1321a97de4d66594c9b07c8
-      | {{ $global.user.ranking }} pontos
+      h1.title {{ pageTitle }}
+      span.ranking(v-if="$global.user.ranking\
+        && $global.user.type !== 'child'\
+        && !this.$global.user.sices")
+        | {{ $global.user.ranking }} pontos
     Badge(v-if='this.$global.user.sices')
     span.info {{ date }}
     a.messages(v-if='$global.user.sices', href='/messenger')
