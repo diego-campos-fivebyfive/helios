@@ -31,12 +31,10 @@ class PaymentController extends AbstractController
         /** @var CartPoolManager $cartPoolManager */
         $cartPoolManager = $this->container->get('cart_pool_manager');
 
-        $code = $request->query->get('order_id');
+        $idCartPool = $request->query->get('order_id');
 
         /** @var CartPool $pool */
-        $pool = $cartPoolManager->findOneBy([
-            'code' => $code
-        ]);
+        $pool = $cartPoolManager->find($idCartPool);
 
         $callback = $this->formatCallback($request->query->all(), 'card');
         $result = $this->processCardCallback($callback, $pool);
@@ -71,25 +69,16 @@ class PaymentController extends AbstractController
         /** @var CartPoolManager $cartPoolManager */
         $cartPoolManager = $this->manager('cart_pool');
 
-        $code = $request->query->get('order_id');
+        $idCartPool = $request->query->get('order_id');
 
         /** @var CartPool $pool */
-        $pool = $cartPoolManager->findOneBy([
-            'code' => $code
-        ]);
+        $pool = $cartPoolManager->find($idCartPool);
 
         $callback = $this->formatCallback($request->query->all(), 'billet');
         $result = $this->processBilletCallback($callback, $pool);
 
         if ($result['processed']) {
             $cartPoolManager->save($pool);
-
-            if ($result['transform']) {
-                /** @var OrderTransformer $orderTransformer */
-                $orderTransformer = $this->container->get('order_transformer');
-
-                $orderTransformer->transformFromCartPool($pool);
-            }
 
             return $this->json();
         }
