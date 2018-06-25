@@ -58,11 +58,11 @@ class CartPoolHelper
     }
 
     /**
-     * @param $code
+     * @param CartPool $cartPool
      * @param AccountInterface $account
-     * @return CartPool
+     * @return CartPool|null
      */
-    public function createCartPool($code, AccountInterface $account)
+    public function updateCartPool(CartPool $cartPool, AccountInterface $account)
     {
         $cart = $this->getCart($account);
 
@@ -70,25 +70,18 @@ class CartPoolHelper
 
         $items = $this->formatItems($cartHasKits, true);
 
-        $checkout = $cart->getCheckout();
-
         if ($items) {
-            /** @var CartPoolManager $cartPoolManager */
-            $cartPoolManager = $this->container->get('cart_pool_manager');
 
-            /** @var CartPool $cartPool */
-            $cartPool = $cartPoolManager->create();
+            $checkout = $cart->getCheckout();
 
-            $cartPool->setCode($code);
-            $cartPool->setAccount($account);
             $cartPool->setAmount($this->getAmount($cart));
             $cartPool->setItems($items);
             $cartPool->setCheckout($checkout);
-            $cartPool->setStatus(CartPool::STATUS_CREATED);
+
+            /** @var CartPoolManager $cartPoolManager */
+            $cartPoolManager = $this->container->get('cart_pool_manager');
 
             $cartPoolManager->save($cartPool);
-
-            $this->clearCart($cart);
 
             return $cartPool;
         }
