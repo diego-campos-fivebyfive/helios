@@ -191,11 +191,8 @@
 <script>
 
     var Confirmation = {
-        hash: '',
-        hashLoad: function () {
-            this.hash = Math.random().toString(36).substring(2);
-        },
-        createCheckout: function () {
+        idCartPool: '{{ cartPoolId }}',
+        createGetnetIframe: function () {
 
             var getnetIfrm = document.createElement('script');
 
@@ -205,7 +202,7 @@
             getnetIfrm.setAttribute('data-getnet-amount', '{{ data.amount }}');
             //getnetIfrm.setAttribute('data-getnet-instructions', 'Teste');
             getnetIfrm.setAttribute('data-getnet-customerid', '{{ data.customerId }}');
-            getnetIfrm.setAttribute('data-getnet-orderid', Confirmation.hash);
+            getnetIfrm.setAttribute('data-getnet-orderid', Confirmation.idCartPool);
             getnetIfrm.setAttribute('data-getnet-button-class', 'pay-button-checkout');
             getnetIfrm.setAttribute('data-getnet-installments', '4');
             getnetIfrm.setAttribute('data-getnet-customer-first-name', '{{ data.firstName }}');
@@ -225,19 +222,18 @@
             getnetIfrm.setAttribute('data-getnet-items', '{{ data.items|raw }}');
             getnetIfrm.setAttribute('data-getnet-url-callback', '');
 
-            getnetIfrm.src = 'https://checkout-homologacao.getnet.com.br/loader.js?' + Confirmation.hash;
+            getnetIfrm.src = 'https://checkout-homologacao.getnet.com.br/loader.js?' + Confirmation.idCartPool;
             document.querySelector('body').appendChild(getnetIfrm);
 
             getnetIfrm.onload = function() {
                 Confirmation.getnetListener();
             };
         },
-        createCartPool: function (type) {
+        finishCartPool: function (type) {
 
             $.ajax({
-                url: "{{ path('cart_pool_create') }}",
+                url: "{{ path('cart_pool_finish', {id: cartPoolId}) }}",
                 method: "post",
-                data: {code: Confirmation.hash},
                 complete: function (response) {
                     if (response.status === 200) {
                         window.location = '{{ path("payment_feedback") }}';
@@ -247,11 +243,11 @@
         },
         getnetListener: function () {
             getnet.subscribe('success', function() {
-                Confirmation.createCartPool('success');
+                Confirmation.finishCartPool('success');
             });
 
             getnet.subscribe('pending', function() {
-                Confirmation.createCartPool('pending');
+                Confirmation.finishCartPool('pending');
             });
 
             getnet.subscribe('error', function(status, response) {
@@ -260,9 +256,8 @@
             });
         },
         init: function () {
-            this.hashLoad();
 
-            this.createCheckout();
+            this.createGetnetIframe();
         }
     };
 
