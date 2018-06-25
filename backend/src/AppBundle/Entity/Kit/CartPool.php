@@ -36,13 +36,6 @@ class CartPool
     private $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $code;
-
-    /**
      * @var Customer
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Customer")
      */
@@ -91,6 +84,13 @@ class CartPool
     private $status;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $confirmed;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
@@ -121,25 +121,6 @@ class CartPool
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @param $code
-     * @return $this
-     */
-    public function setCode($code)
-    {
-        $this->code = $code;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCode()
-    {
-        return $this->code;
     }
 
     /**
@@ -279,6 +260,25 @@ class CartPool
     public function setBilletId($billetId)
     {
         $this->billetId = $billetId;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isConfirmed()
+    {
+        return $this->confirmed;
+    }
+
+    /**
+     * @param bool $confirmed
+     * @return CartPool
+     */
+    public function setConfirmed($confirmed)
+    {
+        $this->confirmed = $confirmed;
 
         return $this;
     }
