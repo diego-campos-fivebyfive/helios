@@ -52,7 +52,11 @@ class CartController extends AbstractController
             /** @var CartPoolHelper $cartPoolHelper */
             $cartPoolHelper = $this->container->get('cart_pool_helper');
 
-            $cartPool = $cartPoolHelper->findOrCreateCartPool($this->account());
+            $account = $this->account();
+
+            $cartPool = $cartPoolHelper->findOrCreateCartPool($account);
+
+            $cartPoolHelper->updateCartPool($cartPool, $account);
 
             return $this->render('cart.confirmation', [
                 'data' => $data,
