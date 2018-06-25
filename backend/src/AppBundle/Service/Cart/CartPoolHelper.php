@@ -60,7 +60,6 @@ class CartPoolHelper
     /**
      * @param CartPool $cartPool
      * @param AccountInterface $account
-     * @return CartPool|null
      */
     public function updateCartPool(CartPool $cartPool, AccountInterface $account)
     {
@@ -70,23 +69,16 @@ class CartPoolHelper
 
         $items = $this->formatItems($cartHasKits, true);
 
-        if ($items) {
+        $checkout = $cart->getCheckout();
 
-            $checkout = $cart->getCheckout();
+        $cartPool->setAmount($this->getAmount($cart));
+        $cartPool->setItems($items);
+        $cartPool->setCheckout($checkout);
 
-            $cartPool->setAmount($this->getAmount($cart));
-            $cartPool->setItems($items);
-            $cartPool->setCheckout($checkout);
+        /** @var CartPoolManager $cartPoolManager */
+        $cartPoolManager = $this->container->get('cart_pool_manager');
 
-            /** @var CartPoolManager $cartPoolManager */
-            $cartPoolManager = $this->container->get('cart_pool_manager');
-
-            $cartPoolManager->save($cartPool);
-
-            return $cartPool;
-        }
-
-        return null;
+        $cartPoolManager->save($cartPool);
     }
 
     /**
