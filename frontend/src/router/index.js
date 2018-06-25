@@ -18,7 +18,13 @@ export const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   const path = {
     destiny: to.path,
+    origin: from.path,
     notfound: '/not-found'
+  }
+
+  if (path.origin === path.notfound) {
+    router.back()
+    return
   }
 
   if (path.destiny === path.notfound) {
