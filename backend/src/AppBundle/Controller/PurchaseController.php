@@ -20,20 +20,18 @@ use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 class PurchaseController extends AbstractController
 {
     /**
-     * @Route("/create_cart_pool", name="cart_pool_create")
+     * @Route("/{id}/finish_cart_pool", name="cart_pool_finish")
      * @Security("has_role('ROLE_OWNER')")
      * @Method("post")
      */
-    public function createCartPoolAction(Request $request)
+    public function finishCartPoolAction(CartPool $cartPool)
     {
-        $code = $request->get('code');
-
         $account = $this->account();
 
         /** @var CartPoolHelper $cartPoolHelper */
         $cartPoolHelper = $this->container->get('cart_pool_helper');
 
-        $cartPoolHelper->createCartPool($code, $account);
+        //$cartPoolHelper->createCartPool($code, $account);
 
         return $this->json();
     }
