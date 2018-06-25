@@ -69,7 +69,7 @@ class PaymentController extends AbstractController
     public function getPaymentBilletRegisterAction(Request $request)
     {
         /** @var CartPoolManager $cartPoolManager */
-        $cartPoolManager = $this->container->get('cart_pool_manager');
+        $cartPoolManager = $this->manager('cart_pool');
 
         $code = $request->query->get('order_id');
 
