@@ -7,6 +7,18 @@
             background-size: contain;
             background-position: center;
         }
+        .row-total {
+            display: block;
+        }
+
+        .spacing {
+            margin-top: 8px;
+        }
+
+        [type="checkbox"]
+        {
+            vertical-align: middle;
+        }
     </style>
 
     <div class="wrapper wrapper-content animated fadeInRight">
@@ -96,6 +108,126 @@
 
                 <div class="ibox">
                     <div class="ibox-title">
+                        <h5>Dados de faturamento e entrega</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="tab-content">
+                            <div class="tab-pane active">
+                                <div class="row">
+                                    {#<div class="row wrapper">#}
+                                        {#<div class="col-lg-12">#}
+                                            {#<ol class="breadcrumb">#}
+                                                {#<div class="col-md-12">#}
+                                                    {#<label>Dados do integrador</label>#}
+                                                {#</div>#}
+                                            {#</ol>#}
+                                        {#</div>#}
+                                    {#</div>#}
+                                    <div class="col-md-12">
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Cliente</label>
+                                            {{ account.firstName }}
+                                        </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Nome</label>
+                                            {{ account.lastName }}
+                                        </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">CNPJ</label>
+                                            {{ account.document }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Inscrição Estadual</label>
+                                            {{ account.extraDocument }}
+                                        </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Contato</label>
+                                            {{ account.contact }}
+                                        </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Email</label>
+                                            {{ account.email }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Telefone</label>
+                                            {{ account.phone }}
+                                        </div>
+                                        <div class="col-md-2 spacing">
+                                            <label class="row-total">CEP</label>
+                                            {{ account.postcode }}
+                                        </div>
+                                        <div class="col-md-2 spacing">
+                                            <label class="row-total">Estado</label>
+                                            {{ account.state }}
+                                        </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Cidade</label>
+                                            {{ account.city }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Endereço</label>
+                                            {{ account.address }}
+                                        </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Usuário Sices vinculado</label>
+                                            {{ account.agent.firstName }}
+                                        </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Nível de desconto</label>
+                                            {{ account.level|trans }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr/>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">CEP</label>
+                                            {{ account.postcode }}
+                                        </div>
+                                        <div class="col-md-2 spacing">
+                                            <label class="row-total">Estado</label>
+                                            {{ account.state }}
+                                        </div>
+                                        <div class="col-md-3 spacing">
+                                            <label class="row-total">Cidade</label>
+                                            {{ account.city }}
+                                        </div>
+                                        <div class="col-md-3 spacing">
+                                            <label class="row-total">Bairro</label>
+                                            {{ account.district }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Logradouro</label>
+                                            {{ account.address }}
+                                        </div>
+                                        <div class="col-md-2 spacing">
+                                            <label class="row-total">Número</label>
+                                            {{ account.number }}
+                                        </div>
+                                        <div class="col-md-6 spacing">
+                                            <label class="row-total">Complementos</label>
+                                            {{ account.complement }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ibox">
+                    <div class="ibox-title">
                         <span class="pull-right">(<strong>{{ kits|length }}</strong>) item(s)</span>
                         <h5>Revise seu(s) item(s)</h5>
                     </div>
@@ -172,11 +304,17 @@
 
                         <hr>
                         <span class="text-muted small">
-                                Realizar pagamento
-                            </span>
-                        <div class="m-t-sm">
+                            <input id="terms" type="checkbox"/>
+                            <label for="terms">
+                                <a href="#">
+                                    Li e concordo com os termos
+                                </a>
+                            </label>
+                        </span>
+                        <div class="m-t-md">
                             <div class="btn-group">
-                                <button type="button" class="btn btn-primary btn-sm pay-button-checkout">Confirmar</button>
+                                <button id="confirmCheckout" type="button" class="btn btn-primary btn-sm disabled">Confirmar</button>
+                                <button id="loadIframe" type="button" class="hidden pay-button-checkout"></button>
                             </div>
                         </div>
                     </div>
@@ -271,5 +409,24 @@
     };
 
     Confirmation.init();
+
+    var checkedTerms = $(this).is(':checked');
+    $('#terms').on('click', function () {
+        var checked = $(this).is(':checked');
+
+        if (checked) {
+            $('#confirmCheckout').removeClass('disabled');
+        } else {
+            $('#confirmCheckout').addClass('disabled');
+        }
+
+        checkedTerms = checked;
+    });
+
+    $('#confirmCheckout').on('click', function () {
+        if (checkedTerms) {
+            $('#loadIframe').click();
+        }
+    });
 </script>
 {% endblock %}
