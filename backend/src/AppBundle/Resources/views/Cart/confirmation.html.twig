@@ -392,17 +392,21 @@
 
     Confirmation.init();
 
-    var checkedTerms = $(this).is(':checked');
-    $('#terms').on('click', function () {
-        var checked = $(this).is(':checked');
+    var checkedTerms = $('#terms').is(':checked');
 
-        if (checked) {
+    function checkTerms() {
+        if (checkedTerms) {
             $('#confirmCheckout').removeClass('disabled');
         } else {
             $('#confirmCheckout').addClass('disabled');
         }
+    }
 
-        checkedTerms = checked;
+    checkTerms();
+
+    $('#terms').on('click', function () {
+        checkedTerms = $(this).is(':checked');
+        checkTerms();
     });
 
     $('#confirmCheckout').on('click', function () {
