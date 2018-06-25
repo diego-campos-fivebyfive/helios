@@ -54,6 +54,10 @@
                 type: "get",
                 url: "{{ route('checker_terms') }}",
                 complete: function(response) {
+                    if(window.self !== window.top) {
+                        return;
+                    }
+
                     if (response.status === 401) {
                         window.location = response.responseJSON.url;
                     }
