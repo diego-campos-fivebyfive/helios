@@ -28,6 +28,7 @@ class CartController extends AbstractController
     /**
      * @Breadcrumb("Confirmação")
      * @Route("/checkout", name="cart_checkout")
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getCheckoutAction(Request $request)
     {
@@ -48,10 +49,16 @@ class CartController extends AbstractController
             $kits = $data['kits'];
             unset($data['kits']);
 
+            /** @var CartPoolHelper $cartPoolHelper */
+            $cartPoolHelper = $this->container->get('cart_pool_helper');
+
+            $cartPool = $cartPoolHelper->findOrCreateCartPool($this->account());
+
             return $this->render('cart.confirmation', [
                 'data' => $data,
                 'kits' => $kits,
-                'numbers' => $numbers
+                'numbers' => $numbers,
+                'cartPoolId' => $cartPool->getId()
             ]);
         }
 

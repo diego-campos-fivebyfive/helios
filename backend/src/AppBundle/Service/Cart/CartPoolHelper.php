@@ -9,6 +9,7 @@ use AppBundle\Entity\Kit\CartPool;
 use AppBundle\Manager\CartHasKitManager;
 use AppBundle\Manager\CartManager;
 use AppBundle\Manager\CartPoolManager;
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class CartPoolHelper
@@ -31,6 +32,29 @@ class CartPoolHelper
         $this->container = $container;
 
         $this->cartHasKitManager = $this->container->get('cart_has_kit_manager');
+    }
+
+    /**
+     * @param AccountInterface $account
+     * @return CartPool
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findOrCreateCartPool(AccountInterface $account)
+    {
+        /** @var CartPoolManager $cartPoolManager */
+        $cartPoolManager = $this->container->get('cart_pool_manager');
+
+        /** @var QueryBuilder $qb */
+        $qb = $cartPoolManager->createQueryBuilder();
+
+        $qb
+            ->andWhere($qb->expr()->eq('c.account', $account->getId()))
+            ->andWhere($qb->expr()->eq('c.confirmed', $qb->expr()->literal(false)));
+
+        /** @var CartPool $cartPool */
+        $cartPool = $qb->getQuery()->getOneOrNullResult();
+
+        return $cartPool ? $cartPool : $this->generateCartPool($account);
     }
 
     /**
@@ -197,5 +221,26 @@ class CartPoolHelper
         return $this->cartHasKitManager->findBy([
             'cart' => $cart
         ]);
+    }
+
+    /**
+     * @param AccountInterface $account
+     * @return CartPool
+     */
+    private function generateCartPool(AccountInterface $account)
+    {
+        /** @var CartPoolManager $cartPoolManager */
+        $cartPoolManager = $this->container->get('cart_pool_manager');
+
+        /** @var CartPool $cartPool */
+        $cartPool = $cartPoolManager->create();
+        $cartPool
+            ->setAccount($account)
+            ->setStatus(CartPool::STATUS_CREATED)
+            ->setConfirmed(false);
+
+        $cartPoolManager->save($cartPool);
+
+        return $cartPool;
     }
 }
