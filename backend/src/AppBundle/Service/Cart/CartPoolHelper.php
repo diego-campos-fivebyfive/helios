@@ -58,11 +58,10 @@ class CartPoolHelper
     }
 
     /**
-     * @param $code
+     * @param CartPool $cartPool
      * @param AccountInterface $account
-     * @return CartPool
      */
-    public function createCartPool($code, AccountInterface $account)
+    public function updateCartPool(CartPool $cartPool, AccountInterface $account)
     {
         $cart = $this->getCart($account);
 
@@ -72,28 +71,14 @@ class CartPoolHelper
 
         $checkout = $cart->getCheckout();
 
-        if ($items) {
-            /** @var CartPoolManager $cartPoolManager */
-            $cartPoolManager = $this->container->get('cart_pool_manager');
+        $cartPool->setAmount($this->getAmount($cart));
+        $cartPool->setItems($items);
+        $cartPool->setCheckout($checkout);
 
-            /** @var CartPool $cartPool */
-            $cartPool = $cartPoolManager->create();
+        /** @var CartPoolManager $cartPoolManager */
+        $cartPoolManager = $this->container->get('cart_pool_manager');
 
-            $cartPool->setCode($code);
-            $cartPool->setAccount($account);
-            $cartPool->setAmount($this->getAmount($cart));
-            $cartPool->setItems($items);
-            $cartPool->setCheckout($checkout);
-            $cartPool->setStatus(CartPool::STATUS_CREATED);
-
-            $cartPoolManager->save($cartPool);
-
-            $this->clearCart($cart);
-
-            return $cartPool;
-        }
-
-        return null;
+        $cartPoolManager->save($cartPool);
     }
 
     /**
@@ -143,26 +128,6 @@ class CartPoolHelper
      */
     public function formatCheckout(array $checkout)
     {
-        $shipping = [
-            [
-                "first_name" => $checkout['firstName'],
-                "name" => $checkout['shippingName'],
-                "email" => $checkout['shippingEmail'],
-                "phone_number" => $checkout['shippingPhone'],
-                "shipping_amount" => 10,
-                "address" => [
-                    "street" => $checkout['shippingStreet'],
-                    "complement" => $checkout['shippingComplement'],
-                    "number" => $checkout['shippingNumber'],
-                    "district" => $checkout['shippingNeighborhood'],
-                    "city" => $checkout['shippingCity'],
-                    "state" => $checkout['shippingState'],
-                    "country" => "Brasil",
-                    "postal_code" => str_replace("-", "", $checkout['shippingPostcode'])
-                ]
-            ]
-        ];
-
         return [
             "firstName" => $checkout['firstName'],
             "lastName" => $checkout['lastName'],
@@ -177,9 +142,7 @@ class CartPoolHelper
             "city" => $checkout['city'],
             "state" => $checkout['state'],
             "zipcode" => $checkout['postcode'],
-            "country" => "Brasil",
-            "differentDelivery" => $checkout['differentDelivery'],
-            "shipping" => json_encode($shipping)
+            "country" => "Brasil"
         ];
     }
 
