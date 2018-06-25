@@ -38,7 +38,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 /**
  * @Security("user.isPlatform()")
  *
- * @Route("orders")
+ * @Route("twig/orders")
  * @Breadcrumb("Orçamentos")
  */
 class OrderController extends AbstractController

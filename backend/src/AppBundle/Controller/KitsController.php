@@ -10,7 +10,7 @@ USE Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 
 /**
- * @Route("kit")
+ * @Route("twig/kit")
  *
  * @Breadcrumb("Kits Fixos")
  */

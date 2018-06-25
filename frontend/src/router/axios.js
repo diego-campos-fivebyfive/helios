@@ -18,7 +18,7 @@ const handleSuccessResponse = response => {
 const handleErrorResponse = error => {
   throw new Error('An unexpected request error has occurred:')
   console.log(error)
-  return {}
+  return error
 }
 
 axios.interceptors.response

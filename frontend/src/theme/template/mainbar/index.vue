@@ -1,9 +1,18 @@
 <template lang="pug">
   header.bar
+<<<<<<< HEAD
     h1.title {{ getPageTitle }}
     span.ranking(v-if="$global.user.ranking\
       && $global.user.type !== 'child'\
       && !this.$global.user.sices")
+=======
+    transition(name='fade')
+      .header-cover(
+        v-show='handleTwigModal.state',
+        v-on:click='handleTwigModal.toogle')
+    h1.title {{ pageTitle }}
+    span.ranking(v-if='$global.user.ranking')
+>>>>>>> b6f510a3d2ab7cbec1321a97de4d66594c9b07c8
       | {{ $global.user.ranking }} pontos
     Badge(v-if='this.$global.user.sices')
     span.info {{ date }}
@@ -14,7 +23,7 @@
     nav.menu
       Button(
         class='default-common',
-        link='/logout',
+        redirect='/logout',
         label='Sair',
         pos='first')
         Icon(name='sign-out')
@@ -57,8 +66,15 @@
   }
 
   export default {
+    props: {
+      handleTwigModal: {
+        type: Object,
+        required: true
+      }
+    },
     data: () => ({
       date: '',
+      pageTitle: '',
       totalOfMessages: null
     }),
     sockets: {
@@ -66,12 +82,19 @@
         this.totalOfMessages = this.totalOfMessages + data
       }
     },
-    computed: {
-      getPageTitle() {
-        return this.$router.history.current.name
+    methods: {
+      setPageTitle() {
+        this.pageTitle = this.$router.history.current.name
+      }
+    },
+    watch: {
+      $route() {
+        this.setPageTitle()
       }
     },
     mounted() {
+      this.setPageTitle()
+
       const uri = '/admin/api/v1/orders/messages/unread_count'
       this.axios.get(uri)
         .then(response => {
@@ -84,12 +107,27 @@
 </script>
 
 <style lang="scss" scoped>
+  $head-border-size: 1px;
+
+  .header-cover {
+    background-color: rgba(0,0,0,0.5);
+    height: calc(100% + 1px);
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 250;
+  }
+
   .bar {
     background-color: $ui-white-regular;
-    border-bottom: 1px solid $ui-divider-color;
+    border-bottom: $head-border-size solid $ui-divider-color;
     color: $ui-text-main;
     display: block;
+    height: $ui-mainbar-y;
+    max-height: $ui-mainbar-y - $head-border-size;
     padding: $ui-space-y $ui-space-x;
+    position: relative;
     text-align: right;
     width: 100%;
     z-index: 100;
@@ -151,5 +189,13 @@
 
   a {
     color: $ui-gray-regular;
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: all 150ms ease;
+  }
+
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
   }
 </style>

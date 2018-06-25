@@ -20,7 +20,7 @@ use AppBundle\Form\Component\StructureType;
  * Class StructureController
  * @author Claudinei Machado <claudinei@kolinalabs.com>
  *
- * @Route("structure")
+ * @Route("twig/structure")
  *
  * @Breadcrumb("Dashboard", route={"name"="app_index"})
  * @Breadcrumb("Estruturas", route={"name"="structure_index"})

@@ -19,7 +19,7 @@ use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
  *
  * @Security("has_role('ROLE_USER')")
  *
- * @Route("tasks")
+ * @Route("twig/tasks")
  *
  * @Breadcrumb("Dashboard", route={"name"="app_index"})
  * @Breadcrumb("Tasks", route={"name"="task_index"})

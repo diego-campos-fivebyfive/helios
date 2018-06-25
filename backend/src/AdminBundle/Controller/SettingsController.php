@@ -16,7 +16,7 @@ use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
  *
  * @Breadcrumb("Configurações Gerais")
  *
- * @Route("/settings")
+ * @Route("twig/settings")
  */
 class SettingsController extends AdminController
 {

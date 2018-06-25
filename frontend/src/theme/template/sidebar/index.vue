@@ -1,10 +1,20 @@
 <template lang="pug">
   aside.sidebar(:class='sidebarType')
-    nav
-      Button.toogle(
-        class='primary-common',
-        :action='updateSidebarType')
-        Icon(name='bars')
+    transition(name='fade')
+      .sidebar-cover(
+        class='modal-cover',
+        v-show='handleTwigModal.state',
+        v-on:click='handleTwigModal.toogle')
+    nav.menu
+      .toogle
+        .toggle-cover(
+          class='modal-cover',
+          v-show='handleTwigModal.state',
+          v-on:click='handleTwigModal.toogle')
+        Button.toogle-button(
+          class='primary-common',
+          :action='updateSidebarType')
+          Icon(name='bars')
       Head(:sidebarType='sidebarType')
       Menu(:sidebarType='sidebarType')
 </template>
@@ -19,6 +29,10 @@
       Menu
     },
     props: {
+      handleTwigModal: {
+        type: Object,
+        required: true
+      },
       sidebarType: {
         type: String,
         required: true
@@ -52,11 +66,35 @@
     &.common {
       max-width: $ui-sidebar-common-x;
     }
+
+    .menu {
+      overflow-x: hidden;
+    }
+  }
+
+  .modal-cover {
+    background-color: rgba(0, 0, 0, 0.5);
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 250;
   }
 
   .toogle {
     position: absolute;
     right: -($ui-sidebar-toogle-x + $ui-space-x);
     top: $ui-space-y;
+  }
+
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: all 150ms ease;
+  }
+
+  .fade-enter,
+  .fade-leave-to {
+    opacity: 0;
   }
 </style>

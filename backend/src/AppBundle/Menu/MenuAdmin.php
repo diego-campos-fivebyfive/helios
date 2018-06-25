@@ -10,13 +10,13 @@ class MenuAdmin
     private static $menuMap = [
         'dashboard' => [
             'name' => 'Dashboard',
-            'route' => 'app_index',
+            'link' => '/',
             'icon' => 'dashboard',
             'allowedRoles' => '*'
         ],
         'accounts' => [
             'name' => 'Contas',
-            'route' => 'account_index',
+            'link' => '/admin/account',
             'icon' => 'accounts',
             'allowedRoles' => [
                 'admin',
@@ -30,7 +30,7 @@ class MenuAdmin
         ],
         'ranking' => [
             'name' => 'Fidelidade SICES',
-            'route' => 'ranking_index',
+            'link' => '/ranking',
             'icon' => 'trophy',
             'allowedRoles' => '*'
         ],
@@ -45,7 +45,7 @@ class MenuAdmin
         ],
         'memorials' => [
             'name' => 'Memoriais',
-            'route' => 'memorials',
+            'link' => '/admin/memorials',
             'icon' => 'bars',
             'allowedRoles' => [
                 'admin',
@@ -54,7 +54,7 @@ class MenuAdmin
         ],
         'orders' => [
             'name' => 'Orçamentos',
-            'route' => 'orders',
+            'link' => '/admin/orders',
             'icon' => 'orders',
             'allowedRoles' => '*'
         ],
@@ -71,7 +71,7 @@ class MenuAdmin
             'subItems' => [
                 'modules' => [
                     'name' => 'Módulos',
-                    'route' => 'components',
+                    'link' => '/components/module',
                     'icon' => 'modules',
                     'custom' => [
                         'routeParameters' => [
@@ -82,7 +82,7 @@ class MenuAdmin
                 ],
                 'inverters' => [
                     'name' => 'Inversores',
-                    'route' => 'components',
+                    'link' => '/components/inverter',
                     'icon' => 'inverters',
                     'custom' => [
                         'routeParameters' => [
@@ -93,19 +93,19 @@ class MenuAdmin
                 ],
                 'structures' => [
                     'name' => 'Estruturas',
-                    'route' => 'structure_index',
+                    'link' => '/structure',
                     'icon' => 'structure',
                     'allowedRoles' => '*'
                 ],
                 'stringBox' => [
                     'name' => 'String Box',
-                    'route' => 'stringbox_index',
+                    'link' => '/stringbox',
                     'icon' => 'stringbox',
                     'allowedRoles' => '*'
                 ],
                 'varieties' => [
                     'name' => 'Variedades',
-                    'route' => 'variety_index',
+                    'link' => '/variety',
                     'icon' => 'variety',
                     'allowedRoles' => '*'
                 ],
@@ -119,18 +119,19 @@ class MenuAdmin
                 ]
             ]
         ],
-//        'kits' => [
-//            'name' => 'Kits Fixos',
-//            'route' => 'kits_index',
-//            'icon' => 'list',
-//            'allowedRoles' => [
-//                'master',
-//                'admin'
-//            ]
-//        ],
+//      'kits' => [
+//          'name' => 'Kits Fixos',
+//          'link' => '/admin/kit',
+//          'route' => 'kits_index',
+//          'icon' => 'list',
+//          'allowedRoles' => [
+//              'master',
+//              'admin'
+//          ]
+//      ],
         'stock' => [
             'name' => 'Estoque',
-            'route' => 'stock',
+            'link' => '/admin/stock',
             'icon' => 'kits',
             'allowedRoles' => [
                 'admin',
@@ -141,7 +142,7 @@ class MenuAdmin
         ],
         'users' => [
             'name' => 'Usuários Sices',
-            'route' => 'user_index',
+            'link' => '/admin/users',
             'icon' => 'users',
             'allowedRoles' => [
                 'admin',
@@ -150,7 +151,7 @@ class MenuAdmin
         ],
         'paymentMethods' => [
             'name' => 'Cond. Pagamento',
-            'route' => 'payment_methods',
+            'link' => '/admin/payment-methods',
             'icon' => 'signature',
             'allowedRoles' => [
                 'admin',
@@ -159,7 +160,7 @@ class MenuAdmin
         ],
        'insurance' => [
             'name' => 'Seguros',
-            'route' => 'insurance_index',
+            'link' => '/admin/insurance',
             'icon' => 'insurance',
             'allowedRoles' => [
                 'admin',
@@ -197,13 +198,13 @@ class MenuAdmin
             'subItems' => [
                 'myData' => [
                     'name' => 'Meus Dados',
-                    'route' => 'member_profile',
+                    'link' => '/member/profile',
                     'icon' => 'profile',
                     'allowedRoles' => '*'
                 ],
                 'parameters' => [
                     'name' => 'Parâmetros',
-                    'route' => 'platform_settings',
+                    'link' => '/admin/settings',
                     'icon' => 'sliders',
                     'allowedRoles' => [
                         'admin',
