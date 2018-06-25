@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Kit\Cart;
 use AppBundle\Entity\Kit\CartPool;
 use AppBundle\Manager\CartManager;
+use AppBundle\Manager\CartPoolManager;
 use AppBundle\Service\Cart\CartPoolHelper;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -26,12 +27,17 @@ class PurchaseController extends AbstractController
      */
     public function finishCartPoolAction(CartPool $cartPool)
     {
-        $account = $this->account();
-
         /** @var CartPoolHelper $cartPoolHelper */
         $cartPoolHelper = $this->container->get('cart_pool_helper');
 
-        //$cartPoolHelper->createCartPool($code, $account);
+        $cartPoolHelper->clearCart($this->getCart());
+
+        /** @var CartPoolManager $cartPoolManager */
+        $cartPoolManager = $this->manager('cart_pool');
+
+        $cartPool->setConfirmed(true);
+
+        $cartPoolManager->save($cartPool);
 
         return $this->json();
     }
@@ -127,5 +133,21 @@ class PurchaseController extends AbstractController
             'shipping' => $shipping
         ]);
 
+    }
+
+    /**
+     * @return Cart
+     */
+    private function getCart()
+    {
+        /** @var CartManager $cartManager */
+        $cartManager = $this->manager('cart');
+
+        /** @var Cart $cart */
+        $cart = $cartManager->findOneBy([
+            'account' => $this->account()
+        ]);
+
+        return $cart;
     }
 }
