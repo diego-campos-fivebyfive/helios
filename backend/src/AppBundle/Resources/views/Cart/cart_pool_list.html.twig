@@ -64,7 +64,7 @@
                     <table class="table table-striped table-hover">
                         <thead>
                         <tr>
-                            <th class="col-md-2"> Código </th>
+                            <th class="col-md-2 text-center"> Pedido </th>
                             {% if member.isPlatformUser %}
                                 <th class="col-md-2"> Conta </th>
                             {% endif %}
@@ -81,7 +81,7 @@
 
                         {% for item in pagination.items %}
                             <tr>
-                                <td> {{ item.code }} </td>
+                                <td class="text-center"> #{{ item.id }} </td>
                                 {% if member.isPlatformUser %}
                                     <td> {{ item.account.firstname }} </td>
                                 {% endif %}
