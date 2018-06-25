@@ -402,10 +402,10 @@ body.fixed-sidebar.mini-navbar .navbar-static-side {
   width: 0;
 }
 body.fixed-sidebar.mini-navbar #page-wrapper {
-  margin: 0 0 0 0;
+  margin: 0;
 }
 body.body-small.fixed-sidebar.mini-navbar #page-wrapper {
-  margin: 0 0 0 220px;
+  margin: 0;
 }
 body.body-small.fixed-sidebar.mini-navbar .navbar-static-side {
   width: 220px;
@@ -8278,4 +8278,35 @@ body.md-skin {
   #page-wrapper {
     margin: 0;
   }
+}
+
+.label-level {
+  padding: 10px 42px;
+}
+.label.label-level {
+  background-color: white;
+  border: 1px solid white;
+  border-radius: 3px;
+  color: #555;
+}
+
+.label.level-titanium {
+  background-image: url('./images/titanium_01.jpg');
+  background-size: 100%;
+}
+.label.level-black {
+  background-image: url('./images/black_01.png');
+  background-size: 100%;
+}
+.label.level-partner {
+  background-image: url('./images/partner_01.png');
+  background-size: 100%;
+}
+.label.level-premium {
+  background-image: url('./images/premium_01.png');
+  background-size: 100%;
+}
+.label.level-platinum {
+  background-image: url('./images/platinum_01.png');
+  background-size: 100%;
 }

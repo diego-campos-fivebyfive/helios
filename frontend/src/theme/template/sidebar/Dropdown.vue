@@ -1,16 +1,17 @@
 <template lang="pug">
   .dropdown(
-    :class='[{ "dropdown-active": open }, sidebarType]')
+    :class='[{ "dropdown-active": dropdownActived }, sidebarType]',
+    v-on:mouseleave='closeDropdown')
     button.dropdown-toogle(
       type='button',
-      v-on:click='toogleList',
-      v-on:mouseover='showLabel')
+      v-on:click='openCommonDropdown',
+      v-on:mouseover='openCollapseDropdown')
       Icon.icon-ui(:name='dropdown.icon')
       span.dropdown-toogle-label(:style='style.labelTopPosition')
         | {{ dropdown.name }}
-      Icon.icon-arrow(v-show='open', name='angle-down')
-      Icon.icon-arrow(v-show='!open', name='angle-left')
-    ul(v-show='open', :style='style.listTopPosition')
+      Icon.icon-arrow(v-show='dropdownActived', name='angle-down')
+      Icon.icon-arrow(v-show='!dropdownActived', name='angle-left')
+    ul(v-show='dropdownActived', :style='style.listTopPosition')
       li(v-for='item in dropdown.subItems')
         Item(:item='item', :itemDropdown='true', :sidebarType='sidebarType')
 </template>
@@ -33,7 +34,7 @@
       }
     },
     data: () => ({
-      open: false,
+      dropdownActived: false,
       style: {
         labelTopPosition: '',
         listTopPosition: ''
@@ -48,14 +49,36 @@
       },
       toogleList(event) {
         this.updateElementPosition(event, 'listTopPosition')
-        this.open = !this.open
+        this.dropdownActived = !this.dropdownActived
       },
       showLabel(event) {
         this.updateElementPosition(event, 'labelTopPosition')
+      },
+      closeDropdown() {
+        if (this.sidebarType === 'collapse') {
+          this.dropdownActived = !this.dropdownActived
+        }
+      },
+      openCommonDropdown(event) {
+        if (this.sidebarType === 'common') {
+          this.toogleList(event)
+        }
+      },
+      openCollapseDropdown(event) {
+        if (
+          this.sidebarType === 'collapse'
+          && event.target.type === 'button'
+        ) {
+          this.toogleList(event)
+        }
       }
     },
     watch: {
-      sidebarType() {}
+      sidebarType() {
+        if (this.sidebarType === 'collapse') {
+          this.dropdownActived = false
+        }
+      }
     }
   }
 </script>
