@@ -59,6 +59,7 @@ class CartController extends AbstractController
             $cartPoolHelper->updateCartPool($cartPool, $account);
 
             return $this->render('cart.confirmation', [
+                'account' => $cartPool->getAccount(),
                 'data' => $data,
                 'kits' => $kits,
                 'numbers' => $numbers,
