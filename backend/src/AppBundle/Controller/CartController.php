@@ -291,8 +291,6 @@ class CartController extends AbstractController
         $cart = $this->getCart();
 
         if ($checkout = $cart->getCheckout()) {
-            $shipping = json_decode($checkout['shipping'], true)[0];
-
             $form->get('firstName')->setData($checkout['firstName']);
             $form->get('lastName')->setData($checkout['lastName']);
             $form->get('documentType')->setData($checkout['documentType']);
@@ -305,18 +303,6 @@ class CartController extends AbstractController
             $form->get('neighborhood')->setData($checkout['neighborhood']);
             $form->get('street')->setData($checkout['street']);
             $form->get('number')->setData($checkout['number']);
-            $form->get('complement')->setData($checkout['complement']);
-            $form->get('differentDelivery')->setData($checkout['differentDelivery']);
-            $form->get('shippingName')->setData($shipping['name']);
-            $form->get('shippingEmail')->setData($shipping['email']);
-            $form->get('shippingPhone')->setData($shipping['phone_number']);
-            $form->get('shippingPostcode')->setData($shipping['address']['postal_code']);
-            $form->get('shippingState')->setData($shipping['address']['state']);
-            $form->get('shippingCity')->setData($shipping['address']['city']);
-            $form->get('shippingNeighborhood')->setData($shipping['address']['district']);
-            $form->get('shippingStreet')->setData($shipping['address']['street']);
-            $form->get('shippingNumber')->setData($shipping['address']['number']);
-            $form->get('shippingComplement')->setData($shipping['address']['complement']);
         }
     }
 
@@ -423,16 +409,6 @@ class CartController extends AbstractController
             "street",
             "number",
             "complement",
-            "differentDelivery",
-            "shippingName",
-            "shippingEmail",
-            "shippingPostcode",
-            "shippingState",
-            "shippingCity",
-            "shippingNeighborhood",
-            "shippingStreet",
-            "shippingNumber",
-            "shippingComplement",
         ];
 
         foreach ($keys as $key) {
@@ -441,8 +417,7 @@ class CartController extends AbstractController
 
         $formatKeys = [
             "document",
-            "phone",
-            "shippingPhone"
+            "phone"
         ];
 
         foreach ($formatKeys as $key) {
