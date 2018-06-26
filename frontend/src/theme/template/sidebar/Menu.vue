@@ -31,17 +31,8 @@
       }
     },
     mounted() {
-      this.axios.get('api/v1/application/menu').then(({ data }) => {
-        const currentRoute = this.$router.history.current.path
-
-        this.menu = Object.entries(data)
-          .map(([itemMenuKey, itemMenu]) => (
-            Object.assign(itemMenu, {
-              active: currentRoute === itemMenu.link,
-              key: itemMenuKey
-            })
-          ))
-      })
+      const uri = 'api/v1/application/menu'
+      this.axios.get(uri).then(({ data }) => this.menu = data)
     },
     watch: {
       sidebarType() {}

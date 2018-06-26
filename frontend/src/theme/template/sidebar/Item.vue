@@ -2,10 +2,7 @@
   router-link.item(
     :to='item.link',
     :style='item.customStyle',
-    :class='[{\
-      "item-dropdown": itemDropdown,\
-      "item-active": item.active },\
-      sidebarType]',
+    :class='[{ "item-dropdown": itemDropdown }, sidebarType]',
     v-on:click.native='forceReload',
     v-on:mouseover.native='setLabelPosition')
     Icon.icon-ui(:name='item.icon')
@@ -131,7 +128,7 @@
     }
   }
 
-  .item-active {
+  .router-link-exact-active {
     background-color: $ui-gray-dark;
     border-left: $ui-space-x/6.25 solid $ui-blue-light;
     color: $ui-white-regular;
