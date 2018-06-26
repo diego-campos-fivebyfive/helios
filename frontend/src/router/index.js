@@ -15,7 +15,7 @@ export const router = new VueRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
+/* router.beforeEach((to, from, next) => {
   const path = {
     destiny: to.path,
     origin: from.path,
@@ -56,6 +56,6 @@ router.beforeEach((to, from, next) => {
   axios.get(uri).catch(() => next('/terms'))
 
   next()
-})
+}) */
 
 export { axios }
