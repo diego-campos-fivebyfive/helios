@@ -193,6 +193,26 @@ abstract class AbstractMailer
     }
 
     /**
+     * @param \Swift_Message $message
+     */
+    protected function resolvePlatformJuridicEmail(\Swift_Message $message)
+    {
+        $settings = $this->getPlatformSettings();
+
+        $addIfDefined = function($target, $bcc = false) use($settings, $message){
+            if(array_key_exists($target, $settings) && !empty($settings[$target]['email'])){
+                if($bcc){
+                    $message->addBcc($settings[$target]['email'], $settings[$target]['name']);
+                }else {
+                    $message->addCc($settings[$target]['email'], $settings[$target]['name']);
+                }
+            }
+        };
+
+        $addIfDefined('juridic');
+    }
+
+    /**
      * @param $account
      * @param $message
      */
