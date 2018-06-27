@@ -4,24 +4,22 @@
       .header-cover(
         v-show='handleTwigModal.state',
         v-on:click='handleTwigModal.toogle')
-    h1.title {{ pageTitle }}
-    span.ranking(v-if="$global.user.ranking\
-      && $global.user.type !== 'child'\
-      && !this.$global.user.sices")
-      | {{ $global.user.ranking }} pontos
-    Badge(v-if='this.$global.user.sices')
+      h1.title {{ pageTitle }}
+      span.ranking(v-if="$global.user.ranking\
+        && $global.user.type !== 'child'\
+        && !$global.user.sices")
+        | {{ $global.user.ranking }} pontos
+    Badge.badge(v-if='!$global.user.sices')
     span.info {{ date }}
-    a.messages(v-if='$global.user.sices', href='/messenger')
-      Icon.messages-icon(name='envelope')
-      label.messages-label(v-if='totalOfMessages')
-        | {{ totalOfMessages }}
     nav.menu
-      Button(
-        class='default-common',
-        redirect='/logout',
-        label='Sair',
-        pos='first')
+      a.menu-item.messages(v-if='$global.user.sices', href='/messenger')
+        Icon.messages-icon(name='envelope')
+        label.messages-label(v-if='totalOfMessages')
+          | {{ totalOfMessages }}
+      a.menu-item.leave(
+        href='/logout')
         Icon(name='sign-out')
+        span Sair
 </template>
 
 <script>
@@ -104,6 +102,10 @@
 <style lang="scss" scoped>
   $head-border-size: 1px;
 
+  .badge {
+    margin: 0 $ui-space-x/3;
+  }
+
   .header-cover {
     background-color: rgba(0,0,0,0.5);
     height: calc(100% + 1px);
@@ -118,7 +120,6 @@
     background-color: $ui-white-regular;
     border-bottom: $head-border-size solid $ui-divider-color;
     color: $ui-text-main;
-    display: block;
     height: $ui-mainbar-y;
     max-height: $ui-mainbar-y - $head-border-size;
     padding: $ui-space-y $ui-space-x;
@@ -151,18 +152,19 @@
     display: inline-block;
     font-size: 1rem;
     font-weight: 400;
-    margin: $ui-space-y/3 $ui-space-x;
     opacity: 0.8;
   }
 
   .menu {
     display: flex;
     float: right;
+
+  .menu-item {
+      margin: 10px
+    }
   }
 
   .messages {
-    margin-right: 0.75rem;
-
     .messages-icon {
       display: inline-block;
       z-index: 105;
@@ -192,5 +194,11 @@
 
   .fade-enter, .fade-leave-to {
     opacity: 0;
+  }
+
+  @media (max-width: $ui-size-md){
+    .info{
+      display: none;
+    }
   }
 </style>
