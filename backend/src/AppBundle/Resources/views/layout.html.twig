@@ -8,7 +8,10 @@
 
     <script>
         // this script pushes Twig paths to Vue router
-        if (window.self !== window.top) {
+        if (window.self === window.top) {
+            window.location = window.location.pathname
+                .replace(/\/twig/, '');
+        } else {
             const parentPath = top.window.location.pathname
                 .replace(/\/$/g, '');
 
