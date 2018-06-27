@@ -151,6 +151,7 @@
                                                                     {% set form_admin = form_params.admin %}
                                                                     {% set form_platform = form_params.platform %}
                                                                     {% set form_financial = form_params.financial %}
+                                                                    {% set form_juristic = form_params.juristic %}
 
                                                                     {{ this.formInfo(form_platform) }}
 
@@ -159,6 +160,8 @@
                                                                     {{ this.formInfo(form_admin) }}
 
                                                                     {{ this.formInfo(form_financial) }}
+
+                                                                    {{ this.formInfo(form_juristic) }}
 
                                                                 </div>
 
@@ -735,7 +738,7 @@
                         $('#show-back-phrase').css('background-color', color_promo);
                         color_finame = $('#settings_parameters_finame_background').val();
                         $('#show-back-finame-phrase').css('background-color', color_finame).val();
-                        
+
                         if (OrderExpirations.refresh)
                             window.location.reload();
                     } else {
