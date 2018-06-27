@@ -26,6 +26,7 @@ use AppBundle\Entity\Order\OrderInterface;
 use AppBundle\Entity\Pricing\MemorialInterface;
 use AppBundle\Manager\KitManager;
 use AppBundle\Manager\OrderManager;
+use AppBundle\Service\Mailer;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -195,6 +196,16 @@ class OrderTransformer
         $orderReference = $this->container->get('order_reference');
 
         $orderReference->generate($order);
+
+        $this->sendKitEmail($order);
+    }
+
+    private function sendKitEmail(Order $order)
+    {
+        /** @var Mailer $mailer */
+        $mailer = $this->container->get('app_mailer');
+
+        $mailer->sendCartPoolConvertedMessage($order);
     }
 
     /**
