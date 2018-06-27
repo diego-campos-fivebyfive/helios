@@ -200,6 +200,9 @@ class OrderTransformer
         $this->sendKitEmail($order);
     }
 
+    /**
+     * @param Order $order
+     */
     private function sendKitEmail(Order $order)
     {
         /** @var Mailer $mailer */
