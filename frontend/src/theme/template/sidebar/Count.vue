@@ -1,5 +1,5 @@
 <template lang="pug">
-  span.label-count.fade-in(v-show="amount") {{ amount }}
+  span.label-count(v-show="amount") {{ amount }}
 </template>
 
 <script>
