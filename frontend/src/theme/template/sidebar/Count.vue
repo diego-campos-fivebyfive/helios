@@ -18,18 +18,18 @@
 
 <style lang="scss" scoped>
   .label-count {
+    animation-name: fadeInOpacity;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in;
+    animation-duration: 1s;
     background: $ui-blue-light;
     border-radius: $ui-corner/2;
     color: $ui-white-regular;
     font-size: 0.8em;
     float: right;
     margin-right: $ui-space-y/2;
-    padding: $ui-space-y/6 $ui-space-y/2;
-    animation-name: fadeInOpacity;
-    animation-iteration-count: 1;
-    animation-timing-function: ease-in;
-    animation-duration: 1s;
     opacity: 1;
+    padding: $ui-space-y/6 $ui-space-y/2;
   }
 
   @keyframes fadeInOpacity {
