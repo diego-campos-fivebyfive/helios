@@ -124,6 +124,38 @@ class Mailer extends AbstractMailer
 
     /**
      * @param OrderInterface $order
+     */
+    public function createCartPoolConvertedMessage(OrderInterface $order)
+    {
+        $parameters = $this->getKitParameters($order);
+
+        $message = $this->createMessage($parameters);
+
+        $this->resolvePlatformEmails($message);
+
+        $this->resolvePlatformJuridicEmail($message);
+
+        $account = $order->getAccount();
+
+        $this->resolveAccountEmails($message, $account);
+
+        return $message;
+    }
+
+    /**
+     * @param OrderInterface $order
+     */
+    public function sendCartPoolConvertedMessage(OrderInterface $order)
+    {
+        $message = $this->createCartPoolConvertedMessage($order);
+
+        if ($message instanceof \Swift_Message) {
+            $this->sendMessage($message);
+        }
+    }
+
+    /**
+     * @param OrderInterface $order
      * @return \Swift_Message
      */
     private function createMessageOrder(OrderInterface $order)
@@ -157,6 +189,18 @@ class Mailer extends AbstractMailer
         $this->addExpanseCc($account, $message);
 
         return $message;
+    }
+
+    private function getKitParameters(OrderInterface $order)
+    {
+        $parameters = [
+            'subject' => 'Pedido #' . $order->getReference(),
+            'body' => $this->templating->render('orders/emails/kit.html.twig', array(
+                'order' => $order
+            ))
+        ];
+
+        return $parameters;
     }
 
     /**
