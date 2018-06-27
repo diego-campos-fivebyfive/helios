@@ -24,10 +24,7 @@
     font-size: 0.8em;
     float: right;
     margin-right: $ui-space-y/2;
-    padding: $ui-space-y/6 $ui-space-y/2 $ui-space-y/6 $ui-space-y/2;
-  }
-
-  .fade-in {
+    padding: $ui-space-y/6 $ui-space-y/2;
     animation-name: fadeInOpacity;
     animation-iteration-count: 1;
     animation-timing-function: ease-in;
