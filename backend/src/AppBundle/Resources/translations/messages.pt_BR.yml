@@ -30,6 +30,8 @@ add:
 confirm:
     exclusion: "Confirmar exclusão?"
 
+Juristic: Jurídico
+
 select:
     maker: Selecionar Fabricante
     serial: "Selecionar Série"
