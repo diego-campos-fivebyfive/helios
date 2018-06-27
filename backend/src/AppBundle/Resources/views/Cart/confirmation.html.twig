@@ -21,6 +21,31 @@
         }
     </style>
 
+    <div id="informations" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-justify">
+                    <p>Prezado(a) Integrador(a),</p>
+                    <p>
+                        Considerando que, a Sices Brasil Ltda., mantém relação comercial apenas com empresas Integradoras
+                        (pessoas jurídicas) e, para tanto, disponibiliza como ferramenta, a Plataforma “Sices Solar”.
+                        Considerando também, que a Sices Brasil Ltda., não atende clientes finais;
+                    </p>
+                    <p>
+                        A Sices Brasil Ltda. não se responsabiliza por compras efetuadas por meio da Plataforma “Sices Solar”,
+                        nas quais foram utilizados cartões de débito e crédito de terceiros para pagamento, sendo de
+                        inteira responsabilidade do Integrador a forma de pagamento adotada, bem como a relação
+                        comercial existente entre ele e o seu cliente final, devendo isentar a Sices Brasil Ltda.
+                        de qualquer questionamento, baseado no Código de Defesa do Consumidor.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-md-9">
@@ -297,7 +322,7 @@
                         <span class="text-muted small">
                             <input id="terms" type="checkbox"/>
                             <label for="terms">
-                                <a href="#">
+                                <a href="#" data-toggle="modal" data-target="#informations">
                                     Li e concordo com os termos
                                 </a>
                             </label>
