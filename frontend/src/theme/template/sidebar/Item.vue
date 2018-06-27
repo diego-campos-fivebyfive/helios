@@ -8,10 +8,16 @@
     Icon.icon-ui(:name='item.icon')
     span(:style='labelPosition.top') {{ item.name }}
     Icon.icon-arrow(name='angle-right')
+    Count(v-if='item.link == "/tasks/m"')
 </template>
 
 <script>
+  import Count from './Count'
+
   export default {
+    components: {
+      Count
+    },
     props: {
       item: {
         type: Object,
