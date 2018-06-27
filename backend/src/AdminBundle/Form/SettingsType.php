@@ -52,6 +52,11 @@ class SettingsType extends AbstractType
                         ->create('financial', FormType::class)
                         ->add('name', TextType::class)
                         ->add('email', EmailType::class)
+                )->add(
+                    $builder
+                        ->create('juristic', FormType::class)
+                        ->add('name', TextType::class)
+                        ->add('email', EmailType::class)
                 )
                 ->add('enable_promo', CheckboxType::class)
                 ->add('promo_enabled_levels', ChoiceType::class, [
