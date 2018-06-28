@@ -67,6 +67,15 @@ class User extends AbstractUser implements UserInterface
         $this->enabled = true;
     }
 
+    public function accountActivated()
+    {
+        if($this->info){
+            return $this->info->getAccount()->isActivated();
+        }
+
+        return false;
+    }
+
     /**
      * @inheritDoc
      */
