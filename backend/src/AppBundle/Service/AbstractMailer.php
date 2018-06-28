@@ -207,7 +207,7 @@ abstract class AbstractMailer
             }
         };
 
-        $addIfDefined('juridic');
+        $addIfDefined('juristic');
     }
 
     /**
