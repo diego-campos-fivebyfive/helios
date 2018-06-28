@@ -328,6 +328,26 @@ export const routes = [
     component: FrameView
   },
   {
+    path: '/cart/show',
+    name: 'Carrinho',
+    component: FrameView
+  },
+  {
+    path: '/cart/checkout',
+    name: 'Checkout',
+    component: FrameView
+  },
+  {
+    path: '/purchase/list_cart_pool',
+    name: 'Purchase',
+    component: FrameView
+  },
+  {
+    path: '/purchase/payment_feedback',
+    name: 'Purchase feedback',
+    component: FrameView
+  },
+  {
     path: '/settings/categories/contact_category/',
     name: 'Categorias',
     component: FrameView,
@@ -449,7 +469,10 @@ export const routes = [
   {
     path: '/project/generator',
     name: 'Projetos',
-    component: FrameView
+    component: FrameView,
+    meta: {
+      absolutePath: '/twig/project/generator/'
+    }
   },
   {
     path: '/project/generator/:id',

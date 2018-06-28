@@ -51,9 +51,6 @@
         this.updateElementPosition(event, 'listTopPosition')
         this.dropdownActived = !this.dropdownActived
       },
-      showLabel(event) {
-        this.updateElementPosition(event, 'labelTopPosition')
-      },
       closeDropdown() {
         if (this.sidebarType === 'collapse') {
           this.dropdownActived = !this.dropdownActived
@@ -100,6 +97,19 @@
     position: relative;
 
     &.collapse {
+      .dropdown-toogle {
+        position: relative;
+
+        &:before {
+          content: "";
+          height: 100%;
+          left: 0;
+          position: absolute;
+          top: 0;
+          width: 100%;
+        }
+      }
+
       .dropdown-toogle-label {
         background-color: $ui-gray-darken;
         display: none;
