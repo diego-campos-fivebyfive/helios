@@ -214,10 +214,10 @@ class Mailer extends AbstractMailer
 
         $parameters = [
             'subject' => 'Nova mensagem',
-            'body' => $this->templating->render('orders/emails/message.html.twig', array(
+            'body' => $this->templating->render('orders/emails/message.html.twig', [
                 'message' => $message,
                 'order' => $order
-            ))
+            ])
         ];
 
         if ($message->isRestricted()) {
