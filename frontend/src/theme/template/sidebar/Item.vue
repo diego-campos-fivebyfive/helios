@@ -63,13 +63,16 @@
   $item-dropdown-x: 145px;
 
   .icon-arrow {
-    float: right;
+    left: $ui-sidebar-common-x - $ui-space-x;
+    position: absolute;
+    top: $ui-space-y;
   }
 
   .item {
     color: inherit;
     display: block;
     padding: $ui-space-y $ui-space-x/1.5 $ui-space-y $ui-space-x;
+    position: relative;
     transition: all 300ms;
     width: 100%;
 
