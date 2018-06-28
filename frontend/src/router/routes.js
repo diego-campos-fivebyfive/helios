@@ -333,6 +333,11 @@ export const routes = [
     component: FrameView
   },
   {
+    path: '/cart/checkout',
+    name: 'Checkout',
+    component: FrameView
+  },
+  {
     path: '/settings/categories/contact_category/',
     name: 'Categorias',
     component: FrameView,
