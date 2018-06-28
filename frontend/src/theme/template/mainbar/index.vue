@@ -4,11 +4,11 @@
       .header-cover(
         v-show='handleTwigModal.state',
         v-on:click='handleTwigModal.toogle')
-      h1.title {{ pageTitle }}
-      span.ranking(v-if="$global.user.ranking\
-        && $global.user.type !== 'child'\
-        && !$global.user.sices")
-        | {{ $global.user.ranking }} pontos
+    h1.title {{ pageTitle }}
+    span.ranking(v-if="$global.user.ranking\
+      && $global.user.type !== 'child'\
+      && !$global.user.sices")
+      | {{ $global.user.ranking }} pontos
     Badge.badge(v-if='!$global.user.sices')
     span.info {{ date }}
     nav.menu
