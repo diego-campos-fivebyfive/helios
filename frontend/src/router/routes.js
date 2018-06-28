@@ -303,6 +303,22 @@ export const routes = [
     component: FrameView
   },
   {
+    path: '/admin/kit/create',
+    name: 'Criação de Kit',
+    component: FrameView,
+    meta: {
+      absolutePath: '/admin/twig/kit/create'
+    }
+  },
+  {
+    path: '/admin/kit/update',
+    name: 'Edição de kit',
+    component: FrameView,
+    meta: {
+      absolutePath: '/admin/twig/kit/:id/update'
+    }
+  },
+  {
     path: '/orders',
     name: 'Meus Pedidos',
     component: FrameView
