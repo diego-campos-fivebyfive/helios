@@ -195,7 +195,7 @@ abstract class AbstractMailer
     /**
      * @param \Swift_Message $message
      */
-    protected function resolvePlatformJuridicEmail(\Swift_Message $message)
+    protected function resolvePlatformJuristicEmail(\Swift_Message $message)
     {
         $settings = $this->getPlatformSettings();
 
