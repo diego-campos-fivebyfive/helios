@@ -4064,6 +4064,7 @@ a.close-canvas-menu:hover {
 .modal-dialog {
   max-height: calc(100vh - 65px);
   overflow-y: auto;
+  overflow-x: hidden;
 }
 .spiner-example {
   height: 200px;
