@@ -195,9 +195,9 @@ class Mailer extends AbstractMailer
     {
         $parameters = [
             'subject' => 'Pedido #' . $order->getReference(),
-            'body' => $this->templating->render('orders/emails/kit.html.twig', array(
+            'body' => $this->templating->render('orders/emails/kit.html.twig', [
                 'order' => $order
-            ))
+            ])
         ];
 
         return $parameters;
