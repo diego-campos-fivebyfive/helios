@@ -100,6 +100,19 @@
     position: relative;
 
     &.collapse {
+      .dropdown-toogle {
+        position: relative;
+
+        &:before {
+          content: "";
+          height: 100%;
+          left: 0;
+          position: absolute;
+          top: 0;
+          width: 100%;
+        }
+      }
+
       .dropdown-toogle-label {
         background-color: $ui-gray-darken;
         display: none;
