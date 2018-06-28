@@ -65,21 +65,4 @@
       padding: 2px;
     }
   }
-  @media (max-width: $ui-size-md){
-    .header {
-      &.collapse{
-      background: #e7b042;
-      padding: $ui-space-y/1.75 0;
-        .level {
-          display: block;
-          font-weight: 600;
-          font-size: 0.75em;
-          text-transform: uppercase;
-        }
-        img {
-          padding: 0 $ui-space-x/1.75;
-        }
-      }
-    }
-  }
 </style>
