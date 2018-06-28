@@ -19,15 +19,6 @@ class AppController extends AbstractController
      */
     public function indexAction(Request $request)
     {
-        if(!$this->account()->isActivated()){
-
-            $this->getSession()->invalidate();
-
-            return $this->redirectToRoute('fos_user_security_login', [
-                'login_failure' => 'account_locked'
-            ]);
-        }
-
         $this->getTopbarAction('app_index');
         
         $member = $this->member();
