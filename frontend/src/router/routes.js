@@ -359,6 +359,11 @@ export const routes = [
     component: FrameView
   },
   {
+    path: '/purchase/cart_pool/:id',
+    name: 'Histórico de Transações',
+    component: FrameView
+  },
+  {
     path: '/purchase/payment_feedback',
     name: 'Compra Efetuada',
     component: FrameView
