@@ -355,12 +355,12 @@ export const routes = [
   },
   {
     path: '/purchase/list_cart_pool',
-    name: 'Purchase',
+    name: 'Histórico de Transações',
     component: FrameView
   },
   {
     path: '/purchase/payment_feedback',
-    name: 'Purchase feedback',
+    name: 'Compra Efetuada',
     component: FrameView
   },
   {
