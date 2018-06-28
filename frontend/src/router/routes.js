@@ -338,6 +338,11 @@ export const routes = [
     component: FrameView
   },
   {
+    path: '/purchase/list_cart_pool',
+    name: 'Purchase',
+    component: FrameView
+  },
+  {
     path: '/settings/categories/contact_category/',
     name: 'Categorias',
     component: FrameView,
