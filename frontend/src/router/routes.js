@@ -343,6 +343,11 @@ export const routes = [
     component: FrameView
   },
   {
+    path: '/purchase/payment_feedback',
+    name: 'Purchase feedback',
+    component: FrameView
+  },
+  {
     path: '/settings/categories/contact_category/',
     name: 'Categorias',
     component: FrameView,
