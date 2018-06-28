@@ -18,7 +18,7 @@ use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Route("cart")
+ * @Route("twig/cart")
  *
  * @Breadcrumb("Carrinho de compras")
  * @Security("has_role('ROLE_OWNER')")
