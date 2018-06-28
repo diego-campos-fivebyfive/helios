@@ -152,6 +152,7 @@
     display: inline-block;
     font-size: 1rem;
     font-weight: 400;
+    margin: $ui-space-y/1.25 $ui-space-x/2;
     opacity: 0.8;
   }
 
