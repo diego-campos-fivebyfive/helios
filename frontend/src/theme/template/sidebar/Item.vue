@@ -3,8 +3,7 @@
     :to='item.link',
     :style='item.customStyle',
     :class='[{ "item-dropdown": itemDropdown }, sidebarType]',
-    v-on:click.native='forceReload',
-    v-on:mouseover.native='setLabelPosition')
+    v-on:click.native='forceReload')
     Icon.icon-ui(:name='item.icon')
     span(:style='labelPosition.top') {{ item.name }}
     Icon.icon-arrow(name='angle-right')
@@ -51,12 +50,6 @@
         getInitPath
           .then(redirectToDifferentPath)
           .then(redirectToInitPath)
-      },
-      setLabelPosition(event) {
-        if (event.target.href) {
-          const targetPosition = event.target.getBoundingClientRect()
-          this.$set(this.labelPosition, 'top', `top: ${targetPosition.y}px`)
-        }
       }
     },
     watch: {
@@ -122,12 +115,6 @@
           position: fixed;
           top: 0;
           white-space: nowrap;
-        }
-
-        &:hover {
-          span {
-            display: none; /*inline-block*/
-          }
         }
 
         .icon-arrow {

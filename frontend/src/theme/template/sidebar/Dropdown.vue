@@ -51,9 +51,6 @@
         this.updateElementPosition(event, 'listTopPosition')
         this.dropdownActived = !this.dropdownActived
       },
-      showLabel(event) {
-        this.updateElementPosition(event, 'labelTopPosition')
-      },
       closeDropdown() {
         if (this.sidebarType === 'collapse') {
           this.dropdownActived = !this.dropdownActived
