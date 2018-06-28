@@ -91,13 +91,15 @@
   }
 
   .icon-arrow {
-    float: right;
+    left: $ui-sidebar-common-x - $ui-space-x;
+    position: absolute;
+    top: $ui-space-y;
   }
 
   .dropdown {
-    &.collapse {
-      position: relative;
+    position: relative;
 
+    &.collapse {
       .dropdown-toogle-label {
         background-color: $ui-gray-darken;
         display: none;
@@ -115,8 +117,7 @@
       }
 
       .icon-arrow {
-        margin-right: -$ui-space-y/2;
-        margin-top: $ui-space-y/10;
+        display: none;
       }
 
       ul {

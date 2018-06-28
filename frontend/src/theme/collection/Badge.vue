@@ -59,4 +59,10 @@
       }
     }
   }
+
+  @media (max-width: $ui-size-md){
+    .collection-badge {
+      display: none;
+    }
+  }
 </style>
