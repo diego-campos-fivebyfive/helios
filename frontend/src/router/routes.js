@@ -311,7 +311,7 @@ export const routes = [
     }
   },
   {
-    path: '/admin/kit/update',
+    path: '/admin/kit/:id/update',
     name: 'Edição de kit',
     component: FrameView,
     meta: {
