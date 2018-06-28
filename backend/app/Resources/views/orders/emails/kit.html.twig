@@ -1,0 +1,26 @@
+{% extends ('orders/emails/layout.html.twig') %}
+
+{% block body %}
+    <tr>
+        <td class="content-block">
+            <p>
+                Prezado(a) parceiro da {{ order.account.lastName }},
+            </p>
+            <p>
+                O Pedido {{ order.reference }} foi gerado com sucesso.
+            </p>
+            <p>
+                Considerando que, a Sices Brasil Ltda., mantém relação comercial apenas com empresas Integradoras
+                (pessoas jurídicas) e, para tanto, disponibiliza como ferramenta, a Plataforma “Sices Solar”.
+                Considerando também, que a Sices Brasil Ltda., não atende clientes finais;
+            </p>
+            <p>
+                A Sices Brasil Ltda. não se responsabiliza por compras efetuadas por meio da Plataforma “Sices Solar”,
+                nas quais foram utilizados cartões de débito e crédito de terceiros para pagamento, sendo de inteira
+                responsabilidade do Integrador a forma de pagamento adotada, bem como a relação comercial existente
+                entre ele e o seu cliente final, devendo isentar a Sices Brasil Ltda. de qualquer questionamento,
+                baseado no Código de Defesa do Consumidor.
+            </p>
+        </td>
+    </tr>
+{% endblock %}
