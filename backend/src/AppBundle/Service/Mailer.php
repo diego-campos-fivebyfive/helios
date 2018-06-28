@@ -133,7 +133,7 @@ class Mailer extends AbstractMailer
 
         $this->resolvePlatformEmails($message);
 
-        $this->resolvePlatformJuridicEmail($message);
+        $this->resolvePlatformJuristicEmail($message);
 
         $account = $order->getAccount();
 
