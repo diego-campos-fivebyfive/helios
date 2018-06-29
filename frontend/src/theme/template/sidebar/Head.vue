@@ -1,8 +1,9 @@
 <template lang="pug">
-  a.header(href='/', :class='sidebarType')
+  router-link.header(to='/', :class='sidebarType')
     img(
       src='@/theme/assets/media/logo-small.png',
       alt='Sices Solar Logo')
+    .level {{ $global.user.level }}
     .header-info(:class='sidebarType')
       span.title {{ $global.user.name }}
       span {{ $global.user.company }}
@@ -33,6 +34,10 @@
     color: $ui-white-regular;
     display: block;
     text-align: center;
+
+    .level {
+      display: none;
+    }
 
     &.collapse {
       img {

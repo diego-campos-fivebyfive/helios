@@ -29,7 +29,7 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   $badges-size: 28px;
 
   .collection-badge {

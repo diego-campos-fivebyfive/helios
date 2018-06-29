@@ -4,7 +4,12 @@
 {% block title %} Login {% endblock %}
 
 {% block fos_user_content %}
-
+    <script>
+       // This script pushes vue route to login when session expires (iframe)
+       if (window.self !== window.top) {
+           top.window.location.href = '{{ platform_host }}:{{ platform_port }}';
+       }
+    </script>
     <p style="margin-top: 2rem;">
         A plataforma pensada exclusivamente em quem trabalha com
         Energia Solar Fotovoltaica

@@ -1,23 +1,25 @@
 <template lang="pug">
   header.bar
-    h1.title {{ getPageTitle }}
+    transition(name='fade')
+      .header-cover(
+        v-show='handleTwigModal.state',
+        v-on:click='handleTwigModal.toogle')
+    h1.title {{ pageTitle }}
     span.ranking(v-if="$global.user.ranking\
       && $global.user.type !== 'child'\
       && !$global.user.sices")
       | {{ $global.user.ranking }} pontos
-    Badge(v-if='!$global.user.sices')
+    Badge.badge(v-if='!$global.user.sices')
     span.info {{ date }}
-    a.messages(v-if='$global.user.sices', href='/messenger')
-      Icon.messages-icon(name='envelope')
-      label.messages-label(v-if='totalOfMessages')
-        | {{ totalOfMessages }}
     nav.menu
-      Button(
-        class='default-common',
-        link='/logout',
-        label='Sair',
-        pos='first')
+      a.menu-item.messages(v-if='$global.user.sices', href='/messenger')
+        Icon.messages-icon(name='envelope')
+        label.messages-label(v-if='totalOfMessages')
+          | {{ totalOfMessages }}
+      a.menu-item.leave(
+        href='/logout')
         Icon(name='sign-out')
+        span Sair
 </template>
 
 <script>
@@ -57,8 +59,15 @@
   }
 
   export default {
+    props: {
+      handleTwigModal: {
+        type: Object,
+        required: true
+      }
+    },
     data: () => ({
       date: '',
+      pageTitle: '',
       totalOfMessages: null
     }),
     sockets: {
@@ -66,12 +75,19 @@
         this.totalOfMessages = this.totalOfMessages + data
       }
     },
-    computed: {
-      getPageTitle() {
-        return this.$router.history.current.name
+    methods: {
+      setPageTitle() {
+        this.pageTitle = this.$router.history.current.name
+      }
+    },
+    watch: {
+      $route() {
+        this.setPageTitle()
       }
     },
     mounted() {
+      this.setPageTitle()
+
       const uri = '/admin/api/v1/orders/messages/unread_count'
       this.axios.get(uri)
         .then(response => {
@@ -84,12 +100,30 @@
 </script>
 
 <style lang="scss" scoped>
+  $head-border-size: 1px;
+
+  .badge {
+    margin: 0 $ui-space-x/3;
+  }
+
+  .header-cover {
+    background-color: rgba(0,0,0,0.5);
+    height: calc(100% + $head-border-size);
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 250;
+  }
+
   .bar {
     background-color: $ui-white-regular;
-    border-bottom: 1px solid $ui-divider-color;
+    border-bottom: $head-border-size solid $ui-divider-color;
     color: $ui-text-main;
-    display: block;
+    height: $ui-mainbar-y;
+    max-height: $ui-mainbar-y - $head-border-size;
     padding: $ui-space-y $ui-space-x;
+    position: relative;
     text-align: right;
     width: 100%;
     z-index: 100;
@@ -118,18 +152,20 @@
     display: inline-block;
     font-size: 1rem;
     font-weight: 400;
-    margin: $ui-space-y/3 $ui-space-x;
+    margin: $ui-space-y/1.25 $ui-space-x/2;
     opacity: 0.8;
   }
 
   .menu {
     display: flex;
     float: right;
+
+  .menu-item {
+      margin: 10px
+    }
   }
 
   .messages {
-    margin-right: 0.75rem;
-
     .messages-icon {
       display: inline-block;
       z-index: 105;
@@ -151,5 +187,27 @@
 
   a {
     color: $ui-gray-regular;
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: all 150ms ease;
+  }
+
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
+  }
+
+  @media (max-width: $ui-size-lg) {
+    .info {
+      display: none;
+    }
+
+    .badge {
+      display: none;
+    }
+
+    .ranking {
+      display: none;
+    }
   }
 </style>

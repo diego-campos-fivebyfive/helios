@@ -3,10 +3,14 @@
     Sidebar(
       v-if='sidebarType !== "none"',
       :sidebarType='sidebarType',
-      :updateSidebarType='updateSidebarType')
+      :updateSidebarType='updateSidebarType',
+      :handleTwigModal='handleTwigModal')
     main.app-page-main
-      Mainbar(v-if='mainbarType !== "none"')
-      router-view
+      Mainbar(
+        v-if='mainbarType !== "none"',
+        :handleTwigModal='handleTwigModal')
+      .app-page-main-wrapper
+        router-view
 </template>
 
 <script>
@@ -19,19 +23,39 @@
       Mainbar
     },
     data: () => ({
-      sidebarType: 'common',
-      mainbarType: 'common'
+      sidebarType: '',
+      mainbarType: '',
+      handleTwigModal: {
+        state: false,
+        toogle: () => {}
+      }
     }),
     methods: {
       updateSidebarType() {
         this.sidebarType = (this.sidebarType === 'collapse')
           ? 'common'
           : 'collapse'
+      },
+      setDefaultSidebarType() {
+        this.sidebarType = this.$route.meta.sidebar || 'common'
+        this.mainbarType = this.$route.meta.mainbar || 'common'
       }
     },
     mounted() {
-      this.sidebarType = this.$route.meta.sidebar || this.sidebarType
-      this.mainbarType = this.$route.meta.mainbar || this.mainbarType
+      this.setDefaultSidebarType()
+
+      window.updateVueRoute = path => {
+        this.$router.push({ path })
+      }
+
+      window.handleTwigModal = handler => {
+        this.handleTwigModal = handler
+      }
+    },
+    watch: {
+      $route() {
+        this.setDefaultSidebarType()
+      }
     }
   }
 </script>
@@ -60,5 +84,10 @@
 
   .app-page-main {
     @include clearfix;
+  }
+
+  .app-page-main-wrapper {
+    height: calc(100vh - #{$ui-mainbar-y});
+    overflow-y: auto;
   }
 </style>

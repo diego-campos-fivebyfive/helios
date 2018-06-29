@@ -1,12 +1,11 @@
 <template lang="pug">
-  a.item(
-    :href='item.link',
-    :style='item.customStyle'
-    :class='[{ "item-dropdown": itemDropdown,\
-      "item-active": item.active }, \
-      sidebarType]')
+  router-link.item(
+    :to='item.link',
+    :style='item.customStyle',
+    :class='[{ "item-dropdown": itemDropdown }, sidebarType]',
+    v-on:click.native='forceReload')
     Icon.icon-ui(:name='item.icon')
-    span {{ item.name }}
+    span(:style='labelPosition.top') {{ item.name }}
     Icon.icon-arrow(name='angle-right')
     Count(v-if='item.link == "/tasks/m"')
 </template>
@@ -32,6 +31,27 @@
         required: true
       }
     },
+    data: () => ({
+      labelPosition: {}
+    }),
+    methods: {
+      forceReload() {
+        const getInitPath = Promise.resolve(this.$router.history.current.path)
+
+        const redirectToDifferentPath = initPath => {
+          this.$router.push({ path: '/' })
+          return initPath
+        }
+
+        const redirectToInitPath = initPath => {
+          this.$router.push({ path: initPath })
+        }
+
+        getInitPath
+          .then(redirectToDifferentPath)
+          .then(redirectToInitPath)
+      }
+    },
     watch: {
       sidebarType() {}
     }
@@ -42,13 +62,16 @@
   $item-dropdown-x: 145px;
 
   .icon-arrow {
-    float: right;
+    left: $ui-sidebar-common-x - $ui-space-x;
+    position: absolute;
+    top: $ui-space-y;
   }
 
   .item {
     color: inherit;
     display: block;
     padding: $ui-space-y $ui-space-x/1.5 $ui-space-y $ui-space-x;
+    position: relative;
     transition: all 300ms;
     width: 100%;
 
@@ -89,15 +112,9 @@
           display: none;
           left: $ui-sidebar-collapse-x;
           padding: $ui-space-y+$ui-space-y/9 $ui-space-x;
-          position: absolute;
+          position: fixed;
           top: 0;
           white-space: nowrap;
-        }
-
-        &:hover {
-          span {
-            display: inline-block;
-          }
         }
 
         .icon-arrow {
@@ -107,7 +124,7 @@
     }
   }
 
-  .item-active {
+  .router-link-exact-active {
     background-color: $ui-gray-dark;
     border-left: $ui-space-x/6.25 solid $ui-blue-light;
     color: $ui-white-regular;

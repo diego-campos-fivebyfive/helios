@@ -30,7 +30,7 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
  * @Security("has_role('ROLE_OWNER') or has_role('ROLE_PLATFORM_AFTER_SALES') or has_role('ROLE_PLATFORM_EXPANSE')")
- * @Route("project/generator")
+ * @Route("twig/project/generator")
  * @Breadcrumb("Orçamentos")
  */
 class ProjectGeneratorController extends AbstractController

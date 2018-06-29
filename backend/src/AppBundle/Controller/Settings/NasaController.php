@@ -14,7 +14,7 @@ use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 
 /**
  * @Security("has_role('ROLE_OWNER')")
- * @Route("/nasa")
+ * @Route("twig/nasa")
  * @Breadcrumb("Climatic data", route={"name"="nasa"})
  */
 class NasaController extends AbstractController

@@ -14,7 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 
 /**
- * @Route("purchase")
+ * @Route("twig/purchase")
  *
  * @Breadcrumb("Compra")
  */

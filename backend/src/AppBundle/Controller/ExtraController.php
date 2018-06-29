@@ -12,7 +12,7 @@ use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Route("item")
+ * @Route("twig/item")
  *
  */
 class ExtraController extends AbstractController

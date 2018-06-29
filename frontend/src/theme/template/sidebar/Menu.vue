@@ -1,5 +1,5 @@
 <template lang="pug">
-  ul.menu
+  ul.menu(:class='sidebarType')
     li(v-for='itemMenu in menu')
       Dropdown(
         v-if='itemMenu.dropdown',
@@ -31,17 +31,8 @@
       }
     },
     mounted() {
-      this.axios.get('api/v1/application/menu').then(({ data }) => {
-        const currentRoute = this.$router.history.current.path
-
-        this.menu = Object.entries(data)
-          .map(([itemMenuKey, itemMenu]) => (
-            Object.assign(itemMenu, {
-              active: currentRoute === itemMenu.link,
-              key: itemMenuKey
-            })
-          ))
-      })
+      const uri = 'api/v1/application/menu'
+      this.axios.get(uri).then(({ data }) => this.menu = data)
     },
     watch: {
       sidebarType() {}
@@ -50,8 +41,13 @@
 </script>
 
 <style lang="scss" scoped>
+  $menu-head-common-y: 120px;
+  $menu-head-collapse-y: 45px;
+
   ul {
     list-style: none;
+    margin-right: - $ui-space-x/1.5;
+    overflow-y: scroll;
   }
 
   li {
@@ -69,5 +65,13 @@
   .active {
     background-color: $ui-gray-dark;
     border-left: 5px solid $ui-blue-light;
+  }
+
+  .collapse {
+    max-height: calc(100vh - #{$menu-head-collapse-y})
+  }
+
+  .common {
+    max-height: calc(100vh - #{$menu-head-common-y});
   }
  </style>

@@ -15,7 +15,7 @@ export const router = new VueRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
+/* router.beforeEach((to, from, next) => {
   const path = {
     destiny: to.path,
     origin: from.path,
@@ -28,6 +28,11 @@ router.beforeEach((to, from, next) => {
   }
 
   if (path.destiny === path.notfound) {
+    next()
+    return
+  }
+
+  if (to.path === '/terms') {
     next()
     return
   }
@@ -46,6 +51,11 @@ router.beforeEach((to, from, next) => {
 
       next()
     })
-})
+
+  const uri = '/api/v1/terms/checker'
+  axios.get(uri).catch(() => next('/terms'))
+
+  next()
+}) */
 
 export { axios }
