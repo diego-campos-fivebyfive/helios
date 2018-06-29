@@ -143,7 +143,7 @@ export const routes = [
   },
   {
     path: '/admin/kit',
-    name: 'Kits Fixos',
+    name: 'Sices express',
     component: FrameView,
     meta: {
       absolutePath: '/admin/twig/kit'
