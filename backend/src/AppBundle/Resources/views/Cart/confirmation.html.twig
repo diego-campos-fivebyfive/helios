@@ -374,6 +374,10 @@
             getnetIfrm.setAttribute('data-getnet-items', '{{ data.items|raw }}');
             getnetIfrm.setAttribute('data-getnet-url-callback', '');
 
+            {% if data.differentDelivery %}
+                getnetIfrm.setAttribute('data-getnet-shipping-address', '{{ data.shipping|raw }}');
+            {% endif %}
+
             getnetIfrm.src = 'https://checkout-homologacao.getnet.com.br/loader.js?' + Confirmation.idCartPool;
             document.querySelector('body').appendChild(getnetIfrm);
 
