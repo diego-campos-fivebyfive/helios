@@ -318,7 +318,7 @@ export const routes = [
   },
   {
     path: '/admin/kit/create',
-    name: 'Criação de Kit',
+    name: 'Kits Fixos',
     component: FrameView,
     meta: {
       absolutePath: '/admin/twig/kit/create'
@@ -326,7 +326,7 @@ export const routes = [
   },
   {
     path: '/admin/kit/:id/update',
-    name: 'Edição de kit',
+    name: 'Kits Fixos',
     component: FrameView,
     meta: {
       absolutePath: '/admin/twig/kit/:id/update'
