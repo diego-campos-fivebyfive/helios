@@ -214,23 +214,30 @@
             var kit_quantity = $('#kit_quantity');
 
             $('[data-target="#add_to_cart"]').on('click', function () {
-              var url = $(this).data('url');
+                var url = $(this).data('url');
 
-              kit_code.html($(this).data('code-kit'));
-              form_add_to_cart.attr("action", url);
+                kit_code.html($(this).data('code-kit'));
 
-              $('#kit_quantity').TouchSpin({
-                initval: 1,
-                min: 1,
-                max: 100000
-              });
+                form_add_to_cart.attr("action", url);
 
-              $('#modal_add_to_cart').modal('show');
+                $('#kit_quantity').TouchSpin({
+                    initval: 1,
+                    min: 1,
+                    max: 100000
+                });
+
+                $('#modal_add_to_cart').modal('show');
             });
 
             $('#add_cart_submit').on('click', function () {
                 $('#cart_submit').trigger('click');
-            })
+            });
+
+            function showCart() {
+                window.setTimeout(function () {
+                    window.location = '{{ path('cart_show') }}';
+                }, 2500);
+            }
 
             form_add_to_cart.on('submit', function (event) {
                 event.preventDefault();
@@ -241,23 +248,22 @@
                     complete: function(xhr){
                         var message = xhr.responseJSON.message;
 
-                        if(200 === xhr.status){
-                            $('#modal_add_to_cart').modal('hide');
+                        if (200 === xhr.status) {
+                            showCart();
                             toastr.success(message, '{{ 'Success'|trans }}', {
                                 positionClass: 'toast-top-center',
                                 progressBar: true,
                                 preventDuplicates: true
                             });
-                            kit_quantity.val(1);
-                        }else{
-                            $('#modal_add_to_cart').modal('hide');
+                        } else {
                             toastr.error(message, '{{ 'Error'|trans }}', {
                                 positionClass: 'toast-top-center',
                                 progressBar: true,
                                 preventDuplicates: true
                             });
-                            kit_quantity.val(1);
                         }
+                        kit_quantity.val(1);
+                        $('#modal_add_to_cart').modal('hide');
                     }
                 });
             });
