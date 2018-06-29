@@ -27,25 +27,6 @@
 
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}" type="image/x-icon">
     <link rel="icon" href="{{ asset('assets/images/favicon.ico') }}" type="image/x-icon">
-    <script>
-        // this script pushes Twig paths to Vue router
-        window.onload = function() {
-            if (!top) {
-                return;
-            }
-
-            const parentPath = top.window.location.pathname
-                .replace(/\/$/g, '');
-
-            const destinationPath = window.location.pathname
-                .replace(/\/twig/, '')
-                .replace(/\/$/g, '');
-
-            if (parentPath !== destinationPath) {
-                top.updateVueRoute(destinationPath);
-            }
-        }
-    </script>
 
     {% block before_styles %}{% endblock %}
 
