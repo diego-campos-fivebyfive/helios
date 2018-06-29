@@ -32,13 +32,27 @@ const FrameView = {
     getRoute() {
       const { absolutePath } = this.$route.meta
 
-      if (absolutePath) {
-        return `${process.env.API_URL}${absolutePath}`
+      if (!absolutePath) {
+        const twigBaseUri = `${process.env.API_URL}/twig`
+        const routePath = this.getRoutePath
+        return `${twigBaseUri}${routePath}`
       }
 
-      const twigBaseUri = `${process.env.API_URL}/twig`
-      const routePath = this.getRoutePath
-      return `${twigBaseUri}${routePath}`
+      const viewsEntryPoint = 'twig'
+      const viewsEntryPointIndex = absolutePath
+        .split('/')
+        .filter(segment => segment)
+        .findIndex(segment => segment === viewsEntryPoint)
+
+      const currentPathSegments = this.$route.path
+        .split('/')
+        .filter(segment => segment)
+
+      return currentPathSegments.reduce((acc, segment, segmentIndex) => (
+        (segmentIndex === viewsEntryPointIndex)
+          ? `${acc}/${viewsEntryPoint}/${segment}`
+          : `${acc}/${segment}`
+        ), process.env.API_URL)
     }
   }
 }
