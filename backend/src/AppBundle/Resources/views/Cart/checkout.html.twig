@@ -9,6 +9,15 @@
             {{ form_start(form, {attr:{id:'checkout_form'}}) }}
 
             <div class="row">
+                <div class="col-md-12">
+                    <div class="alert alert-danger text-center">
+                        ATENÇÃO: OBRIGATORIAMENTE o estado do endereço de entrega necessita ser o
+                        mesmo estado de faturamento (integrador)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
                 <div class="col-md-3">
                     <div class="form-group">
                         {{ form_label(form.firstName, 'Nome') }}
@@ -97,6 +106,86 @@
             </div>
 
             <div class="row">
+                <div class="col-md-5">
+                    <div class="form-group">
+                        {{ form_widget(form.differentDelivery, {attr:{class:'i-checks'}}) }}
+                        {{ form_label(form.differentDelivery, 'Informar um endereço de entrega diferente') }}
+                    </div>
+                </div>
+            </div>
+
+            <div id="different_delivery" class="hidden">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            {{ form_label(form.shippingName, 'Nome') }}
+                            {{ form_widget(form.shippingName, {attr:{class:'form-control', placeholder:'Nome'}}) }}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            {{ form_label(form.shippingEmail, 'Email') }}
+                            {{ form_widget(form.shippingEmail, {attr:{class:'form-control', placeholder:'Email'}}) }}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            {{ form_label(form.shippingPhone, 'Telefone') }}
+                            {{ form_widget(form.shippingPhone, {attr:{class:'form-control telephone', placeholder:'Telefone'}}) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            {{ form_label(form.shippingPostcode, 'CEP') }}
+                            {{ form_widget(form.shippingPostcode, {attr:{class:'form-control', placeholder:'CEP'}}) }}
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            {{ form_label(form.shippingState, 'Estado') }}
+                            {{ form_widget(form.shippingState, {attr:{class:'form-control', placeholder:'Estado'}}) }}
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            {{ form_label(form.shippingCity, 'Cidade') }}
+                            {{ form_widget(form.shippingCity, {attr:{class:'form-control', placeholder:'Cidade'}}) }}
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            {{ form_label(form.shippingNeighborhood, 'Bairro') }}
+                            {{ form_widget(form.shippingNeighborhood, {attr:{class:'form-control', placeholder:'Bairro'}}) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            {{ form_label(form.shippingStreet, 'Logradouro') }}
+                            {{ form_widget(form.shippingStreet, {attr:{class:'form-control', placeholder:'Logradouro'}}) }}
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            {{ form_label(form.shippingNumber, 'Número') }}
+                            {{ form_widget(form.shippingNumber, {attr:{class:'form-control', placeholder:'Número'}}) }}
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            {{ form_label(form.shippingComplement, 'Complemento') }}
+                            {{ form_widget(form.shippingComplement, {attr:{class:'form-control', placeholder:'Complemento'}}) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
                 <a href="{{ path('cart_show') }}" class="btn btn-white" type="button">
                     <i class="fa fa-arrow-left"></i>
                     Cancelar
@@ -133,6 +222,40 @@
                 }
             });
         }
+
+        var shippingFields = [
+            $('#checkout_shippingName'),
+            $('#checkout_shippingEmail'),
+            $('#checkout_shippingPhone'),
+            $('#checkout_shippingEmail'),
+            $('#checkout_shippingPostcode'),
+            $('#checkout_shippingState'),
+            $('#checkout_shippingCity'),
+            $('#checkout_shippingNeighborhood'),
+            $('#checkout_shippingStreet'),
+            $('#checkout_shippingNumber'),
+        ];
+
+        function resolveDifferentDelivery() {
+            if ($('#checkout_differentDelivery').is(':checked')) {
+                $('#different_delivery').removeClass('hidden');
+
+                shippingFields.forEach(function (value) {
+                    value.attr('required', 'required');
+                });
+            } else {
+                $('#different_delivery').addClass('hidden');
+
+                shippingFields.forEach(function (value) {
+                    value.removeAttr('required');
+                });
+            }
+        }
+
+        resolveDifferentDelivery();
+        $('#checkout_differentDelivery').on('change', function () {
+            resolveDifferentDelivery();
+        });
 
         $('#checkout_postcode').change(function () {
             var childrens = {

@@ -137,8 +137,8 @@ class OrderTransformer
 
         $account = $cartPool->getAccount();
         $checkout = $cartPool->getCheckout();
-        /* Todo: Esta parte da funcionalidade ficará comentada temporariamente, até definições posteriores sobre o FRETE*/
-        /*$shipping = json_decode($checkout['shipping'], true);*/
+
+        $shipping = json_decode($checkout['shipping'], true);
 
         /** @var Order $order */
         $order = $this->manager->create();
@@ -164,8 +164,7 @@ class OrderTransformer
         $order->setPower($power);
         $order->setAgent($account->getAgent());
 
-        /* Todo: Esta parte da funcionalidade ficará comentada temporariamente, até definições posteriores sobre o FRETE*/
-        /*$deliveryKeys = [
+        $deliveryKeys = [
             'street' => 'street',
             'city' => 'city',
             'complement' => 'complement',
@@ -175,9 +174,9 @@ class OrderTransformer
             'state' => 'state'
         ];
 
-        $values = $checkout['differentDelivery'] ? $shipping['address'] : $checkout;
+        $values = $checkout['differentDelivery'] ? $shipping[0]['address'] : $checkout;
 
-        $this->setOrderDelivery($order, $values, $deliveryKeys);*/
+        $this->setOrderDelivery($order, $values, $deliveryKeys);
 
         $items = $cartPool->getItems();
 
