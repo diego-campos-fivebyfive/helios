@@ -911,8 +911,12 @@
                                                                     <td class="col-md-2 text-center"><b>VALOR TOTAL</b>
                                                                     </td>
                                                                 {% endif %}
-                                                                {% if order.parent.subStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_WAITING_MATERIAL') and
-                                                                    order.parent.status == constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') %}
+                                                                {% set waitingMaterial =
+                                                                    order.parent.subStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_WAITING_MATERIAL') and
+                                                                    order.parent.status == constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') and
+                                                                    isPlatform
+                                                                %}
+                                                                {% if waitingMaterial %}
                                                                     <td class="col-md-2 text-center"><b>AGUARDANDO MATERIAL</b></td>
                                                                 {% endif %}
                                                             </tr>
@@ -941,7 +945,7 @@
                                                                             </td>
                                                                         {% else %}
                                                                             <td class="col-md-2 text-center">
-                                                                                {% if element.metadata.waiting_material is defined and element.metadata.waiting_material %}
+                                                                                {% if element.metadata.waiting_material is defined and element.metadata.waiting_material and waitingMaterial  %}
                                                                                     <i class="fa fa-check-circle"></i>
                                                                                 {% endif %}
                                                                             </td>
