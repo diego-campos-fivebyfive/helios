@@ -108,7 +108,7 @@
 
   .header-cover {
     background-color: rgba(0,0,0,0.5);
-    height: calc(100% + 1px);
+    height: calc(100% + $head-border-size);
     left: 0;
     position: absolute;
     top: 0;
@@ -197,8 +197,16 @@
     opacity: 0;
   }
 
-  @media (max-width: $ui-size-md){
-    .info{
+  @media (max-width: $ui-size-lg) {
+    .info {
+      display: none;
+    }
+
+    .badge {
+      display: none;
+    }
+
+    .ranking {
       display: none;
     }
   }

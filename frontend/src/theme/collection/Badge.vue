@@ -29,7 +29,7 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   $badges-size: 28px;
 
   .collection-badge {
@@ -57,12 +57,6 @@
         display: block;
         font-size: 1.25em;
       }
-    }
-  }
-
-  @media (max-width: $ui-size-md){
-    .collection-badge {
-      display: none;
     }
   }
 </style>
