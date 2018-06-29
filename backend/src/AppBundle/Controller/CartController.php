@@ -296,7 +296,7 @@ class CartController extends AbstractController
         $cart = $this->getCart();
 
         if ($checkout = $cart->getCheckout()) {
-            $shipping = json_decode($checkout['shipping'], true)[0];
+            $shipping = json_decode($checkout['shipping'], true);
 
             $form->get('firstName')->setData($checkout['firstName']);
             $form->get('lastName')->setData($checkout['lastName']);
