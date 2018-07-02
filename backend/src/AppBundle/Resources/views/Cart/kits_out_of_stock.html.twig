@@ -1,0 +1,19 @@
+<div class="modal-body">
+    <p>Atenção, a compra não pode ser realizada pela falta em estoque dos seguintes kits:</p>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <th>Kit</th>
+            <th>Descrição</th>
+            <th>Qtd. no carrinho</th>
+        </thead>
+        <tbody>
+            {% for kit in kits %}
+                <tr>
+                    <td>{{ kit.kit.code }}</td>
+                    <td>{{ kit.kit.description }}</td>
+                    <td>{{kit.quantity }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

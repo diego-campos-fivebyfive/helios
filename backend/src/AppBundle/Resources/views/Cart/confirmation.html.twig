@@ -46,6 +46,18 @@
         </div>
     </div>
 
+    <div id="kits-out-of-stock" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div id="kits-out-of-stock-content">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div  class="wrapper wrapper-content">
         <div class="row">
             <div class="col-md-9">
@@ -385,8 +397,7 @@
                 Confirmation.getnetListener();
             };
         },
-        finishCartPool: function (type) {
-
+        finishCartPool: function(type) {
             $.ajax({
                 url: "{{ path('cart_pool_finish', {id: cartPoolId}) }}",
                 method: "post",
@@ -394,6 +405,30 @@
                     if (response.status === 200) {
                         window.location = '{{ path("payment_feedback") }}';
                     }
+                }
+            });
+        },
+        checkCartPoolKits: function() {
+            $.ajax({
+                url: "{{ path('check_cart_kits') }}",
+                method: "post",
+                complete: function (response) {
+                    if (response.status === 200) {
+                        $('#loadIframe').click();
+                    } else {
+                        Confirmation.showKitsOutOfStock();
+                    }
+                }
+            });
+        },
+        showKitsOutOfStock: function() {
+            $.ajax({
+                url: "{{ path('cart_kits_out_of_stock') }}",
+                method: "get",
+                complete: function (response) {
+                    console.log(response);
+                    $('#kits-out-of-stock-content').html(response.responseText);
+                    $('#kits-out-of-stock').modal('show');
                 }
             });
         },
@@ -412,7 +447,6 @@
             });
         },
         init: function () {
-
             this.createGetnetIframe();
         }
     };
@@ -438,7 +472,7 @@
 
     $('#confirmCheckout').on('click', function () {
         if (checkedTerms) {
-            $('#loadIframe').click();
+            Confirmation.checkCartPoolKits();
         }
     });
 </script>
