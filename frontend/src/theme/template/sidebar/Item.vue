@@ -7,7 +7,7 @@
     Icon.icon-ui(:name='item.icon')
     span(:style='labelPosition.top') {{ item.name }}
     Icon.icon-arrow(name='angle-right')
-    Count(v-if='item.link == "/tasks/m"')
+    Count(v-if='showTaskCount(item)')
 </template>
 
 <script>
@@ -50,6 +50,9 @@
         getInitPath
           .then(redirectToDifferentPath)
           .then(redirectToInitPath)
+      },
+      showTaskCount(item) {
+        return item.link == '/tasks/m'
       }
     },
     watch: {

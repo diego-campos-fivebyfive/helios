@@ -1,7 +1,7 @@
 <template lang="pug">
   .collection-dropdown
     Button.collection-dropdown-button(
-      :action='() => open = !open',
+      :action='showDropdown',
       class='primary-common',
       label='Operações')
       Icon(name='arrow-down')
@@ -28,7 +28,12 @@
     },
     data: () => ({
       open: false
-    })
+    }),
+    methods: {
+      showDropdown() {
+        this.open = !this.open
+      }
+    }
   }
 </script>
 

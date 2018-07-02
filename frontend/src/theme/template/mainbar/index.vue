@@ -2,19 +2,17 @@
   header.bar
     transition(name='fade')
       .header-cover(
-        v-show='handleTwigModal.state',
-        v-on:click='handleTwigModal.toogle')
+        v-show='getStateTwigModal()',
+        v-on:click='toggleTwigModal()')
     h1.title {{ pageTitle }}
-    span.ranking(v-if="$global.user.ranking\
-      && $global.user.type !== 'child'\
-      && !$global.user.sices")
+    span.ranking(v-if="showRanking()")
       | {{ $global.user.ranking }} pontos
-    Badge.badge(v-if='!$global.user.sices')
+    Badge.badge(v-if='showBadge()')
     span.info {{ date }}
     nav.menu
-      a.menu-item.messages(v-if='$global.user.sices', href='/messenger')
+      a.menu-item.messages(v-if='showMessages()', href='/messenger')
         Icon.messages-icon(name='envelope')
-        label.messages-label(v-if='totalOfMessages')
+        label.messages-label(v-if='showTotalMessages()')
           | {{ totalOfMessages }}
       a.menu-item.leave(
         href='/logout')
@@ -78,6 +76,26 @@
     methods: {
       setPageTitle() {
         this.pageTitle = this.$router.history.current.name
+      },
+      showRanking() {
+        return this.$global.user.ranking
+        && this.$global.user.type !== 'child'
+        && !this.$global.user.sices
+      },
+      showBadge() {
+        return !this.$global.user.sices
+      },
+      showMessages() {
+        return this.$global.user.sices
+      },
+      showTotalMessages() {
+        return this.totalOfMessages
+      },
+      getStateTwigModal() {
+        return this.handleTwigModal.state
+      },
+      toggleTwigModal() {
+        return this.handleTwigModal.toogle
       }
     },
     watch: {

@@ -4,7 +4,7 @@
       v-for='button in buttons.left',
       :action='button.click',
       :key='button.icon',
-      :label='button.label || ""',
+      :label='showLabel(button)',
       :pos='button.position',
       class='default-bordered')
       Icon(:name='button.icon')
@@ -12,7 +12,7 @@
       v-for='button in buttons.right',
       :action='button.click',
       :key='button.icon',
-      :label='button.label || ""',
+      :label='showLabel(button)',
       :pos='button.position',
       class='default-bordered')
       Icon(:name='button.icon')
@@ -106,6 +106,9 @@
                 .catch(() => 'Não foi possível marcar mensagens como lidas')
             }
           })
+      },
+      showLabel(button) {
+        return button.label || ""
       },
       filterUnread() {
         this.unreadMessages = true

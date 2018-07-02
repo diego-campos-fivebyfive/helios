@@ -1,5 +1,5 @@
 <template lang="pug">
-  span.label-count(v-show="amount") {{ amount }}
+  span.label-count(v-show="showAmount()") {{ amount }}
 </template>
 
 <script>
@@ -12,6 +12,11 @@
         .then(({ data }) => {
           this.amount = data.count
         })
+    },
+    methods: {
+      showAmount() {
+        return this.amount
+      }
     }
   }
 </script>
