@@ -359,7 +359,8 @@ class CartController extends AbstractController
             $form->get('number')->setData($checkout['number']);
             $form->get('complement')->setData($checkout['complement']);
             $form->get('differentDelivery')->setData($checkout['differentDelivery']);
-            $form->get('shippingName')->setData($shipping['name']);
+            $form->get('shippingFirstName')->setData($shipping['first_name']);
+            $form->get('shippingLastName')->setData($shipping['name']);
             $form->get('shippingEmail')->setData($shipping['email']);
             $form->get('shippingPhone')->setData($shipping['phone_number']);
             $form->get('shippingPostcode')->setData($shipping['address']['postal_code']);
@@ -476,7 +477,8 @@ class CartController extends AbstractController
             "number",
             "complement",
             "differentDelivery",
-            "shippingName",
+            "shippingFirstName",
+            "shippingLastName",
             "shippingEmail",
             "shippingPostcode",
             "shippingState",

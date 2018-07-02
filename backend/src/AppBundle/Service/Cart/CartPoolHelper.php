@@ -132,8 +132,8 @@ class CartPoolHelper
     {
         $shipping = [
             [
-                "first_name" => $checkout['firstName'],
-                "name" => $checkout['shippingName'],
+                "first_name" => $checkout['shippingFirstName'],
+                "name" => $checkout['shippingLastName'],
                 "email" => $checkout['shippingEmail'],
                 "phone_number" => $checkout['shippingPhone'],
                 "shipping_amount" => 10,

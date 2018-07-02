@@ -51,7 +51,8 @@ class CheckoutType extends AbstractType
             ->add('differentDelivery', CheckboxType::class, $notRequired);
 
         $builder
-            ->add('shippingName', TextType::class, $notRequired)
+            ->add('shippingFirstName', TextType::class, $notRequired)
+            ->add('shippingLastName', TextType::class, $notRequired)
             ->add('shippingEmail', EmailType::class, $notRequired)
             ->add('shippingPhone', TextType::class, $notRequired)
             ->add('shippingPostcode', TextType::class, $notRequired)
