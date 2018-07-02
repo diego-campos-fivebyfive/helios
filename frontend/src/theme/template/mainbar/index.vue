@@ -107,8 +107,8 @@
   }
 
   .header-cover {
-    background-color: rgba(0,0,0,0.5);
-    height: calc(100% + $head-border-size);
+    background-color: rgba(0, 0, 0, 0.5);
+    height: calc(100% + #{$head-border-size});
     left: 0;
     position: absolute;
     top: 0;
@@ -189,11 +189,13 @@
     color: $ui-gray-regular;
   }
 
-  .fade-enter-active, .fade-leave-active {
+  .fade-enter-active,
+  .fade-leave-active {
     transition: all 150ms ease;
   }
 
-  .fade-enter, .fade-leave-to {
+  .fade-enter,
+  .fade-leave-to {
     opacity: 0;
   }
 
