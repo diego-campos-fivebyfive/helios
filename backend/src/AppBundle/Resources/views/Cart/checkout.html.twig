@@ -114,21 +114,27 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="form-group">
-                            {{ form_label(form.shippingName, 'Nome') }}
-                            {{ form_widget(form.shippingName, {attr:{class:'form-control', placeholder:'Nome'}}) }}
+                            {{ form_label(form.shippingFirstName, 'Nome') }}
+                            {{ form_widget(form.shippingFirstName, {attr:{class:'form-control', placeholder:'Nome'}}) }}
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            {{ form_label(form.shippingLastName, 'Sobrenome') }}
+                            {{ form_widget(form.shippingLastName, {attr:{class:'form-control', placeholder:'Sobrenome'}}) }}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
                         <div class="form-group">
                             {{ form_label(form.shippingEmail, 'Email') }}
                             {{ form_widget(form.shippingEmail, {attr:{class:'form-control', placeholder:'Email'}}) }}
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="form-group">
                             {{ form_label(form.shippingPhone, 'Telefone') }}
                             {{ form_widget(form.shippingPhone, {attr:{class:'form-control telephone', placeholder:'Telefone'}}) }}
