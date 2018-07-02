@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\File\File;
 /**
  * @Route("twig/kit")
  *
- * @Breadcrumb("Kits Fixos")
+ * @Breadcrumb("Sices Express")
  */
 class KitsController extends AbstractController
 {

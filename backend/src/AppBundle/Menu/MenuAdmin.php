@@ -120,7 +120,7 @@ class MenuAdmin
             ]
         ],
 //      'kits' => [
-//          'name' => 'Kits Fixos',
+//          'name' => 'Sices Express',
 //          'link' => '/admin/kit',
 //          'route' => 'kits_index',
 //          'icon' => 'list',
