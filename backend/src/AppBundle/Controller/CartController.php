@@ -256,6 +256,50 @@ class CartController extends AbstractController
     }
 
     /**
+     * @Security("has_role('ROLE_OWNER')")
+     *
+     * @Route("/check_cart_kits", name="check_cart_kits")
+     * @Method("post")
+     */
+    public function checkCartKitsAction()
+    {
+        /** @var Cart $cart */
+        $cart = $this->getCart();
+
+        /** @var CartPoolHelper $cartPoolHelper */
+        $cartPoolHelper = $this->container->get('cart_pool_helper');
+
+        $kitsOutOfStock = $cartPoolHelper->checkCartKits($cart);
+
+        if (empty($kitsOutOfStock)) {
+            return $this->json($kitsOutOfStock);
+        }
+
+        return $this->json($kitsOutOfStock, Response::HTTP_FORBIDDEN);
+    }
+
+    /**
+     * @Security("has_role('ROLE_OWNER')")
+     *
+     * @Route("/cart_kits_out_of_stock", name="cart_kits_out_of_stock")
+     * @Method("get")
+     */
+    public function getCartKitsOutOfStockAction()
+    {
+        /** @var Cart $cart */
+        $cart = $this->getCart();
+
+        /** @var CartPoolHelper $cartPoolHelper */
+        $cartPoolHelper = $this->container->get('cart_pool_helper');
+
+        $kitsOutOfStock = $cartPoolHelper->checkCartKits($cart);
+
+        return $this->render('cart.kits_out_of_stock', [
+            'kits' => $kitsOutOfStock
+        ]);
+    }
+
+    /**
      * @return Cart|mixed|object
      */
     private function createCart()

@@ -6,9 +6,11 @@ use AppBundle\Entity\AccountInterface;
 use AppBundle\Entity\Kit\Cart;
 use AppBundle\Entity\Kit\CartHasKit;
 use AppBundle\Entity\Kit\CartPool;
+use AppBundle\Entity\Kit\Kit;
 use AppBundle\Manager\CartHasKitManager;
 use AppBundle\Manager\CartManager;
 use AppBundle\Manager\CartPoolManager;
+use AppBundle\Manager\KitManager;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -166,6 +168,34 @@ class CartPoolHelper
             "differentDelivery" => $checkout['differentDelivery'],
             "shipping" => json_encode($shipping)
         ];
+    }
+
+    /**
+     * @param Cart $cart
+     * @return array
+     */
+    public function checkCartKits(Cart $cart)
+    {
+        /** @var KitManager $kitManager */
+        $kitManager = $this->container->get('kit_manager');
+
+        $cartKits = $this->getCartHasKits($cart);
+
+        $kitsOutOfStock = [];
+
+        /** @var CartHasKit $cartKit */
+        foreach ($cartKits as $cartKit) {
+            $kitId = $cartKit->getKit()->getId();
+
+            /** @var Kit $kit */
+            $kit = $kitManager->find($kitId);
+
+            if ($cartKit->getQuantity() > $kit->getStock()) {
+                $kitsOutOfStock[] = $cartKit;
+            }
+        }
+
+        return $kitsOutOfStock;
     }
 
     /**
