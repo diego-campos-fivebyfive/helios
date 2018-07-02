@@ -31,12 +31,12 @@
           td.col-p
             input(
               type='checkbox',
-              :checked='component.relation === "parent"',
+              :checked='parentRelationship(component)',
               v-on:change='updateRelation(component, "parent", groupName, $event)')
           td.col-c
             input(
               type='checkbox',
-              :checked='component.relation === "child"',
+              :checked='childRelationship(component)',
               v-on:change='updateRelation(component, "child", groupName, $event)')
           td.col-cmv
             .cost-price
@@ -58,7 +58,6 @@
   export default {
     props: {
       groups: {
-        type: Array,
         required: true
       },
       getQueryParams: {
@@ -207,6 +206,12 @@
           .then(({ data }) => {
             this.$emit('updateMemorialMarkup', data, markupValue)
           })
+      },
+      parentRelationship(component) {
+        return component.relation === "parent"
+      },
+      childRelationship(component){
+        return component.relation === "child"
       }
     },
     mounted() {
