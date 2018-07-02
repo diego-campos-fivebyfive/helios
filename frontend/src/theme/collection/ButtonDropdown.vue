@@ -21,9 +21,7 @@
   export default {
     props: {
       groups: {
-        type: Array,
         required: true,
-        default: () => {}
       }
     },
     data: () => ({
