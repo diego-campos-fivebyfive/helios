@@ -3,7 +3,7 @@
     transition(name='fade')
       .header-cover(
         v-show='getStateTwigModal()',
-        v-on:click='toggleTwigModal()')
+        v-on:click='toggleTwigModal')
     h1.title {{ pageTitle }}
     span.ranking(v-if="showRanking()")
       | {{ $global.user.ranking }} pontos
