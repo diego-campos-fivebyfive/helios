@@ -462,6 +462,10 @@ class CartController extends AbstractController
         return $dataForm;
     }
 
+    /**
+     * @param $data
+     * @return array
+     */
     private function formatShipping($data)
     {
         $different = $data['differentDelivery'];
@@ -481,6 +485,5 @@ class CartController extends AbstractController
             "number" => $different ? $shipping['address']['number'] : $data['number'],
             "complement" => $different ? $shipping['address']['complement'] : $data['firstName']
         ];
-
     }
 }

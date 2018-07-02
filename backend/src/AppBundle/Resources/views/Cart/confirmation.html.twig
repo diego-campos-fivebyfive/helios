@@ -244,6 +244,86 @@
 
                 <div class="ibox">
                     <div class="ibox-title">
+                        <h5>Dados de entrega</h5>
+                    </div>
+                    <div class="ibox-content">
+
+                        <div class="table-responsive">
+                            <table class="table shoping-cart-table">
+
+                                <tbody>
+                                <tr>
+                                    <td class="col-md-3">
+                                        <div><strong>Nome</strong></div>
+                                        {{ shipping.firstName }}
+                                    </td>
+
+                                    <td class="col-md-3">
+                                        <div><strong>Sobrenome</strong></div>
+                                        {{ shipping.lastName }}
+                                    </td>
+
+                                    <td class="col-md-3">
+                                        <div><strong>{{ data.documentType }}</strong></div>
+                                        {{ shipping.document }}
+                                    </td>
+
+                                    <td class="col-md-3">
+                                        <div><strong>Email</strong></div>
+                                        {{ shipping.email }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-3">
+                                        <div><strong>Telefone</strong></div>
+                                        {{ shipping.phone }}
+                                    </td>
+
+                                    <td class="col-md-3">
+                                        <div><strong>Rua</strong></div>
+                                        {{ shipping.street }}
+                                    </td>
+
+                                    <td class="col-md-3">
+                                        <div><strong>Número</strong></div>
+                                        {{ shipping.number }}
+                                    </td>
+
+                                    <td class="col-md-3">
+                                        <div><strong>Complemento</strong></div>
+                                        {{ shipping.complement }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-3">
+                                        <div><strong>Bairro</strong></div>
+                                        {{ shipping.neighborhood }}
+                                    </td>
+
+                                    <td class="col-md-3">
+                                        <div><strong>Cidade</strong></div>
+                                        {{ shipping.city }}
+                                    </td>
+
+                                    <td class="col-md-3">
+                                        <div><strong>Estado</strong></div>
+                                        {{ shipping.state }}
+                                    </td>
+
+                                    <td class="col-md-3">
+                                        <div><strong>CEP</strong></div>
+                                        {{ shipping.postcode }}
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="ibox">
+                    <div class="ibox-title">
                         <span class="pull-right">(<strong>{{ kits|length }}</strong>) item(s)</span>
                         <h5>Revise seu(s) item(s)</h5>
                     </div>
