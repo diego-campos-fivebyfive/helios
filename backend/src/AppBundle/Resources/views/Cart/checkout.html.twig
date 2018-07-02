@@ -9,15 +9,6 @@
             {{ form_start(form, {attr:{id:'checkout_form'}}) }}
 
             <div class="row">
-                <div class="col-md-12">
-                    <div class="alert alert-danger text-center">
-                        ATENÇÃO: OBRIGATORIAMENTE o estado do endereço de entrega necessita ser o
-                        mesmo estado de faturamento (integrador)
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
                 <div class="col-md-3">
                     <div class="form-group">
                         {{ form_label(form.firstName, 'Nome') }}
@@ -115,6 +106,15 @@
             </div>
 
             <div id="different_delivery" class="hidden">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="alert alert-danger text-center">
+                            ATENÇÃO: OBRIGATORIAMENTE o estado do endereço de entrega necessita ser o
+                            mesmo estado de faturamento (integrador)
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
