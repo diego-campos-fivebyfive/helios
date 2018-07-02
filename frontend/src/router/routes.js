@@ -313,12 +313,12 @@ export const routes = [
   },
   {
     path: '/kit',
-    name: 'Kits Fixos',
+    name: 'Sices express',
     component: FrameView
   },
   {
     path: '/admin/kit/create',
-    name: 'Kits Fixos',
+    name: 'Sices express',
     component: FrameView,
     meta: {
       absolutePath: '/admin/twig/kit/create'
@@ -326,7 +326,7 @@ export const routes = [
   },
   {
     path: '/admin/kit/:id/update',
-    name: 'Kits Fixos',
+    name: 'Sices express',
     component: FrameView,
     meta: {
       absolutePath: '/admin/twig/kit/:id/update'

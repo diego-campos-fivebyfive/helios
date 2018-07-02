@@ -131,7 +131,7 @@ class MenuAccount
             ]
         ],
 //      'kits' => [
-//          'name' => 'Kits Fixos',
+//          'name' => 'Sices express',
 //          'link' => '/kit',
 //          'route' => 'index_kit',
 //          'icon' => 'cart-plus',

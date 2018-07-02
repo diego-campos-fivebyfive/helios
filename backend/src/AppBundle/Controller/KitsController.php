@@ -12,7 +12,7 @@ use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 /**
  * @Route("twig/kit")
  *
- * @Breadcrumb("Kits Fixos")
+ * @Breadcrumb("Sices express")
  */
 class KitsController extends AbstractController
 {
