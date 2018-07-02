@@ -58,9 +58,12 @@ class CartController extends AbstractController
 
             $cartPoolHelper->updateCartPool($cartPool, $account);
 
+            $shipping = $this->formatShipping($data);
+
             return $this->render('cart.confirmation', [
                 'account' => $cartPool->getAccount(),
                 'data' => $data,
+                'shipping' => $shipping,
                 'kits' => $kits,
                 'numbers' => $numbers,
                 'cartPoolId' => $cartPool->getId()
@@ -296,7 +299,7 @@ class CartController extends AbstractController
         $cart = $this->getCart();
 
         if ($checkout = $cart->getCheckout()) {
-            $shipping = json_decode($checkout['shipping'], true);
+            $shipping = json_decode($checkout['shipping'], true)[0];
 
             $form->get('firstName')->setData($checkout['firstName']);
             $form->get('lastName')->setData($checkout['lastName']);
@@ -457,5 +460,27 @@ class CartController extends AbstractController
         }
 
         return $dataForm;
+    }
+
+    private function formatShipping($data)
+    {
+        $different = $data['differentDelivery'];
+        $shipping = json_decode($data['shipping'], true)[0];
+
+        return [
+            "firstName" => $different ? $shipping['first_name'] : $data['firstName'],
+            "lastName" => $different ? $shipping['name'] : $data['lastName'],
+            "document" => $data['documentNumber'],
+            "email" => $different ? $shipping['email'] : $data['email'],
+            "phone" => $different ? $shipping['phone_number'] : $data['phone'],
+            "postcode" => $different ? $shipping['address']['postal_code'] : $data['zipcode'],
+            "state" => $different ? $shipping['address']['state'] : $data['state'],
+            "city" => $different ? $shipping['address']['city'] : $data['city'],
+            "neighborhood" => $different ? $shipping['address']['district'] : $data['neighborhood'],
+            "street" => $different ? $shipping['address']['street'] : $data['street'],
+            "number" => $different ? $shipping['address']['number'] : $data['number'],
+            "complement" => $different ? $shipping['address']['complement'] : $data['firstName']
+        ];
+
     }
 }
