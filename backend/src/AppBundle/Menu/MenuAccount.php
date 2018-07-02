@@ -131,7 +131,7 @@ class MenuAccount
             ]
         ],
 //      'kits' => [
-//          'name' => 'Sices express',
+//          'name' => 'Sices Express',
 //          'link' => '/kit',
 //          'route' => 'index_kit',
 //          'icon' => 'cart-plus',
