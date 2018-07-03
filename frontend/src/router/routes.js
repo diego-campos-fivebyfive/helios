@@ -24,7 +24,7 @@ const FrameView = {
   }),
   computed: {
     getRoutePath() {
-      const currentPath = this.$route.path
+      const currentPath = this.$route.fullPath
       const homePath = '/dashboard'
 
       return (currentPath === '/') ? homePath : currentPath
