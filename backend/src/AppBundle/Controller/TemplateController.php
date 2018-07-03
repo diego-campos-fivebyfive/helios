@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
- * @Route("/project")
+ * @Route("twig/project")
  */
 class TemplateController extends AbstractController
 {

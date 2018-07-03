@@ -502,6 +502,11 @@ export const routes = [
     component: FrameView
   },
   {
+    path: '/project/:id/manage',
+    name: 'Projetos',
+    component: FrameView
+  },
+  {
     path: '/project/generator',
     name: 'Projetos',
     component: FrameView,
