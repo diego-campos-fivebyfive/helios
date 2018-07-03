@@ -9,6 +9,7 @@ use AppBundle\Form\Cart\CheckoutType;
 use AppBundle\Manager\CartManager;
 use AppBundle\Service\Cart\CartPoolHelper;
 use AppBundle\Service\Checkout\Getnet;
+use AppBundle\Service\Common\MaskHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
@@ -59,6 +60,14 @@ class CartController extends AbstractController
             $cartPoolHelper->updateCartPool($cartPool, $account);
 
             $shipping = $this->formatShipping($data);
+
+            $documentPattern = $data['documentType'] === 'CPF' ?  '###.###.###-##' : '##.###.###/####-##';
+            $phonePattern = strlen($shipping['phone']) <= 10 ? '(##) ####-####' : '(##) #####-####';
+            $postcodePattern = '#####-###';
+
+            $shipping['document'] = MaskHelper::genericMask($shipping['document'], $documentPattern);
+            $shipping['phone'] = MaskHelper::genericMask($shipping['phone'], $phonePattern);
+            $shipping['postcode'] = MaskHelper::genericMask($shipping['postcode'], $postcodePattern);
 
             return $this->render('cart.confirmation', [
                 'account' => $cartPool->getAccount(),
