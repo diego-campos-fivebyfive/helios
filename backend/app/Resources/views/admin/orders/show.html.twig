@@ -202,299 +202,305 @@
                 {% endif %}
 
                 <div class="ibox border-bottom">
-                    <div class="ibox-content">
-                        <div class="tab-content">
-                            <div class="tab-pane active">
-                                <div class="row">
-                                    <div class="row wrapper">
-                                        <div class="col-md-12 border-bottom">
-                                            <div class="btn-group spacing-bottom">
+                    <div class="ibox-title">
+                        <div class="row">
+                            <div class="row wrapper">
+                                <ol class="breadcrumb">
+                                    <div class="col-md-12">
+                                        <div class="btn-group spacing-bottom">
 
                                                 <span class="btn btn-sm btn-status">
                                                     <i class="fa fa-circle status-{{ order.statusName }}"></i> {{ order.statusName|capitalize|trans }}
                                                 </span>
 
-                                                {% if not member.isPlatformExpanse %}
-                                                    {% if order.isBuilding or (order.isRejected and (member.isPlatformMaster or member.isPlatformAdmin)) %}
-                                                        <a class="btn btn-sm btn-danger"
-                                                           data-delete="{{ path('order_delete', {id:order.id}) }}">
-                                                            <i class="fa fa-close"></i> Excluir
-                                                        </a>
-                                                    {% endif %}
-                                                {% endif %}
-
-                                                {% for button in buttons %}
-                                                    <a class="btn btn-sm btn-{{ button.attributes.style }}" data-id="{{ order.id }}"
-                                                       data-status="{{ button.status }}"
-                                                       data-substatus="{{ button.substatus is null ? 'undefined' : button.substatus }}">
-                                                        {{ button.attributes.label }}
+                                            {% if not member.isPlatformExpanse %}
+                                                {% if order.isBuilding or (order.isRejected and (member.isPlatformMaster or member.isPlatformAdmin)) %}
+                                                    <a class="btn btn-sm btn-danger"
+                                                       data-delete="{{ path('order_delete', {id:order.id}) }}">
+                                                        <i class="fa fa-close"></i> Excluir
                                                     </a>
-                                                {% endfor %}
+                                                {% endif %}
+                                            {% endif %}
+
+                                            {% for button in buttons %}
+                                                <a class="btn btn-sm btn-{{ button.attributes.style }}" data-id="{{ order.id }}"
+                                                   data-status="{{ button.status }}"
+                                                   data-substatus="{{ button.substatus is null ? 'undefined' : button.substatus }}">
+                                                    {{ button.attributes.label }}
+                                                </a>
+                                            {% endfor %}
 
 
-                                                {#{% if order.isInserted and member.isPlatformLogistic %}
-                                                    {% if order.subStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_RESERVED') %}
-                                                        <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                           data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') }}"
-                                                           data-substatus="{{ constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_WAITING_MATERIAL') }}">
-                                                            <i class="fa fa-archive"></i> Aguardando Material
-                                                        </a>
+                                            {#{% if order.isInserted and member.isPlatformLogistic %}
+                                                {% if order.subStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_RESERVED') %}
+                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') }}"
+                                                       data-substatus="{{ constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_WAITING_MATERIAL') }}">
+                                                        <i class="fa fa-archive"></i> Aguardando Material
+                                                    </a>
 
-                                                        {% if order.subStatus != constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_WAITING_MATERIAL') %}
-                                                            <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                               data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') }}"
-                                                               data-substatus="{{ constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_WAITING_PAYMENT') }}">
-                                                                <i class="fa fa-archive"></i> Produção Concluída
-                                                            </a>
-                                                        {% endif %}
-                                                    {% endif %}
-
-                                                    {% if order.subStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_PRODUCTION') %}
-                                                        <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                               data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_AVAILABLE') }}">
-                                                            <i class="fa fa-archive"></i> Produção Concluída
-                                                        </a>
-                                                        {% if order.subStatus != constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_WAITING_MATERIAL') %}
-                                                            <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                               data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') }}"
-                                                               data-substatus="{{ constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_WAITING_MATERIAL') }}">
-                                                                <i class="fa fa-archive"></i> Aguardando Material
-                                                            </a>
-                                                        {% endif %}
-                                                    {% endif %}
-
-                                                    {% if order.previousSubStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_RESERVED') and order.subStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_WAITING_MATERIAL') %}
+                                                    {% if order.subStatus != constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_WAITING_MATERIAL') %}
                                                         <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
                                                            data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') }}"
                                                            data-substatus="{{ constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_WAITING_PAYMENT') }}">
                                                             <i class="fa fa-archive"></i> Produção Concluída
                                                         </a>
                                                     {% endif %}
+                                                {% endif %}
 
-                                                    {% if order.previousSubStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_PRODUCTION') and order.subStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_WAITING_MATERIAL') %}
-                                                        <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                {% if order.subStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_PRODUCTION') %}
+                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
                                                            data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_AVAILABLE') }}">
-                                                            <i class="fa fa-archive"></i> Produção Concluída
+                                                        <i class="fa fa-archive"></i> Produção Concluída
+                                                    </a>
+                                                    {% if order.subStatus != constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_WAITING_MATERIAL') %}
+                                                        <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                           data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') }}"
+                                                           data-substatus="{{ constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_WAITING_MATERIAL') }}">
+                                                            <i class="fa fa-archive"></i> Aguardando Material
                                                         </a>
                                                     {% endif %}
                                                 {% endif %}
 
-                                                {% if order.isAvailable and member.isPlatformLogistic %}
+                                                {% if order.previousSubStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_RESERVED') and order.subStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_WAITING_MATERIAL') %}
                                                     <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_COLLECTED') }}">
-                                                        <i class="fa fa-check"></i> Coletado pelo cliente
+                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') }}"
+                                                       data-substatus="{{ constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_WAITING_PAYMENT') }}">
+                                                        <i class="fa fa-archive"></i> Produção Concluída
                                                     </a>
                                                 {% endif %}
 
-                                                {% if order.isDone and member.isPlatformAfterSales %}
-                                                    {% if order.subStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_DONE_RESERVED') %}
-                                                        <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                           data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') }}"
-                                                           data-substatus="{{ constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_RESERVED') }}">
-                                                            <i class="fa fa-check"></i> Produção de Reserva
-                                                        </a>
-                                                    {% endif %}
-                                                    {% if order.subStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_DONE_CONFIRMED') %}
-                                                        <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                           data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') }}"
-                                                           data-substatus="{{ constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_PRODUCTION') }}">
-                                                            <i class="fa fa-check"></i> Em Produção
-                                                        </a>
-                                                    {% endif %}
-                                                {% endif %}
-
-                                                {% if order.isInserted and member.isPlatformAfterSales and order.subStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_WAITING_PAYMENT') %}
+                                                {% if order.previousSubStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_PRODUCTION') and order.subStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_WAITING_MATERIAL') %}
                                                     <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
                                                        data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_AVAILABLE') }}">
-                                                        <i class="fa fa-archive"></i> Coleta Disponível
+                                                        <i class="fa fa-archive"></i> Produção Concluída
                                                     </a>
                                                 {% endif %}
-
-                                                #}{# Todo: Funcionalidade retirada temporiamente, será re-utilizada em novas regras #}{#
-                                                #}{#{% if order.isCollected and member.isPlatformAfterSales %}#}{#
-                                                #}{#<a class="btn btn-sm btn-green" data-id="{{ order.id }}"#}{#
-                                                #}{#data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_DELIVERED') }}">#}{#
-                                                #}{#<i class="fa fa-check"></i> Entregue#}{#
-                                                #}{#</a>#}{#
-                                                #}{#{% endif %}#}{#
-
-                                                {% if not member.isPlatformUser and order.isValidated and not expired %}
-                                                    <a id="generate_proform" class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_APPROVED') }}">
-                                                        <i class="fa fa-thumbs-o-up"></i> Aprovar e gerar pró-forma
-                                                    </a>
-                                                {% endif %}
-
-                                                {% if not member.isPlatformExpanse %}
-                                                    {% if (not member.isPlatformUser and order.isValidated)
-                                                        or (member.isPlatformUser and (order.isValidated or order.isPending or order.isApproved))
-                                                        or (member.isPlatformMaster and not order.isBuilding and not order.isRejected) %}
-                                                        <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
-                                                           data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_REJECTED') }}">
-                                                            <i class="fa fa-thumbs-o-down"></i> Cancelar este orçamento
-                                                        </a>
-                                                    {% endif %}
-                                                {% endif %}
-
-                                                {% if member.isPlatformUser and order.isValidated %}
-                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_PENDING') }}">
-                                                        <i class="fa fa-arrow-left"></i> Remover Validação
-                                                    </a>
-                                                {% endif %}
-
-                                                {% if (member.isPlatformFinancial or member.isPlatformFinancing) and order.isApproved %}
-                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_DONE') }}"
-                                                       data-substatus="{{ constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_DONE_RESERVED') }}">
-                                                        <i class="fa fa-check-square-o"></i> Reservado
-                                                    </a>
-                                                {% endif %}
-
-                                                {% if member.isPlatformFinancial and order.isApproved %}
-                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
-                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_DONE') }}"
-                                                       data-substatus="{{ constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_DONE_CONFIRMED') }}">
-                                                        <i class="fa fa-check-square-o"></i> Confirmado
-                                                    </a>
-                                                {% endif %}
-
-                                                {% if (member.isPlatformFinancial or member.isPlatformFinancing) and order.isDone %}
-                                                    <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
-                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_APPROVED') }}">
-                                                        <i class="fa fa-stop"></i> Cancelar Confirmação
-                                                    </a>
-                                                {% endif %}#}
-                                            </div>
-
-                                            <div class="pull-right btn-group">
-                                                {% if member.platformMaster or member.platformAdmin or member.platformExpanse %}
-                                                    <a data-target="#master_cloner_modal"
-                                                       data-href="{{ path('show_order_cloner', {id:order.id}) }}"
-                                                       data-toggle="modal"
-                                                       class="btn btn-sm btn-warning">
-                                                        <i class="fa fa-recycle"></i> Clonar Orçamento
-                                                    </a>
-                                                {% endif %}
-                                                {% if not expired %}
-                                                    {% if not (order.isDone or order.isApproved or order.isRejected)
-                                                        and (order.isBuilding or (order.isPending and member.isPlatformUser) or (order.isValidated and not member.isPlatformUser)) %}
-                                                        <a class="btn btn-sm btn-success pull-right"
-                                                           href="{{ path('project_generator', {order:order.id}) }}">
-                                                            <i class="fa fa-pencil"></i> Editar Orçamento
-                                                        </a>
-                                                    {% endif %}
-                                                {% endif %}
-                                                {% if member.isPlatformAfterSales %}
-                                                    <a id="after_sales_button" data-target="#after_sales_modal"
-                                                       data-toggle="modal"
-                                                       class="btn btn-sm btn-success pull-right">
-                                                        <i class="fa fa-pencil"></i> Editar Informações
-                                                    </a>
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12 {% if order.billingDirect %}border-bottom{% endif %}">
-                                            <h2>
-                                                Orçamento {{ order.reference }}
-                                                {% if order.fileExtract and
-                                                    (member.isPlatformAdmin or member.isPlatformMaster or member.isPlatformAfterSales) %}
-                                                    <a class="pull-right" target="_blank"
-                                                       href="{{ path('order_file',{id:order.id, type:'fileExtract'}) }}">
-                                                        <i class="fa fa-download"></i> CSV
-                                                    </a>
-                                                {% endif %}
-                                            </h2>
-
-                                            {% if member.isPlatformFinancial or member.isPlatformFinancing %}
-                                                <input type="checkbox" data-antecipated-billing="{{ path('antecipated_billing_order', {id:order.id}) }}" {{ order.antecipatedBilling ? 'checked' }}>
-                                                Faturamento Antecipado
-                                            {% else %}
-                                                {{ order.antecipatedBilling ? 'Faturamento Antecipado' }}
                                             {% endif %}
 
-                                            {#TODO: Está funcionalidade já está ok, esta apenas aguardando outras propriedades#}
-                                            {#<h2>
-                                                Frase do Orçamento:
-                                                {% if member.isPlatformAdmin or member.isPlatformMaster or member.isPlatformCommercial %}
-                                                    <div class="btn-group">
-                                                        <input class="form-control" id="expire_at" type="text">
-                                                    </div>
-                                                {% else %}
-                                                    {{ order.expireAt|date('d/m/Y') }}
+                                            {% if order.isAvailable and member.isPlatformLogistic %}
+                                                <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                   data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_COLLECTED') }}">
+                                                    <i class="fa fa-check"></i> Coletado pelo cliente
+                                                </a>
+                                            {% endif %}
+
+                                            {% if order.isDone and member.isPlatformAfterSales %}
+                                                {% if order.subStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_DONE_RESERVED') %}
+                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') }}"
+                                                       data-substatus="{{ constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_RESERVED') }}">
+                                                        <i class="fa fa-check"></i> Produção de Reserva
+                                                    </a>
                                                 {% endif %}
-                                            </h2>#}
+                                                {% if order.subStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_DONE_CONFIRMED') %}
+                                                    <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_INSERTED') }}"
+                                                       data-substatus="{{ constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_PRODUCTION') }}">
+                                                        <i class="fa fa-check"></i> Em Produção
+                                                    </a>
+                                                {% endif %}
+                                            {% endif %}
+
+                                            {% if order.isInserted and member.isPlatformAfterSales and order.subStatus == constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_INSERTED_WAITING_PAYMENT') %}
+                                                <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                   data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_AVAILABLE') }}">
+                                                    <i class="fa fa-archive"></i> Coleta Disponível
+                                                </a>
+                                            {% endif %}
+
+                                            #}{# Todo: Funcionalidade retirada temporiamente, será re-utilizada em novas regras #}{#
+                                            #}{#{% if order.isCollected and member.isPlatformAfterSales %}#}{#
+                                            #}{#<a class="btn btn-sm btn-green" data-id="{{ order.id }}"#}{#
+                                            #}{#data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_DELIVERED') }}">#}{#
+                                            #}{#<i class="fa fa-check"></i> Entregue#}{#
+                                            #}{#</a>#}{#
+                                            #}{#{% endif %}#}{#
+
+                                            {% if not member.isPlatformUser and order.isValidated and not expired %}
+                                                <a id="generate_proform" class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                   data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_APPROVED') }}">
+                                                    <i class="fa fa-thumbs-o-up"></i> Aprovar e gerar pró-forma
+                                                </a>
+                                            {% endif %}
+
+                                            {% if not member.isPlatformExpanse %}
+                                                {% if (not member.isPlatformUser and order.isValidated)
+                                                    or (member.isPlatformUser and (order.isValidated or order.isPending or order.isApproved))
+                                                    or (member.isPlatformMaster and not order.isBuilding and not order.isRejected) %}
+                                                    <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
+                                                       data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_REJECTED') }}">
+                                                        <i class="fa fa-thumbs-o-down"></i> Cancelar este orçamento
+                                                    </a>
+                                                {% endif %}
+                                            {% endif %}
+
+                                            {% if member.isPlatformUser and order.isValidated %}
+                                                <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                   data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_PENDING') }}">
+                                                    <i class="fa fa-arrow-left"></i> Remover Validação
+                                                </a>
+                                            {% endif %}
+
+                                            {% if (member.isPlatformFinancial or member.isPlatformFinancing) and order.isApproved %}
+                                                <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                   data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_DONE') }}"
+                                                   data-substatus="{{ constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_DONE_RESERVED') }}">
+                                                    <i class="fa fa-check-square-o"></i> Reservado
+                                                </a>
+                                            {% endif %}
+
+                                            {% if member.isPlatformFinancial and order.isApproved %}
+                                                <a class="btn btn-sm btn-green" data-id="{{ order.id }}"
+                                                   data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_DONE') }}"
+                                                   data-substatus="{{ constant('AppBundle\\Entity\\Order\\Order::SUBSTATUS_DONE_CONFIRMED') }}">
+                                                    <i class="fa fa-check-square-o"></i> Confirmado
+                                                </a>
+                                            {% endif %}
+
+                                            {% if (member.isPlatformFinancial or member.isPlatformFinancing) and order.isDone %}
+                                                <a class="btn btn-sm btn-orange" data-id="{{ order.id }}"
+                                                   data-status="{{ constant('AppBundle\\Entity\\Order\\Order::STATUS_APPROVED') }}">
+                                                    <i class="fa fa-stop"></i> Cancelar Confirmação
+                                                </a>
+                                            {% endif %}#}
                                         </div>
-                                        {% if order.billingDirect %}
-                                            <div class="border-bottom">
-                                                <ol class="breadcrumb">
-                                                    <li>
-                                                        <label>Dados de faturamento</label>
-                                                    </li>
-                                                </ol>
-                                            </div>
-                                        {% endif %}
+
+                                        <div class="pull-right btn-group">
+                                            {% if member.platformMaster or member.platformAdmin or member.platformExpanse %}
+                                                <a data-target="#master_cloner_modal"
+                                                   data-href="{{ path('show_order_cloner', {id:order.id}) }}"
+                                                   data-toggle="modal"
+                                                   class="btn btn-sm btn-warning">
+                                                    <i class="fa fa-recycle"></i> Clonar Orçamento
+                                                </a>
+                                            {% endif %}
+                                            {% if not expired %}
+                                                {% if not (order.isDone or order.isApproved or order.isRejected)
+                                                    and (order.isBuilding or (order.isPending and member.isPlatformUser) or (order.isValidated and not member.isPlatformUser)) %}
+                                                    <a class="btn btn-sm btn-success pull-right"
+                                                       href="{{ path('project_generator', {order:order.id}) }}">
+                                                        <i class="fa fa-pencil"></i> Editar Orçamento
+                                                    </a>
+                                                {% endif %}
+                                            {% endif %}
+                                            {% if member.isPlatformAfterSales %}
+                                                <a id="after_sales_button" data-target="#after_sales_modal"
+                                                   data-toggle="modal"
+                                                   class="btn btn-sm btn-success pull-right">
+                                                    <i class="fa fa-pencil"></i> Editar Informações
+                                                </a>
+                                            {% endif %}
+                                        </div>
                                     </div>
-                                    {% if order.billingDirect %}
-                                        <div class="col-md-12">
-                                            <div class="col-md-4 spacing">
-                                                <label class="row-total">Cliente</label>
-                                                {{ order.billingFirstname }}
-                                            </div>
-                                            <div class="col-md-4 spacing">
-                                                <label class="row-total">Razão Social</label>
-                                                {{ order.billingLastname }}
-                                            </div>
-                                            <div class="col-md-4 spacing">
-                                                <label class="row-total">CNPJ</label>
-                                                {{ order.billingCnpj }}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="col-md-4 spacing">
-                                                <label class="row-total">Inscrição Estadual</label>
-                                                {{ order.billingIe }}
-                                            </div>
-                                            <div class="col-md-4 spacing">
-                                                <label class="row-total">Contato</label>
-                                                {{ order.billingContact }}
-                                            </div>
-                                            <div class="col-md-4 spacing">
-                                                <label class="row-total">Email</label>
-                                                {{ order.billingEmail }}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="col-md-4 spacing">
-                                                <label class="row-total">Telefone</label>
-                                                {{ order.billingPhone }}
-                                            </div>
-                                            <div class="col-md-4 spacing">
-                                                <label class="row-total">Cep</label>
-                                                {{ order.billingPostcode }}
-                                            </div>
-                                            <div class="col-md-4 spacing">
-                                                <label class="row-total">Estado</label>
-                                                {{ order.billingState }}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="col-md-4 spacing">
-                                                <label class="row-total">Cidade</label>
-                                                {{ order.billingCity }}
-                                            </div>
-                                            <div class="col-md-4 spacing">
-                                                <label class="row-total">Bairro</label>
-                                                {{ order.billingDistrict }}
-                                            </div>
-                                            <div class="col-md-4 spacing">
-                                                <label class="row-total">Rua</label>
-                                                {{ order.billingStreet }}
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                </div>
+                                </ol>
                             </div>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="row wrapper">
+                                <div class="col-md-12 {% if order.billingDirect %}border-bottom{% endif %}">
+                                    <h2>
+                                        Orçamento {{ order.reference }}
+                                        {% if order.fileExtract and
+                                            (member.isPlatformAdmin or member.isPlatformMaster or member.isPlatformAfterSales) %}
+                                            <a class="pull-right" target="_blank"
+                                               href="{{ path('order_file',{id:order.id, type:'fileExtract'}) }}">
+                                                <i class="fa fa-download"></i> CSV
+                                            </a>
+                                        {% endif %}
+                                    </h2>
+
+                                    {% if member.isPlatformFinancial or member.isPlatformFinancing %}
+                                        <input type="checkbox" data-antecipated-billing="{{ path('antecipated_billing_order', {id:order.id}) }}" {{ order.antecipatedBilling ? 'checked' }}>
+                                        Faturamento Antecipado
+                                    {% else %}
+                                        {{ order.antecipatedBilling ? 'Faturamento Antecipado' }}
+                                    {% endif %}
+
+                                    {#TODO: Está funcionalidade já está ok, esta apenas aguardando outras propriedades#}
+                                    {#<h2>
+                                        Frase do Orçamento:
+                                        {% if member.isPlatformAdmin or member.isPlatformMaster or member.isPlatformCommercial %}
+                                            <div class="btn-group">
+                                                <input class="form-control" id="expire_at" type="text">
+                                            </div>
+                                        {% else %}
+                                            {{ order.expireAt|date('d/m/Y') }}
+                                        {% endif %}
+                                    </h2>#}
+                                </div>
+                                {% if order.billingDirect %}
+                                    <div class="col-md-12">
+                                        <div class="border-bottom">
+                                            <ol class="breadcrumb">
+                                                <li>
+                                                    <label>Dados de faturamento</label>
+                                                </li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            {% if order.billingDirect %}
+                                <div class="col-md-12">
+                                    <div class="col-md-4 spacing">
+                                        <label class="row-total">Cliente</label>
+                                        {{ order.billingFirstname }}
+                                    </div>
+                                    <div class="col-md-4 spacing">
+                                        <label class="row-total">Razão Social</label>
+                                        {{ order.billingLastname }}
+                                    </div>
+                                    <div class="col-md-4 spacing">
+                                        <label class="row-total">CNPJ</label>
+                                        {{ order.billingCnpj }}
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-4 spacing">
+                                        <label class="row-total">Inscrição Estadual</label>
+                                        {{ order.billingIe }}
+                                    </div>
+                                    <div class="col-md-4 spacing">
+                                        <label class="row-total">Contato</label>
+                                        {{ order.billingContact }}
+                                    </div>
+                                    <div class="col-md-4 spacing">
+                                        <label class="row-total">Email</label>
+                                        {{ order.billingEmail }}
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-4 spacing">
+                                        <label class="row-total">Telefone</label>
+                                        {{ order.billingPhone }}
+                                    </div>
+                                    <div class="col-md-4 spacing">
+                                        <label class="row-total">Cep</label>
+                                        {{ order.billingPostcode }}
+                                    </div>
+                                    <div class="col-md-4 spacing">
+                                        <label class="row-total">Estado</label>
+                                        {{ order.billingState }}
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-4 spacing">
+                                        <label class="row-total">Cidade</label>
+                                        {{ order.billingCity }}
+                                    </div>
+                                    <div class="col-md-4 spacing">
+                                        <label class="row-total">Bairro</label>
+                                        {{ order.billingDistrict }}
+                                    </div>
+                                    <div class="col-md-4 spacing">
+                                        <label class="row-total">Rua</label>
+                                        {{ order.billingStreet }}
+                                    </div>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -553,80 +559,106 @@
                 </div>
 
                 <div class="ibox border-bottom">
+                    <div class="ibox-title">
+                        <div class="row">
+                            <div class="row wrapper">
+                                <ol class="breadcrumb">
+                                    <div class="col-md-12">
+                                        <label>Dados do integrador</label>
+                                    </div>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
                     <div class="ibox-content">
-                        <div class="tab-content">
-                            <div class="tab-pane active">
-                                <div class="row">
-                                    <div class="row wrapper">
-                                        <div class="col-lg-12 border-bottom">
-                                            <ol class="breadcrumb">
-                                                <div class="col-md-12">
-                                                    <label>Dados do integrador</label>
-                                                </div>
-                                            </ol>
-                                        </div>
-                                    </div>
+                        <div class="row">
+                            <div class="col-md-4 spacing">
+                                <label class="row-total">Cliente</label>
+                                {{ order.firstname }}
+                            </div>
+                            <div class="col-md-4 spacing">
+                                <label class="row-total">Nome</label>
+                                {{ order.lastname }}
+                            </div>
+                            <div class="col-md-4 spacing">
+                                <label class="row-total">CNPJ</label>
+                                {{ order.cnpj }}
+                            </div>
+                            <div class="col-md-4 spacing">
+                                <label class="row-total">Inscrição Estadual</label>
+                                {{ order.ie }}
+                            </div>
+                            <div class="col-md-4 spacing">
+                                <label class="row-total">Contato</label>
+                                {{ order.contact }}
+                            </div>
+                            <div class="col-md-4 spacing">
+                                <label class="row-total">Email</label>
+                                {{ order.email }}
+                            </div>
+                            <div class="col-md-4 spacing">
+                                <label class="row-total">Telefone</label>
+                                {{ order.phone }}
+                            </div>
+                            <div class="col-md-2 spacing">
+                                <label class="row-total">Cep</label>
+                                {{ order.postcode }}
+                            </div>
+                            <div class="col-md-2 spacing">
+                                <label class="row-total">Estado</label>
+                                {{ order.state }}
+                            </div>
+                            <div class="col-md-4 spacing">
+                                <label class="row-total">Cidade</label>
+                                {{ order.city }}
+                            </div>
+                            <div class="col-md-4 spacing">
+                                <label class="row-total">Endereço</label>
+                                {{ order.address }}
+                            </div>
+                            <div class="col-md-4 spacing">
+                                <label class="row-total">Usuário Sices vinculado</label>
+                                {{ order.agent }}
+                            </div>
+                            <div class="col-md-4 spacing">
+                                {% set notLevel = 'Sem Nivel' %}
+                                <label class="row-total">Nível de desconto</label>
+                                {{ order.account ? order.account.level|trans : notLevel }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ibox border-bottom">
+                    <div class="ibox-title">
+                        <div class="row">
+                            <div class="row wrapper">
+                                <ol class="breadcrumb">
                                     <div class="col-md-12">
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">Cliente</label>
-                                            {{ order.firstname }}
-                                        </div>
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">Nome</label>
-                                            {{ order.lastname }}
-                                        </div>
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">CNPJ</label>
-                                            {{ order.cnpj }}
-                                        </div>
+                                        <label>Dados do ERP</label>
                                     </div>
-                                    <div class="col-md-12">
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">Inscrição Estadual</label>
-                                            {{ order.ie }}
-                                        </div>
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">Contato</label>
-                                            {{ order.contact }}
-                                        </div>
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">Email</label>
-                                            {{ order.email }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">Telefone</label>
-                                            {{ order.phone }}
-                                        </div>
-                                        <div class="col-md-2 spacing">
-                                            <label class="row-total">Cep</label>
-                                            {{ order.postcode }}
-                                        </div>
-                                        <div class="col-md-2 spacing">
-                                            <label class="row-total">Estado</label>
-                                            {{ order.state }}
-                                        </div>
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">Cidade</label>
-                                            {{ order.city }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">Endereço</label>
-                                            {{ order.address }}
-                                        </div>
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">Usuário Sices vinculado</label>
-                                            {{ order.agent }}
-                                        </div>
-                                        <div class="col-md-4 spacing">
-                                            {% set notLevel = 'Sem Nivel' %}
-                                            <label class="row-total">Nível de desconto</label>
-                                            {{ order.account ? order.account.level|trans : notLevel }}
-                                        </div>
-                                    </div>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="row wrapper">
+                                <div class="col-md-6 spacing">
+                                    <label class="row-total">OR</label>
+                                    {{ order.erpOR }}
+                                </div>
+                                <div class="col-md-6 spacing">
+                                    <label class="row-total">OP</label>
+                                    {{ order.erpOP }}
+                                </div>
+                                <div class="col-md-6 spacing">
+                                    <label class="row-total">PV</label>
+                                    {{ order.erpPV }}
+                                </div>
+                                <div class="col-md-6 spacing">
+                                    <label class="row-total">RPV</label>
+                                    {{ order.erpRPV }}
                                 </div>
                             </div>
                         </div>
@@ -634,97 +666,59 @@
                 </div>
 
                 <div class="ibox border-bottom">
-                    <div class="ibox-content">
-                        <div class="tab-content">
-                            <div class="tab-pane active">
-                                <div class="row">
-                                    <div class="row wrapper">
-                                        <div class="col-lg-12 border-bottom">
-                                            <ol class="breadcrumb">
-                                                <li>
-                                                    <label>Dados do ERP</label>
-                                                </li>
-                                            </ol>
-                                        </div>
-                                        <div class="col-md-6 spacing">
-                                            <label class="row-total">OR</label>
-                                            {{ order.erpOR }}
-                                        </div>
-                                        <div class="col-md-6 spacing">
-                                            <label class="row-total">OP</label>
-                                            {{ order.erpOP }}
-                                        </div>
-                                        <div class="col-md-6 spacing">
-                                            <label class="row-total">PV</label>
-                                            {{ order.erpPV }}
-                                        </div>
-                                        <div class="col-md-6 spacing">
-                                            <label class="row-total">RPV</label>
-                                            {{ order.erpRPV }}
-                                        </div>
+                    <div class="ibox-title">
+                        <div class="row">
+                            <div class="row wrapper">
+                                <ol class="breadcrumb">
+                                    <div class="col-md-12">
+                                        <label>Pagamento e Entrega</label>
                                     </div>
-                                </div>
+                                </ol>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="ibox border-bottom">
                     <div class="ibox-content">
-                        <div class="tab-content">
-                            <div class="tab-pane active">
-                                <div class="row">
-                                    <div class="row wrapper">
-                                        <div class="col-lg-12 border-bottom">
-                                            <ol class="breadcrumb">
-                                                <li>
-                                                    <label>Pagamento e Entrega</label>
-                                                </li>
-                                            </ol>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">Condição de pagamento</label>
-                                            {% if order.paymentMethod('array') %}
-                                                {% for payment in order.paymentMethod('array').quotas %}
-                                                    &#{{ loop.index + 96 }}; ) {{ payment.description }} {{ payment.percent }}%
-                                                    {% if payment.display_payment_date is defined
-                                                        and payment.display_payment_date == 'true' and order.isApproved %}
-                                                        - {{ payment.date|date('d/m/Y') }}
-                                                    {% endif %}<br>
-                                                {% endfor %}
-                                            {% endif %}
-                                        </div>
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">Disponibilidade para coleta (data)</label>
-                                            {% if member.PlatformAfterSales %}
-                                                <input class="form-control" id="delivery_at_order" type="text">
-                                            {% else %}
-                                                {% if order.deliveryAt %}{{ order.deliveryAt.date|date('d/m/Y') }}{% endif %}
-                                            {% endif %}
-                                        </div>
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">Disponibilidade para coleta (dias após
-                                                pagamento)</label>
-                                            {% if order.deliveryDelay %} {{ order.deliveryDelay }} dia(s) após a identificação do pagamento.{% endif %}
-                                            <br/>
-                                        </div>
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">Prazo de entrega</label>
-                                            {% if order.deadline %}
-                                                {{ order.deadline }} DIAS
-                                            {% endif %}
-                                        </div>
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">Validade da proposta (dias)</label>
-                                            {% if order.expireDays %} {{ order.expireDays }} {% endif %}
-                                        </div>
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">Observações</label>
-                                            {{ order.note }}
-                                        </div>
-                                    </div>
+                        <div class="row">
+                            <div class="row wrapper">
+                                <div class="col-md-4 spacing">
+                                    <label class="row-total">Condição de pagamento</label>
+                                    {% if order.paymentMethod('array') %}
+                                        {% for payment in order.paymentMethod('array').quotas %}
+                                            &#{{ loop.index + 96 }}; ) {{ payment.description }} {{ payment.percent }}%
+                                            {% if payment.display_payment_date is defined
+                                                and payment.display_payment_date == 'true' and order.isApproved %}
+                                                - {{ payment.date|date('d/m/Y') }}
+                                            {% endif %}<br>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-4 spacing">
+                                    <label class="row-total">Disponibilidade para coleta (data)</label>
+                                    {% if member.PlatformAfterSales %}
+                                        <input class="form-control" id="delivery_at_order" type="text">
+                                    {% else %}
+                                        {% if order.deliveryAt %}{{ order.deliveryAt.date|date('d/m/Y') }}{% endif %}
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-4 spacing">
+                                    <label class="row-total">Disponibilidade para coleta (dias após
+                                        pagamento)</label>
+                                    {% if order.deliveryDelay %} {{ order.deliveryDelay }} dia(s) após a identificação do pagamento.{% endif %}
+                                    <br/>
+                                </div>
+                                <div class="col-md-4 spacing">
+                                    <label class="row-total">Prazo de entrega</label>
+                                    {% if order.deadline %}
+                                        {{ order.deadline }} DIAS
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-4 spacing">
+                                    <label class="row-total">Validade da proposta (dias)</label>
+                                    {% if order.expireDays %} {{ order.expireDays }} {% endif %}
+                                </div>
+                                <div class="col-md-4 spacing">
+                                    <label class="row-total">Observações</label>
+                                    {{ order.note }}
                                 </div>
                             </div>
                         </div>
@@ -734,64 +728,64 @@
                 {% if order.shippingrules and order.shippingrules['type'] == 'self' and order.shippingRules.company is not null %}
 
                     <div class="ibox border-bottom">
+                        <div class="ibox-title">
+                            <div class="row">
+                                <div class="row wrapper">
+                                    <ol class="breadcrumb">
+                                        <div class="col-md-12">
+                                            <label>Dados da transportadora</label>
+                                        </div>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
                         <div class="ibox-content">
-                            <div class="tab-content">
-                                <div class="tab-pane active">
-                                    <div class="row">
-                                        <div class="row wrapper">
-                                            <div class="col-lg-12 border-bottom">
-                                                <ol class="breadcrumb">
-                                                    <li>
-                                                        <label>Dados da transportadora</label>
-                                                    </li>
-                                                </ol>
-                                            </div>
+                            <div class="row">
+                                <div class="row wrapper">
+                                    <div class="col-md-12">
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Razão Social</label>
+                                            {{ order.shippingrules['company']['name'] }}
                                         </div>
-                                        <div class="col-md-12">
-                                            <div class="col-md-4 spacing">
-                                                <label class="row-total">Razão Social</label>
-                                                {{ order.shippingrules['company']['name'] }}
-                                            </div>
-                                            <div class="col-md-4 spacing">
-                                                <label class="row-total">CNPJ</label>
-                                                {{ order.shippingrules['company']['cnpj'] }}
-                                            </div>
-                                            <div class="col-md-4 spacing">
-                                                <label class="row-total">Inscrição Estadual</label>
-                                                {{ order.shippingrules['company']['ie'] }}
-                                            </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">CNPJ</label>
+                                            {{ order.shippingrules['company']['cnpj'] }}
                                         </div>
-                                        <div class="col-md-12">
-                                            <div class="col-md-4 spacing">
-                                                <label class="row-total">Contato</label>
-                                                {{ order.shippingrules['company']['contact'] }}
-                                            </div>
-                                            <div class="col-md-4 spacing">
-                                                <label class="row-total">Email</label>
-                                                {{ order.shippingrules['company']['email'] }}
-                                            </div>
-                                            <div class="col-md-4 spacing">
-                                                <label class="row-total">Telefone</label>
-                                                {{ order.shippingrules['company']['phone'] }}
-                                            </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Inscrição Estadual</label>
+                                            {{ order.shippingrules['company']['ie'] }}
                                         </div>
-                                        <div class="col-md-12">
-                                            <div class="col-md-3 spacing">
-                                                <label class="row-total">Cep</label>
-                                                {{ order.shippingrules['company']['postcode'] }}
-                                            </div>
-                                            <div class="col-md-1 spacing">
-                                                <label class="row-total">Estado</label>
-                                                {{ order.shippingrules['company']['state'] }}
-                                            </div>
-                                            <div class="col-md-4 spacing">
-                                                <label class="row-total">Cidade</label>
-                                                {{ order.shippingrules['company']['city'] }}
-                                            </div>
-                                            <div class="col-md-4 spacing">
-                                                <label class="row-total">Endereço</label>
-                                                {{ order.shippingrules['company']['address'] }}
-                                            </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Contato</label>
+                                            {{ order.shippingrules['company']['contact'] }}
+                                        </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Email</label>
+                                            {{ order.shippingrules['company']['email'] }}
+                                        </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Telefone</label>
+                                            {{ order.shippingrules['company']['phone'] }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="col-md-3 spacing">
+                                            <label class="row-total">Cep</label>
+                                            {{ order.shippingrules['company']['postcode'] }}
+                                        </div>
+                                        <div class="col-md-1 spacing">
+                                            <label class="row-total">Estado</label>
+                                            {{ order.shippingrules['company']['state'] }}
+                                        </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Cidade</label>
+                                            {{ order.shippingrules['company']['city'] }}
+                                        </div>
+                                        <div class="col-md-4 spacing">
+                                            <label class="row-total">Endereço</label>
+                                            {{ order.shippingrules['company']['address'] }}
                                         </div>
                                     </div>
                                 </div>
@@ -802,51 +796,47 @@
                 {% endif %}
 
                 <div class="ibox border-bottom">
+                    <div class="ibox-title">
+                        <div class="row">
+                            <div class="row wrapper">
+                                <ol class="breadcrumb">
+                                    <div class="col-md-12">
+                                        <label>Endereço de Entrega</label>
+                                    </div>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
                     <div class="ibox-content">
-                        <div class="tab-content">
-                            <div class="tab-pane active">
-                                <div class="row">
-                                    <div class="row wrapper">
-                                        <div class="col-lg-12 border-bottom">
-                                            <ol class="breadcrumb">
-                                                <li>
-                                                    <label>Endereço de Entrega</label>
-                                                </li>
-                                            </ol>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">CEP</label>
-                                            {{ order.deliveryPostcode }}
-                                        </div>
-                                        <div class="col-md-2 spacing">
-                                            <label class="row-total">Estado</label>
-                                            {{ order.deliveryState }}
-                                        </div>
-                                        <div class="col-md-3 spacing">
-                                            <label class="row-total">Cidade</label>
-                                            {{ order.deliveryCity }}
-                                        </div>
-                                        <div class="col-md-3 spacing">
-                                            <label class="row-total">Bairro</label>
-                                            {{ order.deliveryDistrict }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="col-md-4 spacing">
-                                            <label class="row-total">Logradouro</label>
-                                            {{ order.deliveryStreet }}
-                                        </div>
-                                        <div class="col-md-2 spacing">
-                                            <label class="row-total">Número</label>
-                                            {{ order.deliveryNumber }}
-                                        </div>
-                                        <div class="col-md-6 spacing">
-                                            <label class="row-total">Complementos</label>
-                                            {{ order.deliveryComplement }}
-                                        </div>
-                                    </div>
+                        <div class="row">
+                            <div class="row wrapper">
+                                <div class="col-md-4 spacing">
+                                    <label class="row-total">CEP</label>
+                                    {{ order.deliveryPostcode }}
+                                </div>
+                                <div class="col-md-2 spacing">
+                                    <label class="row-total">Estado</label>
+                                    {{ order.deliveryState }}
+                                </div>
+                                <div class="col-md-3 spacing">
+                                    <label class="row-total">Cidade</label>
+                                    {{ order.deliveryCity }}
+                                </div>
+                                <div class="col-md-3 spacing">
+                                    <label class="row-total">Bairro</label>
+                                    {{ order.deliveryDistrict }}
+                                </div>
+                                <div class="col-md-4 spacing">
+                                    <label class="row-total">Logradouro</label>
+                                    {{ order.deliveryStreet }}
+                                </div>
+                                <div class="col-md-2 spacing">
+                                    <label class="row-total">Número</label>
+                                    {{ order.deliveryNumber }}
+                                </div>
+                                <div class="col-md-6 spacing">
+                                    <label class="row-total">Complementos</label>
+                                    {{ order.deliveryComplement }}
                                 </div>
                             </div>
                         </div>
@@ -1034,22 +1024,22 @@
                 </div>
 
                 <div class="ibox border-bottom">
+                    <div class="ibox-title">
+                        <div class="row">
+                            <div class="row wrapper">
+                                <ol class="breadcrumb">
+                                    <div class="col-md-12">
+                                        <label>Mensagens</label>
+                                    </div>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
                     <div class="ibox-content">
-                        <div class="tab-content">
-                            <div class="tab-pane active">
-                                <div class="row">
-                                    <div class="row wrapper">
-                                        <div class="col-lg-12 border-bottom">
-                                            <ol class="breadcrumb">
-                                                <li>
-                                                    <label>Mensagens</label>
-                                                </li>
-                                            </ol>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12 spacing">
-                                        {% include view('orders/messages/index.html.twig') %}
-                                    </div>
+                        <div class="row">
+                            <div class="row wrapper">
+                                <div class="col-md-12 spacing">
+                                    {% include view('orders/messages/index.html.twig') %}
                                 </div>
                             </div>
                         </div>
