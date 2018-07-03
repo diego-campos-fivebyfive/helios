@@ -9,16 +9,17 @@
     <script>
         // this script pushes Twig paths to Vue router
         if (window.self === window.top) {
-            window.location = window.location.pathname
+            window.location = (window.location.pathname + window.location.search)
                 .replace(/\/twig/, '');
         } else {
-            const parentPath = top.window.location.pathname
+            const parentPath = (top.window.location.pathname + window.location.search)
                 .replace(/\/$/g, '');
 
-            const destinationPath = window.location.pathname
+            const destinationPath = (window.location.pathname + window.location.search)
                 .replace(/\/twig/, '')
                 .replace(/\/$/g, '');
-
+            console.log('parentPath', parentPath)
+            console.log('destinationPath', destinationPath)
             if (parentPath !== destinationPath) {
                 top.updateVueRoute(destinationPath + window.location.search);
             }
