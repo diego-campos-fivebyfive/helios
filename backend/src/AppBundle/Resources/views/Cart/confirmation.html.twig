@@ -432,128 +432,133 @@
 
 {% endblock %}
 {% block scripts %}
-<script>
+    <script>
 
-    var Confirmation = {
-        idCartPool: '{{ cartPoolId }}',
-        createGetnetIframe: function () {
+        function strPad(string) {
+            var value = parseInt(string);
+            return value < 10 ? '0' + value : value;
+        }
 
-            var getnetIfrm = document.createElement('script');
+        var Confirmation = {
+            idCartPool: strPad('{{ cartPoolId }}'),
+            createGetnetIframe: function () {
 
-            getnetIfrm.setAttribute('id', 'getnet');
-            getnetIfrm.setAttribute('data-getnet-sellerid', '4609a349-e4b8-4edf-a332-5a45c9fe7d19');
-            getnetIfrm.setAttribute('data-getnet-token', '{{ data.token }}');
-            getnetIfrm.setAttribute('data-getnet-amount', '{{ data.amount }}');
-            //getnetIfrm.setAttribute('data-getnet-instructions', 'Teste');
-            getnetIfrm.setAttribute('data-getnet-customerid', '{{ data.customerId }}');
-            getnetIfrm.setAttribute('data-getnet-orderid', Confirmation.idCartPool);
-            getnetIfrm.setAttribute('data-getnet-button-class', 'pay-button-checkout');
-            getnetIfrm.setAttribute('data-getnet-installments', '{{ numberInstallments }}');
-            getnetIfrm.setAttribute('data-getnet-customer-first-name', '{{ data.firstName }}');
-            getnetIfrm.setAttribute('data-getnet-customer-last-name', '{{ data.lastName }}');
-            getnetIfrm.setAttribute('data-getnet-customer-document-type', '{{ data.documentType }}');
-            getnetIfrm.setAttribute('data-getnet-customer-document-number', '{{ data.documentNumber }}');
-            getnetIfrm.setAttribute('data-getnet-customer-email', '{{ data.email }}');
-            getnetIfrm.setAttribute('data-getnet-customer-phone-number', '{{ data.phone }}');
-            getnetIfrm.setAttribute('data-getnet-customer-address-street', '{{ data.street }}');
-            getnetIfrm.setAttribute('data-getnet-customer-address-street-number', '{{ data.number }}');
-            getnetIfrm.setAttribute('data-getnet-customer-address-complementary', '{{ data.complement }}');
-            getnetIfrm.setAttribute('data-getnet-customer-address-neighborhood', '{{ data.neighborhood }}');
-            getnetIfrm.setAttribute('data-getnet-customer-address-city', '{{ data.city }}');
-            getnetIfrm.setAttribute('data-getnet-customer-address-state', '{{ data.state }}');
-            getnetIfrm.setAttribute('data-getnet-customer-address-zipcode', '{{ data.zipcode }}');
-            getnetIfrm.setAttribute('data-getnet-customer-country', '{{ data.country }}');
-            getnetIfrm.setAttribute('data-getnet-items', '{{ data.items|raw }}');
-            getnetIfrm.setAttribute('data-getnet-url-callback', '');
+                var getnetIfrm = document.createElement('script');
 
-            {% if data.differentDelivery %}
+                getnetIfrm.setAttribute('id', 'getnet');
+                getnetIfrm.setAttribute('data-getnet-sellerid', '4609a349-e4b8-4edf-a332-5a45c9fe7d19');
+                getnetIfrm.setAttribute('data-getnet-token', '{{ data.token }}');
+                getnetIfrm.setAttribute('data-getnet-amount', '{{ data.amount }}');
+                //getnetIfrm.setAttribute('data-getnet-instructions', 'Teste');
+                getnetIfrm.setAttribute('data-getnet-customerid', '{{ data.customerId }}');
+                getnetIfrm.setAttribute('data-getnet-orderid', Confirmation.idCartPool);
+                getnetIfrm.setAttribute('data-getnet-button-class', 'pay-button-checkout');
+                getnetIfrm.setAttribute('data-getnet-installments', '{{ numberInstallments }}');
+                getnetIfrm.setAttribute('data-getnet-customer-first-name', '{{ data.firstName }}');
+                getnetIfrm.setAttribute('data-getnet-customer-last-name', '{{ data.lastName }}');
+                getnetIfrm.setAttribute('data-getnet-customer-document-type', '{{ data.documentType }}');
+                getnetIfrm.setAttribute('data-getnet-customer-document-number', '{{ data.documentNumber }}');
+                getnetIfrm.setAttribute('data-getnet-customer-email', '{{ data.email }}');
+                getnetIfrm.setAttribute('data-getnet-customer-phone-number', '{{ data.phone }}');
+                getnetIfrm.setAttribute('data-getnet-customer-address-street', '{{ data.street }}');
+                getnetIfrm.setAttribute('data-getnet-customer-address-street-number', '{{ data.number }}');
+                getnetIfrm.setAttribute('data-getnet-customer-address-complementary', '{{ data.complement }}');
+                getnetIfrm.setAttribute('data-getnet-customer-address-neighborhood', '{{ data.neighborhood }}');
+                getnetIfrm.setAttribute('data-getnet-customer-address-city', '{{ data.city }}');
+                getnetIfrm.setAttribute('data-getnet-customer-address-state', '{{ data.state }}');
+                getnetIfrm.setAttribute('data-getnet-customer-address-zipcode', '{{ data.zipcode }}');
+                getnetIfrm.setAttribute('data-getnet-customer-country', '{{ data.country }}');
+                getnetIfrm.setAttribute('data-getnet-items', '{{ data.items|raw }}');
+                getnetIfrm.setAttribute('data-getnet-url-callback', '');
+
+                {% if data.differentDelivery %}
                 getnetIfrm.setAttribute('data-getnet-shipping-address', '{{ data.shipping|raw }}');
-            {% endif %}
+                {% endif %}
 
-            getnetIfrm.src = 'https://checkout-homologacao.getnet.com.br/loader.js?' + Confirmation.idCartPool;
-            document.querySelector('body').appendChild(getnetIfrm);
+                getnetIfrm.src = 'https://checkout-homologacao.getnet.com.br/loader.js?' + Confirmation.idCartPool;
+                document.querySelector('body').appendChild(getnetIfrm);
 
-            getnetIfrm.onload = function() {
-                Confirmation.getnetListener();
-            };
-        },
-        finishCartPool: function(type) {
-            $.ajax({
-                url: "{{ path('cart_pool_finish', {id: cartPoolId}) }}",
-                method: "post",
-                complete: function (response) {
-                    if (response.status === 200) {
-                        window.location = '{{ path("payment_feedback") }}';
+                getnetIfrm.onload = function() {
+                    Confirmation.getnetListener();
+                };
+            },
+            finishCartPool: function(type) {
+                $.ajax({
+                    url: "{{ path('cart_pool_finish', {id: cartPoolId}) }}",
+                    method: "post",
+                    complete: function (response) {
+                        if (response.status === 200) {
+                            window.location = '{{ path("payment_feedback") }}';
+                        }
                     }
-                }
-            });
-        },
-        checkCartPoolKits: function() {
-            $.ajax({
-                url: "{{ path('check_cart_kits') }}",
-                method: "post",
-                complete: function (response) {
-                    if (response.status === 200) {
-                        $('#loadIframe').click();
-                    } else {
-                        Confirmation.showKitsOutOfStock();
+                });
+            },
+            checkCartPoolKits: function() {
+                $.ajax({
+                    url: "{{ path('check_cart_kits') }}",
+                    method: "post",
+                    complete: function (response) {
+                        if (response.status === 200) {
+                            $('#loadIframe').click();
+                        } else {
+                            Confirmation.showKitsOutOfStock();
+                        }
                     }
-                }
-            });
-        },
-        showKitsOutOfStock: function() {
-            $.ajax({
-                url: "{{ path('cart_kits_out_of_stock') }}",
-                method: "get",
-                complete: function (response) {
+                });
+            },
+            showKitsOutOfStock: function() {
+                $.ajax({
+                    url: "{{ path('cart_kits_out_of_stock') }}",
+                    method: "get",
+                    complete: function (response) {
+                        console.log(response);
+                        $('#kits-out-of-stock-content').html(response.responseText);
+                        $('#kits-out-of-stock').modal('show');
+                    }
+                });
+            },
+            getnetListener: function () {
+                getnet.subscribe('success', function() {
+                    Confirmation.finishCartPool('success');
+                });
+
+                getnet.subscribe('pending', function() {
+                    Confirmation.finishCartPool('pending');
+                });
+
+                getnet.subscribe('error', function(status, response) {
+                    console.log(status);
                     console.log(response);
-                    $('#kits-out-of-stock-content').html(response.responseText);
-                    $('#kits-out-of-stock').modal('show');
-                }
-            });
-        },
-        getnetListener: function () {
-            getnet.subscribe('success', function() {
-                Confirmation.finishCartPool('success');
-            });
+                });
+            },
+            init: function () {
+                this.createGetnetIframe();
+            }
+        };
 
-            getnet.subscribe('pending', function() {
-                Confirmation.finishCartPool('pending');
-            });
+        Confirmation.init();
 
-            getnet.subscribe('error', function(status, response) {
-                console.log(status);
-                console.log(response);
-            });
-        },
-        init: function () {
-            this.createGetnetIframe();
+        var checkedTerms = $('#terms').is(':checked');
+
+        function checkTerms() {
+            if (checkedTerms) {
+                $('#confirmCheckout').removeClass('disabled');
+            } else {
+                $('#confirmCheckout').addClass('disabled');
+            }
         }
-    };
 
-    Confirmation.init();
-
-    var checkedTerms = $('#terms').is(':checked');
-
-    function checkTerms() {
-        if (checkedTerms) {
-            $('#confirmCheckout').removeClass('disabled');
-        } else {
-            $('#confirmCheckout').addClass('disabled');
-        }
-    }
-
-    checkTerms();
-
-    $('#terms').on('click', function () {
-        checkedTerms = $(this).is(':checked');
         checkTerms();
-    });
 
-    $('#confirmCheckout').on('click', function () {
-        if (checkedTerms) {
-            Confirmation.checkCartPoolKits();
-        }
-    });
-</script>
+        $('#terms').on('click', function () {
+            checkedTerms = $(this).is(':checked');
+            checkTerms();
+        });
+
+        $('#confirmCheckout').on('click', function () {
+            if (checkedTerms) {
+                Confirmation.checkCartPoolKits();
+            }
+        });
+    </script>
 {% endblock %}
