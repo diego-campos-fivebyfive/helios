@@ -24,7 +24,7 @@ const FrameView = {
   }),
   computed: {
     getRoutePath() {
-      const currentPath = this.$route.path
+      const currentPath = this.$route.fullPath
       const homePath = '/dashboard'
 
       return (currentPath === '/') ? homePath : currentPath
@@ -44,7 +44,7 @@ const FrameView = {
         .filter(segment => segment)
         .findIndex(segment => segment === viewsEntryPoint)
 
-      const currentPathSegments = this.$route.fullPath
+      const currentPathSegments = this.$route.path
         .split('/')
         .filter(segment => segment)
 
