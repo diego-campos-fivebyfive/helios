@@ -20,7 +20,7 @@
                 .replace(/\/$/g, '');
 
             if (parentPath !== destinationPath) {
-                top.updateVueRoute(destinationPath);
+                top.updateVueRoute(destinationPath + window.location.search);
             }
         }
     </script>
