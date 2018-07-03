@@ -525,6 +525,11 @@ export const routes = [
     component: FrameView
   },
   {
+    path: '/project/financial/:id',
+    name: 'Análise financeira',
+    component: FrameView
+  },
+  {
     path: '/tasks/m',
     name: 'Tarefas',
     component: FrameView

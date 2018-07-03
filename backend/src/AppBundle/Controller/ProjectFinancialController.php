@@ -20,7 +20,7 @@ use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 /**
  * @Breadcrumb("Dashboard", route={"name"="app_index"})
  * @Breadcrumb("Projects", route={"name"="project_index"})
- * @Route("/project/financial")
+ * @Route("/twig/project/financial")
  */
 class ProjectFinancialController extends AbstractController
 {
