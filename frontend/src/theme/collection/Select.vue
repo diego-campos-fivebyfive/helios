@@ -6,7 +6,7 @@
       v-on:change='updateOption($event.target.value)')
       option(
         v-for='option in options',
-        :selected='selected === option.value',
+        :selected='selectedValue(option)',
         :value='option.value')
         | {{ option.text }}
 </template>
@@ -25,7 +25,8 @@
       },
       disabled: {
         type: Boolean,
-        required: true
+        required: false,
+        default: false
       },
       options: {
         type: Array,
@@ -46,6 +47,9 @@
         ))
 
         this.$emit('update', currentOption)
+      },
+      selectedValue(option) {
+        return this.selected === option.value
       }
     }
   }

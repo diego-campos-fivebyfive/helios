@@ -3,7 +3,7 @@
     input.field(
       v-on:input='requestOptions($event.target.value)',
       :value='selected.text')
-    .options(v-if='this.show')
+    .options(v-if='showOptions()')
       ul
         li(
           v-on:click='updateOption($event.target.value)',
@@ -42,15 +42,18 @@
       }
     },
     data: () => ({
-      show: false
+      showingOptions: false
     }),
     methods: {
+      showOptions() {
+        return this.showingOptions
+      },
       requestOptions(param) {
         this.$emit('request', param)
-        this.show = true
+        this.showingOptions = true
       },
       updateOption(selectedOption) {
-        this.show = false
+        this.showingOptions = false
 
         const currentOption = this.options.find(eachOption => (
           eachOption.value === selectedOption

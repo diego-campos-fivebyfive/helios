@@ -16,11 +16,11 @@
       tr.rows(slot='rows', v-for='coupon in coupons')
         td.col-name {{ coupon.name }}
         td.col-code {{ coupon.code }}
-        td.col-account {{ coupon.account.name || 'Não Vinculada' }}
-        td.col-status {{ coupon.applied ? 'Aplicado' : 'Não Aplicado' }}
+        td.col-account {{ coupon.account.nameText }}
+        td.col-status {{ coupon.appliedText }}
         td.col-amount R$ {{ coupon.amount }}
         td.col-action
-          nav(v-if='!coupon.applied')
+          nav(v-if='showOptions(coupon)')
             Button(
               class='primary-common',
               pos='first',
@@ -50,6 +50,21 @@
             this.$emit('getCoupons')
             this.$refs.notification.notify('Cupom removido com sucesso')
           })
+      },
+      showOptions(coupon) {
+        return !coupon.applied
+      }
+    },
+    watch: {
+      coupons() {
+        this.coupons.map(coupon => (
+          Object.assign(coupon, {
+            appliedText: coupon.applied ? 'Aplicado' : 'Não Aplicado',
+            account: {
+              nameText: coupon.account.name || 'Não Vinculada'
+            }
+          })
+        ))
       }
     }
   }

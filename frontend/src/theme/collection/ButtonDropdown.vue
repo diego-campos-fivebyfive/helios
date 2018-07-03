@@ -1,11 +1,11 @@
 <template lang="pug">
   .collection-dropdown
     Button.collection-dropdown-button(
-      :action='() => open = !open',
+      :action='showDropdown',
       class='primary-common',
       label='Operações')
       Icon(name='arrow-down')
-    nav.collection-dropdown-content(v-show='open')
+    nav.collection-dropdown-content(v-show='showDropdownContent')
       ul.collection-dropdown-content-separator(v-for='group in groups')
         li(v-for='button in group')
           Button(
@@ -21,14 +21,20 @@
   export default {
     props: {
       groups: {
-        type: Array,
         required: true,
-        default: () => {}
       }
     },
     data: () => ({
       open: false
-    })
+    }),
+    methods: {
+      showDropdown() {
+        this.open = !this.open
+      },
+      showDropdownContent() {
+        return this.open
+      }
+    }
   }
 </script>
 

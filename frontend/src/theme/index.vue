@@ -1,13 +1,13 @@
 <template lang="pug">
   .app-page(:class='sidebarType')
     Sidebar(
-      v-if='sidebarType !== "none"',
+      v-if='showSidebar()',
       :sidebarType='sidebarType',
       :updateSidebarType='updateSidebarType',
       :handleTwigModal='handleTwigModal')
     main.app-page-main
       Mainbar(
-        v-if='mainbarType !== "none"',
+        v-if='showMainbar()',
         :handleTwigModal='handleTwigModal')
       .app-page-main-wrapper
         router-view
@@ -39,6 +39,12 @@
       setDefaultSidebarType() {
         this.sidebarType = this.$route.meta.sidebar || 'common'
         this.mainbarType = this.$route.meta.mainbar || 'common'
+      },
+      showSidebar() {
+        return this.sidebarType !== "none"
+      },
+      showMainbar() {
+        return this.mainbarType !== "none"
       }
     },
     mounted() {

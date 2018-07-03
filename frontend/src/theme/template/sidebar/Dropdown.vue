@@ -9,9 +9,9 @@
       Icon.icon-ui(:name='dropdown.icon')
       span.dropdown-toogle-label(:style='style.labelTopPosition')
         | {{ dropdown.name }}
-      Icon.icon-arrow(v-show='dropdownActived', name='angle-down')
-      Icon.icon-arrow(v-show='!dropdownActived', name='angle-left')
-    ul(v-show='dropdownActived', :style='style.listTopPosition')
+      Icon.icon-arrow(v-show='showDropdown()', name='angle-down')
+      Icon.icon-arrow(v-show='hideDropdown()', name='angle-left')
+    ul(v-show='showDropdown()', :style='style.listTopPosition')
       li(v-for='item in dropdown.subItems')
         Item(:item='item', :itemDropdown='true', :sidebarType='sidebarType')
 </template>
@@ -68,6 +68,12 @@
         ) {
           this.toogleList(event)
         }
+      },
+      showDropdown() {
+        return this.dropdownActived
+      },
+      hideDropdown() {
+        return !this.dropdownActived
       }
     },
     watch: {

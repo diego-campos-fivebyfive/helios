@@ -3,14 +3,14 @@
     transition(name='fade')
       .sidebar-cover(
         class='modal-cover',
-        v-show='handleTwigModal.state',
-        v-on:click='handleTwigModal.toogle')
+        v-show='getStateTwigModal()',
+        v-on:click='toggleTwigModal')
     nav.menu
       .toogle
         .toggle-cover(
           class='modal-cover',
-          v-show='handleTwigModal.state',
-          v-on:click='handleTwigModal.toogle')
+          v-show='getStateTwigModal()',
+          v-on:click='toggleTwigModal')
         Button.toogle-button(
           class='primary-common',
           :action='updateSidebarType')
@@ -44,6 +44,14 @@
     },
     watch: {
       sidebarType() {}
+    },
+    methods: {
+      toggleTwigModal() {
+        return this.handleTwigModal.toogle
+      },
+      getStateTwigModal() {
+        return this.handleTwigModal.state
+      }
     }
   }
 </script>
