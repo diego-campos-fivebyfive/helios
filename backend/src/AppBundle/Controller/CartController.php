@@ -69,11 +69,19 @@ class CartController extends AbstractController
             $shipping['phone'] = MaskHelper::genericMask($shipping['phone'], $phonePattern);
             $shipping['postcode'] = MaskHelper::genericMask($shipping['postcode'], $postcodePattern);
 
+            $manager = $this->manager('parameter');
+
+            /** @var Parameter $parameter */
+            $parameter = $manager->findOrCreate('platform_settings');
+
+            $numberOfInstallments = $parameter->get('getnet_number_of_installments');
+
             return $this->render('cart.confirmation', [
                 'account' => $cartPool->getAccount(),
                 'data' => $data,
                 'shipping' => $shipping,
                 'kits' => $kits,
+                'numberInstallments' => $numberOfInstallments,
                 'numbers' => $numbers,
                 'cartPoolId' => $cartPool->getId()
             ]);

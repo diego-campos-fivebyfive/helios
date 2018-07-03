@@ -131,6 +131,14 @@
                                                     <i class="fa fa-ticket"></i> Parâmetros de Cupom
                                                 </a>
                                             </li>
+
+                                            {% if isMaster %}
+                                                <li>
+                                                    <a data-toggle="tab" href="#tab-5" aria-expanded="true">
+                                                        <i class="fa fa-list"></i> Sices Express
+                                                    </a>
+                                                </li>
+                                            {% endif %}
                                         </ul>
                                         <div class="tab-content">
 
@@ -444,6 +452,29 @@
                                                 </div>
                                             </div>
 
+                                            {% if isMaster %}
+                                                <div id="tab-5" class="tab-pane">
+                                                    <div class="panel-body">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <div class="panel panel-success">
+                                                                    <div class="panel-heading">
+                                                                        <i class="fa fa-list"></i> Parcelamento
+                                                                    </div>
+                                                                    <div class="panel-body">
+                                                                        <div class="row">
+                                                                            <div class="col-md-3">
+                                                                                {{ form_label(form_params.getnet_number_of_installments, 'Número de parcelas s/juros') }}
+                                                                                {{ form_widget(form_params.getnet_number_of_installments) }}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
                                         </div>
 
                                     </div>
@@ -590,6 +621,12 @@
             '#settings_parameters_account_level_handler_levels_titanium_amount,' +
             '#settings_parameters_coupon_order_percent'
         ).mask('##,00',{reverse: true});
+
+        $('#settings_parameters_getnet_number_of_installments').TouchSpin({
+            initVal: 1,
+            min: 1,
+            max: 9999999
+        });
 
         var inputsTouchSpin = [
             '#settings_parameters_account_level_handler_levels_partner_days',
