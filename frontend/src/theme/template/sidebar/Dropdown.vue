@@ -45,6 +45,17 @@
         if (event.target.type === 'button') {
           const targetPosition = event.target.getBoundingClientRect()
           this.$set(this.style, element, `top: ${targetPosition.y}px`)
+
+          const ulElement = event.target.parentNode.querySelector('ul')
+          ulElement.style.display = 'block';
+          const ulHeight = ulElement.getBoundingClientRect().height
+          ulElement.style.display = 'none';
+
+          const listPosition = ulHeight - targetPosition.height
+          const topPosition = targetPosition.y - listPosition
+
+          if (ulHeight + targetPosition.y > document.body.clientHeight)
+            this.$set(this.style, element, `top: ${topPosition}px`)
         }
       },
       toogleList(event) {
