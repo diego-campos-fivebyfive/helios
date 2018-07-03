@@ -153,6 +153,9 @@ class SettingsType extends AbstractType
                 ->add('coupon_order_rescue', CheckboxType::class, [
                     'required' => false
                 ])
+                ->add('getnet_number_of_installments', TextType::class, [
+                    'required' => true
+                ])
         );
         $builder->get('parameters')
             ->get('promo_end_at')
