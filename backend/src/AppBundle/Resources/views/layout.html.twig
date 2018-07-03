@@ -18,8 +18,7 @@
             const destinationPath = (window.location.pathname + window.location.search)
                 .replace(/\/twig/, '')
                 .replace(/\/$/g, '');
-            console.log('parentPath', parentPath)
-            console.log('destinationPath', destinationPath)
+
             if (parentPath !== destinationPath) {
                 top.updateVueRoute(destinationPath + window.location.search);
             }
