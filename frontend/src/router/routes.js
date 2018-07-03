@@ -44,7 +44,7 @@ const FrameView = {
         .filter(segment => segment)
         .findIndex(segment => segment === viewsEntryPoint)
 
-      const currentPathSegments = this.$route.path
+      const currentPathSegments = this.$route.fullPath
         .split('/')
         .filter(segment => segment)
 
