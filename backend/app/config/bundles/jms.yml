@@ -1,4 +1,0 @@
-jms_serializer:
-    property_naming:
-        separator:  _
-        lower_case: true

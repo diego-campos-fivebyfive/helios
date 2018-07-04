@@ -1,23 +1,9 @@
-*.swp
-.ssh
 .idea
-backend/app/logs/*
-backend/bin/app/logs/*
-backend/app/cache/*
-backend/app/sessions/
-backend/app/config/parameters.yml
-backend/app/bootstrap.php.cache
-backend/storage
-backend/web/app
-backend/web/public
-backend/web/uploads
+*.swp
 
-node_modules
-vendor
+.DS_Store
+node_modules/
+dist/
 
-.temp
-.mirror
-.backup
-.uploads
-
-devops/cli/stash/temp/*
+yarn-error.log
+yarn.lock

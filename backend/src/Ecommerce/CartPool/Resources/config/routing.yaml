@@ -1,9 +1,0 @@
-public.cart_pool:
-    resource: "@CartPoolBundle/Action/PublicAccess"
-    type: annotation
-    prefix: /public
-
-integrador.cart_pool:
-    resource: "@CartPoolBundle/Action/Integrador"
-    type: annotation
-    prefix: /twig

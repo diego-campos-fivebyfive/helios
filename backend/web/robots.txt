@@ -1,4 +1,0 @@
-# robots.txt for www.robotstxt.org
-
-User-agent: *
-Disallow: /

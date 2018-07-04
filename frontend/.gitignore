@@ -1,9 +1,0 @@
-.idea
-*.swp
-
-.DS_Store
-node_modules/
-dist/
-
-yarn-error.log
-yarn.lock

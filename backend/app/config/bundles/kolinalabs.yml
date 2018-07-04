@@ -1,3 +1,0 @@
-# KolinaLabs Bundles
-kolina_customer:
-    entity: AppBundle\Entity\Customer

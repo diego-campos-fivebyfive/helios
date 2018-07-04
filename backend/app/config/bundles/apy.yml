@@ -1,2 +1,0 @@
-apy_breadcrumb_trail:
-    template: AppBundle:App:breadcrumb.html.twig

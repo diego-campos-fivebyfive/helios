@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-cd $SICES_PATH/backend
-
-echo 'Updating doctrine...'
-
-php app/console doctrine:schema:update --force
