@@ -30,13 +30,13 @@ class CartCheckoutConfirm extends AbstractController
      */
     public function __invoke(Request $request)
     {
-        /** @var CartCheckoutService $cartCheckoutService */
-        $cartCheckoutService = $this->get('integrador.cart_checkout_service');
-
         $form = $this->createForm(CheckoutType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var CartCheckoutService $cartCheckoutService */
+            $cartCheckoutService = $this->get('integrador.cart_checkout_service');
+
             $account = $this->account();
             $data = $cartCheckoutService->confirm($form, $account);
 
