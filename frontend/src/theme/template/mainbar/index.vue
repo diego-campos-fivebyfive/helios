@@ -56,6 +56,7 @@
     return `${dayInTheWeek}, ${day} de ${month} de ${year}`
   }
 
+  import ringNotify from '@/theme/assets/media/ring-notify.wav'
   export default {
     props: {
       handleTwigModal: {
@@ -71,6 +72,9 @@
     sockets: {
       updateTotalOfMessages(data) {
         this.totalOfMessages = this.totalOfMessages + data
+
+        const ringMessage = new Audio(ringNotify)
+        ringMessage.play()
       }
     },
     methods: {
