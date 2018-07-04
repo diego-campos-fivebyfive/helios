@@ -90,6 +90,10 @@ class CartCheckoutService
         ];
     }
 
+    /**
+     * @param AccountInterface $account
+     * @return array
+     */
     public function itemsList(AccountInterface $account)
     {
         $cartHasKits = $this->getCartHasKits($account);
@@ -119,6 +123,7 @@ class CartCheckoutService
     }
 
     /**
+     * @param AccountInterface $account
      * @return array
      */
     public function getCartHasKits(AccountInterface $account)
@@ -132,6 +137,7 @@ class CartCheckoutService
 
     /**
      * @param $data
+     * @param AccountInterface $account
      */
     public function updateCheckout($data, AccountInterface $account)
     {

@@ -24,6 +24,9 @@ class OverrideGetFiltersListener implements EventSubscriberInterface
 {
     const PRIORITY = 0;
 
+    /**
+     * @return array
+     */
     public static function getSubscribedEvents()
     {
         return [
@@ -31,6 +34,9 @@ class OverrideGetFiltersListener implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * @param GetResponseEvent $event
+     */
     public function onKernelRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();

@@ -38,7 +38,10 @@ class CartService
     private $kitManager;
 
     /**
-     * @inheritDoc
+     * CartService constructor.
+     * @param CartManager $manager
+     * @param CartHasKitManager $cartHasKitManager
+     * @param KitManager $kitManager
      */
     public function __construct(
         CartManager $manager,
@@ -50,6 +53,13 @@ class CartService
         $this->kitManager = $kitManager;
     }
 
+    /**
+     * @param Kit $kit
+     * @param AccountInterface $account
+     * @param int $quantity
+     * @param int $status
+     * @return array
+     */
     public function addKit(
         Kit $kit,
         AccountInterface $account,
@@ -103,6 +113,13 @@ class CartService
         return ['message' => $message];
     }
 
+    /**
+     * @param Kit $kit
+     * @param AccountInterface $account
+     * @param int $quantity
+     * @param int $status
+     * @return array
+     */
     public function updateKitQuantity(
         Kit $kit,
         AccountInterface $account,
@@ -167,7 +184,7 @@ class CartService
      * @param AccountInterface $account
      * @return Cart
      */
-    public function getCart(AccountInterface $account): Cart
+    public function getCart(AccountInterface $account)
     {
         /** @var Cart $cart */
         $cart = $this->manager->findOneBy([
