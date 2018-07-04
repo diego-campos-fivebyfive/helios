@@ -1,0 +1,16 @@
+services:
+    # Managers
+
+    kit_manager:
+        class: Ecommerce\Kit\Manager\KitManager
+        arguments: ['Ecommerce\Kit\Entity\Kit', '@doctrine']
+
+    # Services
+
+    sices.kit_service:
+        class: Ecommerce\Kit\Service\Sices\KitService
+        arguments: ['@kit_manager', '@knp_paginator', '@component_file_handler', '@cart_has_kit_manager']
+
+    integrador.kit_service:
+        class: Ecommerce\Kit\Service\Integrador\KitService
+        arguments: ['@kit_manager', '@knp_paginator']

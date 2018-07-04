@@ -2,14 +2,10 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Kit\Cart;
 use AppBundle\Entity\Order\Order;
-use AppBundle\Manager\CartManager;
-use AppBundle\Service\Cart\CartPoolHelper;
 use AppBundle\Service\Mailer;
 use AppBundle\Service\Order\OrderExporter;
 use AppBundle\Service\Order\OrderFinder;
-use AppBundle\Service\Order\OrderTransformer;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;

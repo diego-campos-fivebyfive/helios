@@ -35,6 +35,8 @@ twig:
         socket_port: "%socket_port%"
         platform_host: "%platform_host%"
         platform_port: "%platform_port%"
+    paths:
+        '%kernel.root_dir%/../app/Resources/twig': "__main__"
 
 doctrine:
     dbal:

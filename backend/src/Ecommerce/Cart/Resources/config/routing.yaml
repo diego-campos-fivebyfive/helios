@@ -1,0 +1,4 @@
+integrador.cart:
+    resource: "@CartBundle/Action/Integrador"
+    type: annotation
+    prefix: /twig/cart

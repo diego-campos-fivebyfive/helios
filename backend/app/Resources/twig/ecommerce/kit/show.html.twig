@@ -1,0 +1,83 @@
+<style>
+    .kit-images{
+        max-height: 280px;
+    }
+</style>
+<div  class="wrapper wrapper-content">
+    <div class="row">
+        <div class="ibox product-detail flow-h">
+            <div class="ibox-content flow-md">
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="kit-images">
+                            <div>
+                                <img class="col-md-12" src="{{ kit.image|componentFilePath }}"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-8">
+                        <div class="table-responsive">
+                            <table class="table table-stripped table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th colspan="2">
+                                        Dados Gerais
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th width="35%">Código</th>
+                                    <td>{{ kit.code }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Descrição</th>
+                                    <td>{{ kit.description }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Potência</th>
+                                    <td>{{ kit.power }} kWp</td>
+                                </tr>
+                                <tr>
+                                    <th>Preço</th>
+                                    <td>{{ kit.price|currency }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="hr-line-dashed">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table table-stripped table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Descrição</th>
+                                    <th>Quantidade</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for component in kit.components %}
+                                    <tr>
+                                        <td>{{ component.code }}</td>
+                                        <td>{{ component.description }}</td>
+                                        <td>{{ component.quantity }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

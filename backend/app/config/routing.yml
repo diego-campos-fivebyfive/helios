@@ -7,6 +7,15 @@ api_doc:
     resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
     prefix: /api/doc
 
+cart:
+    resource: "@CartBundle/Resources/config/routing.yaml"
+
+cart_pool:
+    resource: "@CartPoolBundle/Resources/config/routing.yaml"
+
+kit:
+    resource: "@KitBundle/Resources/config/routing.yaml"
+
 app:
     resource: "@AppBundle/Controller/"
     type: annotation

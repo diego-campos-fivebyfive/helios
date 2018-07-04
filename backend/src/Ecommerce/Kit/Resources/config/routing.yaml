@@ -1,0 +1,9 @@
+integrador.kits:
+    resource: "@KitBundle/Action/Integrador"
+    type: annotation
+    prefix: /twig/kit
+
+sices.kits:
+    resource: "@KitBundle/Action/Sices"
+    type: annotation
+    prefix: /admin/twig/kit
