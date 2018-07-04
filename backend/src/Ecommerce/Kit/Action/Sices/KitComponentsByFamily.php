@@ -12,15 +12,12 @@
 namespace Ecommerce\Kit\Action\Sices;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Manager\AbstractManager;
 use Ecommerce\Kit\Service\Sices\KitService;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class KitComponentsByFamily extends AbstractController
 {
-    const MANAGER_SUFFIX = "_manager";
-
     /**
      * @Route("/components/{family}", name="kit_components_by_family")
      *
@@ -36,18 +33,9 @@ class KitComponentsByFamily extends AbstractController
             return $this->json([], Response::HTTP_NOT_FOUND);
         }
 
-        $manager = $this->getFamilyManager($family);
+        $manager = $this->manager($family);
         $components = $kitService->getComponentsByFamily($family, $manager);
 
         return $this->json($components, Response::HTTP_OK);
-    }
-
-    /**
-     * @param string $family
-     * @return AbstractManager
-     */
-    private function getFamilyManager(string $family)
-    {
-        return $this->container->get($family . self::MANAGER_SUFFIX);
     }
 }
