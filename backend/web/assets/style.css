@@ -2443,6 +2443,11 @@ label.error {
   filter: alpha(opacity=100);
   cursor: pointer;
 }
+.toast-top-center {
+  top: 0;
+  right: calc(50% - 150px) !important;
+  width: auto !important;
+}
 .toast {
   background-color: #00A7EC;
 }
