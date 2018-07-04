@@ -17,7 +17,7 @@ use AppBundle\Entity\Category;
 use AppBundle\Entity\CategoryInterface;
 use AppBundle\Entity\Component\Project;
 use AppBundle\Entity\Customer;
-use AppBundle\Entity\Kit\CartPool;
+use Ecommerce\CartPool\Entity\CartPool;
 use AppBundle\Entity\MemberInterface;
 use AppBundle\Entity\Order\Order;
 use AppBundle\Entity\User;

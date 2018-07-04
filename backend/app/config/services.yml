@@ -7,6 +7,11 @@ services:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
 
+    app.override_get_filters.listener:
+        class: AppBundle\EventListener\OverrideGetFiltersListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
     doctrine_event_listener:
         class: AppBundle\EventListener\DoctrineListener
         arguments: ['@service_container']
@@ -34,18 +39,6 @@ services:
         class: AppBundle\Manager\AdditiveManager
         arguments: ['AppBundle\Entity\Misc\Additive', '@doctrine']
 
-    cart_has_kit_manager:
-        class: AppBundle\Manager\CartHasKitManager
-        arguments: ['AppBundle\Entity\Kit\CartHasKit', '@doctrine']
-
-    cart_manager:
-        class: AppBundle\Manager\CartManager
-        arguments: ['AppBundle\Entity\Kit\Cart', '@doctrine']
-
-    cart_pool_manager:
-            class: AppBundle\Manager\CartPoolManager
-            arguments: ['AppBundle\Entity\Kit\CartPool', '@doctrine']
-
     category_manager:
         alias: sonata.classification.manager.category
 
@@ -64,10 +57,6 @@ services:
     inverter_manager:
         class: AppBundle\Manager\InverterManager
         arguments: ['AppBundle\Entity\Component\Inverter', '@doctrine']
-
-    kit_manager:
-        class: AppBundle\Manager\KitManager
-        arguments: ['AppBundle\Entity\Kit\Kit', '@doctrine']
 
     level_manager:
         class: AppBundle\Manager\Pricing\LevelManager

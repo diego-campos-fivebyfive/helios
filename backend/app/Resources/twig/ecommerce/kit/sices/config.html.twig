@@ -1,0 +1,444 @@
+{% extends view('layout') %}
+
+{% block body %}
+    <style>
+        .image-group {
+            height: 200px;
+            width: 210px;
+            background-color: #f8f8f9;
+            position: relative;
+        }
+        .preview-image {
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center;
+            border: 1px solid #e5e6e7;
+            height: 170px;
+        }
+        .image-input {
+            color: dimgrey;
+            width: 100%;
+            background-color: lightgrey;
+            position: absolute;
+            bottom: 0;
+            height: 30px;
+        }
+        img {
+            max-width: 500px;
+            height: auto;
+            width: auto;
+        }
+    </style>
+
+    <div class="wrapper wrapper-content   ecommerce">
+        <div class="ibox-content m-b-sm border-bottom">
+            {{ form_start(form, {attr:{id:'kit_form', enctype:'multipart/form-data'}}) }}
+            <fieldset>
+                <legend>Kit</legend>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="image-group">
+                            <div id="kit_img_preview" class="preview-image" style="background-image: url({{ kit.image|componentFilePath }})"></div>
+                            <input id="kit_image" type="file" name="image" accept="image/*" class="image-input">
+                        </div>
+                    </div>
+
+                    <div class="col-md-9">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                {{ form_label(form.code, 'Código') }}
+                                {{ form_widget(form.code, {attr:{class:'form-control', placeholder:'Código'}}) }}
+                            </div>
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="form-group">
+                                {{ form_label(form.description, 'Descrição') }}
+                                {{ form_widget(form.description, {attr:{class:'form-control', placeholder:'Descrição'}}) }}
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                {{ form_label(form.power, 'Potência') }}
+                                {{ form_widget(form.power, {attr:{class:'form-control', placeholder:'Potência'}}) }}
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                {{ form_label(form.price, 'Preço') }}
+                                {{ form_widget(form.price, {attr:{class:'form-control', placeholder:'Preço'}}) }}
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                {{ form_label(form.stock, 'Estoque') }}
+                                {{ form_widget(form.stock, {attr:{class:'form-control', placeholder:'Estoque'}}) }}
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                {{ form_label(form.position, 'Posição') }}
+                                {{ form_widget(form.position, {attr:{class:'form-control', placeholder:'Posição'}}) }}
+                            </div>
+                        </div>
+                        <div class="col-sm-4" style="padding-top: 20px">
+                            {{ form_widget(form.available, {attr:{class:'i-checks'}}) }}
+                            {{ form_label(form.available, 'Kit Disponível para venda') }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group hidden">
+                    {{ form_rest(form) }}
+                </div>
+
+                <button id="btn_save_kit_hidden" type="submit" class="btn btn-success hidden">
+                    <i class="fa fa-save"></i> Salvar Kit
+                </button>
+
+            </fieldset>
+            {{ form_end(form) }}
+
+            <form id="component_form" style="padding-top: 10px">
+                <fieldset>
+                    <legend>Adicionar componente</legend>
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label class="control-label" for="component_families">Família</label>
+                                <select id="component_families" class="form-control" required>
+                                    <option value='' selected> &nbsp; </option>
+                                    {% for family in families %}
+                                        <option value="{{ family }}">{{ family|trans }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="control-label" for="components">Componente</label>
+                                <select id="components" class="form-control" required>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label class="control-label" for="component_quantity">Quantidade</label>
+                                <input type="text" id="component_quantity" name="component_quantity" value="" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <label class="control-label" for="component_position">Posição</label>
+                                <input type="text" id="component_position" name="component_position" value="" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-2" style="padding-top: 25px">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fa fa-save"></i> Adicionar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <div id="table">
+                            <table class="footable table table-stripped toggle-arrow-tiny">
+                                <caption><h3 style="text-align: center">Componentes</h3></caption>
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Código</th>
+                                        <th class="text-center">Descrição</th>
+                                        <th class="text-center">Quantidade</th>
+                                        <th class="text-center">Posição</th>
+                                        <th class="text-center">Ação</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if kit.components %}
+                                        {% for component in kit.components %}
+                                            <tr>
+                                                <td class="hidden component_id">{{ component.componentId }}</td>
+
+                                                <td class="hidden component_family">{{ component.family}}</td>
+
+                                                <td class="text-center component_code" contenteditable="true">{{ component.code }}</td>
+
+                                                <td class="text-center component_description" contenteditable="true">{{ component.description }}</td>
+
+                                                <td class="text-center component_quantity" contenteditable="true">{{ component.quantity }}</td>
+
+                                                <td class="text-center component_position" contenteditable="true">{{ component.position }}</td>
+
+                                                <td class="text-center">
+                                                    <div class="btn-group">
+                                                        <button type="button"class="btn-white btn btn-xs component-remove">Excluir</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% endif %}
+
+                                    <tr class="hide">
+                                        <td class="hidden component_id"></td>
+
+                                        <td class="hidden component_family"></td>
+
+                                        <td class="text-center component_code" contenteditable="true"></td>
+
+                                        <td class="text-center component_description" contenteditable="true"></td>
+
+                                        <td class="text-center component_quantity" contenteditable="true"></td>
+
+                                        <td class="text-center component_position" contenteditable="true"></td>
+
+                                        <td class="text-center">
+                                            <div class="btn-group">
+                                                <button type="button"class="btn-white btn btn-xs component-remove">Excluir</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group" style="padding-left: 25px">
+                <button id="btn_save_kit" type="button" class="btn btn-primary">
+                    <i class="fa fa-save"></i> Salvar Kit
+                </button>
+                <a href="/admin/kit">
+                    <button class="btn btn-success btn-xd">Voltar</button>
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+{% block scripts %}
+    {% include view('helper.request') %}
+    {% include view('helper.plugins_js') %}
+
+    <script>
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    var background = 'background-image: url(' + e.target.result + ')';
+                    $('#kit_img_preview').attr('style', background);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        jQuery.fn.pop = [].pop;
+        jQuery.fn.shift = [].shift;
+
+        function countRows() {
+            var count = 0;
+            var $rows = $('#table').find('tr:not(:hidden)');
+
+            $rows.each(function () {
+                count++;
+            });
+
+            return count - 1;
+        }
+
+        function converTableToJSON() {
+            var $rows = $('#table').find('tr:not(:hidden)');
+            var headers = [];
+            var data = [];
+
+            $($rows.shift()).find('th:not(:empty)').each(function () {
+                headers.push($(this).text().toLowerCase());
+            });
+
+            $rows.each(function () {
+                var componentId = $(this).find('.component_id').html();
+                var componentCode = $(this).find('.component_code').html();
+                var componentDescription = $(this).find('.component_description').html();
+                var componentQuantity = $(this).find('.component_quantity').html();
+                var componentPosition = $(this).find('.component_position').html();
+                var componentFamily = $(this).find('.component_family').html();
+
+                var rowData = {
+                    "code": componentCode,
+                    "description": componentDescription,
+                    "family": componentFamily,
+                    "quantity": componentQuantity,
+                    "position": componentPosition,
+                    "componentId": componentId
+                };
+
+                data.push(rowData);
+            });
+
+            return JSON.stringify(data);
+        }
+
+        function componentDeleteConfirm(element) {
+            swal({
+                title: 'Confirma a exclusão?',
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: '{{ 'Confirmar'|trans }}',
+                cancelButtonText: '{{ 'Cancelar'|trans }}',
+                closeOnConfirm: false
+            }, function () {
+                element.parents('tr').detach();
+                swal.close();
+            });
+        }
+
+        $('.component-remove').click(function () {
+            componentDeleteConfirm($(this));
+        });
+
+        var options = {
+            positionClass: "toast-top-center",
+            preventDuplicates: true,
+            progressBar: true
+        };
+
+        $('#remove_img').on('click', function () {
+            $('#kit_image').val('');
+            hidePreview();
+        });
+
+        $('#kit_image').change(function () {
+            readURL(this);
+        });
+
+        $('#btn_save_kit').on('click', function () {
+            var numberOfRows = countRows();
+
+            if (numberOfRows > 0) {
+                $('#kit_components').val(converTableToJSON());
+                $('#btn_save_kit_hidden').click();
+            } else {
+                toastr.error('É necessário ter pelo menos um componente no kit!', null, options);
+            }
+        });
+
+        var inputsTouchSpin = [
+            '#component_position',
+            '#kit_position',
+            '#kit_stock'
+        ];
+        var inputsTouchSpinNotZero = [
+            '#component_quantity'
+        ];
+        for (i = 0; i < inputsTouchSpin.length; i++) {
+            $(inputsTouchSpin[i]).TouchSpin({
+                min: 0,
+                max: 9999999
+            });
+        }
+        for (i = 0; i < inputsTouchSpinNotZero.length; i++) {
+            $(inputsTouchSpinNotZero[i]).TouchSpin({
+                min: 1,
+                max: 9999999
+            });
+        }
+
+        var sanitize = function(element){
+            function clear(v){ return v.replace(/\D+/g,''); }
+            var value = element.val();
+            var backup = value.replace(/\./g,',');
+            value = clear(value);
+            if(backup.indexOf(',') > 0){
+                var commas = backup.split(',');
+                value = clear(commas[0])+',';
+                if(commas[1].length){
+                    value += clear(commas[1]);
+                }
+            }
+            if(0 == backup.indexOf('-')){
+                if(2 == backup.split('-').length){
+                    value = '-' + value;
+                }
+            }
+            element.val(value);
+        };
+
+        var custom_mask = function(element){
+            element.on('keyup', function(){
+                sanitize(element);
+            });
+        };
+
+        var common_mask = {pattern: '##,##', reverse: true};
+        var targets = {
+            'kit_price': common_mask,
+            'kit_power': common_mask
+        };
+
+        $.each(targets, function (id, options) {
+            custom_mask($('#'+id));
+        });
+
+        $('#component_form').on('submit', function () {
+            var componentQuantity = $('#component_quantity').val();
+            var componentPosition = $('#component_position').val();
+            var componentFamily = $('#component_families').val();
+            var componentSelected = $('#components').find(":selected");
+            var componentId= componentSelected.val();
+            var componentCode = componentSelected.data('code');
+            var componentDescription = componentSelected.data('description');
+
+            var clone = $('#table').find('tr.hide').clone(true).removeClass('hide');
+
+            clone.find('.component_id').html(componentId);
+            clone.find('.component_code').html(componentCode);
+            clone.find('.component_description').html(componentDescription);
+            clone.find('.component_quantity').html(componentQuantity);
+            clone.find('.component_position').html(componentPosition);
+            clone.find('.component_family').html(componentFamily);
+
+            $('#table').find('table').append(clone);
+
+            $(this).trigger("reset");
+
+            return false;
+        });
+
+        $('#component_families').on('change', function () {
+            var family = $('#component_families').find(':selected').val();
+            var url = '{{ path('kit_components_by_family', {family:'_family_'}) }}'.replace('_family_', family);
+
+            $.ajax({
+                url: url,
+                complete: function (response) {
+                    $('#components').empty();
+                    $('#components').append('<option value="" selected>&nbsp;</option>>');
+
+                    var len = response.responseJSON.length;
+
+                    for( var i = 0; i < len; i++) {
+                        var value = response.responseJSON[i].id;
+                        var code = response.responseJSON[i].code;
+                        var description = response.responseJSON[i].description;
+
+                        $('#components').append('<option value="'+ value +'" data-description="'+ description +'" data-code="' + code +'">' + description +'</option>');
+                    }
+                }
+            });
+        })
+    </script>
+{% endblock %}

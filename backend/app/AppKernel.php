@@ -37,6 +37,11 @@ class AppKernel extends Kernel
             new ApiBundle\ApiBundle(),
             new Nelmio\CorsBundle\NelmioCorsBundle(),
             new AdminBundle\AdminBundle(),
+
+            // Nova arquitetura
+            new Ecommerce\Cart\CartBundle(),
+            new Ecommerce\CartPool\CartPoolBundle(),
+            new Ecommerce\Kit\KitBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true))
