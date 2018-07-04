@@ -11,6 +11,7 @@
 
 namespace Ecommerce\Cart\Service\Integrador;
 
+use AppBundle\Manager\ParameterManager;
 use AppBundle\Entity\AccountInterface;
 use AppBundle\Service\Common\MaskHelper;
 use Ecommerce\CartPool\Service\GetnetClient;
@@ -44,18 +45,25 @@ class CartCheckoutService
     private $cartHasKitManager;
 
     /**
+     * @var ParameterManager
+     */
+    private $parameterManager;
+
+    /**
      * @inheritDoc
      */
     public function __construct(
         CartManager $manager,
         CartPoolHelper $cartPoolHelper,
         CartService $cartService,
-        CartHasKitManager $cartHasKitManager
+        CartHasKitManager $cartHasKitManager,
+        ParameterManager $parameterManager
     ) {
         $this->manager = $manager;
         $this->cartPoolHelper = $cartPoolHelper;
         $this->cartService = $cartService;
         $this->cartHasKitManager = $cartHasKitManager;
+        $this->parameterManager = $parameterManager;
     }
 
     /**
@@ -80,11 +88,15 @@ class CartCheckoutService
         $this->cartPoolHelper->updateCartPool($cartPool, $account);
         $shipping = $this->formatShipping($data);
 
+        $parameter = $this->parameterManager->findOrCreate('platform_settings');
+        $numberOfInstallments = $parameter->get('getnet_number_of_installments');
+
         return [
             'account' => $cartPool->getAccount(),
             'data' => $data,
             'shipping' => $shipping,
             'kits' => $kits,
+            'numberInstallments' => $numberOfInstallments,
             'numbers' => $numbers,
             'cartPoolId' => $cartPool->getId()
         ];
