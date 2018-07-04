@@ -152,58 +152,58 @@
                             <table class="footable table table-stripped toggle-arrow-tiny">
                                 <caption><h3 style="text-align: center">Componentes</h3></caption>
                                 <thead>
-                                <tr>
-                                    <th class="text-center">Código</th>
-                                    <th class="text-center">Descrição</th>
-                                    <th class="text-center">Quantidade</th>
-                                    <th class="text-center">Posição</th>
-                                    <th class="text-center">Ação</th>
-                                </tr>
+                                    <tr>
+                                        <th class="text-center">Código</th>
+                                        <th class="text-center">Descrição</th>
+                                        <th class="text-center">Quantidade</th>
+                                        <th class="text-center">Posição</th>
+                                        <th class="text-center">Ação</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                {% if kit.components %}
-                                    {% for component in kit.components %}
-                                        <tr>
-                                            <td class="hidden component_id">{{ component.componentId }}</td>
+                                    {% if kit.components %}
+                                        {% for component in kit.components %}
+                                            <tr>
+                                                <td class="hidden component_id">{{ component.componentId }}</td>
 
-                                            <td class="hidden component_family">{{ component.family}}</td>
+                                                <td class="hidden component_family">{{ component.family}}</td>
 
-                                            <td class="text-center component_code" contenteditable="true">{{ component.code }}</td>
+                                                <td class="text-center component_code" contenteditable="true">{{ component.code }}</td>
 
-                                            <td class="text-center component_description" contenteditable="true">{{ component.description }}</td>
+                                                <td class="text-center component_description" contenteditable="true">{{ component.description }}</td>
 
-                                            <td class="text-center component_quantity" contenteditable="true">{{ component.quantity }}</td>
+                                                <td class="text-center component_quantity" contenteditable="true">{{ component.quantity }}</td>
 
-                                            <td class="text-center component_position" contenteditable="true">{{ component.position }}</td>
+                                                <td class="text-center component_position" contenteditable="true">{{ component.position }}</td>
 
-                                            <td class="text-center">
-                                                <div class="btn-group">
-                                                    <button type="button"class="btn-white btn btn-xs component-remove">Excluir</button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                {% endif %}
+                                                <td class="text-center">
+                                                    <div class="btn-group">
+                                                        <button type="button"class="btn-white btn btn-xs component-remove">Excluir</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% endif %}
 
-                                <tr class="hide">
-                                    <td class="hidden component_id"></td>
+                                    <tr class="hide">
+                                        <td class="hidden component_id"></td>
 
-                                    <td class="hidden component_family"></td>
+                                        <td class="hidden component_family"></td>
 
-                                    <td class="text-center component_code" contenteditable="true"></td>
+                                        <td class="text-center component_code" contenteditable="true"></td>
 
-                                    <td class="text-center component_description" contenteditable="true"></td>
+                                        <td class="text-center component_description" contenteditable="true"></td>
 
-                                    <td class="text-center component_quantity" contenteditable="true"></td>
+                                        <td class="text-center component_quantity" contenteditable="true"></td>
 
-                                    <td class="text-center component_position" contenteditable="true"></td>
+                                        <td class="text-center component_position" contenteditable="true"></td>
 
-                                    <td class="text-center">
-                                        <div class="btn-group">
-                                            <button type="button"class="btn-white btn btn-xs component-remove">Excluir</button>
-                                        </div>
-                                    </td>
-                                </tr>
+                                        <td class="text-center">
+                                            <div class="btn-group">
+                                                <button type="button"class="btn-white btn btn-xs component-remove">Excluir</button>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>

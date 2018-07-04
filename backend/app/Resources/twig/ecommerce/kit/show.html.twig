@@ -21,29 +21,29 @@
                         <div class="table-responsive">
                             <table class="table table-stripped table-bordered table-hover">
                                 <thead>
-                                <tr>
-                                    <th colspan="2">
-                                        Dados Gerais
-                                    </th>
-                                </tr>
+                                    <tr>
+                                        <th colspan="2">
+                                            Dados Gerais
+                                        </th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <th width="35%">Código</th>
-                                    <td>{{ kit.code }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Descrição</th>
-                                    <td>{{ kit.description }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Potência</th>
-                                    <td>{{ kit.power }} kWp</td>
-                                </tr>
-                                <tr>
-                                    <th>Preço</th>
-                                    <td>{{ kit.price|currency }}</td>
-                                </tr>
+                                    <tr>
+                                        <th width="35%">Código</th>
+                                        <td>{{ kit.code }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Descrição</th>
+                                        <td>{{ kit.description }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Potência</th>
+                                        <td>{{ kit.power }} kWp</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Preço</th>
+                                        <td>{{ kit.price|currency }}</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -57,26 +57,25 @@
                         <div class="table-responsive">
                             <table class="table table-stripped table-bordered table-hover">
                                 <thead>
-                                <tr>
-                                    <th>Código</th>
-                                    <th>Descrição</th>
-                                    <th>Quantidade</th>
-                                </tr>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Descrição</th>
+                                        <th>Quantidade</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                {% for component in kit.components %}
-                                    <tr>
-                                        <td>{{ component.code }}</td>
-                                        <td>{{ component.description }}</td>
-                                        <td>{{ component.quantity }}</td>
-                                    </tr>
-                                {% endfor %}
+                                    {% for component in kit.components %}
+                                        <tr>
+                                            <td>{{ component.code }}</td>
+                                            <td>{{ component.description }}</td>
+                                            <td>{{ component.quantity }}</td>
+                                        </tr>
+                                    {% endfor %}
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
