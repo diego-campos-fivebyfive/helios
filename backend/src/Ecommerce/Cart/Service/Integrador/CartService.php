@@ -12,12 +12,14 @@
 namespace Ecommerce\Cart\Service\Integrador;
 
 use AppBundle\Entity\AccountInterface;
+use AppBundle\Service\Common\FormHelper;
 use Ecommerce\Cart\Entity\Cart;
 use Ecommerce\Cart\Entity\CartHasKit;
 use Ecommerce\Cart\Manager\CartHasKitManager;
 use Ecommerce\Cart\Manager\CartManager;
 use Ecommerce\Kit\Entity\Kit;
 use Ecommerce\Kit\Manager\KitManager;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Response;
 
 class CartService
@@ -235,6 +237,50 @@ class CartService
         }
 
         return $kitsOutOfStock;
+    }
+
+    /**
+     * @param AccountInterface $account
+     * @param Form $form
+     */
+    public function bindDataOnForm(AccountInterface $account, Form &$form)
+    {
+        $cart = $this->getCart($account);
+
+        if ($checkout = $cart->getCheckout()) {
+            $shipping = json_decode($checkout['shipping'], true)[0];
+
+            $data = [
+                'firstName' => $checkout['firstName'],
+                'lastName' => $checkout['lastName'],
+                'documentType' => $checkout['documentType'],
+                'document' => $checkout['documentNumber'],
+                'email' => $checkout['email'],
+                'phone' => $checkout['phone'],
+                'postcode' => $checkout['zipcode'],
+                'state' => $checkout['state'],
+                'city' => $checkout['city'],
+                'neighborhood' => $checkout['neighborhood'],
+                'street' => $checkout['street'],
+                'number' => $checkout['number'],
+                'complement' => $checkout['complement'],
+                'differentDelivery' => $checkout['differentDelivery'],
+                // Shipping
+                'shippingFirstName' => $shipping['first_name'],
+                'shippingLastName' => $shipping['name'],
+                'shippingEmail' => $shipping['email'],
+                'shippingPhone' => $shipping['phone_number'],
+                'shippingPostcode' => $shipping['address']['postal_code'],
+                'shippingState' => $shipping['address']['state'],
+                'shippingCity' => $shipping['address']['city'],
+                'shippingNeighborhood' => $shipping['address']['district'],
+                'shippingStreet' => $shipping['address']['street'],
+                'shippingNumber' => $shipping['address']['number'],
+                'shippingComplement' => $shipping['address']['complement'],
+            ];
+
+            FormHelper::setDataForm($form, $data);
+        }
     }
 
 }

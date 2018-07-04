@@ -17,4 +17,9 @@ services:
 
     integrador.cart_checkout_service:
         class: Ecommerce\Cart\Service\Integrador\CartCheckoutService
-        arguments: ['@cart_manager', '@integrador.cart_pool_helper', '@integrador.cart_service', '@cart_has_kit_manager']
+        arguments:
+            - '@cart_manager'
+            - '@integrador.cart_pool_helper'
+            - '@integrador.cart_service'
+            - '@cart_has_kit_manager'
+            - '@parameter_manager'
