@@ -68,7 +68,7 @@
             {% if showPrices %}
                 <td width="15%"> {{ element.total|currency }} </td>
             {% endif %}
-            <td width="5%">
+            <td class="col-md-1">
                 <div class="btn-group btn-group-justified btn-group-sm">
 
                     {% set allowDelete = not element.isFamily('module') or order.elements('module').count > 1 %}

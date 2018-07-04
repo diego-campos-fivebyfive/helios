@@ -24,7 +24,7 @@ const FrameView = {
   }),
   computed: {
     getRoutePath() {
-      const currentPath = this.$route.path
+      const currentPath = this.$route.fullPath
       const homePath = '/dashboard'
 
       return (currentPath === '/') ? homePath : currentPath
@@ -502,6 +502,11 @@ export const routes = [
     component: FrameView
   },
   {
+    path: '/project/:id/manage',
+    name: 'Projetos',
+    component: FrameView
+  },
+  {
     path: '/project/generator',
     name: 'Projetos',
     component: FrameView,
@@ -522,6 +527,11 @@ export const routes = [
   {
     path: '/project/:id/update',
     name: 'Projetos',
+    component: FrameView
+  },
+  {
+    path: '/project/financial/:id',
+    name: 'Análise financeira',
     component: FrameView
   },
   {

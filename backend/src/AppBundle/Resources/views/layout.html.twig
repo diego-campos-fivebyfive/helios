@@ -12,7 +12,7 @@
             window.location = (window.location.pathname + window.location.search)
                 .replace(/\/twig/, '');
         } else {
-            const parentPath = (top.window.location.pathname + window.location.search)
+            const parentPath = (top.window.location.pathname + top.window.location.search)
                 .replace(/\/$/g, '');
 
             const destinationPath = (window.location.pathname + window.location.search)
@@ -20,7 +20,7 @@
                 .replace(/\/$/g, '');
 
             if (parentPath !== destinationPath) {
-                top.updateVueRoute(destinationPath + window.location.search);
+                top.updateVueRoute(destinationPath);
             }
         }
     </script>
