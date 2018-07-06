@@ -25,6 +25,8 @@
     data: () => ({
       sidebarType: '',
       mainbarType: '',
+      stateSidebarType: 'common',
+
       handleTwigModal: {
         state: false,
         toogle: () => {}
@@ -35,9 +37,12 @@
         this.sidebarType = (this.sidebarType === 'collapse')
           ? 'common'
           : 'collapse'
+
+        this.stateSidebarType = this.sidebarType
+
       },
       setDefaultSidebarType() {
-        this.sidebarType = this.$route.meta.sidebar || 'common'
+        this.sidebarType = this.$route.meta.sidebar  || this.stateSidebarType
         this.mainbarType = this.$route.meta.mainbar || 'common'
       },
       showSidebar() {
