@@ -42,7 +42,7 @@
 
       },
       setDefaultSidebarType() {
-        this.sidebarType = this.$route.meta.sidebar  || this.stateSidebarType
+        this.sidebarType = this.$route.meta.sidebar || this.stateSidebarType
         this.mainbarType = this.$route.meta.mainbar || 'common'
       },
       showSidebar() {
