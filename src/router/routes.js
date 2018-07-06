@@ -561,6 +561,12 @@ export const routes = [
     }
   },
   {
+    path: `/admin/${externalLinks.utils}`,
+    beforeEnter() {
+      window.location = externalLinks.utils
+    }
+  },
+  {
     path: '*',
     name: 'not-found',
     component: NotFound,
