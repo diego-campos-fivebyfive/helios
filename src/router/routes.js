@@ -8,54 +8,7 @@ import Metric from '@/pages/metric'
 import NotFound from '@/pages/notfound'
 import Terms from '@/pages/terms'
 import TermsOfUse from '@/pages/terms-of-use'
-
-const FrameView = {
-  template: '<div :style="frameWrapper"><iframe :style="frame" :src="getRoute"></iframe></div>',
-  data: () => ({
-    frame: {
-      border: 0,
-      height: '100%',
-      width: '100%'
-    },
-    frameWrapper: {
-      height: '100%',
-      overflow: 'hidden'
-    }
-  }),
-  computed: {
-    getRoutePath() {
-      const currentPath = this.$route.fullPath
-      const homePath = '/dashboard'
-
-      return (currentPath === '/') ? homePath : currentPath
-    },
-    getRoute() {
-      const { absolutePath } = this.$route.meta
-
-      if (!absolutePath) {
-        const twigBaseUri = `${process.env.API_URL}/twig`
-        const routePath = this.getRoutePath
-        return `${twigBaseUri}${routePath}`
-      }
-
-      const viewsEntryPoint = 'twig'
-      const viewsEntryPointIndex = absolutePath
-        .split('/')
-        .filter(segment => segment)
-        .findIndex(segment => segment === viewsEntryPoint)
-
-      const currentPathSegments = this.$route.fullPath
-        .split('/')
-        .filter(segment => segment)
-
-      return currentPathSegments.reduce((acc, segment, segmentIndex) => (
-        (segmentIndex === viewsEntryPointIndex)
-          ? `${acc}/${viewsEntryPoint}/${segment}`
-          : `${acc}/${segment}`
-        ), process.env.API_URL)
-    }
-  }
-}
+import FrameView from '@/theme/template/frameview'
 
 const externalLinks = {
   utils: 'https://suporte.plataformasicessolar.com.br/faq/links-uteis'
