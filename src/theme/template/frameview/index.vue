@@ -10,7 +10,9 @@
 				const currentPath = this.$route.fullPath
 				const homePath = '/dashboard'
 
-				return (currentPath === '/') ? homePath : currentPath
+				return (currentPath === '/')
+					? homePath
+					: currentPath
 			},
 			getRoute() {
 				const { absolutePath } = this.$route.meta
@@ -18,7 +20,6 @@
 				if (!absolutePath) {
 					const twigBaseUri = `${process.env.API_URL}/twig`
 					const routePath = this.getRoutePath
-					console.log(`${twigBaseUri}${routePath}`);
 					return `${twigBaseUri}${routePath}`
 				}
 
