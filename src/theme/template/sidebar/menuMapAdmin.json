@@ -65,7 +65,7 @@
     "icon": "cube",
     "allowedRoles": [
       "ROLE_PLATFORM_ADMIN",
-      "commercial",
+      "ROLE_PLATFORM_COMMERCIAL",
       "ROLE_PLATFORM_EXPANSE",
       "ROLE_PLATFORM_MASTER"
     ],
@@ -116,7 +116,7 @@
     "icon": "cubes",
     "allowedRoles": [
       "ROLE_PLATFORM_ADMIN",
-      "commercial",
+      "ROLE_PLATFORM_COMMERCIAL",
       "ROLE_PLATFORM_EXPANSE",
       "ROLE_PLATFORM_MASTER"
     ]
