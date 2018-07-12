@@ -1,0 +1,218 @@
+{
+  "dashboard": {
+    "name": "Dashboard",
+    "link": "/",
+    "icon": "dashboard",
+    "allowedRoles": "*"
+  },
+  "contacts": {
+    "name": "Contatos",
+    "link": "/contact/person",
+    "icon": "book",
+    "allowedRoles": "*"
+  },
+  "tasks": {
+    "name": "Tarefas",
+    "link": "/tasks/m",
+    "icon": "check-square",
+    "allowedRoles": "*"
+  },
+  "projects": {
+    "name": "Projetos",
+    "link": "/project",
+    "icon": "paste",
+    "allowedRoles": "*"
+  },
+  "myItems": {
+    "name": "Meus Itens",
+    "link": "/item",
+    "icon": "plus-square",
+    "allowedRoles": [
+      "ownerMaster",
+      "owner"
+    ]
+  },
+  "sellPrice": {
+    "name": "Preço de Venda",
+    "link": "/price",
+    "icon": "money",
+    "allowedRoles": [
+      "ownerMaster",
+      "owner"
+    ]
+  },
+  "components": {
+    "name": "Componentes",
+    "uri": "#",
+    "icon": "cube",
+    "allowedRoles": "*",
+    "subItems": {
+      "modules": {
+        "name": "Módulos",
+        "link": "/components/module/",
+        "icon": "th",
+        "allowedRoles": "*"
+      },
+      "inverters": {
+        "name": "Inversores",
+        "link": "/components/inverter/",
+        "icon": "exchange",
+        "allowedRoles": "*"
+      },
+      "structures": {
+        "name": "Estruturas",
+        "link": "/structure",
+        "icon": "sitemap",
+        "allowedRoles": "*"
+      },
+      "stringBox": {
+        "name": "String Box",
+        "link": "/stringbox",
+        "icon": "plug",
+        "allowedRoles": "*"
+      },
+      "varieties": {
+        "name": "Variedades",
+        "link": "/variety",
+        "icon": "wrench",
+        "allowedRoles": "*"
+      }
+    }
+  },
+  "weather": {
+    "name": "Dados Climáticos",
+    "link": "/settings/nasa",
+    "icon": "sun-o",
+    "allowedRoles": [
+      "ownerMaster",
+      "owner"
+    ]
+  },
+  "users": {
+    "name": "Usuários",
+    "link": "/member",
+    "icon": "users",
+    "allowedRoles": [
+      "ownerMaster",
+      "owner"
+    ]
+  },
+  "ranking": {
+    "name": "Fidelidade SICES",
+    "link": "/ranking",
+    "icon": "trophy",
+    "allowedRoles": [
+      "ownerMaster",
+      "owner"
+    ]
+  },
+  "kits": {
+    "name": "Sices Express",
+    "link": "/kit",
+    "route": "index_kit",
+    "icon": "cart-plus",
+    "allowedRoles": [
+      "owner"
+    ],
+    "customStyle": {
+      "background-color": "#00a7ec",
+      "color": "#ffffff"
+    }
+  },
+  "order": {
+    "name": "Orçamento SICES",
+    "link": "/orders",
+    "id": "idPedidos",
+    "icon": "file-text-o",
+    "customStyle": {
+      "background-color": "#00a7ec",
+      "color": "#ffffff"
+    },
+    "allowedRoles": [
+      "ownerMaster",
+      "owner"
+    ]
+  },
+  "utils": {
+    "name": "Links Úteis",
+    "link": "https://suporte.plataformasicessolar.com.br/faq/links-uteis",
+    "icon": "link",
+    "customStyle": {
+      "background-color": "#f4a21a",
+      "color": "#ffffff"
+    },
+    "allowedRoles": "*"
+  },
+  "terms": {
+    "name": "Termos de Uso",
+    "link": "/terms",
+    "icon": "file-text-o",
+    "allowedRoles": [
+      "ownerMaster"
+    ]
+  },
+  "settings": {
+    "name": "Configurações",
+    "uri": "#",
+    "icon": "cogs",
+    "allowedRoles": "*",
+    "subItems": {
+      "timezone": {
+        "name": "Fuso Horário",
+        "link": "/member/timezone",
+        "icon": "globe",
+        "allowedRoles": "*"
+      },
+      "myData": {
+        "name": "Meus Dados",
+        "link": "/member/profile",
+        "icon": "male",
+        "allowedRoles": "*"
+      },
+      "myBusiness": {
+        "name": "Meu Negócio",
+        "link": "/member/business",
+        "icon": "building",
+        "allowedRoles": [
+          "ownerMaster"
+        ]
+      },
+      "categories": {
+        "name": "Categorias",
+        "link": "/settings/categories/contact_category/",
+        "icon": "list",
+        "allowedRoles": [
+          "owner",
+          "ownerMaster"
+        ]
+      },
+      "saleSteps": {
+        "name": "Etapas de Venda",
+        "link": "/settings/categories/sale_stage/",
+        "icon": "list-ol",
+        "allowedRoles": [
+          "owner",
+          "ownerMaster"
+        ]
+      }
+    }
+  },
+  "apiAuth": {
+    "name": "API Auth",
+    "uri": "#",
+    "icon": "settings",
+    "allowedRoles": [
+      "superAdmin"
+    ],
+    "subItems": {
+      "clients": {
+        "name": "Clientes",
+        "route": "api_clients",
+        "icon": "users",
+        "allowedRoles": [
+          "superAdmin"
+        ]
+      }
+    }
+  }
+}

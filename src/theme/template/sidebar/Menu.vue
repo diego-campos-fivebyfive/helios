@@ -2,7 +2,7 @@
   ul.menu(:class='sidebarType')
     li(v-for='itemMenu in menu')
       Dropdown(
-        v-if='itemMenu.dropdown',
+        v-if='itemMenu.subItems',
         :dropdown='itemMenu',
         :sidebarType='sidebarType')
       Item(
@@ -15,6 +15,8 @@
 <script>
   import Item from './Item'
   import Dropdown from './Dropdown'
+  import menuAdmin from './menuMapAdmin'
+  import menuAccount from './menuMapAccount'
 
   export default {
     components: {
@@ -31,8 +33,9 @@
       }
     },
     mounted() {
-      const uri = 'api/v1/application/menu'
-      this.axios.get(uri).then(({ data }) => this.menu = data)
+      this.menu = this.$global.user.sices
+      ? menuAdmin
+      : menuAccount
     },
     watch: {
       sidebarType() {}
