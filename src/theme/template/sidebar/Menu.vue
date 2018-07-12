@@ -1,10 +1,11 @@
 <template lang="pug">
   ul.menu(:class='sidebarType')
-    li(v-for='itemMenu in menu')
+    li(v-for='itemMenu in menu', v-if='hasRoles(itemMenu)')
       Dropdown(
         v-if='itemMenu.subItems',
         :dropdown='itemMenu',
-        :sidebarType='sidebarType')
+        :sidebarType='sidebarType',
+        :hasRoles='hasRoles')
       Item(
         v-else,
         :item='itemMenu',
@@ -15,8 +16,9 @@
 <script>
   import Item from './Item'
   import Dropdown from './Dropdown'
-  import menuAdmin from './menuMapAdmin'
-  import menuAccount from './menuMapAccount'
+  import menuAdmin from './menuMaps/Admin'
+  import menuAccount from './menuMaps/Account'
+  import menuTerms from './menuMaps/OnlyTerms'
 
   export default {
     components: {
@@ -32,10 +34,30 @@
         required: true
       }
     },
+    methods: {
+      hasRoles(item) {
+        if (item.allowedRoles === '*') {
+          return true
+        }
+
+      return this.$global.user.roles.some(role =>
+        item.allowedRoles.includes(role))
+      }
+    },
     mounted() {
-      this.menu = this.$global.user.sices
-      ? menuAdmin
-      : menuAccount
+      if (this.$global.user.sices) {
+          this.menu = menuAdmin
+          return
+      }
+
+      const uri = '/api/v1/terms/checker'
+      this.axios.get(uri)
+        .catch(response => response)
+        .then(({ statusText }) => {
+          this.menu = statusText === 'OK'
+            ? menuAccount
+            : menuTerms
+        })
     },
     watch: {
       sidebarType() {}
@@ -71,7 +93,7 @@
   }
 
   .collapse {
-    max-height: calc(100vh - #{$menu-head-collapse-y})
+    max-height: calc(100vh - #{$menu-head-collapse-y});
   }
 
   .common {

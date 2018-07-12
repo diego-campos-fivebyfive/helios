@@ -1,0 +1,10 @@
+{
+  "terms": {
+    "name": "Termos de Uso",
+    "link": "/terms",
+    "icon": "file-text-o",
+    "allowedRoles": [
+        "ROLE_OWNER_MASTER"
+    ]
+  }
+}

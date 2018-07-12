@@ -13,7 +13,11 @@
       Icon.icon-arrow(v-show='hideDropdown()', name='angle-left')
     ul(v-show='showDropdown()', :style='style.listTopPosition')
       li(v-for='item in dropdown.subItems')
-        Item(:item='item', :itemDropdown='true', :sidebarType='sidebarType')
+        Item(
+          v-if="hasRoles(item)",
+          :item='item',
+          :itemDropdown='true',
+          :sidebarType='sidebarType')
 </template>
 
 <script>
@@ -31,6 +35,10 @@
       sidebarType: {
         type: String,
         required: true
+      },
+      hasRoles: {
+        type: Function,
+        required: true
       }
     },
     data: () => ({
@@ -47,15 +55,16 @@
           this.$set(this.style, element, `top: ${targetPosition.y}px`)
 
           const ulElement = event.target.parentNode.querySelector('ul')
-          ulElement.style.display = 'block';
+          ulElement.style.display = 'block'
           const ulHeight = ulElement.getBoundingClientRect().height
-          ulElement.style.display = 'none';
+          ulElement.style.display = 'none'
 
           const listPosition = ulHeight - targetPosition.height
           const topPosition = targetPosition.y - listPosition
 
-          if (ulHeight + targetPosition.y > document.body.clientHeight)
+          if (ulHeight + targetPosition.y > document.body.clientHeight) {
             this.$set(this.style, element, `top: ${topPosition}px`)
+          }
         }
       },
       toogleList(event) {
@@ -110,6 +119,19 @@
     top: $ui-space-y;
   }
 
+  .dropdown-toogle {
+    color: inherit;
+    font-weight: inherit;
+    padding: $ui-space-y $ui-space-x/1.5 $ui-space-y $ui-space-x;
+    text-align: inherit;
+    transition: all 300ms;
+    width: 100%;
+
+    &:hover {
+      color: $ui-white-regular;
+    }
+  }
+
   .dropdown {
     position: relative;
 
@@ -139,7 +161,7 @@
 
       &:hover {
         .dropdown-toogle-label {
-          display: none; /*inline-block*/
+          display: none;
         }
       }
 
@@ -165,19 +187,6 @@
       .icon-arrow {
         display: none;
       }
-    }
-  }
-
-  .dropdown-toogle {
-    color: inherit;
-    font-weight: inherit;
-    padding: $ui-space-y $ui-space-x/1.5 $ui-space-y $ui-space-x;
-    text-align: inherit;
-    transition: all 300ms;
-    width: 100%;
-
-    &:hover {
-      color: $ui-white-regular;
     }
   }
 

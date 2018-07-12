@@ -109,7 +109,6 @@
   "kits": {
     "name": "Sices Express",
     "link": "/kit",
-    "route": "index_kit",
     "icon": "cart-plus",
     "allowedRoles": [
       "ROLE_OWNER"
@@ -207,7 +206,7 @@
     "subItems": {
       "clients": {
         "name": "Clientes",
-        "route": "api_clients",
+        "link": "/client",
         "icon": "users",
         "allowedRoles": [
           "ROLE_SUPER_ADMIN"

@@ -46,7 +46,6 @@
   "kits": {
     "name": "Sices Express",
     "link": "/admin/kit",
-    "route": "kits_index",
     "icon": "list",
     "allowedRoles": [
       "ROLE_PLATFORM_MASTER",
@@ -102,7 +101,7 @@
       },
       "makers": {
         "name": "Fabricantes",
-        "route": "maker_index",
+        "link": "/maker",
         "icon": "building",
         "allowedRoles": [
           "ROLE_PLATFORM_MASTER"

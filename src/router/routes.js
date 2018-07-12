@@ -431,17 +431,17 @@ export const routes = [
   },
   {
     path: '/maker',
-    name: 'Módulos',
+    name: 'Fabricantes',
     component: FrameView
   },
   {
     path: '/maker/update/:id',
-    name: 'Módulos',
+    name: 'Fabricantes',
     component: FrameView
   },
   {
     path: '/maker/create',
-    name: 'Módulos',
+    name: 'Fabricantes',
     component: FrameView
   },
   {
