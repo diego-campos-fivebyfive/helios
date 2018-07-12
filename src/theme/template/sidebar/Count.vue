@@ -8,7 +8,7 @@
       amount: 0
     }),
     mounted() {
-      this.axios.get('/tasks/count')
+      this.axios.get('/twig/tasks/count')
         .then(({ data }) => {
           this.amount = data.count
         })
@@ -32,7 +32,7 @@
     color: $ui-white-regular;
     font-size: 0.8em;
     float: right;
-    margin-right: $ui-space-y/2;
+    margin-right: $ui-space-y;
     opacity: 1;
     padding: $ui-space-y/6 $ui-space-y/2;
   }
