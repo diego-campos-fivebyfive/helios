@@ -1,0 +1,210 @@
+{
+  "dashboard": {
+    "name": "Dashboard",
+    "link": "/",
+    "icon": "dashboard",
+    "allowedRoles": "*"
+  },
+  "accounts": {
+    "name": "Contas",
+    "link": "/admin/account",
+    "icon": "bookmark",
+    "allowedRoles": [
+      "ROLE_PLATFORM_ADMIN",
+      "ROLE_PLATFORM_AFTER_SALES",
+      "ROLE_PLATFORM_COMMERCIAL",
+      "ROLE_PLATFORM_EXPANSE",
+      "ROLE_PLATFORM_FINANCIAL",
+      "ROLE_PLATFORM_FINANCING",
+      "ROLE_PLATFORM_MASTER"
+    ]
+  },
+  "ranking": {
+    "name": "Fidelidade SICES",
+    "link": "/ranking",
+    "icon": "trophy",
+    "allowedRoles": "*"
+  },
+  "coupon": {
+    "name": "Cupom de Desconto",
+    "link": "/coupon",
+    "icon": "ticket",
+    "allowedRoles": [
+      "ROLE_PLATFORM_ADMIN",
+      "ROLE_PLATFORM_MASTER"
+    ]
+  },
+  "memorials": {
+    "name": "Memoriais",
+    "link": "/admin/memorials",
+    "icon": "bars",
+    "allowedRoles": [
+      "ROLE_PLATFORM_ADMIN",
+      "ROLE_PLATFORM_MASTER"
+    ]
+  },
+  "kits": {
+    "name": "Sices Express",
+    "link": "/admin/kit",
+    "icon": "list",
+    "allowedRoles": [
+      "ROLE_PLATFORM_MASTER",
+      "ROLE_PLATFORM_ADMIN"
+    ]
+  },
+  "orders": {
+    "name": "Orçamentos",
+    "link": "/admin/orders",
+    "icon": "file-text-o",
+    "allowedRoles": "*"
+  },
+  "components": {
+    "name": "Componentes",
+    "uri": "#",
+    "icon": "cube",
+    "allowedRoles": [
+      "ROLE_PLATFORM_ADMIN",
+      "ROLE_PLATFORM_COMMERCIAL",
+      "ROLE_PLATFORM_EXPANSE",
+      "ROLE_PLATFORM_MASTER"
+    ],
+    "dropdown": true,
+    "subItems": {
+      "modules": {
+        "name": "Módulos",
+        "link": "/components/module",
+        "icon": "th",
+        "allowedRoles": "*"
+      },
+      "inverters": {
+        "name": "Inversores",
+        "link": "/components/inverter",
+        "icon": "exchange",
+        "allowedRoles": "*"
+      },
+      "structures": {
+        "name": "Estruturas",
+        "link": "/structure",
+        "icon": "sitemap",
+        "allowedRoles": "*"
+      },
+      "stringBox": {
+        "name": "String Box",
+        "link": "/stringbox",
+        "icon": "plug",
+        "allowedRoles": "*"
+      },
+      "varieties": {
+        "name": "Variedades",
+        "link": "/variety",
+        "icon": "wrench",
+        "allowedRoles": "*"
+      },
+      "makers": {
+        "name": "Fabricantes",
+        "link": "/maker",
+        "icon": "building",
+        "allowedRoles": [
+          "ROLE_PLATFORM_MASTER"
+        ]
+      }
+    }
+  },
+  "stock": {
+    "name": "Estoque",
+    "link": "/admin/stock",
+    "icon": "cubes",
+    "allowedRoles": [
+      "ROLE_PLATFORM_ADMIN",
+      "ROLE_PLATFORM_COMMERCIAL",
+      "ROLE_PLATFORM_EXPANSE",
+      "ROLE_PLATFORM_MASTER"
+    ]
+  },
+  "users": {
+    "name": "Usuários Sices",
+    "link": "/admin/users",
+    "icon": "users",
+    "allowedRoles": [
+      "ROLE_PLATFORM_ADMIN",
+      "ROLE_PLATFORM_MASTER"
+    ]
+  },
+  "paymentMethods": {
+    "name": "Cond. Pagamento",
+    "link": "/admin/payment-methods",
+    "icon": "credit-card",
+    "allowedRoles": [
+      "ROLE_PLATFORM_ADMIN",
+      "ROLE_PLATFORM_MASTER"
+    ]
+  },
+   "insurance": {
+    "name": "Seguros",
+    "link": "/admin/insurance",
+    "icon": "shield",
+    "allowedRoles": [
+      "ROLE_PLATFORM_ADMIN",
+      "ROLE_PLATFORM_MASTER"
+    ]
+  },
+  "utils": {
+    "name": "Links Úteis",
+    "link": "https://suporte.plataformasicessolar.com.br/faq/links-uteis",
+    "icon": "link",
+    "customStyle": {
+      "background-color": "#f4a21a",
+      "color": "#ffffff"
+    },
+    "allowedRoles": "*"
+  },
+  "terms": {
+    "name": "Termos de Uso",
+    "link": "/terms-of-use",
+    "icon": "file-text-o",
+    "allowedRoles": [
+      "ROLE_PLATFORM_MASTER"
+    ]
+  },
+   "settings": {
+    "name": "Configurações",
+    "uri": "#",
+    "icon": "cogs",
+    "allowedRoles": "*",
+    "dropdown": true,
+    "subItems": {
+      "myData": {
+        "name": "Meus Dados",
+        "link": "/member/profile",
+        "icon": "male",
+        "allowedRoles": "*"
+      },
+      "parameters": {
+        "name": "Parâmetros",
+        "link": "/admin/settings",
+        "icon": "sliders",
+        "allowedRoles": [
+          "ROLE_PLATFORM_ADMIN",
+          "ROLE_PLATFORM_MASTER"
+        ]
+      }
+    }
+  },
+  "metrics": {
+    "name": "Métricas",
+    "uri": "#",
+    "icon": "area-chart",
+    "allowedRoles": [
+      "ROLE_PLATFORM_MASTER"
+    ],
+    "dropdown": true,
+    "subItems": {
+      "product": {
+        "name": "Técnicas",
+        "link": "/metrics",
+        "icon": "coffee",
+        "allowedRoles": "*"
+      }
+    }
+  }
+}

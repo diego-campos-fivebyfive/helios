@@ -1,10 +1,11 @@
 <template lang="pug">
   ul.menu(:class='sidebarType')
-    li(v-for='itemMenu in menu')
+    li(v-for='itemMenu in menu', v-if='hasRoles(itemMenu)')
       Dropdown(
         v-if='itemMenu.dropdown',
         :dropdown='itemMenu',
-        :sidebarType='sidebarType')
+        :sidebarType='sidebarType',
+        :hasRoles='hasRoles')
       Item(
         v-else,
         :item='itemMenu',
@@ -15,6 +16,8 @@
 <script>
   import Item from './Item'
   import Dropdown from './Dropdown'
+  import menuAdmin from './menuMaps/Admin'
+  import menuAccount from './menuMaps/Account'
 
   export default {
     components: {
@@ -30,9 +33,23 @@
         required: true
       }
     },
+    methods: {
+      hasRoles(item) {
+        if (item.allowedRoles === '*') {
+          return true
+        }
+
+        const matchedRole = this.$global.user.roles
+          .find(role => item.allowedRoles
+          .find(allowedRole => allowedRole === role))
+
+        return Boolean(matchedRole)
+      }
+    },
     mounted() {
-      const uri = 'api/v1/application/menu'
-      this.axios.get(uri).then(({ data }) => this.menu = data)
+      this.menu = this.$global.user.sices
+        ? menuAdmin
+        : menuAccount
     },
     watch: {
       sidebarType() {}
@@ -68,7 +85,7 @@
   }
 
   .collapse {
-    max-height: calc(100vh - #{$menu-head-collapse-y})
+    max-height: calc(100vh - #{$menu-head-collapse-y});
   }
 
   .common {
