@@ -46,6 +46,7 @@
     "uri": "#",
     "icon": "cube",
     "allowedRoles": "*",
+    "dropdown": true,
     "subItems": {
       "modules": {
         "name": "Módulos",
@@ -155,6 +156,7 @@
     "uri": "#",
     "icon": "cogs",
     "allowedRoles": "*",
+    "dropdown": true,
     "subItems": {
       "timezone": {
         "name": "Fuso Horário",
@@ -203,6 +205,7 @@
     "allowedRoles": [
       "ROLE_SUPER_ADMIN"
     ],
+    "dropdown": true,
     "subItems": {
       "clients": {
         "name": "Clientes",

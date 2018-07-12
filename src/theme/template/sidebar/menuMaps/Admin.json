@@ -68,6 +68,7 @@
       "ROLE_PLATFORM_EXPANSE",
       "ROLE_PLATFORM_MASTER"
     ],
+    "dropdown": true,
     "subItems": {
       "modules": {
         "name": "Módulos",
@@ -170,6 +171,7 @@
     "uri": "#",
     "icon": "cogs",
     "allowedRoles": "*",
+    "dropdown": true,
     "subItems": {
       "myData": {
         "name": "Meus Dados",
@@ -195,6 +197,7 @@
     "allowedRoles": [
       "ROLE_PLATFORM_MASTER"
     ],
+    "dropdown": true,
     "subItems": {
       "product": {
         "name": "Técnicas",

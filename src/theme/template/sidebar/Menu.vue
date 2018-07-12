@@ -2,7 +2,7 @@
   ul.menu(:class='sidebarType')
     li(v-for='itemMenu in menu', v-if='hasRoles(itemMenu)')
       Dropdown(
-        v-if='itemMenu.subItems',
+        v-if='itemMenu.dropdown',
         :dropdown='itemMenu',
         :sidebarType='sidebarType',
         :hasRoles='hasRoles')
@@ -18,7 +18,6 @@
   import Dropdown from './Dropdown'
   import menuAdmin from './menuMaps/Admin'
   import menuAccount from './menuMaps/Account'
-  import menuTerms from './menuMaps/OnlyTerms'
 
   export default {
     components: {
@@ -40,24 +39,15 @@
           return true
         }
 
-      return this.$global.user.roles.some(role =>
-        item.allowedRoles.includes(role))
+      return this.$global.user.roles
+        .find(role => item.allowedRoles
+          .find(allowedRole => allowedRole === role))
       }
     },
     mounted() {
-      if (this.$global.user.sices) {
-          this.menu = menuAdmin
-          return
-      }
-
-      const uri = '/api/v1/terms/checker'
-      this.axios.get(uri)
-        .catch(response => response)
-        .then(({ statusText }) => {
-          this.menu = statusText === 'OK'
-            ? menuAccount
-            : menuTerms
-        })
+      this.menu = this.$global.user.sices
+        ? menuAdmin
+        : menuAccount
     },
     watch: {
       sidebarType() {}
