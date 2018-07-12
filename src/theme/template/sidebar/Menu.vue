@@ -39,9 +39,11 @@
           return true
         }
 
-      return this.$global.user.roles
-        .find(role => item.allowedRoles
+        const matchedRole = this.$global.user.roles
+          .find(role => item.allowedRoles
           .find(allowedRole => allowedRole === role))
+
+        return Boolean(matchedRole)
       }
     },
     mounted() {
