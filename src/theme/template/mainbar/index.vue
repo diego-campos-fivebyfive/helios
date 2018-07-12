@@ -10,7 +10,7 @@
     Badge.badge(v-if='showBadge()')
     span.info {{ date }}
     nav.menu
-      a.menu-item.messages(v-if='showMessages()', href='/messenger')
+      router-link.menu-item.messages(v-if='showMessages()', to='/messenger')
         Icon.messages-icon(name='envelope')
         label.messages-label(v-if='showTotalMessages()')
           | {{ totalOfMessages }}
