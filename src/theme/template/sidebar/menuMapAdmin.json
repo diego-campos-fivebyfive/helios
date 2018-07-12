@@ -10,13 +10,13 @@
     "link": "/admin/account",
     "icon": "bookmark",
     "allowedRoles": [
-      "admin",
-      "afterSales",
-      "commercial",
-      "expanse",
-      "financial",
-      "financing",
-      "master"
+      "ROLE_PLATFORM_ADMIN",
+      "ROLE_PLATFORM_AFTER_SALES",
+      "ROLE_PLATFORM_COMMERCIAL",
+      "ROLE_PLATFORM_EXPANSE",
+      "ROLE_PLATFORM_FINANCIAL",
+      "ROLE_PLATFORM_FINANCING",
+      "ROLE_PLATFORM_MASTER"
     ]
   },
   "ranking": {
@@ -30,8 +30,8 @@
     "link": "/coupon",
     "icon": "ticket",
     "allowedRoles": [
-      "admin",
-      "master"
+      "ROLE_PLATFORM_ADMIN",
+      "ROLE_PLATFORM_MASTER"
     ]
   },
   "memorials": {
@@ -39,8 +39,8 @@
     "link": "/admin/memorials",
     "icon": "bars",
     "allowedRoles": [
-      "admin",
-      "master"
+      "ROLE_PLATFORM_ADMIN",
+      "ROLE_PLATFORM_MASTER"
     ]
   },
   "kits": {
@@ -49,8 +49,8 @@
     "route": "kits_index",
     "icon": "list",
     "allowedRoles": [
-      "master",
-      "admin"
+      "ROLE_PLATFORM_MASTER",
+      "ROLE_PLATFORM_ADMIN"
     ]
   },
   "orders": {
@@ -64,10 +64,10 @@
     "uri": "#",
     "icon": "cube",
     "allowedRoles": [
-      "admin",
+      "ROLE_PLATFORM_ADMIN",
       "commercial",
-      "expanse",
-      "master"
+      "ROLE_PLATFORM_EXPANSE",
+      "ROLE_PLATFORM_MASTER"
     ],
     "subItems": {
       "modules": {
@@ -105,7 +105,7 @@
         "route": "maker_index",
         "icon": "building",
         "allowedRoles": [
-          "master"
+          "ROLE_PLATFORM_MASTER"
         ]
       }
     }
@@ -115,10 +115,10 @@
     "link": "/admin/stock",
     "icon": "cubes",
     "allowedRoles": [
-      "admin",
+      "ROLE_PLATFORM_ADMIN",
       "commercial",
-      "expanse",
-      "master"
+      "ROLE_PLATFORM_EXPANSE",
+      "ROLE_PLATFORM_MASTER"
     ]
   },
   "users": {
@@ -126,8 +126,8 @@
     "link": "/admin/users",
     "icon": "users",
     "allowedRoles": [
-      "admin",
-      "master"
+      "ROLE_PLATFORM_ADMIN",
+      "ROLE_PLATFORM_MASTER"
     ]
   },
   "paymentMethods": {
@@ -135,8 +135,8 @@
     "link": "/admin/payment-methods",
     "icon": "credit-card",
     "allowedRoles": [
-      "admin",
-      "master"
+      "ROLE_PLATFORM_ADMIN",
+      "ROLE_PLATFORM_MASTER"
     ]
   },
    "insurance": {
@@ -144,8 +144,8 @@
     "link": "/admin/insurance",
     "icon": "shield",
     "allowedRoles": [
-      "admin",
-      "master"
+      "ROLE_PLATFORM_ADMIN",
+      "ROLE_PLATFORM_MASTER"
     ]
   },
   "utils": {
@@ -163,7 +163,7 @@
     "link": "/terms-of-use",
     "icon": "file-text-o",
     "allowedRoles": [
-      "master"
+      "ROLE_PLATFORM_MASTER"
     ]
   },
    "settings": {
@@ -183,8 +183,8 @@
         "link": "/admin/settings",
         "icon": "sliders",
         "allowedRoles": [
-          "admin",
-          "master"
+          "ROLE_PLATFORM_ADMIN",
+          "ROLE_PLATFORM_MASTER"
         ]
       }
     }
@@ -194,7 +194,7 @@
     "uri": "#",
     "icon": "area-chart",
     "allowedRoles": [
-      "master"
+      "ROLE_PLATFORM_MASTER"
     ],
     "subItems": {
       "product": {

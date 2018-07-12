@@ -28,8 +28,8 @@
     "link": "/item",
     "icon": "plus-square",
     "allowedRoles": [
-      "ownerMaster",
-      "owner"
+      "ROLE_OWNER_MASTER",
+      "ROLE_OWNER"
     ]
   },
   "sellPrice": {
@@ -37,8 +37,8 @@
     "link": "/price",
     "icon": "money",
     "allowedRoles": [
-      "ownerMaster",
-      "owner"
+      "ROLE_OWNER_MASTER",
+      "ROLE_OWNER"
     ]
   },
   "components": {
@@ -84,8 +84,8 @@
     "link": "/settings/nasa",
     "icon": "sun-o",
     "allowedRoles": [
-      "ownerMaster",
-      "owner"
+      "ROLE_OWNER_MASTER",
+      "ROLE_OWNER"
     ]
   },
   "users": {
@@ -93,8 +93,8 @@
     "link": "/member",
     "icon": "users",
     "allowedRoles": [
-      "ownerMaster",
-      "owner"
+      "ROLE_OWNER_MASTER",
+      "ROLE_OWNER"
     ]
   },
   "ranking": {
@@ -102,8 +102,8 @@
     "link": "/ranking",
     "icon": "trophy",
     "allowedRoles": [
-      "ownerMaster",
-      "owner"
+      "ROLE_OWNER_MASTER",
+      "ROLE_OWNER"
     ]
   },
   "kits": {
@@ -112,7 +112,7 @@
     "route": "index_kit",
     "icon": "cart-plus",
     "allowedRoles": [
-      "owner"
+      "ROLE_OWNER"
     ],
     "customStyle": {
       "background-color": "#00a7ec",
@@ -129,8 +129,8 @@
       "color": "#ffffff"
     },
     "allowedRoles": [
-      "ownerMaster",
-      "owner"
+      "ROLE_OWNER_MASTER",
+      "ROLE_OWNER"
     ]
   },
   "utils": {
@@ -148,7 +148,7 @@
     "link": "/terms",
     "icon": "file-text-o",
     "allowedRoles": [
-      "ownerMaster"
+      "ROLE_OWNER_MASTER"
     ]
   },
   "settings": {
@@ -174,7 +174,7 @@
         "link": "/member/business",
         "icon": "building",
         "allowedRoles": [
-          "ownerMaster"
+          "ROLE_OWNER_MASTER"
         ]
       },
       "categories": {
@@ -182,8 +182,8 @@
         "link": "/settings/categories/contact_category/",
         "icon": "list",
         "allowedRoles": [
-          "owner",
-          "ownerMaster"
+          "ROLE_OWNER",
+          "ROLE_OWNER_MASTER"
         ]
       },
       "saleSteps": {
@@ -191,8 +191,8 @@
         "link": "/settings/categories/sale_stage/",
         "icon": "list-ol",
         "allowedRoles": [
-          "owner",
-          "ownerMaster"
+          "ROLE_OWNER",
+          "ROLE_OWNER_MASTER"
         ]
       }
     }
@@ -200,9 +200,9 @@
   "apiAuth": {
     "name": "API Auth",
     "uri": "#",
-    "icon": "settings",
+    "icon": "cogs",
     "allowedRoles": [
-      "superAdmin"
+      "ROLE_SUPER_ADMIN"
     ],
     "subItems": {
       "clients": {
@@ -210,7 +210,7 @@
         "route": "api_clients",
         "icon": "users",
         "allowedRoles": [
-          "superAdmin"
+          "ROLE_SUPER_ADMIN"
         ]
       }
     }
