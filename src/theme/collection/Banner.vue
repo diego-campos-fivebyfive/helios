@@ -26,15 +26,14 @@
 
 <style lang="scss" scoped>
   .collection-banner {
+    background-color: $ui-orange-light;
     border-radius: 0.5rem;
-    color: inherit;
+    color: $ui-white-regular;
     font-size: 1.5rem;
     padding: $ui-space-y/2;
     position: relative;
     margin: $ui-space-y;
     text-align: center;
-    background-color: $ui-orange-light;
-    color: $ui-white-regular;
 
     svg {
       vertical-align: sub;
