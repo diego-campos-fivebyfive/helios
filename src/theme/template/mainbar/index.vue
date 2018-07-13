@@ -7,7 +7,9 @@
     h1.title {{ pageTitle }}
     span.ranking(v-if="showRanking()")
       | {{ $global.user.ranking }} pontos
-    Badge.badge(v-if='showBadge()')
+    Badge.badge(
+      v-if='showBadge()',
+      :level='$global.user.level')
     span.info {{ date }}
     nav.menu
       router-link.menu-item.messages(v-if='showMessages()', to='/messenger')

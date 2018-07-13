@@ -1,5 +1,5 @@
-import Account from '@/pages/account'
-import AccountForm from '@/pages/account/form'
+//import Account from '@/pages/account'
+//import AccountForm from '@/pages/account/form'
 import Coupon from '@/pages/coupon'
 import Memorial from '@/pages/memorial'
 import MemorialConfig from '@/pages/memorial/form'
@@ -20,7 +20,7 @@ export const routes = [
     name: 'Dashboard',
     component: FrameView
   },
-/*   {
+  /*   {
     path: '/account',
     name: 'Contas',
     component: Account
