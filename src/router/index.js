@@ -16,10 +16,14 @@ export const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const uri = '/api/v1/terms/checker'
-  axios.get(uri).catch(() => next('/terms'))
-
-  next()
+  if(to.path !== '/terms') {
+    const uri = '/api/v1/terms/checker'
+    axios.get(uri)
+      .then(() => next())
+      .catch(() => next('/terms'))
+  } else {
+    next()
+  }
 })
 
 export { axios }

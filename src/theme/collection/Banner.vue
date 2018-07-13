@@ -1,5 +1,5 @@
 <template lang="pug">
-  .collection-banner.warning(:class='type')
+  .collection-banner(:class='type')
     Icon.collection-banner-icon(v-if='icon', :name='icon', scale='1.75')
     h2.collection-banner-title {{ title }}
     p.collection-banner-text {{ message }}
@@ -33,6 +33,8 @@
     position: relative;
     margin: $ui-space-y;
     text-align: center;
+    background-color: $ui-orange-light;
+    color: $ui-white-regular;
 
     svg {
       vertical-align: sub;
@@ -49,11 +51,6 @@
 
     .collection-banner-text {
       padding: $ui-space-y/2;
-    }
-
-    &.warning {
-      background-color: $ui-orange-light;
-      color: $ui-white-regular;
     }
   }
 </style>
