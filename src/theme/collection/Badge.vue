@@ -4,17 +4,21 @@
       src='~@/theme/assets/media/logo-inverse.png')
     .collection-badge-label
       | Sices
-      span {{ $global.user.level }}
+      span {{ level }}
 </template>
 
 <script>
   import titaniumCover from '@/theme/assets/media/titanium.jpg'
 
   export default {
+    props: {
+      level: {
+        type: String,
+        required: true
+      }
+    },
     methods: {
       getBadgeBackground() {
-        const { level: userLevel } = this.$global.user
-
         const badgesBackground = {
           black: '#6d6d6d',
           partner: '#e7b042',
@@ -23,7 +27,7 @@
           titanium: `url(${titaniumCover})`
         }
 
-        return `background: ${badgesBackground[userLevel]};`
+        return `background: ${badgesBackground[this.level]};`
       }
     }
   }
