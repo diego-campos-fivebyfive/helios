@@ -2,8 +2,7 @@
   router-link.item(
     :to='item.link',
     :style='item.customStyle',
-    :class='[{ "item-dropdown": itemDropdown }, sidebarType]',
-    v-on:click.native='forceReload')
+    :class='[{ "item-dropdown": itemDropdown }, sidebarType]')
     Icon.icon-ui(:name='item.icon')
     span(:style='labelPosition.top') {{ item.name }}
     Icon.icon-arrow(name='angle-right')
@@ -35,22 +34,6 @@
       labelPosition: {}
     }),
     methods: {
-      forceReload() {
-        const getInitPath = Promise.resolve(this.$router.history.current.path)
-
-        const redirectToDifferentPath = initPath => {
-          this.$router.push({ path: '/' })
-          return initPath
-        }
-
-        const redirectToInitPath = initPath => {
-          this.$router.push({ path: initPath })
-        }
-
-        getInitPath
-          .then(redirectToDifferentPath)
-          .then(redirectToInitPath)
-      },
       showTaskCount(item) {
         return item.link == '/tasks/m'
       }
