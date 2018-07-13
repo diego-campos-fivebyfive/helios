@@ -110,12 +110,13 @@
     mounted() {
       this.setPageTitle()
 
-      const uri = '/admin/api/v1/orders/messages/unread_count'
-      this.axios.get(uri)
-        .then(response => {
-          this.totalOfMessages = response.data.unreadMessages
-        })
-
+      if (this.$global.user.sices) {
+        const uri = '/admin/api/v1/orders/messages/unread_count'
+        this.axios.get(uri)
+          .then(response => {
+            this.totalOfMessages = response.data.unreadMessages
+          })
+      }
       this.date = getDate()
     }
   }
