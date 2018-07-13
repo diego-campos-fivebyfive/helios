@@ -16,20 +16,25 @@ export const router = user => {
     routes
   })
 
-    Router.beforeEach((to, from, next) => {
-      if(user.sices) {
+  Router.beforeEach((to, from, next) => {
+    if (user.sices) {
+      next()
+      return
+    }
+
+    if (to.path === '/terms') {
+      next()
+      return
+    }
+
+    axios.get('/api/v1/terms/checker')
+      .then(() => {
         next()
-      } else {
-        if(to.path === '/terms') {
-          next()
-        } else {
-          const uri = '/api/v1/terms/checker'
-          axios.get(uri)
-            .then(() => next())
-            .catch(() => next('/terms'))
-        }
-      }
-    })
+      })
+      .catch(() => {
+        next('/terms')
+      })
+  })
 
   return Router
 }
