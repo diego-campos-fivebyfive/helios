@@ -488,6 +488,14 @@ export const routes = [
     component: FrameView
   },
   {
+    path: '/admin/proposal/:id/editor',
+    name: 'Proposal',
+    component: FrameView,
+    meta: {
+      absolutePath: '/admin/twig/proposal'
+    }
+  },
+  {
     path: '/tasks/m',
     name: 'Tarefas',
     component: FrameView
