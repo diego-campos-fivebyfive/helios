@@ -32,7 +32,6 @@
     data: () => ({
       terms: [],
       pagination: {},
-      isAgree: [],
       hasTerms: null
     }),
     methods: {
