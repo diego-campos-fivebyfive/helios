@@ -8,7 +8,7 @@
       amount: 0
     }),
     mounted() {
-      this.axios.get('/twig/tasks/count')
+      this.axios.get('/api/v1/tasks/count')
         .then(({ data }) => {
           this.amount = data.count
         })
