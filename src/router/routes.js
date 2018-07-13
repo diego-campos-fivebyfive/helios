@@ -189,11 +189,6 @@ export const routes = [
     component: FrameView
   },
   {
-    path: '/contact/:context',
-    name: 'Contato',
-    component: FrameView
-  },
-  {
     path: '/contact/:context/:token/show',
     name: 'Contato',
     component: FrameView
