@@ -20,7 +20,7 @@ export const routes = [
     name: 'Dashboard',
     component: FrameView
   },
-  {
+/*   {
     path: '/account',
     name: 'Contas',
     component: Account
@@ -29,7 +29,7 @@ export const routes = [
     path: '/account/create',
     name: 'Cadastro de Conta',
     component: AccountForm
-  },
+  }, */
   {
     path: '/admin/account/',
     name: 'Contas',
