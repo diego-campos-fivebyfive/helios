@@ -24,7 +24,7 @@ initGlobals(Vue).then(() => {
   /* eslint-disable no-new, no-console */
   new Vue({
     el: '#app',
-    router,
+    router: router(user),
     components: globalComponents,
     template: '<App/>',
     render: h => h(App),

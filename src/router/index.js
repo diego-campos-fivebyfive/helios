@@ -10,7 +10,31 @@ Vue.use(VueAxios, axios)
 Vue.use(VueCookies)
 Vue.use(VueRouter)
 
-export const router = new VueRouter({
+export const router = user => {
+  const Router = new VueRouter({
+    mode: 'history',
+    routes
+  })
+
+    Router.beforeEach((to, from, next) => {
+      if(user.sices) {
+        next()
+      } else {
+        if(to.path === '/terms') {
+          next()
+        } else {
+          const uri = '/api/v1/terms/checker'
+          axios.get(uri)
+            .then(() => next())
+            .catch(() => next('/terms'))
+        }
+      }
+    })
+
+  return Router
+}
+
+/* export const router = new VueRouter({
   mode: 'history',
   routes
 })
@@ -24,6 +48,6 @@ router.beforeEach((to, from, next) => {
   } else {
     next()
   }
-})
+}) */
 
 export { axios }
