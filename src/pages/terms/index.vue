@@ -1,6 +1,7 @@
 <template lang="pug">
   .wrapper
     Banner(
+      v-if='hasTerms'
       title='Aviso',
       message='É necessário aceitar todos os termos de uso da Plataforma SICES',
       type='info',
@@ -32,7 +33,6 @@
     data: () => ({
       terms: [],
       pagination: {},
-      isAgree: [],
       hasTerms: null
     }),
     methods: {
