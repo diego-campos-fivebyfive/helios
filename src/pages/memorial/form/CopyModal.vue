@@ -55,7 +55,7 @@
         this.axios.put(uri, { source: this.level, target })
       },
       show() {
-        this.axios.get('admin/api/v1/memorials/levels')
+        this.axios.get('admin/api/v1/memorials/account/levels')
           .then(response => {
             delete response.data[this.level]
 

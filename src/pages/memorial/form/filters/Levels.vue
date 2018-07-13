@@ -16,7 +16,7 @@
       options: []
     }),
     mounted() {
-      this.axios.get('admin/api/v1/memorials/levels')
+      this.axios.get('admin/api/v1/memorials/account/levels')
         .then(response => {
           this.options = Object.entries(response.data)
             .map(([key, value]) => ({
