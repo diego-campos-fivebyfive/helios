@@ -189,11 +189,6 @@ export const routes = [
     component: FrameView
   },
   {
-    path: '/contact/:context',
-    name: 'Contato',
-    component: FrameView
-  },
-  {
     path: '/contact/:context/:token/show',
     name: 'Contato',
     component: FrameView
@@ -486,6 +481,14 @@ export const routes = [
     path: '/project/financial/:id',
     name: 'Análise financeira',
     component: FrameView
+  },
+  {
+    path: '/admin/proposal/:id/editor',
+    name: 'Proposal',
+    component: FrameView,
+    meta: {
+      absolutePath: '/admin/twig/proposal'
+    }
   },
   {
     path: '/tasks/m',
