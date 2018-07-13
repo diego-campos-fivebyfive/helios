@@ -45,9 +45,9 @@
 
           const currentTerms = response.data.hasTermsToAccept
 
-          if (this.hasTerms != null && currentTerms !== this.hasTerms) {
+          /* if (this.hasTerms != null && currentTerms !== this.hasTerms) {
             location.reload()
-          }
+          } */
 
           this.hasTerms = currentTerms
         })

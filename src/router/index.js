@@ -10,20 +10,33 @@ Vue.use(VueAxios, axios)
 Vue.use(VueCookies)
 Vue.use(VueRouter)
 
-export const router = new VueRouter({
-  mode: 'history',
-  routes
-})
+export const router = user => {
+  const Router = new VueRouter({
+    mode: 'history',
+    routes
+  })
 
-router.beforeEach((to, from, next) => {
-  if(to.path !== '/terms') {
-    const uri = '/api/v1/terms/checker'
-    axios.get(uri)
-      .then(() => next())
-      .catch(() => next('/terms'))
-  } else {
-    next()
-  }
-})
+  Router.beforeEach((to, from, next) => {
+    if (user.sices) {
+      next()
+      return
+    }
+
+    if (to.path === '/terms') {
+      next()
+      return
+    }
+
+    axios.get('/api/v1/terms/checker')
+      .then(() => {
+        next()
+      })
+      .catch(() => {
+        next('/terms')
+      })
+  })
+
+  return Router
+}
 
 export { axios }

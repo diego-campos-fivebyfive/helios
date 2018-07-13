@@ -12,13 +12,10 @@ const handleSuccessResponse = response => {
   }
 
   throw new Error('Your session has expired')
-  return {}
 }
 
 const handleErrorResponse = error => {
   throw new Error('An unexpected request error has occurred:')
-  console.log(error)
-  return error
 }
 
 axios.interceptors.response
