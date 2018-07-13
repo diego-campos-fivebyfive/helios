@@ -39,20 +39,4 @@ export const router = user => {
   return Router
 }
 
-/* export const router = new VueRouter({
-  mode: 'history',
-  routes
-})
-
-router.beforeEach((to, from, next) => {
-  if(to.path !== '/terms') {
-    const uri = '/api/v1/terms/checker'
-    axios.get(uri)
-      .then(() => next())
-      .catch(() => next('/terms'))
-  } else {
-    next()
-  }
-}) */
-
 export { axios }
