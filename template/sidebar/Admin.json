@@ -150,7 +150,7 @@
   },
   "utils": {
     "name": "Links Úteis",
-    "link": "https://suporte.plataformasicessolar.com.br/faq/links-uteis",
+    "link": "/https://suporte.plataformasicessolar.com.br/faq/links-uteis",
     "icon": "link",
     "customStyle": {
       "background-color": "#f4a21a",
