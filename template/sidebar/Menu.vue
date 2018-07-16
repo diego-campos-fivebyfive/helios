@@ -16,8 +16,8 @@
 <script>
   import Item from './Item'
   import Dropdown from './Dropdown'
-  import menuAdmin from './menuMaps/Admin'
-  import menuAccount from './menuMaps/Account'
+  import menuAdmin from './Admin'
+  import menuAccount from './Account'
 
   export default {
     components: {
