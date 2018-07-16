@@ -483,11 +483,11 @@ export const routes = [
     component: FrameView
   },
   {
-    path: '/admin/proposal/:id/editor',
+    path: '/proposal/:id/editor',
     name: 'Proposal',
     component: FrameView,
     meta: {
-      absolutePath: '/admin/twig/proposal'
+      absolutePath: '/twig/proposal/:id/editor'
     }
   },
   {
