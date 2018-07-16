@@ -83,7 +83,8 @@ export const routes = [
     name: 'Memoriais',
     component: FrameView,
     meta: {
-      absolutePath: 'admin/twig/memorials/:id/config'
+      absolutePath: 'admin/twig/memorials/:id/config',
+      sidebar: 'collapse'
     }
   },
   {
