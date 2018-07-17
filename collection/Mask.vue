@@ -11,7 +11,7 @@
 </template>
 
 <script>
-  import Field from '@/theme/collection/Field'
+  import Field from 'theme/collection/Field'
   import { mask } from 'vue-the-mask'
 
   export default {

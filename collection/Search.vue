@@ -10,7 +10,7 @@
 </template>
 
 <script>
-  import Button from '@/theme/collection/Button'
+  import Button from 'theme/collection/Button'
 
   export default {
     data: () => ({

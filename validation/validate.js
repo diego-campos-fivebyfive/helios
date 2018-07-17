@@ -1,5 +1,5 @@
-import exceptions from '@/theme/validation/locale/pt-br'
-import patterns from '@/theme/validation/patterns'
+import exceptions from 'theme/validation/locale/pt-br'
+import patterns from 'theme/validation/patterns'
 
 const validateRequired = field => {
   if (!field.value && field.required) {

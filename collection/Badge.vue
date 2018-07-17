@@ -1,14 +1,14 @@
 <template lang="pug">
   .collection-badge(:style='getBadgeBackground()')
     img.collection-badge-logo(
-      src='~@/theme/assets/media/logo-inverse.png')
+      src='~theme/assets/media/logo-inverse.png')
     .collection-badge-label
       | Sices
       span {{ level }}
 </template>
 
 <script>
-  import titaniumCover from '@/theme/assets/media/titanium.jpg'
+  import titaniumCover from 'theme/assets/media/titanium.jpg'
 
   export default {
     props: {

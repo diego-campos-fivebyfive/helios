@@ -14,8 +14,8 @@
 </template>
 
 <script>
-  import Sidebar from '@/theme/template/sidebar'
-  import Mainbar from '@/theme/template/mainbar'
+  import Sidebar from 'theme/template/sidebar'
+  import Mainbar from 'theme/template/mainbar'
 
   export default {
     components: {

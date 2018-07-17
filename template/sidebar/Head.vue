@@ -1,7 +1,7 @@
 <template lang="pug">
   router-link.header(to='/', :class='sidebarType')
     img(
-      src='@/theme/assets/media/logo-small.png',
+      src='~theme/assets/media/logo-small.png',
       alt='Sices Solar Logo')
     .level {{ $global.user.level }}
     .header-info(:class='sidebarType')
@@ -30,7 +30,7 @@
   $img-width: 60px;
 
   .header {
-    background: url("~@/theme/assets/media/logo-cover.png");
+    background: url("~theme/assets/media/logo-cover.png");
     color: $ui-white-regular;
     display: block;
     text-align: center;

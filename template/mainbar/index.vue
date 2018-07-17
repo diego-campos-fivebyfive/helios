@@ -58,7 +58,7 @@
     return `${dayInTheWeek}, ${day} de ${month} de ${year}`
   }
 
-  import ringNotify from '@/theme/assets/media/ring-notify.wav'
+  import ringNotify from 'theme/assets/media/ring-notify.wav'
   export default {
     props: {
       handleTwigModal: {
