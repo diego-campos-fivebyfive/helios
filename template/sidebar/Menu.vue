@@ -1,10 +1,10 @@
 <template lang="pug">
-  ul.menu(:class='sidebarType')
+  ul.menu(:class='`sidebar-${sidebarType}`')
     li(v-for='itemMenu in menu', v-if='hasRoles(itemMenu)')
       Dropdown(
         v-if='itemMenu.dropdown',
-        :dropdown='itemMenu',
         :sidebarType='sidebarType',
+        :dropdown='itemMenu',
         :hasRoles='hasRoles')
       Item(
         v-else,
@@ -25,7 +25,8 @@
       Dropdown
     },
     data: () => ({
-      menu: []
+      menu: [],
+      user: {}
     }),
     props: {
       sidebarType: {
@@ -33,26 +34,29 @@
         required: true
       }
     },
+    watch: {
+      sidebarType() {}
+    },
     methods: {
       hasRoles(item) {
         if (item.allowedRoles === '*') {
           return true
         }
 
-        const matchedRole = this.$global.user.roles
+        const matchedRole = this.user.roles
           .find(role => item.allowedRoles
           .find(allowedRole => allowedRole === role))
 
         return Boolean(matchedRole)
       }
     },
+    created() {
+      this.user = window.$global.user
+    },
     mounted() {
-      this.menu = this.$global.user.sices
+      this.menu = this.user.sices
         ? menuAdmin
         : menuAccount
-    },
-    watch: {
-      sidebarType() {}
     }
   }
 </script>
@@ -84,11 +88,11 @@
     border-left: 5px solid $ui-blue-light;
   }
 
-  .collapse {
+  .sidebar-collapse {
     max-height: calc(100vh - #{$menu-head-collapse-y});
   }
 
-  .common {
+  .sidebar-common {
     max-height: calc(100vh - #{$menu-head-common-y});
   }
  </style>

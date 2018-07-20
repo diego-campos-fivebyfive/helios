@@ -5,11 +5,11 @@
         v-show='getStateTwigModal()',
         v-on:click='toggleTwigModal')
     h1.title {{ pageTitle }}
-    span.ranking(v-if="showRanking()")
-      | {{ $global.user.ranking }} pontos
+    span.ranking(v-if='showRanking()')
+      | {{ user.ranking }} pontos
     Badge.badge(
       v-if='showBadge()',
-      :level='$global.user.level')
+      :level='user.level')
     span.info {{ date }}
     nav.menu
       router-link.menu-item.messages(v-if='showMessages()', to='/messenger')
@@ -69,7 +69,8 @@
     data: () => ({
       date: '',
       pageTitle: '',
-      totalOfMessages: null
+      totalOfMessages: null,
+      user: {}
     }),
     sockets: {
       updateTotalOfMessages(data) {
@@ -84,15 +85,15 @@
         this.pageTitle = this.$router.history.current.name
       },
       showRanking() {
-        return this.$global.user.ranking
-        && this.$global.user.type !== 'child'
-        && !this.$global.user.sices
+        return this.user.ranking
+          && this.user.type !== 'child'
+          && !this.user.sices
       },
       showBadge() {
-        return !this.$global.user.sices
+        return !this.user.sices
       },
       showMessages() {
-        return this.$global.user.sices
+        return this.user.sices
       },
       showTotalMessages() {
         return this.totalOfMessages
@@ -109,10 +110,13 @@
         this.setPageTitle()
       }
     },
+    created() {
+      this.user = window.$global.user
+    },
     mounted() {
       this.setPageTitle()
 
-      if (this.$global.user.sices) {
+      if (this.user.sices) {
         const uri = '/admin/api/v1/orders/messages/unread_count'
         this.axios.get(uri)
           .then(response => {
