@@ -160,7 +160,7 @@
   },
   "terms": {
     "name": "Termos de Uso",
-    "link": "/terms-of-use",
+    "link": "/terms",
     "icon": "file-text-o",
     "allowedRoles": [
       "ROLE_PLATFORM_MASTER"
