@@ -4,7 +4,7 @@
       img.logo(
         src='~theme/assets/media/logo-small.png',
         alt='Sices Solar Logo')
-      .info(v-if='showInfo')
+      .info(v-if='showInfo()')
         span.name {{ user.name }}
         span {{ user.company }}
 </template>
