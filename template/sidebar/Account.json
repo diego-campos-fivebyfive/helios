@@ -50,31 +50,31 @@
     "subItems": {
       "modules": {
         "name": "Módulos",
-        "link": "/components/module/",
+        "link": "/component/module/",
         "icon": "th",
         "allowedRoles": "*"
       },
       "inverters": {
         "name": "Inversores",
-        "link": "/components/inverter/",
+        "link": "/component/inverter/",
         "icon": "exchange",
         "allowedRoles": "*"
       },
       "structures": {
         "name": "Estruturas",
-        "link": "/structure",
+        "link": "/component/structure",
         "icon": "sitemap",
         "allowedRoles": "*"
       },
       "stringBox": {
         "name": "String Box",
-        "link": "/stringbox",
+        "link": "/component/stringbox",
         "icon": "plug",
         "allowedRoles": "*"
       },
       "varieties": {
         "name": "Variedades",
-        "link": "/variety",
+        "link": "/component/variety",
         "icon": "wrench",
         "allowedRoles": "*"
       }
