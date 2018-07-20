@@ -1,12 +1,12 @@
 <template lang="pug">
-  router-link.header(to='/', :class='sidebarType')
-    img(
-      src='~theme/assets/media/logo-small.png',
-      alt='Sices Solar Logo')
-    .level {{ $global.user.level }}
-    .header-info(:class='sidebarType')
-      span.title {{ $global.user.name }}
-      span {{ $global.user.company }}
+  div(:class='`sidebar-${sidebarType}`')
+    router-link.header(to='/')
+      img.logo(
+        src='~theme/assets/media/logo-small.png',
+        alt='Sices Solar Logo')
+      .info(v-if='showInfo')
+        span.name {{ user.name }}
+        span {{ user.company }}
 </template>
 
 <script>
@@ -22,47 +22,49 @@
     },
     watch: {
       sidebarType() {}
+    },
+    methods: {
+      showInfo() {
+        return (this.user && this.sidebarType === 'common')
+      }
+    },
+    mounted() {
+      this.user = window.$global.user
     }
   }
 </script>
 
 <style lang="scss" scoped>
-  $img-width: 60px;
+  $collapse-logo-x: 60px;
+  $common-info-y: 38px;
 
   .header {
     background: url("~theme/assets/media/logo-cover.png");
     color: $ui-white-regular;
     display: block;
     text-align: center;
+  }
 
-    .level {
-      display: none;
-    }
+  .name {
+    display: block;
+    font-weight: 600;
+    padding: $ui-space-y/4;
+  }
 
-    &.collapse {
-      img {
-        max-width: $img-width;
-        padding: $ui-space-y;
-      }
-    }
-
-    &.common {
-      padding: $ui-space-y/2 $ui-space-x;
+  .sidebar-collapse {
+    .logo {
+      max-width: $collapse-logo-x;
+      padding: $ui-space-y;
     }
   }
 
-  .header-info {
-    &.collapse {
-      display: none;
+  .sidebar-common {
+    .header {
+      padding: $ui-space-y/2 $ui-space-x;
     }
 
-    .title {
-      font-weight: 600;
-    }
-
-    span {
-      display: block;
-      padding: 2px;
+    .info {
+      min-height: $common-info-y;
     }
   }
 </style>
