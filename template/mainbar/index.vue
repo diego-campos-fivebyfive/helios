@@ -71,18 +71,27 @@
       pageTitle: '',
       totalOfMessages: null
     }),
+    computed: {
+      user() {
+        return window.$global.user
+      }
+    },
     watch: {
       $route() {
         this.setPageTitle()
       }
     },
-    sockets: {
-      updateTotalOfMessages(data) {
-        this.totalOfMessages = this.totalOfMessages + data
+    mounted() {
+      this.setPageTitle()
 
-        const ringMessage = new Audio(ringNotify)
-        ringMessage.play()
+      if (this.user.sices) {
+        const uri = '/admin/api/v1/orders/messages/unread_count'
+        this.axios.get(uri)
+          .then(response => {
+            this.totalOfMessages = response.data.unreadMessages
+          })
       }
+      this.date = getDate()
     },
     methods: {
       setPageTitle() {
@@ -109,23 +118,14 @@
         return this.handleTwigModal.toogle
       }
     },
-    computed: {
-      user() {
-        return window.$global.user
+    sockets: {
+      updateTotalOfMessages(data) {
+        this.totalOfMessages = this.totalOfMessages + data
+
+        const ringMessage = new Audio(ringNotify)
+        ringMessage.play()
       }
     },
-    mounted() {
-      this.setPageTitle()
-
-      if (this.user.sices) {
-        const uri = '/admin/api/v1/orders/messages/unread_count'
-        this.axios.get(uri)
-          .then(response => {
-            this.totalOfMessages = response.data.unreadMessages
-          })
-      }
-      this.date = getDate()
-    }
   }
 </script>
 

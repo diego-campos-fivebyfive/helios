@@ -24,15 +24,15 @@
       Item,
       Dropdown
     },
-    data: () => ({
-      menu: []
-    }),
     props: {
       sidebarType: {
         type: String,
         required: true
       }
     },
+    data: () => ({
+      menu: []
+    }),
     computed: {
       user() {
         return window.$global.user
@@ -40,6 +40,11 @@
     },
     watch: {
       sidebarType() {}
+    },
+    mounted() {
+      this.menu = this.user.sices
+        ? menuAdmin
+        : menuAccount
     },
     methods: {
       hasRoles(item) {
@@ -53,11 +58,6 @@
 
         return Boolean(matchedRole)
       }
-    },
-    mounted() {
-      this.menu = this.user.sices
-        ? menuAdmin
-        : menuAccount
     }
   }
 </script>
