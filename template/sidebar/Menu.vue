@@ -25,13 +25,17 @@
       Dropdown
     },
     data: () => ({
-      menu: [],
-      user: {}
+      menu: []
     }),
     props: {
       sidebarType: {
         type: String,
         required: true
+      }
+    },
+    computed: {
+      user() {
+        return window.$global.user
       }
     },
     watch: {
@@ -49,9 +53,6 @@
 
         return Boolean(matchedRole)
       }
-    },
-    created() {
-      this.user = window.$global.user
     },
     mounted() {
       this.menu = this.user.sices

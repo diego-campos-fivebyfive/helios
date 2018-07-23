@@ -69,9 +69,13 @@
     data: () => ({
       date: '',
       pageTitle: '',
-      totalOfMessages: null,
-      user: {}
+      totalOfMessages: null
     }),
+    watch: {
+      $route() {
+        this.setPageTitle()
+      }
+    },
     sockets: {
       updateTotalOfMessages(data) {
         this.totalOfMessages = this.totalOfMessages + data
@@ -105,13 +109,10 @@
         return this.handleTwigModal.toogle
       }
     },
-    watch: {
-      $route() {
-        this.setPageTitle()
+    computed: {
+      user() {
+        return window.$global.user
       }
-    },
-    created() {
-      this.user = window.$global.user
     },
     mounted() {
       this.setPageTitle()

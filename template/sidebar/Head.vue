@@ -11,13 +11,15 @@
 
 <script>
   export default {
-    data: () => ({
-      user: {}
-    }),
     props: {
       sidebarType: {
         type: String,
         required: true
+      }
+    },
+    computed: {
+      user() {
+        return window.$global.user
       }
     },
     watch: {
@@ -27,9 +29,6 @@
       showInfo() {
         return (this.user && this.sidebarType === 'common')
       }
-    },
-    mounted() {
-      this.user = window.$global.user
     }
   }
 </script>
