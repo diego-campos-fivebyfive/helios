@@ -1,155 +1,193 @@
-FRONTEND
-========
+# PADRÕES ADOTADOS PARA O FRONTEND
+## 1. Template
+### Declaração de tipagem de componentes
+Quando um componente tiver uma tipagem, ex:
+`sidebarType: 'common' || 'collapse'` é utilizado uma `div` contendo a `:class`, a qual recebe o `type` para que dessa forma seja possível englobar todo o componente. Exemplo:
+```html
+// bad:
 
-1. Collection Components
-
-  - 1.1. Button
-
-    - 1.1.1. Properties
-
-      - **icon**: Attribute used to create an icon inside the button:
-        - Valid values: Use font awesome icon names avoiding use of `fa-` prefix.
-
-      - **label**: Text content or label to the button or link:
-        - Valid values: Text String, not required.
-
-      - **link**: Define the component as `a` tag if has value, else as button:
-        - Valid values: Link, not required.
-
-      - **pos**: Element position in inline group, with no space and border rounded:
-        - Valid values: first (left rounded), middle (no rounded), last (right rounded), single (full rounded).
-
-      - **type**: Type of button, define colors and patterns:
-        - Valid values: primary-common, primary-strong.
+<template lang="pug">
+   router-link.header(to='/',
+   :class='sidebarType')
+    ...
+</template>
 
 
-2. Using Local Backend API
+// good:
 
-  Before you start webpack's dev server you must sign in and export `PHPSESSID` Session ID:
+<template lang="pug">
+  div(:class='`sidebar-${sidebarType}`')
+    router-link.header(to='/')
+    ...
+</template>
+```
 
-    ```
-    $ export SICES_PHPSESSID=3fhdfl9r6dgautom48ls4eg064
-    ```
+## 2. Script
+### Definição de conteúdo de grupos de state
+O conteúdo de grupos de state `watch` e do `vue life-cycle` é composto sempre por métodos, nunca pela própria regra. Exemplo:
+```js
+// bad:
 
-3. Codding style
+mounted() {
+  this.menu = this.user.admin
+    ? menuAdmin
+    : menuUser
+}
 
-  Classes should define objects instead of functions:
-  ```
-  // Good
-  .title {
-    text-align: left;
+
+// good:
+
+mounted() {
+  setMenuType()
+},
+methods: {
+  setMenuType() {
+    // ...
+  }
+}
+```
+
+### Ordem dos atributos de components
+Os atributos de componentes são definidos na seguinte ordem:
+1. Grupo de config de component:
+    - `id`
+    - `render`
+    - `components`
+
+2. Grupo de data:
+    - `props`
+    - `data`
+    - `computed`
+
+3. Grupo de state de data:
+    - `watch`
+
+4. Grupo de state de component:
+  - vue life-cycle
+    - `beforeCreate`, `created`, `beforeMount`, `mounted`, `beforeUpdate`, `updated`, `activated`, `deactivated`, `beforeDestroy`, `destroyed`, `errorCaptured`.
+
+5. Grupo de methods
+    - `methods`
+    - `socket`
+
+Exemplo:
+```js
+<script>
+export default {
+    components: { // 1
+      // ...
+    },
+    props:{ // 2
+      // ...
+    },
+    data: () => ({ //2
+      // ...
+    }),
+    watch: { // 3
+      // ...
+    },
+    mounted() { // 4
+      setMenuType() {}
+    },
+    methods: { // 5
+      setMenuType() {
+        // ...
+      }
+    }
+  }
+</script>
+```
+### Ordem do conteúdo de atributos de components
+O conteúdo de um componente de atributo segue ordem alfabética. Exemplo:
+```js
+props: {
+  dropdown: {
+    // ...
+  },
+  hasRoles: {
+    // ...
+  },
+  sidebarType: {
+    // ...
+  }
+}
+
+/*...*/
+
+methods: {
+  closeDropdown() {
+    // ...
+  },
+  hideDropdown() {
+    // ...
+  },
+  openCommonDropdown() {
+    // ...
+  },
+  showDropdown() {
+    // ...
+  },
+  toogleList() {
+    // ...
+  }
+}
+```
+## 3. Style
+### Ordem dos elementos e classes e seus atributos
+- Os elementos e classes de utilização geral são estruturados sempre no início de `<style>`. Demais elementos e classes de utilização individual são estruturados logo abaixo dos de utilização geral. Ambos seguem ordem alfabética em suas respectivas disposições e são separados por uma linha vazia.
+Exemplo:
+```CSS
+/* bad: */
+
+<style lang="scss" scoped>
+.header {...} /* utilização  geral */
+.sidebar-collapse { /* utilização  individual */
+  .logo {...}
+}
+.sidebar-common { /* utilização  individual */
+  .info {...}
+  .header {...}
+}
+
+.title {...} /* utilização  geral */
+</style>
+
+
+/* good: */
+
+<style lang="scss" scoped>
+.header {...} /* utilização  geral */
+
+.title {...} /* utilização  geral */
+
+.sidebar-collapse { /* utilização  individual */
+  .logo {...}
+}
+
+.sidebar-common { /* utilização  individual */
+  .header {...}
+  .info {...}
+}
+</style>
+```
+- Os atributos dos elementos e classes são definidos sempre em ordem alfabética. Exemplo:
+```CSS
+/* bad: */
+
+.name {
+    padding: $ui-space-y/4;
+    font-weight: 600;
+    text-align: center;
+    display: block;
   }
 
-  // Bad
-  .left {
-    text-align: left;
+
+/* good: */
+
+.name {
+    display: block;
+    font-weight: 600;
+    padding: $ui-space-y/4;
+    text-align: center;
   }
-  ```
-
-4. Structure
-
-  Components
-  |- Collection
-  |- Template
-  |- Pages
-
-  - 4.1. Collection:
-
-    - Uses no scoped styles
-    - Uses BEM nomenclatures to own elements classes
-    - All component's BEM element classes must be prefixed by `.collection-`
-    - All BEM elements must not uses nesting
-    - Does not use BEM nomenclatures to default style to external elements classes
-    - Default styles to external elements classes must be placed inside own BEM classes
-      - Default component's types that uses BEM elements inside, should be declared using placeholder
-      ```
-      // Bad
-      .collection-table {
-        .stripped {
-          .collection-table-header {
-            //some code
-          }
-        }
-      }
-
-      // Good
-      %stripped {
-        .collection-table-header {
-          //some code
-        }
-      }
-
-      .collection-table {
-        &.stripped {
-          @extend %stripped;
-        }
-      }
-      ```
-
-  - 4.2. Template:
-
-    - All parts that are not pages
-    - Uses scoped styles
-    - Does not use BEM nomenclatures
-
-  - 4.3. Modules:
-
-    - All routed components (`router-vue`)
-    - Uses scoped styles
-    - Does not use BEM nomenclatures
-
-    4.3.1. Application
-
-      - Componentes "genéricos" da aplicação, são incluidos na pasta application, onde são alocados por grupo (pasta) e por dados (arquivo).
-        Para inclusão do componente o importamos com o seguinte nome de váriavel: `Nome do arquivo no singular` + `Grupo`.
-
-        ex.:
-        ```javascript
-        import AccountSelect from 'application/select/Accounts'
-
-        export default {
-           components: {
-             AccountSelect
-           }
-        }
-        ```
-
-        Onde:
-          O componente de select de `Accounts` encontrasse na pasta `select`, logo a variavel será: `AccountSelect`.
-
-5. Forms
-
-  `v-model` properties must be mapped inside a form data property:
-    ```
-    // Bad
-    data: () => ({
-      coupon: {}
-    })
-
-    // Bad
-    data: () => ({
-      coupon: {
-        name: null
-      }
-    })
-
-    // Bad
-    data: () => ({
-      form: {}
-    })
-
-    // Good
-    data: () => ({
-      form: {
-        name: null
-      }
-    })
-    ```
-6 - Layout
-  - **z-index**:
-    - Root: 0 to 50
-    - Navbar: 100 to 150
-    - Sidebar: 200 to 250
-    - Modals and floating components: 300 to 350
-
-
+```
