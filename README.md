@@ -1,30 +1,28 @@
 # PADRÕES ADOTADOS PARA O FRONTEND
->> Julho/2018
 ## 1. Estrutura de pastas
 ### 1.1. Clients
 Os clientes são definidos no interior da pasta raiz do projeto e são prefixados com `web-` seguido do nome do cliente. Exemplo: `web-sices`, `web-integrador`. Cada cliente é composto por suas páginas, tema, e demais configurações necessárias.
 ### 1.2. Pages
-Na Imagem-1 é possível observar o que entende-se por `página` e `pageForm`.
+Na Imagem-1 é possível observar o que entende-se por páginas. Um exemplo de `page` e `pageForm` é `'account'` e `'accountForm'`, respectivamente.
 
 ![Imagem-1](../export.png "pageForm")
 
-Cada `página` tem sua própria pasta definida no interior de `web-client/src/`, bem como cada `pageForm`.
+
+Cada página é definida dentro do diretório de page no interior de cada módulo, sendo assim temos: `web-client/src/module/page/page-name`.
 Exemplo:
 ```
 web-client
-|__ +/src
-|     |__ +/account
-|     |    |__ +/config
-|     |    |    |__ ...
-|     |    |__ +/data
-|     |    |    |__ ...
-|     |    |__ ...
-|     |__ +/accountForm
-|     |    |__ +/form
-|     |    |    |__ ...
-|     |__ +/terms
-|     |__  |...
-|     |__ ...
+├── /src
+|     └── /account
+|          ├── /config
+|          |    └── ...
+|          ├── /data
+|          |    └── ...
+|          └── /page
+|               ├── /accout
+|               |    └── ...
+|               ├── /accoutForms
+└─              └── ...
 ```
 
 
