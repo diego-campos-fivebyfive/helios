@@ -19,6 +19,10 @@
       icon: {
         type: String,
         required: true
+      },
+      type: {
+        type: String,
+        required: true
       }
     }
   }
@@ -35,21 +39,41 @@
     margin: $ui-space-y;
     text-align: center;
 
-    svg {
-      vertical-align: sub;
-    }
+      svg {
+        vertical-align: sub;
+      }
 
-    .collection-banner-icon {
-      margin-right: 0.5rem;
-      display: inline-block;
-    }
+      .collection-banner-icon {
+        margin-right: 0.5rem;
+        display: inline-block;
+      }
 
-    .collection-banner-title {
-      display: inline-block;
-    }
+      .collection-banner-title {
+        display: inline-block;
+      }
 
-    .collection-banner-text {
-      padding: $ui-space-y/2;
-    }
+      .collection-banner-text {
+        padding: $ui-space-y/2;
+      }
+
+      &.warning {
+        background-color: $ui-orange-light;
+        color: $ui-white-regular;
+      }
+
+      &.info {
+        background-color: $ui-blue-lighter;
+        color: $ui-blue-darken;
+      }
+
+      &.default {
+        background-color: $ui-white-regular;
+        color: $ui-gray-dark;
+      }
+
+      &.danger {
+        background-color: $ui-red-light;
+        color: $ui-white-regular;
+      }
   }
 </style>
