@@ -29,7 +29,10 @@
       }
     },
     mounted() {
-      this.user = window.$global.user
+      window.$global.getUser
+        .then(user => {
+          this.user = user
+        })
     }
   }
 </script>
