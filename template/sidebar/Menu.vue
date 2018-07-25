@@ -32,11 +32,6 @@
     data: () => ({
       menu: []
     }),
-    computed: {
-      user() {
-        return this.$global.user
-      }
-    },
     watch: {
       sidebarType() {}
     },
@@ -44,18 +39,18 @@
       this.setMenu()
     },
     methods: {
-      hasAccess(menuItem) {
-        if (menuItem.allowedRoles === '*') {
+      hasAccess(allowedRoles, userRoles) {
+        if (allowedRoles === '*') {
           return true
         }
 
-        return menuItem.allowedRoles.some(allowedRole => (
-          this.user.roles.some(userRole => (
+        return allowedRoles.some(allowedRole => (
+          userRoles.some(userRole => (
             userRole === allowedRole
           ))
         ))
       },
-      serializeMenu(menu) {
+      serializeMenu(menu, userRoles) {
         const serializeNode = node =>
           Object.entries(node)
             .reduce((acc, [menuItemName, menuItem]) => {
@@ -71,7 +66,7 @@
                 return acc
               }
 
-              if (this.hasAccess(menuItem)) {
+              if (this.hasAccess(menuItem.allowedRoles, userRoles)) {
                 acc[menuItemName] = menuItem
                 return acc
               }
@@ -82,12 +77,14 @@
         return serializeNode(menu)
       },
       setMenu() {
-        // promise user
-        const menuMap = this.user.sices
-          ? menuAdmin
-          : menuAccount
+        window.$global.getUser
+          .then(user => {
+            const menuMap = user.sices
+              ? menuAdmin
+              : menuAccount
 
-        this.menu = this.serializeMenu(menuMap)
+            this.menu = this.serializeMenu(menuMap, user.roles)
+          })
       }
     }
   }
