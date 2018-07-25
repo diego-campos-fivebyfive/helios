@@ -45,11 +45,6 @@
       this.setMenuType()
     },
     methods: {
-      setMenuType() {
-        this.menu = this.user.sices
-          ? menuAdmin
-          : menuAccount
-      },
       hasRoles(item) {
         if (item.allowedRoles === '*') {
           return true
@@ -60,6 +55,11 @@
           .find(allowedRole => allowedRole === role))
 
         return Boolean(matchedRole)
+      },
+      setMenuType() {
+        this.menu = this.user.sices
+          ? menuAdmin
+          : menuAccount
       }
     }
   }

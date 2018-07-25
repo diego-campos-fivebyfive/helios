@@ -53,6 +53,22 @@
       }
     },
     methods: {
+      done(response) {
+        this.$refs.modal.hide()
+
+        response
+          .then(message => {
+            this.$emit('updateList')
+            this.notify(message, 'primary-common')
+          })
+          .catch(message => {
+            this.notify(message, 'danger-common')
+          })
+      },
+      getFieldSize([grow, shrink, cols]) {
+        const base = this.getColumnsSize * cols
+        return `flex: ${grow} ${shrink} ${base}px`
+      },
       notify(message, type) {
         this.$refs.notification.notify(message, type)
       },
@@ -68,18 +84,6 @@
         this.payload = payload.init(this.schema, data, this.$set)
         this.$refs.modal.show()
       },
-      done(response) {
-        this.$refs.modal.hide()
-
-        response
-          .then(message => {
-            this.$emit('updateList')
-            this.notify(message, 'primary-common')
-          })
-          .catch(message => {
-            this.notify(message, 'danger-common')
-          })
-      },
       validate(field) {
         const { rejected, exception } = validate(field)
 
@@ -88,10 +92,6 @@
         if (rejected) {
           this.notify(exception, 'danger-common')
         }
-      },
-      getFieldSize([grow, shrink, cols]) {
-        const base = this.getColumnsSize * cols
-        return `flex: ${grow} ${shrink} ${base}px`
       }
     }
   }

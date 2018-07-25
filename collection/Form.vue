@@ -69,16 +69,6 @@
             notify(message, 'danger-common')
           })
       },
-      validate(field) {
-        const { rejected, exception } = validate(field)
-
-        this.$set(field, 'rejected', rejected)
-
-        if (rejected) {
-          const { notify } = this.$refs.notification
-          notify(exception, 'danger-common')
-        }
-      },
       disableFields({ state, manager }) {
         this.payload.forEach(item => {
           if (
@@ -106,6 +96,16 @@
 
         this.action = Object.assign(defaultActionParams, currentAction)
         this.payload = payload.init(this.schema, data, this.$set)
+      },
+      validate(field) {
+        const { rejected, exception } = validate(field)
+
+        this.$set(field, 'rejected', rejected)
+
+        if (rejected) {
+          const { notify } = this.$refs.notification
+          notify(exception, 'danger-common')
+        }
       }
     }
   }

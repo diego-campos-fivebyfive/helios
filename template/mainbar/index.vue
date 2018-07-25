@@ -53,6 +53,9 @@
       this.setCurrentDate()
     },
     methods: {
+      getStateTwigModal() {
+        return this.handleTwigModal.state
+      },
       setTotalOfMessages() {
         if (!this.user.sices) {
           return
@@ -80,9 +83,6 @@
       },
       showTotalMessages() {
         return this.totalOfMessages
-      },
-      getStateTwigModal() {
-        return this.handleTwigModal.state
       },
       toggleTwigModal() {
         return this.handleTwigModal.toogle

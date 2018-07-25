@@ -22,9 +22,6 @@
       this.hideWhenEscIsPressed()
     },
     methods: {
-      show() {
-        this.open = true
-      },
       hide() {
         this.open = false
       },
@@ -36,6 +33,9 @@
             this.hide()
           }
         })
+      },
+      show() {
+        this.open = true
       }
     }
   }

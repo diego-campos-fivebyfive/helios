@@ -41,15 +41,15 @@
       }
     },
     methods: {
+      selectedValue(option) {
+        return this.selected === option.value
+      },
       updateOption(selectedOption) {
         const currentOption = this.options.find(eachOption => (
           String(eachOption.value) === selectedOption
         ))
 
         this.$emit('update', currentOption)
-      },
-      selectedValue(option) {
-        return this.selected === option.value
       }
     }
   }
