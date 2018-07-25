@@ -32,12 +32,12 @@
         type: Object,
         required: true
       },
-      sidebarType: {
-        type: String,
-        required: true
-      },
       hasRoles: {
         type: Function,
+        required: true
+      },
+      sidebarType: {
+        type: String,
         required: true
       }
     },

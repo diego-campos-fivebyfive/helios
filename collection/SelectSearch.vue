@@ -20,14 +20,14 @@
       Field
     },
     props: {
-      field: {
-        type: Object,
-        required: true
-      },
       disabled: {
         type: Boolean,
         required: false,
         default: false
+      },
+      field: {
+        type: Object,
+        required: true
       },
       options: {
         type: Array,
