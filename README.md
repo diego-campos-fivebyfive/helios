@@ -5,7 +5,7 @@ Os clientes são definidos no interior da pasta raiz do projeto e são prefixado
 ### 1.2. Pages
 Na Imagem-1 é possível observar o que entende-se por páginas. Um exemplo de `page` e `pageForm` é `'account'` e `'accountForm'` respectivamente.
 
-![Imagem-1](../pages.png "pageForm")
+![Imagem-1](./pages.png "pageForm")
 
 
 Cada página é definida dentro do diretório de page no interior de cada módulo, sendo assim temos: `web-client/src/module/page/page-name`.
@@ -81,7 +81,7 @@ mounted() {
 // good:
 
 mounted() {
-  setMenuType()
+  this.setMenuType()
 },
 methods: {
   setMenuType() {
@@ -94,6 +94,7 @@ methods: {
 Os atributos de componentes são definidos na seguinte ordem:
 1. Grupo de config de component:
     - `id`
+    - `name`
     - `render`
     - `components`
 
