@@ -26,7 +26,7 @@ web-client
 ```
 
 ## 2. Estrutura de um arquivo .vue
-Um arquivo .vue é composto por três partes, são eles `template`, `script` e `style`. Exemplo:
+Um arquivo .vue é composto por três partes, são elas `template`, `script` e `style`. Exemplo:
 ```html
 <template lang="pug">
   ...
