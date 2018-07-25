@@ -14,7 +14,6 @@
     ul(v-show='showDropdown()', :style='style.listTopPosition')
       li(v-for='item in dropdown.subItems')
         Item(
-          v-if="hasRoles(item)",
           :item='item',
           :itemDropdown='true',
           :sidebarType='sidebarType')
@@ -34,10 +33,6 @@
       },
       sidebarType: {
         type: String,
-        required: true
-      },
-      hasRoles: {
-        type: Function,
         required: true
       }
     },
