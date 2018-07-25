@@ -19,14 +19,14 @@
       Field
     },
     props: {
-      field: {
-        type: Object,
-        required: true
-      },
       disabled: {
         type: Boolean,
         required: false,
         default: false
+      },
+      field: {
+        type: Object,
+        required: true
       },
       options: {
         type: Array,
@@ -41,15 +41,15 @@
       }
     },
     methods: {
+      selectedValue(option) {
+        return this.selected === option.value
+      },
       updateOption(selectedOption) {
         const currentOption = this.options.find(eachOption => (
           String(eachOption.value) === selectedOption
         ))
 
         this.$emit('update', currentOption)
-      },
-      selectedValue(option) {
-        return this.selected === option.value
       }
     }
   }

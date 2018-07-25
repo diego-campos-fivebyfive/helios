@@ -34,48 +34,6 @@
       },
       payload: {}
     }),
-    methods: {
-      notify(message, type) {
-        this.$refs.notification.notify(message, type)
-      },
-      show(action, data) {
-        const currentAction = this.actions[action]
-        const defaultActionParams = this.actions.default || {}
-
-        if (!currentAction.component) {
-          throw new Error(`Error: ${action} action component is not defined`)
-        }
-
-        this.action = Object.assign(defaultActionParams, currentAction)
-        this.payload = payload.init(this.schema, data, this.$set)
-        this.$refs.modal.show()
-      },
-      done(response) {
-        this.$refs.modal.hide()
-
-        response
-          .then(message => {
-            this.$emit('updateList')
-            this.notify(message, 'primary-common')
-          })
-          .catch(message => {
-            this.notify(message, 'danger-common')
-          })
-      },
-      validate(field) {
-        const { rejected, exception } = validate(field)
-
-        this.$set(field, 'rejected', rejected)
-
-        if (rejected) {
-          this.notify(exception, 'danger-common')
-        }
-      },
-      getFieldSize([grow, shrink, cols]) {
-        const base = this.getColumnsSize * cols
-        return `flex: ${grow} ${shrink} ${base}px`
-      }
-    },
     computed: {
       getColumnsSize() {
         const sizeTypes = {
@@ -92,6 +50,48 @@
         const spaces = parseInt(styles['ui-space-x'], 10) * 2
 
         return (baseSize - spaces) / this.action.layout.columns.total
+      }
+    },
+    methods: {
+      done(response) {
+        this.$refs.modal.hide()
+
+        response
+          .then(message => {
+            this.$emit('updateList')
+            this.notify(message, 'primary-common')
+          })
+          .catch(message => {
+            this.notify(message, 'danger-common')
+          })
+      },
+      getFieldSize([grow, shrink, cols]) {
+        const base = this.getColumnsSize * cols
+        return `flex: ${grow} ${shrink} ${base}px`
+      },
+      notify(message, type) {
+        this.$refs.notification.notify(message, type)
+      },
+      show(action, data) {
+        const currentAction = this.actions[action]
+        const defaultActionParams = this.actions.default || {}
+
+        if (!currentAction.component) {
+          throw new Error(`Error: ${action} action component is not defined`)
+        }
+
+        this.action = Object.assign(defaultActionParams, currentAction)
+        this.payload = payload.init(this.schema, data, this.$set)
+        this.$refs.modal.show()
+      },
+      validate(field) {
+        const { rejected, exception } = validate(field)
+
+        this.$set(field, 'rejected', rejected)
+
+        if (rejected) {
+          this.notify(exception, 'danger-common')
+        }
       }
     }
   }

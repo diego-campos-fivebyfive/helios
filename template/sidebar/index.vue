@@ -46,11 +46,11 @@
       sidebarType() {}
     },
     methods: {
-      toggleTwigModal() {
-        return this.handleTwigModal.toogle
-      },
       getStateTwigModal() {
         return this.handleTwigModal.state
+      },
+      toggleTwigModal() {
+        return this.handleTwigModal.toogle
       }
     }
   }

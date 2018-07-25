@@ -20,14 +20,14 @@
       Field
     },
     props: {
-      field: {
-        type: Object,
-        required: true
-      },
       disabled: {
         type: Boolean,
         required: false,
         default: false
+      },
+      field: {
+        type: Object,
+        required: true
       },
       options: {
         type: Array,
@@ -45,12 +45,12 @@
       showingOptions: false
     }),
     methods: {
-      showOptions() {
-        return this.showingOptions
-      },
       requestOptions(param) {
         this.$emit('request', param)
         this.showingOptions = true
+      },
+      showOptions() {
+        return this.showingOptions
       },
       updateOption(selectedOption) {
         this.showingOptions = false
