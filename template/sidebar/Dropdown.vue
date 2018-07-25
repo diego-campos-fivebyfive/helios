@@ -32,12 +32,12 @@
         type: Object,
         required: true
       },
-      sidebarType: {
-        type: String,
-        required: true
-      },
       hasRoles: {
         type: Function,
+        required: true
+      },
+      sidebarType: {
+        type: String,
         required: true
       }
     },
@@ -48,7 +48,22 @@
         listTopPosition: ''
       }
     }),
+    watch: {
+      sidebarType() {
+        this.hideDropdownOnCollapse()
+      }
+    },
     methods: {
+      closeDropdown() {
+        if (this.sidebarType === 'collapse') {
+          this.dropdownActived = !this.dropdownActived
+        }
+      },
+      hideDropdownOnCollapse() {
+        if (this.sidebarType === 'collapse') {
+          this.dropdownActived = false
+        }
+      },
       updateElementPosition(event, element) {
         if (event.target.type === 'button') {
           const targetPosition = event.target.getBoundingClientRect()
@@ -67,19 +82,17 @@
           }
         }
       },
-      toogleList(event) {
-        this.updateElementPosition(event, 'listTopPosition')
-        this.dropdownActived = !this.dropdownActived
-      },
-      closeDropdown() {
-        if (this.sidebarType === 'collapse') {
-          this.dropdownActived = !this.dropdownActived
-        }
-      },
       openCommonDropdown(event) {
         if (this.sidebarType === 'common') {
           this.toogleList(event)
         }
+      },
+      showDropdown() {
+        return this.dropdownActived
+      },
+      toogleList(event) {
+        this.updateElementPosition(event, 'listTopPosition')
+        this.dropdownActived = !this.dropdownActived
       },
       openCollapseDropdown(event) {
         if (
@@ -89,18 +102,8 @@
           this.toogleList(event)
         }
       },
-      showDropdown() {
-        return this.dropdownActived
-      },
       hideDropdown() {
         return !this.dropdownActived
-      }
-    },
-    watch: {
-      sidebarType() {
-        if (this.sidebarType === 'collapse') {
-          this.dropdownActived = false
-        }
       }
     }
   }

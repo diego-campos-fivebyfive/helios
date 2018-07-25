@@ -8,7 +8,7 @@
 <script>
   export default {
     props: {
-      title: {
+      icon: {
         type: String,
         required: true
       },
@@ -16,7 +16,7 @@
         type: String,
         required: true
       },
-      icon: {
+      title: {
         type: String,
         required: true
       },

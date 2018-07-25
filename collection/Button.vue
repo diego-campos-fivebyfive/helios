@@ -23,7 +23,25 @@
 <script>
   export default {
     props: {
+      action: {
+        type: Function,
+        required: false,
+        default: () => {}
+      },
+      pos: {
+        type: String,
+        required: false,
+        default: 'single'
+      },
+      redirect: {
+        type: String,
+        required: false
+      },
       label: {
+        type: String,
+        required: false
+      },
+      link: {
         type: String,
         required: false
       },
@@ -31,24 +49,6 @@
         type: String,
         required: false,
         default: 'common'
-      },
-      pos: {
-        type: String,
-        required: false,
-        default: 'single'
-      },
-      action: {
-        type: Function,
-        required: false,
-        default: () => {}
-      },
-      link: {
-        type: String,
-        required: false
-      },
-      redirect: {
-        type: String,
-        required: false
       }
     }
   }

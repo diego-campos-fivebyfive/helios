@@ -33,13 +33,10 @@
       }
     }),
     methods: {
-      updateSidebarType() {
-        this.sidebarType = (this.sidebarType === 'collapse')
-          ? 'common'
-          : 'collapse'
-
-        this.stateSidebarType = this.sidebarType
-
+      handleTwigModalOnWindow() {
+        window.handleTwigModal = handler => {
+          this.handleTwigModal = handler
+        }
       },
       setDefaultSidebarType() {
         this.sidebarType = this.$route.meta.sidebar || this.stateSidebarType
@@ -50,18 +47,24 @@
       },
       showMainbar() {
         return this.mainbarType !== "none"
+      },
+      updateSidebarType() {
+        this.sidebarType = (this.sidebarType === 'collapse')
+          ? 'common'
+          : 'collapse'
+
+        this.stateSidebarType = this.sidebarType
+      },
+      updateVueRouteOnWindow() {
+        window.updateVueRoute = path => {
+          this.$router.push({ path })
+        }
       }
     },
     mounted() {
       this.setDefaultSidebarType()
-
-      window.updateVueRoute = path => {
-        this.$router.push({ path })
-      }
-
-      window.handleTwigModal = handler => {
-        this.handleTwigModal = handler
-      }
+      this.updateVueRouteOnWindow()
+      this.handleTwigModalOnWindow()
     },
     watch: {
       $route() {

@@ -35,44 +35,6 @@
       },
       payload: {}
     }),
-    methods: {
-      done(response) {
-        const { notify } = this.$refs.notification
-
-        response
-          .then(message => {
-            this.$emit('updateList')
-            notify(message, 'primary-common')
-          })
-          .catch(message => {
-            notify(message, 'danger-common')
-          })
-      },
-      validate(field) {
-        const { rejected, exception } = validate(field)
-
-        this.$set(field, 'rejected', rejected)
-
-        if (rejected) {
-          const { notify } = this.$refs.notification
-          notify(exception, 'danger-common')
-        }
-      },
-      disableFields({ state, manager }) {
-        this.payload.forEach(item => {
-          if (
-            item.disabled
-            && item.disabled.manager === manager
-          ) {
-            this.$set(item.disabled, 'state', state)
-          }
-        })
-      },
-      getFieldSize([grow, shrink, cols]) {
-        const base = this.getColumnsSize * cols
-        return `flex: ${grow} ${shrink} ${base}px`
-      }
-    },
     computed: {
       getColumnsSize() {
         const sizeTypes = {
@@ -92,18 +54,59 @@
       }
     },
     mounted() {
-      const data = {}
-      const action = 'create'
+      this.setPayloadAction()
+    },
+    methods: {
+      done(response) {
+        const { notify } = this.$refs.notification
 
-      const currentAction = this.actions[action]
-      const defaultActionParams = this.actions.default || {}
+        response
+          .then(message => {
+            this.$emit('updateList')
+            notify(message, 'primary-common')
+          })
+          .catch(message => {
+            notify(message, 'danger-common')
+          })
+      },
+      disableFields({ state, manager }) {
+        this.payload.forEach(item => {
+          if (
+            item.disabled
+            && item.disabled.manager === manager
+          ) {
+            this.$set(item.disabled, 'state', state)
+          }
+        })
+      },
+      getFieldSize([grow, shrink, cols]) {
+        const base = this.getColumnsSize * cols
+        return `flex: ${grow} ${shrink} ${base}px`
+      },
+      setPayloadAction() {
+        const data = {}
+        const action = 'create'
 
-      if (!currentAction.component) {
-        throw new Error(`Error: ${action} action component is not defined`)
+        const currentAction = this.actions[action]
+        const defaultActionParams = this.actions.default || {}
+
+        if (!currentAction.component) {
+          throw new Error(`Error: ${action} action component is not defined`)
+        }
+
+        this.action = Object.assign(defaultActionParams, currentAction)
+        this.payload = payload.init(this.schema, data, this.$set)
+      },
+      validate(field) {
+        const { rejected, exception } = validate(field)
+
+        this.$set(field, 'rejected', rejected)
+
+        if (rejected) {
+          const { notify } = this.$refs.notification
+          notify(exception, 'danger-common')
+        }
       }
-
-      this.action = Object.assign(defaultActionParams, currentAction)
-      this.payload = payload.init(this.schema, data, this.$set)
     }
   }
 </script>

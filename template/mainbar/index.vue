@@ -12,7 +12,7 @@
     Badge.badge(
       v-if='showBadge()',
       :level='user.level')
-    span.info {{ date }}
+    span.info {{ currentDate }}
     nav.menu
       router-link.menu-item.messages(
         v-if='showMessages()',
@@ -29,42 +29,8 @@
 </template>
 
 <script>
-  const getDate = () => {
-    const months = [
-      'janeiro',
-      'fevereiro',
-      'março',
-      'abril',
-      'maio',
-      'junho',
-      'julho',
-      'agosto',
-      'setembro',
-      'outubro',
-      'novembro',
-      'dezembro'
-    ]
-
-    const daysInTheWeek = [
-      'domingo',
-      'segunda-feira',
-      'terça-feira',
-      'quarta-feira',
-      'quinta-feira',
-      'sexta-feira',
-      'sábado'
-    ]
-
-    const date = new Date()
-    const year = date.getFullYear()
-    const month = months[date.getMonth()]
-    const day = date.getDate()
-    const dayInTheWeek = daysInTheWeek[date.getDay()]
-
-    return `${dayInTheWeek}, ${day} de ${month} de ${year}`
-  }
-
   import ringNotify from 'theme/assets/media/ring-notify.wav'
+
   export default {
     props: {
       handleTwigModal: {
@@ -73,7 +39,7 @@
       }
     },
     data: () => ({
-      date: '',
+      currentDate: '',
       pageTitle: '',
       user: {},
       totalOfMessages: null
@@ -85,19 +51,25 @@
       }
     },
     created() {
-      this.setCurrentDate()
       this.setUser()
     },
     mounted() {
-      if (this.user.sices) {
-        const uri = '/admin/api/v1/orders/messages/unread_count'
-        this.axios.get(uri)
-          .then(response => {
-            this.totalOfMessages = response.data.unreadMessages
-          })
-      }
+      this.setCurrentDate()
+      this.setTotalOfMessages()
     },
     methods: {
+      getStateTwigModal() {
+        return this.handleTwigModal.state
+      },
+      setTotalOfMessages() {
+        if (this.user.sices) {
+          this.axios.get('/admin/api/v1/orders/messages/unread_count')
+            .then(response => {
+              this.totalOfMessages = response.data.unreadMessages
+            })
+        }
+      },
+
       setPageTitle() {
         this.pageTitle = this.$router.history.current.meta.title
       },
@@ -108,7 +80,7 @@
           })
       },
       setCurrentDate() {
-        this.date = getDate()
+        this.currentDate = getDate()
       },
       showRanking() {
         return this.user.ranking
@@ -126,11 +98,42 @@
       showTotalMessages() {
         return this.totalOfMessages
       },
-      getStateTwigModal() {
-        return this.handleTwigModal.state
-      },
       toggleTwigModal() {
         return this.handleTwigModal.toogle
+      },
+      setCurrentDate() {
+        const months = [
+          'janeiro',
+          'fevereiro',
+          'março',
+          'abril',
+          'maio',
+          'junho',
+          'julho',
+          'agosto',
+          'setembro',
+          'outubro',
+          'novembro',
+          'dezembro'
+        ]
+
+        const daysInTheWeek = [
+          'domingo',
+          'segunda-feira',
+          'terça-feira',
+          'quarta-feira',
+          'quinta-feira',
+          'sexta-feira',
+          'sábado'
+        ]
+
+        const date = new Date()
+        const year = date.getFullYear()
+        const month = months[date.getMonth()]
+        const day = date.getDate()
+        const dayInTheWeek = daysInTheWeek[date.getDay()]
+
+        this.currentDate = `${dayInTheWeek}, ${day} de ${month} de ${year}`
       }
     },
     sockets: {

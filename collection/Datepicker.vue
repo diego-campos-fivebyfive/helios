@@ -18,15 +18,15 @@
       Datepicker,
       Field
     },
-    data: () => ({
-      language: ptBR
-    }),
     props: {
       field: {
         type: Object,
         required: true
       }
     },
+    data: () => ({
+      language: ptBR
+    }),
     methods: {
       customFormatter(date) {
         return this.$moment(date).format('DD/MM/YYYY')

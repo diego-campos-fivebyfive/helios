@@ -27,12 +27,12 @@
       hide() {
         this.open = false
       },
+      removeItem() {
+        this.$emit('removeItem', this.id)
+      },
       show(id) {
         this.id = id
         this.open = true
-      },
-      removeItem() {
-        this.$emit('removeItem', this.id)
       }
     }
   }

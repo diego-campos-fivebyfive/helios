@@ -42,9 +42,7 @@
       sidebarType() {}
     },
     mounted() {
-      this.menu = this.user.sices
-        ? menuAdmin
-        : menuAccount
+      this.setMenuType()
     },
     methods: {
       hasRoles(item) {
@@ -57,6 +55,11 @@
           .find(allowedRole => allowedRole === role))
 
         return Boolean(matchedRole)
+      },
+      setMenuType() {
+        this.menu = this.user.sices
+          ? menuAdmin
+          : menuAccount
       }
     }
   }
