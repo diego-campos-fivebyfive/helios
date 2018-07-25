@@ -4,7 +4,7 @@
       src='~theme/assets/media/logo-inverse.png')
     .collection-badge-label
       | Sices
-      span.collection.badge-label-level {{ level }}
+      span.collection-badge-label-level {{ level }}
 </template>
 
 <script>
@@ -57,7 +57,7 @@
       text-align: left;
       text-transform: uppercase;
 
-      .collection.badge-label-level {
+      .collection-badge-label-level {
         display: block;
         font-size: 1.25em;
       }

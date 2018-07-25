@@ -4,16 +4,22 @@
       .header-cover(
         v-show='getStateTwigModal()',
         v-on:click='toggleTwigModal')
-    h1.title {{ pageTitle }}
-    span.ranking(v-if='showRanking()')
+    h1.title
+      | {{ pageTitle }}
+    span.ranking(
+      v-if='showRanking()')
       | {{ user.ranking }} pontos
     Badge.badge(
       v-if='showBadge()',
       :level='user.level')
     span.info {{ currentDate }}
     nav.menu
-      router-link.menu-item.messages(v-if='showMessages()', to='/messenger')
-        Icon.messages-icon(name='envelope')
+      router-link.menu-item.messages(
+        v-if='showMessages()',
+        to='/messenger',
+        class='')
+        Icon.messages-icon(
+          name='envelope')
         label.messages-label(v-if='showTotalMessages()')
           | {{ totalOfMessages }}
       a.menu-item.leave(
@@ -35,40 +41,46 @@
     data: () => ({
       currentDate: '',
       pageTitle: '',
+      user: {},
       totalOfMessages: null
     }),
-    computed: {
-      user() {
-        return window.$global.user
+    watch: {
+      $route: {
+        handler: 'setPageTitle',
+        immediate: true
       }
     },
-    watch: {
-      $route() {
-        this.setPageTitle()
-      }
+    created() {
+      this.setUser()
     },
     mounted() {
-      this.setPageTitle()
-      this.setTotalOfMessages()
       this.setCurrentDate()
+      this.setTotalOfMessages()
     },
     methods: {
       getStateTwigModal() {
         return this.handleTwigModal.state
       },
       setTotalOfMessages() {
-        if (!this.user.sices) {
-          return
+        if (this.user.sices) {
+          this.axios.get('/admin/api/v1/orders/messages/unread_count')
+            .then(response => {
+              this.totalOfMessages = response.data.unreadMessages
+            })
         }
-
-        this.axios.get('/admin/api/v1/orders/messages/unread_count')
-          .then(response => {
-            this.totalOfMessages = response.data.unreadMessages
-          })
       },
 
       setPageTitle() {
         this.pageTitle = this.$router.history.current.name
+      },
+      setUser() {
+        window.$global.getUser
+          .then(user => {
+            this.user = user
+          })
+      },
+      setCurrentDate() {
+        this.currentDate = getDate()
       },
       showRanking() {
         return this.user.ranking
@@ -76,7 +88,9 @@
           && !this.user.sices
       },
       showBadge() {
-        return !this.user.sices
+        return this.user
+          && this.user.level
+          && !this.user.sices
       },
       showMessages() {
         return this.user.sices

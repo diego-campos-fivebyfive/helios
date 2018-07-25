@@ -35,7 +35,7 @@
     }),
     computed: {
       user() {
-        return window.$global.user
+        return this.$global.user
       }
     },
     watch: {
