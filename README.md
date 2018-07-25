@@ -25,8 +25,24 @@ web-client
 └─              └── ...
 ```
 
+## 2. Estrutura de um arquivo .vue
+Um arquivo .vue é composto por três partes, são eles `template`, `script` e `style`. Exemplo:
+```html
+<template lang="pug">
+  ...
+</template>
 
-## 2. Template
+
+<script>
+  ...
+</script>
+
+
+<style lang="scss">
+  ...
+</style>
+```
+## 2.1. Template
 ### Declaração de tipagem de componentes
 Quando um componente tiver uma tipagem, ex:
 `sidebarType: 'common' || 'collapse'` é utilizado uma `div` contendo a `:class`, a qual recebe o `type` para que dessa forma seja possível englobar todo o componente. Exemplo:
@@ -49,7 +65,7 @@ Quando um componente tiver uma tipagem, ex:
 </template>
 ```
 
-## 3. Script
+## 2.2. Script
 ### Definição de conteúdo de grupos de state
 O conteúdo de grupos de state `watch` e do `vue life-cycle` é composto sempre por métodos, nunca pela própria regra. Exemplo:
 ```js
@@ -159,7 +175,7 @@ methods: {
   }
 }
 ```
-## 4. Style
+## 2.3. Style
 ### Ordem dos elementos e classes e seus atributos
 - Se necessário variáveis locais, as mesmas são declaradas no início de `<style>`. Exemplo:
 ```css
