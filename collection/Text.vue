@@ -25,8 +25,13 @@
         required: true
       }
     },
+    methods: {
+      setInputPlaceholder() {
+        this.placeholder = this.$refs.field.getPlaceholder()
+      }
+    },
     mounted() {
-      this.placeholder = this.$refs.field.getPlaceholder()
+      this.setInputPlaceholder()
     }
   }
 </script>

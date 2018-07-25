@@ -24,16 +24,19 @@
       },
       hide() {
         this.open = false
+      },
+      hideWhenEscIsPressed() {
+        document.addEventListener('keyup', event => {
+          const escCode = 27
+
+          if (event.keyCode === escCode) {
+            this.hide()
+          }
+        })
       }
     },
     mounted() {
-      document.addEventListener('keyup', event => {
-        const escCode = 27
-
-        if (event.keyCode === escCode) {
-          this.hide()
-        }
-      })
+      this.hideWhenEscIsPressed()
     }
   }
 </script>

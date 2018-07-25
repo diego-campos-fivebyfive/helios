@@ -94,13 +94,16 @@
       },
       hideDropdown() {
         return !this.dropdownActived
+      },
+      dropdownActive() {
+        if (this.sidebarType === 'collapse') {
+          this.dropdownActived = false
+        }
       }
     },
     watch: {
       sidebarType() {
-        if (this.sidebarType === 'collapse') {
-          this.dropdownActived = false
-        }
+        this.dropdownActived()
       }
     }
   }

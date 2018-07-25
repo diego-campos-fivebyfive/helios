@@ -71,6 +71,20 @@
       getFieldSize([grow, shrink, cols]) {
         const base = this.getColumnsSize * cols
         return `flex: ${grow} ${shrink} ${base}px`
+      },
+      setPayloadAction() {
+        const data = {}
+        const action = 'create'
+
+        const currentAction = this.actions[action]
+        const defaultActionParams = this.actions.default || {}
+
+        if (!currentAction.component) {
+          throw new Error(`Error: ${action} action component is not defined`)
+        }
+
+        this.action = Object.assign(defaultActionParams, currentAction)
+        this.payload = payload.init(this.schema, data, this.$set)
       }
     },
     computed: {
@@ -92,18 +106,7 @@
       }
     },
     mounted() {
-      const data = {}
-      const action = 'create'
-
-      const currentAction = this.actions[action]
-      const defaultActionParams = this.actions.default || {}
-
-      if (!currentAction.component) {
-        throw new Error(`Error: ${action} action component is not defined`)
-      }
-
-      this.action = Object.assign(defaultActionParams, currentAction)
-      this.payload = payload.init(this.schema, data, this.$set)
+      this.setPayloadAction()
     }
   }
 </script>

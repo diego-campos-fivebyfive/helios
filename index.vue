@@ -50,18 +50,22 @@
       },
       showMainbar() {
         return this.mainbarType !== "none"
+      },
+      updateVueRouteOnWindow() {
+        window.updateVueRoute = path => {
+          this.$router.push({ path })
+        }
+      },
+      handleTwigModalOnWindow() {
+        window.handleTwigModal = handler => {
+          this.handleTwigModal = handler
+        }
       }
     },
     mounted() {
       this.setDefaultSidebarType()
-
-      window.updateVueRoute = path => {
-        this.$router.push({ path })
-      }
-
-      window.handleTwigModal = handler => {
-        this.handleTwigModal = handler
-      }
+      this.updateVueRouteOnWindow()
+      this.handleTwigModalOnWindow()
     },
     watch: {
       $route() {

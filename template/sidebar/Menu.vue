@@ -42,11 +42,14 @@
       sidebarType() {}
     },
     mounted() {
-      this.menu = this.user.sices
-        ? menuAdmin
-        : menuAccount
+      this.setMenuType()
     },
     methods: {
+      setMenuType() {
+        this.menu = this.user.sices
+          ? menuAdmin
+          : menuAccount
+      },
       hasRoles(item) {
         if (item.allowedRoles === '*') {
           return true
