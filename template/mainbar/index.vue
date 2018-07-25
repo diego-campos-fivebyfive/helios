@@ -99,7 +99,7 @@
     },
     methods: {
       setPageTitle() {
-        this.pageTitle = this.$router.history.current.name
+        this.pageTitle = this.$router.history.current.meta.title
       },
       setUser() {
         window.$global.getUser
