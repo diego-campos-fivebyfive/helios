@@ -16,9 +16,6 @@
 
   export default {
     name: 'Mask',
-    data: () => ({
-      placeholder: ''
-    }),
     components: {
       Field
     },
@@ -28,7 +25,13 @@
         required: true
       }
     },
+    data: () => ({
+      placeholder: ''
+    }),
     directives: { mask },
+    mounted() {
+      this.setInputPlaceholder()
+    },
     methods: {
       getMask(type) {
         const masks = {
@@ -42,9 +45,6 @@
       setInputPlaceholder() {
         this.placeholder = this.$refs.field.getPlaceholder()
       }
-    },
-    mounted() {
-      this.setInputPlaceholder()
     }
   }
 </script>

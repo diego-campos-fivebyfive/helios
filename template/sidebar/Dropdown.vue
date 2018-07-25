@@ -48,6 +48,11 @@
         listTopPosition: ''
       }
     }),
+    watch: {
+      sidebarType() {
+        this.dropdownActived()
+      }
+    },
     methods: {
       updateElementPosition(event, element) {
         if (event.target.type === 'button') {
@@ -99,11 +104,6 @@
         if (this.sidebarType === 'collapse') {
           this.dropdownActived = false
         }
-      }
-    },
-    watch: {
-      sidebarType() {
-        this.dropdownActived()
       }
     }
   }

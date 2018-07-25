@@ -34,6 +34,24 @@
       },
       payload: {}
     }),
+    computed: {
+      getColumnsSize() {
+        const sizeTypes = {
+          'extra-large': 'xl',
+          'extra-small': 'xs',
+          'large': 'lg',
+          'medium': 'md',
+          'small': 'sm'
+        }
+
+        const sizeType = sizeTypes[this.action.layout.columns.size]
+
+        const baseSize = parseInt(styles[`ui-size-${sizeType}`], 10)
+        const spaces = parseInt(styles['ui-space-x'], 10) * 2
+
+        return (baseSize - spaces) / this.action.layout.columns.total
+      }
+    },
     methods: {
       notify(message, type) {
         this.$refs.notification.notify(message, type)
@@ -74,24 +92,6 @@
       getFieldSize([grow, shrink, cols]) {
         const base = this.getColumnsSize * cols
         return `flex: ${grow} ${shrink} ${base}px`
-      }
-    },
-    computed: {
-      getColumnsSize() {
-        const sizeTypes = {
-          'extra-large': 'xl',
-          'extra-small': 'xs',
-          'large': 'lg',
-          'medium': 'md',
-          'small': 'sm'
-        }
-
-        const sizeType = sizeTypes[this.action.layout.columns.size]
-
-        const baseSize = parseInt(styles[`ui-size-${sizeType}`], 10)
-        const spaces = parseInt(styles['ui-space-x'], 10) * 2
-
-        return (baseSize - spaces) / this.action.layout.columns.total
       }
     }
   }

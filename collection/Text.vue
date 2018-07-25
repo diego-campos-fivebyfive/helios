@@ -13,9 +13,6 @@
   import Field from 'theme/collection/Field'
 
   export default {
-    data: () => ({
-      placeholder: ''
-    }),
     components: {
       Field
     },
@@ -25,13 +22,16 @@
         required: true
       }
     },
+    data: () => ({
+      placeholder: ''
+    }),
+    mounted() {
+      this.setInputPlaceholder()
+    },
     methods: {
       setInputPlaceholder() {
         this.placeholder = this.$refs.field.getPlaceholder()
       }
-    },
-    mounted() {
-      this.setInputPlaceholder()
     }
   }
 </script>

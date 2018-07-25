@@ -35,6 +35,27 @@
       },
       payload: {}
     }),
+    computed: {
+      getColumnsSize() {
+        const sizeTypes = {
+          'extra-large': 'xl',
+          'extra-small': 'xs',
+          'large': 'lg',
+          'medium': 'md',
+          'small': 'sm'
+        }
+
+        const sizeType = sizeTypes[this.action.layout.columns.size]
+
+        const baseSize = parseInt(styles[`ui-size-${sizeType}`], 10)
+        const spaces = parseInt(styles['ui-space-x'], 10) * 2
+
+        return (baseSize - spaces) / this.action.layout.columns.total
+      }
+    },
+    mounted() {
+      this.setPayloadAction()
+    },
     methods: {
       done(response) {
         const { notify } = this.$refs.notification
@@ -86,27 +107,6 @@
         this.action = Object.assign(defaultActionParams, currentAction)
         this.payload = payload.init(this.schema, data, this.$set)
       }
-    },
-    computed: {
-      getColumnsSize() {
-        const sizeTypes = {
-          'extra-large': 'xl',
-          'extra-small': 'xs',
-          'large': 'lg',
-          'medium': 'md',
-          'small': 'sm'
-        }
-
-        const sizeType = sizeTypes[this.action.layout.columns.size]
-
-        const baseSize = parseInt(styles[`ui-size-${sizeType}`], 10)
-        const spaces = parseInt(styles['ui-space-x'], 10) * 2
-
-        return (baseSize - spaces) / this.action.layout.columns.total
-      }
-    },
-    mounted() {
-      this.setPayloadAction()
     }
   }
 </script>

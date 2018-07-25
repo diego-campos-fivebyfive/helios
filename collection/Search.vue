@@ -13,12 +13,12 @@
   import Button from 'theme/collection/Button'
 
   export default {
-    data: () => ({
-      termSearch: ''
-    }),
     components: {
       Button
-    }
+    },
+    data: () => ({
+      termSearch: ''
+    })
   }
 </script>
 

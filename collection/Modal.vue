@@ -18,6 +18,9 @@
     data: () => ({
       open: false
     }),
+    mounted() {
+      this.hideWhenEscIsPressed()
+    },
     methods: {
       show() {
         this.open = true
@@ -34,9 +37,6 @@
           }
         })
       }
-    },
-    mounted() {
-      this.hideWhenEscIsPressed()
     }
   }
 </script>
