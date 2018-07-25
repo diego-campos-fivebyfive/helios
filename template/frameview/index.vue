@@ -6,25 +6,16 @@
 <script>
 	export default {
 		computed: {
-			getRoutePath() {
-				const currentPath = this.$route.fullPath
-				const homePath = '/dashboard'
-
-				return (currentPath === '/')
-					? homePath
-					: currentPath
-			},
 			getRoute() {
-				const { absolutePath } = this.$route.meta
+				const currentPath = this.$route.fullPath
 
-				if (!absolutePath) {
-					const twigBaseUri = `${process.env.API_URL}/twig`
-					const routePath = this.getRoutePath
-					return `${twigBaseUri}${routePath}`
+				if (currentPath === '/') {
+					const homePath = 'twig/dashboard'
+					return `${process.env.API_URL}/${homePath}`
 				}
 
 				const viewsEntryPoint = 'twig'
-				const viewsEntryPointIndex = absolutePath
+				const viewsEntryPointIndex = this.$route.meta.absolutePath
 					.split('/')
 					.filter(segment => segment)
 					.findIndex(segment => segment === viewsEntryPoint)

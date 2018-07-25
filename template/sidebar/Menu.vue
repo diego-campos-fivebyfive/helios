@@ -1,11 +1,10 @@
 <template lang="pug">
   ul.menu(:class='`sidebar-${sidebarType}`')
-    li(v-for='itemMenu in menu', v-if='hasRoles(itemMenu)')
+    li(v-for='itemMenu in menu')
       Dropdown(
         v-if='itemMenu.dropdown',
         :sidebarType='sidebarType',
-        :dropdown='itemMenu',
-        :hasRoles='hasRoles')
+        :dropdown='itemMenu')
       Item(
         v-else,
         :item='itemMenu',
@@ -42,21 +41,53 @@
       sidebarType() {}
     },
     mounted() {
-      this.menu = this.user.sices
-        ? menuAdmin
-        : menuAccount
+      this.setMenu()
     },
     methods: {
-      hasRoles(item) {
-        if (item.allowedRoles === '*') {
+      hasAccess(menuItem) {
+        if (menuItem.allowedRoles === '*') {
           return true
         }
 
-        const matchedRole = this.user.roles
-          .find(role => item.allowedRoles
-          .find(allowedRole => allowedRole === role))
+        return menuItem.allowedRoles.some(allowedRole => (
+          this.user.roles.some(userRole => (
+            userRole === allowedRole
+          ))
+        ))
+      },
+      serializeMenu(menu) {
+        const serializeNode = node =>
+          Object.entries(node)
+            .reduce((acc, [menuItemName, menuItem]) => {
+              if (menuItem.dropdown) {
+                const subItems = serializeNode(menuItem.subItems)
 
-        return Boolean(matchedRole)
+                if (Object.keys(subItems).length) {
+                  acc[menuItemName] = Object.assign(menuItem, {
+                    subItems
+                  })
+                }
+
+                return acc
+              }
+
+              if (this.hasAccess(menuItem)) {
+                acc[menuItemName] = menuItem
+                return acc
+              }
+
+              return acc
+            }, {})
+
+        return serializeNode(menu)
+      },
+      setMenu() {
+        // promise user
+        const menuMap = this.user.sices
+          ? menuAdmin
+          : menuAccount
+
+        this.menu = this.serializeMenu(menuMap)
       }
     }
   }

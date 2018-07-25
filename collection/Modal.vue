@@ -18,22 +18,25 @@
     data: () => ({
       open: false
     }),
+    mounted() {
+      this.hideWhenEscIsPressed()
+    },
     methods: {
-      show() {
-        this.open = true
-      },
       hide() {
         this.open = false
-      }
-    },
-    mounted() {
-      document.addEventListener('keyup', event => {
-        const escCode = 27
+      },
+      hideWhenEscIsPressed() {
+        document.addEventListener('keyup', event => {
+          const escCode = 27
 
-        if (event.keyCode === escCode) {
-          this.hide()
-        }
-      })
+          if (event.keyCode === escCode) {
+            this.hide()
+          }
+        })
+      },
+      show() {
+        this.open = true
+      }
     }
   }
 </script>
