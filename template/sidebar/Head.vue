@@ -17,15 +17,19 @@
         required: true
       }
     },
-    computed: {
-      user() {
-        return window.$global.user
-      }
-    },
+    data: () => ({
+      user: {}
+    }),
     watch: {
       sidebarType() {}
     },
     methods: {
+      setUser() {
+        window.$global.getUser
+          .then(user => {
+            this.user = user
+          })
+      },
       showInfo() {
         return (this.user && this.sidebarType === 'common')
       }
