@@ -50,7 +50,7 @@
     }),
     watch: {
       sidebarType() {
-        this.dropdownActived()
+        this.hideDropdownOnCollapse()
       }
     },
     methods: {
@@ -59,7 +59,7 @@
           this.dropdownActived = !this.dropdownActived
         }
       },
-      dropdownActive() {
+      hideDropdownOnCollapse() {
         if (this.sidebarType === 'collapse') {
           this.dropdownActived = false
         }
