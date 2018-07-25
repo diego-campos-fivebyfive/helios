@@ -5,11 +5,11 @@
         v-show='getStateTwigModal()',
         v-on:click='toggleTwigModal')
     h1.title {{ pageTitle }}
-    span.ranking(v-if="showRanking()")
-      | {{ $global.user.ranking }} pontos
+    span.ranking(v-if='showRanking()')
+      | {{ user.ranking }} pontos
     Badge.badge(
       v-if='showBadge()',
-      :level='$global.user.level')
+      :level='user.level')
     span.info {{ date }}
     nav.menu
       router-link.menu-item.messages(v-if='showMessages()', to='/messenger')
@@ -71,28 +71,42 @@
       pageTitle: '',
       totalOfMessages: null
     }),
-    sockets: {
-      updateTotalOfMessages(data) {
-        this.totalOfMessages = this.totalOfMessages + data
-
-        const ringMessage = new Audio(ringNotify)
-        ringMessage.play()
+    computed: {
+      user() {
+        return window.$global.user
       }
+    },
+    watch: {
+      $route() {
+        this.setPageTitle()
+      }
+    },
+    mounted() {
+      this.setPageTitle()
+
+      if (this.user.sices) {
+        const uri = '/admin/api/v1/orders/messages/unread_count'
+        this.axios.get(uri)
+          .then(response => {
+            this.totalOfMessages = response.data.unreadMessages
+          })
+      }
+      this.date = getDate()
     },
     methods: {
       setPageTitle() {
         this.pageTitle = this.$router.history.current.name
       },
       showRanking() {
-        return this.$global.user.ranking
-        && this.$global.user.type !== 'child'
-        && !this.$global.user.sices
+        return this.user.ranking
+          && this.user.type !== 'child'
+          && !this.user.sices
       },
       showBadge() {
-        return !this.$global.user.sices
+        return !this.user.sices
       },
       showMessages() {
-        return this.$global.user.sices
+        return this.user.sices
       },
       showTotalMessages() {
         return this.totalOfMessages
@@ -104,23 +118,14 @@
         return this.handleTwigModal.toogle
       }
     },
-    watch: {
-      $route() {
-        this.setPageTitle()
+    sockets: {
+      updateTotalOfMessages(data) {
+        this.totalOfMessages = this.totalOfMessages + data
+
+        const ringMessage = new Audio(ringNotify)
+        ringMessage.play()
       }
     },
-    mounted() {
-      this.setPageTitle()
-
-      if (this.$global.user.sices) {
-        const uri = '/admin/api/v1/orders/messages/unread_count'
-        this.axios.get(uri)
-          .then(response => {
-            this.totalOfMessages = response.data.unreadMessages
-          })
-      }
-      this.date = getDate()
-    }
   }
 </script>
 
