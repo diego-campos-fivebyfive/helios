@@ -4,6 +4,7 @@
 Os clientes são definidos no interior da pasta raiz do projeto e são prefixados com `web-` seguido do nome do cliente. Exemplo: `web-sices`, `web-integrador`. Cada cliente é composto por suas páginas, tema e demais configurações necessárias.
 
 Exemplo da árvore de `/src` de Client:
+<span id="clientsTree"/>
 > **Árvore de Client**
 ```
 web-client
@@ -37,8 +38,17 @@ Na Imagem-1 é possível observar o que entende-se por páginas. Um exemplo de `
 ![Imagem-1](./pages.png "pageForm")
 
 
-Cada página é definida dentro do diretório `pages` no interior de cada módulo, sendo assim temos: `web-client/src/module/pages/page-name` (ver `Árvore de Client`).
+Cada página é definida dentro do diretório `pages` no interior de cada módulo, sendo assim temos: `web-client/src/module/pages/page-name`. Ver
+<a href="#clientsTree"> `Árvore de Client` </a>.
 
+As páginas fazem a composição entre componentes (pai-filho) com `'slots'`.
+
+## 1.3. Components
+A pasta componets é uma composição entre collections e regras de negócio específicas de funcionalidades de interfaces (`pages`), como por exemplo: `Table`, `Banner` e `Button`, estes que contêm arquivos `.vue` que descrevem ações específicas do componente. Ver
+<a href="#clientsTree"> `Árvore de Client` </a>.
+
+> NOTA: Se não houver um wrapper de regra, o componente é mantido em `page`, como é feito com `notification`. <br>
+> Entende-se por wrapper uma combinação, ex.: `[Table + List]`.
 
 ## 2. Padrão de Nomenclatura
 
