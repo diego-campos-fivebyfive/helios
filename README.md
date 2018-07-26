@@ -95,7 +95,7 @@ Exemplo:
 
 ### 2.3. Composição de Data
 > ### Service
-- Objeto único que tem como nome o atributo nome de services pré-definidos. Exemplo: `list`, `create`, `update`, `remove`, `get`, `post`, `put`, `delete`.
+- Objeto único que tem como nome o atributo nome de services pré-definidos. Exemplo: `list`, `create`, `update` e `remove`, que devem ser usado ao invés de `get`, `post`, `put` e `delete`.
 > ### State / Data
 - Seguem a mesma regra de `'heap'`, ou seja, sem prefixo de verbo no início.
 
@@ -105,6 +105,19 @@ Exemplo:
 - O method é sempre prefixado com `get`. Exemplo: `getCoupon()`
 > ### Mutations / Methods
 - Sempre prefixadas com methods (funções padrões). O prefixo `get` também pode ser usado (não é exclusívo de Getters). Exemplo: `MarkAsReadMessage()`
+
+Exemplo:
+```
+| prefixo |   verbo    |  Objeto  |   Variação  |
+-------------------------------------------------
+|    -    |     -      |   list   |      -      | // service
+|    -    |     -      |   terms  |      -      | // state/data
+|  when   |   accept   |   Term   |      -      | // actions
+|    -    |    get     |   Terms  |      -      | // getters
+|    -    |    get     |   Terms  |      -      | // mutation/methods
+|   ...   |    ...     |    ...   |     ...     |
+```
+
 ## 3. Estrutura de um arquivo .vue
 - Um arquivo .vue é composto por três partes, são elas `template`, `script` e `style`. Exemplo:
 ```html
