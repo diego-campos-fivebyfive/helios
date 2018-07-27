@@ -33,12 +33,7 @@
       }
     }),
     methods: {
-      handleTwigModalOnWindow() {
-        window.handleTwigModal = handler => {
-          this.handleTwigModal = handler
-        }
-      },
-      setDefaultSidebarType() {
+      setInitialSidebarType() {
         this.sidebarType = this.$route.meta.sidebar || this.stateSidebarType
         this.mainbarType = this.$route.meta.mainbar || 'common'
       },
@@ -54,21 +49,26 @@
           : 'collapse'
 
         this.stateSidebarType = this.sidebarType
-      },
-      updateVueRouteOnWindow() {
-        window.updateVueRoute = path => {
-          this.$router.push({ path })
-        }
       }
     },
     mounted() {
-      this.setDefaultSidebarType()
-      this.updateVueRouteOnWindow()
-      this.handleTwigModalOnWindow()
+      this.setInitialSidebarType()
+
+      window.updateVueRoute = path => {
+        this.$router.push({ path })
+      }
+
+      window.handleTwigModal = handler => {
+        this.handleTwigModal = handler
+      }
+
+      window.updateSidebarType = sidebarType => {
+        this.sidebarType = sidebarType
+      }
     },
     watch: {
       $route() {
-        this.setDefaultSidebarType()
+        this.setInitialSidebarType()
       }
     }
   }
