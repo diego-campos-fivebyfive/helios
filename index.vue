@@ -102,5 +102,6 @@
   .app-page-main-wrapper {
     height: calc(100vh - #{$ui-mainbar-y});
     overflow-y: auto;
+    width: 100%;
   }
 </style>
