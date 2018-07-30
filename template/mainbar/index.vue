@@ -6,27 +6,25 @@
         v-on:click='toggleTwigModal')
     h1.title
       | {{ pageTitle }}
-    Widgets.widget(:user='user')
-    span.info {{ currentDate }}
-    nav.menu
-      router-link.menu-item.messages(
-        v-if='showMessages()',
-        to='/messenger',
-        class='')
-        Icon.messages-icon(name='envelope')
-        label.messages-label(v-if='showTotalMessages()')
-          | {{ totalOfMessages }}
-      a.menu-item.leave(href='/logout')
+    nav.util
+      Widgets.widget(:user='user')
+      span.info {{ currentDate }}
+      Menu.menu(:user='user')
+      a.leave(href='/logout')
         Icon(name='sign-out')
-        span Sair
+        span.leave-label
+          | Sair
 </template>
 
 <script>
   import ringNotify from 'theme/assets/media/ring-notify.wav'
+
+  import Menu from '@/app/theme/Menu'
   import Widgets from '@/app/theme/Widgets'
 
   export default {
     components: {
+      Menu,
       Widgets
     },
     props: {
@@ -52,21 +50,11 @@
     },
     mounted() {
       this.setCurrentDate()
-      this.setTotalOfMessages()
     },
     methods: {
       getStateTwigModal() {
         return this.handleTwigModal.state
       },
-      setTotalOfMessages() {
-        if (this.user.sices) {
-          this.axios.get('/admin/api/v1/orders/messages/unread_count')
-            .then(response => {
-              this.totalOfMessages = response.data.unreadMessages
-            })
-        }
-      },
-
       setPageTitle() {
         this.pageTitle = this.$router.history.current.meta.title
       },
@@ -78,12 +66,6 @@
       },
       setCurrentDate() {
         this.currentDate = getDate()
-      },
-      showMessages() {
-        return this.user.sices
-      },
-      showTotalMessages() {
-        return this.totalOfMessages
       },
       toggleTwigModal() {
         return this.handleTwigModal.toogle
@@ -160,10 +142,6 @@
     z-index: 100;
 
     @include clearfix;
-
-    * {
-      vertical-align: middle;
-    }
   }
 
   .title {
@@ -175,6 +153,11 @@
     text-align: left;
   }
 
+  .util {
+    display: flex;
+    float: right;
+  }
+
   .widget {
     display: inline-block;
   }
@@ -182,10 +165,14 @@
   .menu {
     display: flex;
     float: right;
+  }
 
-  .menu-item {
-      margin: 10px
-    }
+  .leave {
+    margin: 10px;
+  }
+
+  .leave-label {
+    vertical-align: super;
   }
 
   .info {
@@ -197,6 +184,8 @@
   }
 
   .messages {
+    margin: 10px;
+
     .messages-icon {
       display: inline-block;
       z-index: 105;
