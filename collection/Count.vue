@@ -15,7 +15,7 @@
       }
     },
     watch: {
-      initialCount: {
+      count: {
         handler: 'resolveCount',
         immediate: true
       }
