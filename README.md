@@ -269,6 +269,15 @@ methods: {
   }
 }
 ```
+
+> NOTA: Métodos de definição global devem ser mantidos dentro de `mounted`. Exemplo:
+>```
+> mounted() {
+>    window.updateVueRoute = path => {
+>      this.$router.push({ path })
+>    }
+> }
+>```
 ## 3.3. Style
 ### Ordem dos elementos e classes e seus atributos
 - Se necessário variáveis locais, as mesmas são declaradas no início de `<style>`. Exemplo:
