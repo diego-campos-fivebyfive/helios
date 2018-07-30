@@ -23,19 +23,38 @@
       Mainbar
     },
     data: () => ({
-      sidebarType: '',
-      mainbarType: '',
-      stateSidebarType: 'common',
-
       handleTwigModal: {
         state: false,
         toogle: () => {}
-      }
+      },
+      mainbarType: '',
+      sidebarType: '',
+      stateSidebarType: 'common'
     }),
+    watch: {
+      $route() {
+        this.setInitialSidebarType()
+      }
+    },
+    mounted() {
+      this.setInitialSidebarType()
+
+      window.handleTwigModal = handler => {
+        this.handleTwigModal = handler
+      }
+
+      window.updateSidebarType = sidebarType => {
+        this.sidebarType = sidebarType
+      }
+
+      window.updateVueRoute = path => {
+        this.$router.push({ path })
+      }
+    },
     methods: {
       setInitialSidebarType() {
-        this.sidebarType = this.$route.meta.sidebar || this.stateSidebarType
         this.mainbarType = this.$route.meta.mainbar || 'common'
+        this.sidebarType = this.$route.meta.sidebar || this.stateSidebarType
       },
       showSidebar() {
         return this.sidebarType !== "none"
@@ -49,26 +68,6 @@
           : 'collapse'
 
         this.stateSidebarType = this.sidebarType
-      }
-    },
-    mounted() {
-      this.setInitialSidebarType()
-
-      window.updateVueRoute = path => {
-        this.$router.push({ path })
-      }
-
-      window.handleTwigModal = handler => {
-        this.handleTwigModal = handler
-      }
-
-      window.updateSidebarType = sidebarType => {
-        this.sidebarType = sidebarType
-      }
-    },
-    watch: {
-      $route() {
-        this.setInitialSidebarType()
       }
     }
   }
