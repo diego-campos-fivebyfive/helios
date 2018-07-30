@@ -23,24 +23,38 @@
       Mainbar
     },
     data: () => ({
-      sidebarType: '',
-      mainbarType: '',
-      stateSidebarType: 'common',
-
       handleTwigModal: {
         state: false,
         toogle: () => {}
-      }
-    }),
-    methods: {
-      handleTwigModalOnWindow() {
-        window.handleTwigModal = handler => {
-          this.handleTwigModal = handler
-        }
       },
-      setDefaultSidebarType() {
-        this.sidebarType = this.$route.meta.sidebar || this.stateSidebarType
+      mainbarType: '',
+      sidebarType: '',
+      stateSidebarType: 'common'
+    }),
+    watch: {
+      $route() {
+        this.setInitialSidebarType()
+      }
+    },
+    mounted() {
+      this.setInitialSidebarType()
+
+      window.handleTwigModal = handler => {
+        this.handleTwigModal = handler
+      }
+
+      window.updateSidebarType = sidebarType => {
+        this.sidebarType = sidebarType
+      }
+
+      window.updateVueRoute = path => {
+        this.$router.push({ path })
+      }
+    },
+    methods: {
+      setInitialSidebarType() {
         this.mainbarType = this.$route.meta.mainbar || 'common'
+        this.sidebarType = this.$route.meta.sidebar || this.stateSidebarType
       },
       showSidebar() {
         return this.sidebarType !== "none"
@@ -54,21 +68,6 @@
           : 'collapse'
 
         this.stateSidebarType = this.sidebarType
-      },
-      updateVueRouteOnWindow() {
-        window.updateVueRoute = path => {
-          this.$router.push({ path })
-        }
-      }
-    },
-    mounted() {
-      this.setDefaultSidebarType()
-      this.updateVueRouteOnWindow()
-      this.handleTwigModalOnWindow()
-    },
-    watch: {
-      $route() {
-        this.setDefaultSidebarType()
       }
     }
   }
@@ -103,5 +102,6 @@
   .app-page-main-wrapper {
     height: calc(100vh - #{$ui-mainbar-y});
     overflow-y: auto;
+    width: 100%;
   }
 </style>
