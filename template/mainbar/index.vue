@@ -6,32 +6,29 @@
         v-on:click='toggleTwigModal')
     h1.title
       | {{ pageTitle }}
-    span.ranking(
-      v-if='showRanking()')
-      | {{ user.ranking }} pontos
-    Badge.badge(
-      v-if='showBadge()',
-      :level='user.level')
+    Widgets.widget(:user='user')
     span.info {{ currentDate }}
     nav.menu
       router-link.menu-item.messages(
         v-if='showMessages()',
         to='/messenger',
         class='')
-        Icon.messages-icon(
-          name='envelope')
+        Icon.messages-icon(name='envelope')
         label.messages-label(v-if='showTotalMessages()')
           | {{ totalOfMessages }}
-      a.menu-item.leave(
-        href='/logout')
+      a.menu-item.leave(href='/logout')
         Icon(name='sign-out')
         span Sair
 </template>
 
 <script>
   import ringNotify from 'theme/assets/media/ring-notify.wav'
+  import Widgets from '@/app/theme/Widgets'
 
   export default {
+    components: {
+      Widgets
+    },
     props: {
       handleTwigModal: {
         type: Object,
@@ -81,16 +78,6 @@
       },
       setCurrentDate() {
         this.currentDate = getDate()
-      },
-      showRanking() {
-        return this.user.ranking
-          && this.user.type !== 'child'
-          && !this.user.sices
-      },
-      showBadge() {
-        return this.user
-          && this.user.level
-          && !this.user.sices
       },
       showMessages() {
         return this.user.sices
@@ -150,10 +137,6 @@
 <style lang="scss" scoped>
   $head-border-size: 1px;
 
-  .badge {
-    margin: 0 $ui-space-x/3;
-  }
-
   .header-cover {
     background-color: rgba(0, 0, 0, 0.5);
     height: calc(100% + #{$head-border-size});
@@ -192,16 +175,8 @@
     text-align: left;
   }
 
-  .ranking {
-    margin-right: $ui-space-x/2;
-  }
-
-  .info {
+  .widget {
     display: inline-block;
-    font-size: 1rem;
-    font-weight: 400;
-    margin: $ui-space-y/1.25 $ui-space-x/2;
-    opacity: 0.8;
   }
 
   .menu {
@@ -211,6 +186,14 @@
   .menu-item {
       margin: 10px
     }
+  }
+
+  .info {
+    display: inline-block;
+    font-size: 1rem;
+    font-weight: 400;
+    margin: $ui-space-y/1.25 $ui-space-x/2;
+    opacity: 0.8;
   }
 
   .messages {
@@ -249,14 +232,6 @@
 
   @media (max-width: $ui-size-lg) {
     .info {
-      display: none;
-    }
-
-    .badge {
-      display: none;
-    }
-
-    .ranking {
       display: none;
     }
   }
