@@ -15,8 +15,7 @@
 <script>
   import Item from './Item'
   import Dropdown from './Dropdown'
-  import menuAdmin from './Admin'
-  import menuAccount from './Account'
+  import menuMap from '@/app/theme/menu'
 
   export default {
     components: {
@@ -79,10 +78,6 @@
       setMenu() {
         window.$global.getUser
           .then(user => {
-            const menuMap = user.sices
-              ? menuAdmin
-              : menuAccount
-
             this.menu = this.serializeMenu(menuMap, user.roles)
           })
       }
