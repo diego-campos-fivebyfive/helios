@@ -7,9 +7,9 @@
     h1.title
       | {{ pageTitle }}
     nav.util
-      Widgets.widget(:user='user')
+      Widgets.widget
       span.info {{ currentDate }}
-      Menu.menu(:user='user')
+      Menu.menu
       a.leave(href='/logout')
         Icon(name='sign-out')
         span.leave-label
@@ -36,7 +36,6 @@
     data: () => ({
       currentDate: '',
       pageTitle: '',
-      user: {},
       totalOfMessages: null
     }),
     watch: {
@@ -44,9 +43,6 @@
         handler: 'setPageTitle',
         immediate: true
       }
-    },
-    created() {
-      this.setUser()
     },
     mounted() {
       this.setCurrentDate()
@@ -57,12 +53,6 @@
       },
       setPageTitle() {
         this.pageTitle = this.$router.history.current.meta.title
-      },
-      setUser() {
-        window.$global.getUser
-          .then(user => {
-            this.user = user
-          })
       },
       setCurrentDate() {
         this.currentDate = getDate()
