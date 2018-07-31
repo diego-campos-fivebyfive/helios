@@ -5,15 +5,15 @@
 
 <script>
   export default {
-    data: () => ({
-      total: 0
-    }),
     props: {
       count: {
         type: Object,
         required: true
       }
     },
+    data: () => ({
+      total: 0
+    }),
     watch: {
       count: {
         handler: 'resolveCount',
