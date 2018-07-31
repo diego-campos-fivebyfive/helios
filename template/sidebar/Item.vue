@@ -6,16 +6,11 @@
     Icon.icon-ui(:name='item.icon')
     span(:style='labelPosition.top') {{ item.name }}
     Icon.icon-arrow(name='angle-right')
-    Count(v-if='showTaskCount(item)')
+    Count(v-if='item.count', :count='item.count')
 </template>
 
 <script>
-  import Count from './Count'
-
   export default {
-    components: {
-      Count
-    },
     props: {
       item: {
         type: Object,
@@ -33,11 +28,6 @@
     data: () => ({
       labelPosition: {}
     }),
-    methods: {
-      showTaskCount(item) {
-        return item.link == '/tasks/m'
-      }
-    },
     watch: {
       sidebarType() {}
     }

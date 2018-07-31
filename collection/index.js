@@ -6,6 +6,7 @@ import Banner from './Banner'
 import Button from './Button'
 import ButtonDropdown from './ButtonDropdown'
 import Confirm from './Confirm'
+import Count from './Count'
 import Modal from './Modal'
 import Notification from './Notification'
 import Paginator from './Paginator'
@@ -21,6 +22,7 @@ export default {
   Button,
   ButtonDropdown,
   Confirm,
+  Count,
   Modal,
   Notification,
   Paginator,
