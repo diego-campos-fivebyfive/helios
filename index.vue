@@ -1,5 +1,6 @@
 <template lang="pug">
   .app-page(:class='sidebarType')
+    FrameModal
     Sidebar(
       v-if='showSidebar()',
       :sidebarType='sidebarType',
@@ -14,13 +15,15 @@
 </template>
 
 <script>
-  import Sidebar from 'theme/template/sidebar'
+  import FrameModal from 'theme/template/frame-modal'
   import Mainbar from 'theme/template/mainbar'
+  import Sidebar from 'theme/template/sidebar'
 
   export default {
     components: {
-      Sidebar,
-      Mainbar
+      FrameModal,
+      Mainbar,
+      Sidebar
     },
     data: () => ({
       handleTwigModal: {
