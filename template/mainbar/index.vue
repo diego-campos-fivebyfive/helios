@@ -35,8 +35,7 @@
     },
     data: () => ({
       currentDate: '',
-      pageTitle: '',
-      totalOfMessages: null
+      pageTitle: ''
     }),
     watch: {
       $route: {
@@ -93,14 +92,6 @@
         const dayInTheWeek = daysInTheWeek[date.getDay()]
 
         this.currentDate = `${dayInTheWeek}, ${day} de ${month} de ${year}`
-      }
-    },
-    sockets: {
-      updateTotalOfMessages(data) {
-        this.totalOfMessages = this.totalOfMessages + data
-
-        const ringMessage = new Audio(ringNotify)
-        ringMessage.play()
       }
     },
   }
