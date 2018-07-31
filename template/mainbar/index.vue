@@ -17,8 +17,6 @@
 </template>
 
 <script>
-  import ringNotify from 'theme/assets/media/ring-notify.wav'
-
   import Menu from '@/app/theme/Menu'
   import Widgets from '@/app/theme/Widgets'
 
