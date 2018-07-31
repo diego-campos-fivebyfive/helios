@@ -92,7 +92,7 @@
 
 <style lang="scss" scoped>
   $menu-head-common-y: 120px;
-  $menu-head-collapse-y: 45px;
+  $menu-head-collapse-y: 62px;
 
   ul {
     list-style: none;
@@ -118,7 +118,7 @@
   }
 
   .sidebar-collapse {
-    max-height: calc(100vh - #{$menu-head-collapse-y * 1.5});
+    max-height: calc(100vh - #{$menu-head-collapse-y});
   }
 
   .sidebar-common {
