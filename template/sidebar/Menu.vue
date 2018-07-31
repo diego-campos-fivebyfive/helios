@@ -118,7 +118,7 @@
   }
 
   .sidebar-collapse {
-    max-height: calc(100vh - #{$menu-head-collapse-y});
+    max-height: calc(100vh - #{$menu-head-collapse-y * 1.5});
   }
 
   .sidebar-common {
