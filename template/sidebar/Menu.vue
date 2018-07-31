@@ -87,7 +87,7 @@
 
 <style lang="scss" scoped>
   $menu-head-common-y: 120px;
-  $menu-head-collapse-y: 45px;
+  $menu-head-collapse-y: 62px;
 
   ul {
     list-style: none;
