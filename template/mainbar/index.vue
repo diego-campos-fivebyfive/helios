@@ -8,7 +8,7 @@
       | {{ pageTitle }}
     nav.util
       Widgets.widget
-      span.info {{ currentDate }}
+      Time.time
       Menu.menu
       a.leave(href='/logout')
         Icon(name='sign-out')
@@ -22,8 +22,11 @@
   import Menu from '@/app/theme/Menu'
   import Widgets from '@/app/theme/Widgets'
 
+  import Time from './Time'
+
   export default {
     components: {
+      Time,
       Menu,
       Widgets
     },
@@ -34,7 +37,6 @@
       }
     },
     data: () => ({
-      currentDate: '',
       pageTitle: ''
     }),
     watch: {
@@ -43,9 +45,6 @@
         immediate: true
       }
     },
-    mounted() {
-      this.setCurrentDate()
-    },
     methods: {
       getStateTwigModal() {
         return this.handleTwigModal.state
@@ -53,52 +52,25 @@
       setPageTitle() {
         this.pageTitle = this.$router.history.current.meta.title
       },
-      setCurrentDate() {
-        this.currentDate = getDate()
-      },
       toggleTwigModal() {
         return this.handleTwigModal.toogle
-      },
-      setCurrentDate() {
-        const months = [
-          'janeiro',
-          'fevereiro',
-          'março',
-          'abril',
-          'maio',
-          'junho',
-          'julho',
-          'agosto',
-          'setembro',
-          'outubro',
-          'novembro',
-          'dezembro'
-        ]
-
-        const daysInTheWeek = [
-          'domingo',
-          'segunda-feira',
-          'terça-feira',
-          'quarta-feira',
-          'quinta-feira',
-          'sexta-feira',
-          'sábado'
-        ]
-
-        const date = new Date()
-        const year = date.getFullYear()
-        const month = months[date.getMonth()]
-        const day = date.getDate()
-        const dayInTheWeek = daysInTheWeek[date.getDay()]
-
-        this.currentDate = `${dayInTheWeek}, ${day} de ${month} de ${year}`
       }
-    },
+    }
   }
 </script>
 
 <style lang="scss" scoped>
   $head-border-size: 1px;
+
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: all 150ms ease;
+  }
+
+  .fade-enter,
+  .fade-leave-to {
+    opacity: 0;
+  }
 
   .header-cover {
     background-color: rgba(0, 0, 0, 0.5);
@@ -157,26 +129,12 @@
     vertical-align: super;
   }
 
-  .info {
-    display: inline-block;
-    font-size: 1rem;
-    font-weight: 400;
+  .time {
     margin: $ui-space-y/1.25 $ui-space-x/2;
-    opacity: 0.8;
-  }
-
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: all 150ms ease;
-  }
-
-  .fade-enter,
-  .fade-leave-to {
-    opacity: 0;
   }
 
   @media (max-width: $ui-size-lg) {
-    .info {
+    .time {
       display: none;
     }
   }
