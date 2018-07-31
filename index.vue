@@ -1,6 +1,6 @@
 <template lang="pug">
   .app-page(:class='sidebarType')
-    FrameModal
+    FrameModal(:handleTwigModal='handleTwigModal')
     Sidebar(
       v-if='showSidebar()',
       :sidebarType='sidebarType',
