@@ -6,32 +6,28 @@
         v-on:click='toggleTwigModal')
     h1.title
       | {{ pageTitle }}
-    span.ranking(
-      v-if='showRanking()')
-      | {{ user.ranking }} pontos
-    Badge.badge(
-      v-if='showBadge()',
-      :level='user.level')
-    span.info {{ currentDate }}
-    nav.menu
-      router-link.menu-item.messages(
-        v-if='showMessages()',
-        to='/messenger',
-        class='')
-        Icon.messages-icon(
-          name='envelope')
-        label.messages-label(v-if='showTotalMessages()')
-          | {{ totalOfMessages }}
-      a.menu-item.leave(
-        href='/logout')
+    nav.util
+      Widgets.widget
+      Time.time
+      Menu.menu
+      a.leave(href='/logout')
         Icon(name='sign-out')
-        span Sair
+        span.leave-label
+          | Sair
 </template>
 
 <script>
-  import ringNotify from 'theme/assets/media/ring-notify.wav'
+  import Menu from '@/app/theme/Menu'
+  import Widgets from '@/app/theme/Widgets'
+
+  import Time from './Time'
 
   export default {
+    components: {
+      Time,
+      Menu,
+      Widgets
+    },
     props: {
       handleTwigModal: {
         type: Object,
@@ -39,10 +35,7 @@
       }
     },
     data: () => ({
-      currentDate: '',
-      pageTitle: '',
-      user: {},
-      totalOfMessages: null
+      pageTitle: ''
     }),
     watch: {
       $route: {
@@ -50,108 +43,31 @@
         immediate: true
       }
     },
-    created() {
-      this.setUser()
-    },
-    mounted() {
-      this.setCurrentDate()
-      this.setTotalOfMessages()
-    },
     methods: {
       getStateTwigModal() {
         return this.handleTwigModal.state
       },
-      setTotalOfMessages() {
-        if (this.user.sices) {
-          this.axios.get('/admin/api/v1/orders/messages/unread_count')
-            .then(response => {
-              this.totalOfMessages = response.data.unreadMessages
-            })
-        }
-      },
-
       setPageTitle() {
         this.pageTitle = this.$router.history.current.meta.title
       },
-      setUser() {
-        window.$global.getUser
-          .then(user => {
-            this.user = user
-          })
-      },
-      setCurrentDate() {
-        this.currentDate = getDate()
-      },
-      showRanking() {
-        return this.user.ranking
-          && this.user.type !== 'child'
-          && !this.user.sices
-      },
-      showBadge() {
-        return this.user
-          && this.user.level
-          && !this.user.sices
-      },
-      showMessages() {
-        return this.user.sices
-      },
-      showTotalMessages() {
-        return this.totalOfMessages
-      },
       toggleTwigModal() {
         return this.handleTwigModal.toogle
-      },
-      setCurrentDate() {
-        const months = [
-          'janeiro',
-          'fevereiro',
-          'março',
-          'abril',
-          'maio',
-          'junho',
-          'julho',
-          'agosto',
-          'setembro',
-          'outubro',
-          'novembro',
-          'dezembro'
-        ]
-
-        const daysInTheWeek = [
-          'domingo',
-          'segunda-feira',
-          'terça-feira',
-          'quarta-feira',
-          'quinta-feira',
-          'sexta-feira',
-          'sábado'
-        ]
-
-        const date = new Date()
-        const year = date.getFullYear()
-        const month = months[date.getMonth()]
-        const day = date.getDate()
-        const dayInTheWeek = daysInTheWeek[date.getDay()]
-
-        this.currentDate = `${dayInTheWeek}, ${day} de ${month} de ${year}`
       }
-    },
-    sockets: {
-      updateTotalOfMessages(data) {
-        this.totalOfMessages = this.totalOfMessages + data
-
-        const ringMessage = new Audio(ringNotify)
-        ringMessage.play()
-      }
-    },
+    }
   }
 </script>
 
 <style lang="scss" scoped>
   $head-border-size: 1px;
 
-  .badge {
-    margin: 0 $ui-space-x/3;
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: all 150ms ease;
+  }
+
+  .fade-enter,
+  .fade-leave-to {
+    opacity: 0;
   }
 
   .header-cover {
@@ -177,10 +93,6 @@
     z-index: 100;
 
     @include clearfix;
-
-    * {
-      vertical-align: middle;
-    }
   }
 
   .title {
@@ -192,71 +104,35 @@
     text-align: left;
   }
 
-  .ranking {
-    margin-right: $ui-space-x/2;
+  .util {
+    display: flex;
+    float: right;
   }
 
-  .info {
+  .widget {
     display: inline-block;
-    font-size: 1rem;
-    font-weight: 400;
-    margin: $ui-space-y/1.25 $ui-space-x/2;
-    opacity: 0.8;
   }
 
   .menu {
     display: flex;
     float: right;
-
-  .menu-item {
-      margin: 10px
-    }
   }
 
-  .messages {
-    .messages-icon {
-      display: inline-block;
-      z-index: 105;
-    }
-
-    .messages-label {
-      background-color: $ui-orange-light;
-      border-radius: 0.25rem;
-      color: $ui-white-regular;
-      font-size: 0.8rem;
-      font-weight: 600;
-      padding: 0.25rem;
-      position: absolute;
-      right: 7.75rem;
-      top: 0.8rem;
-      z-index: 105;
-    }
-  }
-
-  a {
+  .leave {
     color: $ui-gray-regular;
+    margin: 10px;
   }
 
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: all 150ms ease;
+  .leave-label {
+    vertical-align: super;
   }
 
-  .fade-enter,
-  .fade-leave-to {
-    opacity: 0;
+  .time {
+    margin: $ui-space-y/1.25 $ui-space-x/2;
   }
 
   @media (max-width: $ui-size-lg) {
-    .info {
-      display: none;
-    }
-
-    .badge {
-      display: none;
-    }
-
-    .ranking {
+    .time {
       display: none;
     }
   }
