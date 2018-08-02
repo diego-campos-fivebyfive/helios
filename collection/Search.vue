@@ -1,9 +1,9 @@
 <template lang="pug">
   form.collection-search(
     v-on:keypress.enter.prevent='')
-    input.collection-search-input(v-model='termSearch')
+    input.collection-search-input(v-model='searchParams')
     Button.collection-search-button(
-      :action='() => $emit("updateList")',
+      :action='() => updateSearch()',
       class='primary-common',
       label='Pesquisar',
       pos='last')
@@ -16,9 +16,25 @@
     components: {
       Button
     },
+    props: {
+      search: {
+        type: String,
+        required: false
+      }
+    },
     data: () => ({
-      termSearch: ''
-    })
+      searchParams: ''
+    }),
+    watch: {
+      searchTerms() {
+        this.searchParams = this.search
+      }
+    },
+    methods: {
+      updateSearch() {
+        this.$emit('updateSearch', this.searchParams)
+      }
+    }
   }
 </script>
 
