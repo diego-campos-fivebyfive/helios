@@ -55,8 +55,10 @@
             .reduce((acc, [menuItemName, menuItem]) => {
               if (menuItem.dropdown) {
                 const subItems = serializeNode(menuItem.subItems)
-
-                if (Object.keys(subItems).length) {
+                if (
+                  Object.keys(subItems).length
+                  && this.hasAccess(menuItem.allowedRoles, userRoles)
+                ) {
                   acc[menuItemName] = Object.assign(menuItem, {
                     subItems
                   })
