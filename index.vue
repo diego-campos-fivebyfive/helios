@@ -51,7 +51,7 @@
       }
 
       window.updateVueRoute = path => {
-        this.$router.push({ path })
+        history.pushState({}, null, path)
       }
     },
     methods: {
