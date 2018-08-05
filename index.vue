@@ -51,7 +51,15 @@
       }
 
       window.updateVueRoute = path => {
-        history.pushState({}, null, path)
+        this.$route.meta.pushState = true
+        history.replaceState({}, null, path)
+      }
+
+      window.onpopstate = () => {
+        if (this.$route.meta.pushState) {
+          this.$route.meta.pushState = false
+          history.back()
+        }
       }
     },
     methods: {
