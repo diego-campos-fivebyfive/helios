@@ -1,9 +1,5 @@
 <template lang="pug">
   header.bar
-    transition(name='fade')
-      .header-cover(
-        v-show='getStateTwigModal()',
-        v-on:click='toggleTwigModal')
     h1.title
       | {{ pageTitle }}
     nav.util
@@ -28,12 +24,6 @@
       Menu,
       Widgets
     },
-    props: {
-      handleTwigModal: {
-        type: Object,
-        required: true
-      }
-    },
     data: () => ({
       pageTitle: ''
     }),
@@ -44,14 +34,8 @@
       }
     },
     methods: {
-      getStateTwigModal() {
-        return this.handleTwigModal.state
-      },
       setPageTitle() {
         this.pageTitle = this.$router.history.current.meta.title
-      },
-      toggleTwigModal() {
-        return this.handleTwigModal.toogle
       }
     }
   }
@@ -59,26 +43,6 @@
 
 <style lang="scss" scoped>
   $head-border-size: 1px;
-
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: all 150ms ease;
-  }
-
-  .fade-enter,
-  .fade-leave-to {
-    opacity: 0;
-  }
-
-  .header-cover {
-    background-color: rgba(0, 0, 0, 0.5);
-    height: calc(100% + #{$head-border-size});
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: 100%;
-    z-index: 250;
-  }
 
   .bar {
     background-color: $ui-white-regular;

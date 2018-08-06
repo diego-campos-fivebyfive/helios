@@ -4,12 +4,9 @@
     Sidebar(
       v-if='showSidebar()',
       :sidebarType='sidebarType',
-      :updateSidebarType='updateSidebarType',
-      :handleTwigModal='handleTwigModal')
+      :updateSidebarType='updateSidebarType')
     main.app-page-main
-      Mainbar(
-        v-if='showMainbar()',
-        :handleTwigModal='handleTwigModal')
+      Mainbar(v-if='showMainbar()')
       .app-page-main-wrapper
         router-view
 </template>
