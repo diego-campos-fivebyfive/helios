@@ -51,7 +51,12 @@
       }
 
       window.updateVueRoute = path => {
-        history.pushState({}, null, path)
+        // DEBUG: console.log('twig', location.pathname, path)
+
+        setTimeout(() => {
+          this.$route.meta.pushState = path
+          history.replaceState({}, null, path)
+        }, 1000)
       }
     },
     methods: {
