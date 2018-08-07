@@ -4,7 +4,8 @@
       src='~theme/assets/media/logo-inverse.png')
     .collection-badge-label
       | Sices
-      span.collection-badge-label-level {{ level }}
+      span.collection-badge-label-level
+        | {{ level }}
 </template>
 
 <script>

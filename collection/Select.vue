@@ -8,7 +8,7 @@
         v-for='option in options',
         :selected='selectedValue(option)',
         :value='option.value')
-        | {{ option.text }}
+          | {{ option.text }}
 </template>
 
 <script>

@@ -5,8 +5,10 @@
         src='~theme/assets/media/logo-small.png',
         alt='Sices Solar Logo')
       .info(v-if='showInfo()')
-        span.name {{ user.name }}
-        span {{ user.company }}
+        span.name
+          | {{ user.name }}
+        span
+          | {{ user.company }}
 </template>
 
 <script>

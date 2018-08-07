@@ -1,7 +1,7 @@
 <template lang="pug">
   label.collection-field(
     :class='{ "danger-common": field.rejected }')
-    | {{ field.label }}
+      | {{ field.label }}
     slot
     Icon.collection-field-icon(
       v-if='field.rejected',

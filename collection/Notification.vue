@@ -2,7 +2,7 @@
   .collection-notification(v-show='open')
     span.collection-notification-message(:class='type')
       Icon(name='check', scale='1.5')
-      | {{ message }}
+        | {{ message }}
       slot
       .collection-notification-status(:class='type')
 </template>

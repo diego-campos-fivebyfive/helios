@@ -3,7 +3,7 @@
     label.collection-checkbox-label(
       for='collection-checkbox-wrapper-checker-field',
       v-if='field.label')
-    | {{ field.label }}
+      | {{ field.label }}
     .collection-checkbox-wrapper
       .collection-checkbox-wrapper-checker
         input.collection-checkbox-wrapper-checker-field(
