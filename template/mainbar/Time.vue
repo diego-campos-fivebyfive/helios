@@ -1,5 +1,6 @@
 <template lang="pug">
-  span.time {{ currentDate }}
+  span.time
+    | {{ currentDate }}
 </template>
 
 <script>

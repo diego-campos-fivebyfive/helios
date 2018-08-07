@@ -4,7 +4,8 @@
     :style='item.customStyle',
     :class='[{ "item-dropdown": itemDropdown }, sidebarType]')
     Icon.icon-ui(:name='item.icon')
-    span(:style='labelPosition.top') {{ item.name }}
+    span(:style='labelPosition.top')
+      | {{ item.name }}
     Icon.icon-arrow(name='angle-right')
     Count(v-if='item.count', :count='item.count')
 </template>
