@@ -91,10 +91,10 @@ describe('Paginator.vue', () => {
         }
       }).getNavigationItems()
 
-      const expected = [
+      const expected = expect.arrayContaining([
         expect.objectContaining({ current: true }),
         expect.objectContaining({ current: false })
-      ]
+      ])
 
       expect(schema).toEqual(expected)
     })
@@ -132,6 +132,33 @@ describe('Paginator.vue', () => {
       ])
 
       expect(schema).toEqual(expected)
+    })
+
+    it('should exhibit the next button when there is a next item', () => {
+      const schemaOne = pipe(
+        mountPaginator
+      )({
+        pagination: {
+          total: 9,
+          current: 1
+        }
+      }).getNavigationItems()
+
+
+      const schemaTwo = pipe(
+        mountPaginator
+      )({
+        pagination: {
+          total: 9,
+          current: 9
+        }
+      }).getNavigationItems()
+
+      const expected = expect.arrayContaining([
+        expect.objectContaining({ value: 'Próximo' })
+      ])
+
+      expect(schemaOne).toEqual(expected)
     })
   })
 })

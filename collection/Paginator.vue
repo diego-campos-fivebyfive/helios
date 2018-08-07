@@ -41,6 +41,10 @@
           )
         }
 
+        if (this.pagination.current < this.pagination.total) {
+          ranges.push({ value: 'Próximo' })
+        }
+
         return ranges
       },
       getCurrent(i) {
