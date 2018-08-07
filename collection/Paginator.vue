@@ -14,6 +14,15 @@
     methods: {
       showPagination() {
         return this.pagination.total
+      },
+      getNativagationItems() {
+        let ranges = []
+
+        for(let i = 1; i <= this.pagination.total; i++) {
+          ranges.push(i)
+        }
+
+        return ranges
       }
     }
   }

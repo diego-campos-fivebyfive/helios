@@ -45,4 +45,18 @@ describe('Paginator.vue', () => {
       expect(expectedTwo).not.toEqual(true)
     })
   })
+
+  describe('getNavigationItems()', () => {
+    it('should return an array of items to be rendered based on total', () => {
+      const expected = pipe(
+        mountPaginator
+      )({
+        pagination: {
+          total: 5
+        }
+      }).getNativagationItems()
+
+      expect(expected).toEqual([1, 2, 3, 4, 5])
+    })
+  })
 })
