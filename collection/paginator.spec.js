@@ -80,5 +80,21 @@ describe('Paginator.vue', () => {
 
       expect(expected).toBe('12345')
     })
+
+    it('should contains at least one current item', () => {
+      const expected = pipe(
+        mountPaginator
+      )({
+        pagination: {
+          total: 2,
+          current: 1
+        }
+      }).getNavigationItems()
+
+      expect(expected).toEqual([
+        expect.objectContaining({ current: true }),
+        expect.objectContaining({ current: false })
+      ])
+    })
   })
 })

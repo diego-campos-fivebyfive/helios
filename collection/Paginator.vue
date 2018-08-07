@@ -2,7 +2,7 @@
   .collection-paginator
     nav(v-if='showPagination()')
       button(v-for='item in getNavigationItems()')
-        | {{ item }}
+        | {{ item.value }}
 </template>
 
 <script>
@@ -26,7 +26,10 @@
             && ranges.length < 5;
           i++
         ) {
-          ranges.push(i)
+          ranges.push({
+            value: i,
+            current: this.pagination.current === i 
+          })
         }
 
         return ranges
