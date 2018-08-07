@@ -99,6 +99,23 @@ describe('Paginator.vue', () => {
       expect(schema).toEqual(expected)
     })
 
+    it('should set first item as current when there is no current arg', () => {
+      const schema = pipe(
+        mountPaginator
+      )({
+        pagination: {
+          total: 2
+        }
+      }).getNavigationItems()
+
+      const expected = [
+        expect.objectContaining({ current: true }),
+        expect.objectContaining({ current: false })
+      ]
+
+      expect(schema).toEqual(expected)
+    })
+
     it('should exhibit the last index with spread item when there are more than 5 items', () => {
       const schema = pipe(
         mountPaginator

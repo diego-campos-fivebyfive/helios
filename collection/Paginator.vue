@@ -30,7 +30,7 @@
         ) {
           ranges.push({
             value: i,
-            current: this.pagination.current === i 
+            current: this.getCurrent(i) 
           })
         }
 
@@ -42,6 +42,13 @@
         }
 
         return ranges
+      },
+      getCurrent(i) {
+        if (!this.pagination.current && i === 1) {
+          return true
+        }
+
+        return this.pagination.current === i
       }
     }
   }
