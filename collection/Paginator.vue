@@ -1,6 +1,8 @@
 <template lang="pug">
   .collection-paginator
     nav(v-if='showPagination()')
+      button(v-for='item in getNavigationItems()')
+        | {{ item }}
 </template>
 
 <script>
@@ -15,7 +17,7 @@
       showPagination() {
         return this.pagination.total
       },
-      getNativagationItems() {
+      getNavigationItems() {
         let ranges = []
 
         for(let i = 1; i <= this.pagination.total; i++) {
