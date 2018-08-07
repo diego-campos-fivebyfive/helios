@@ -34,6 +34,13 @@
           })
         }
 
+        if (this.pagination.total > 5) {
+          ranges.push(
+            { value: '...' },
+            { value: this.pagination.total }
+          )
+        }
+
         return ranges
       }
     }

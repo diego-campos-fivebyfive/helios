@@ -47,7 +47,7 @@ describe('Paginator.vue', () => {
   })
 
   describe('getNavigationItems()', () => {
-    it('should return an array with maximum of 5 items', () => {
+    it('should return a simple pagination array when there are 5 items or less', () => {
       const expectedOne = pipe(
         mountPaginator
       )({
@@ -65,7 +65,7 @@ describe('Paginator.vue', () => {
       }).getNavigationItems()
 
       expect(expectedOne).toHaveLength(5)
-      expect(expectedTwo).toHaveLength(5)
+      expect(expectedTwo).not.toHaveLength(5)
     })
 
     it('should render the array returned by navigationItems()', () => {
@@ -95,6 +95,24 @@ describe('Paginator.vue', () => {
         expect.objectContaining({ current: true }),
         expect.objectContaining({ current: false })
       ])
+    })
+
+    it('should exhibit the last index with spread item when there are more than 5 items', () => {
+      const expected = pipe(
+        mountPaginator
+      )({
+        pagination: {
+          total: 9,
+          current: 1
+        }
+      }).getNavigationItems()
+
+      expect(expected).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ value: '...' }),
+          expect.objectContaining({ value: 9 })
+        ])
+      )
     })
   })
 })
