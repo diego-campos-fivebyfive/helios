@@ -47,16 +47,38 @@ describe('Paginator.vue', () => {
   })
 
   describe('getNavigationItems()', () => {
-    it('should return an array of items to be rendered based on total', () => {
-      const expected = pipe(
+    it('should return an array with maximum of 5 items', () => {
+      const expectedOne = pipe(
         mountPaginator
       )({
         pagination: {
           total: 5
         }
-      }).getNativagationItems()
+      }).getNavigationItems()
 
-      expect(expected).toEqual([1, 2, 3, 4, 5])
+      const expectedTwo = pipe(
+        mountPaginator
+      )({
+        pagination: {
+          total: 9
+        }
+      }).getNavigationItems()
+
+      expect(expectedOne).toHaveLength(5)
+      expect(expectedTwo).toHaveLength(5)
+    })
+
+    it('should render the array returned by navigationItems()', () => {
+      const expected = pipe(
+        mountPaginator,
+        getRenderedText
+      )({
+        pagination: {
+          total: 5
+        }
+      })
+
+      expect(expected).toBe('12345')
     })
   })
 })

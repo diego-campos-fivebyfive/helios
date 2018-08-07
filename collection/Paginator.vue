@@ -20,7 +20,12 @@
       getNavigationItems() {
         let ranges = []
 
-        for(let i = 1; i <= this.pagination.total; i++) {
+        for(
+          let i = 1;
+          i <= this.pagination.total
+            && ranges.length < 5;
+          i++
+        ) {
           ranges.push(i)
         }
 
