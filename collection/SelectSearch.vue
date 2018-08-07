@@ -9,7 +9,7 @@
           v-on:click='updateOption($event.target.value)',
           v-for='option in options',
           :value='option.value')
-            | {{ option.text }}
+          | {{ option.text }}
 </template>
 
 <script>
