@@ -4,16 +4,16 @@
       button.collection-paginator-prev(
         v-if='previousPage()',
         v-on:click='paginate(pagination.current - 1)')
-          | Anterior
+        | Anterior
       button.collection-paginator-number(
         v-for='pageNumber in pagination.total',
         v-on:click='paginate(pageNumber)',
         :class='{ "collection-paginator-current": isCurrent(pageNumber) }')
-          | {{ pageNumber }}
+        | {{ pageNumber }}
       button.collection-paginator-next(
         v-if='nextPage()',
         v-on:click='paginate(pagination.current + 1)')
-          | Próxima
+        | Próxima
 </template>
 
 <script>
