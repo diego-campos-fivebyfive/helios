@@ -4,20 +4,20 @@
     :to='link',
     :class='[pos, { labeled: label }]')
     slot
-      | {{ label }}
+    | {{ label }}
   a.collection-button(
     v-else-if='redirect',
     :href='redirect',
     :class='[pos, { labeled: label }]')
     slot
-      | {{ label }}
+    | {{ label }}
   button.collection-button(
     v-else,
     type='button',
     v-on:click='action',
     :class='[pos, { labeled: label }]')
     slot
-      | {{ label }}
+    | {{ label }}
 </template>
 
 <script>
