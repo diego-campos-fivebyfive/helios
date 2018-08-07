@@ -19,21 +19,21 @@ const getProps = Component => {
 
 describe('Paginator.vue', () => {
   it('should mount Paginator with a pagination prop', () => {
-    const expected = pipe(
+    const schema = pipe(
       mountPaginator,
       getProps
     )({ pagination: {} }).pagination
 
-    expect(expected).toBeDefined()
+    expect(schema).toBeDefined()
   })
 
   describe('showPagination()', () => {
     it('should return false when total is 0 or undefined', () => {
-      const expectedOne = pipe(
+      const schemaOne = pipe(
         mountPaginator
       )({ pagination: {} }).showPagination()
 
-      const expectedTwo = pipe(
+      const schemaTwo = pipe(
         mountPaginator
       )({
         pagination: {
@@ -41,14 +41,14 @@ describe('Paginator.vue', () => {
         }
       }).showPagination()
 
-      expect(expectedOne).not.toEqual(true)
-      expect(expectedTwo).not.toEqual(true)
+      expect(schemaOne).not.toEqual(true)
+      expect(schemaTwo).not.toEqual(true)
     })
   })
 
   describe('getNavigationItems()', () => {
     it('should return a simple pagination array when there are 5 items or less', () => {
-      const expectedOne = pipe(
+      const schemaOne = pipe(
         mountPaginator
       )({
         pagination: {
@@ -56,7 +56,7 @@ describe('Paginator.vue', () => {
         }
       }).getNavigationItems()
 
-      const expectedTwo = pipe(
+      const schemaTwo = pipe(
         mountPaginator
       )({
         pagination: {
@@ -64,12 +64,12 @@ describe('Paginator.vue', () => {
         }
       }).getNavigationItems()
 
-      expect(expectedOne).toHaveLength(5)
-      expect(expectedTwo).not.toHaveLength(5)
+      expect(schemaOne).toHaveLength(5)
+      expect(schemaTwo).not.toHaveLength(5)
     })
 
     it('should render the array returned by navigationItems()', () => {
-      const expected = pipe(
+      const schema = pipe(
         mountPaginator,
         getRenderedText
       )({
@@ -78,11 +78,11 @@ describe('Paginator.vue', () => {
         }
       })
 
-      expect(expected).toBe('12345')
+      expect(schema).toBe('12345')
     })
 
     it('should contains at least one current item', () => {
-      const expected = pipe(
+      const schema = pipe(
         mountPaginator
       )({
         pagination: {
@@ -91,14 +91,16 @@ describe('Paginator.vue', () => {
         }
       }).getNavigationItems()
 
-      expect(expected).toEqual([
+      const expected = [
         expect.objectContaining({ current: true }),
         expect.objectContaining({ current: false })
-      ])
+      ]
+
+      expect(schema).toEqual(expected)
     })
 
     it('should exhibit the last index with spread item when there are more than 5 items', () => {
-      const expected = pipe(
+      const schema = pipe(
         mountPaginator
       )({
         pagination: {
@@ -107,12 +109,12 @@ describe('Paginator.vue', () => {
         }
       }).getNavigationItems()
 
-      expect(expected).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({ value: '...' }),
-          expect.objectContaining({ value: 9 })
-        ])
-      )
+      const expected = expect.arrayContaining([
+        expect.objectContaining({ value: '...' }),
+        expect.objectContaining({ value: 9 })
+      ])
+
+      expect(schema).toEqual(expected)
     })
   })
 })
