@@ -1,19 +1,6 @@
 <template lang="pug">
   .collection-paginator
     nav(v-if='showPagination()')
-      button.collection-paginator-prev(
-        v-if='previousPage()',
-        v-on:click='paginate(pagination.current - 1)')
-        | Anterior
-      button.collection-paginator-number(
-        v-for='pageNumber in pagination.total',
-        v-on:click='paginate(pageNumber)',
-        :class='{ "collection-paginator-current": isCurrent(pageNumber) }')
-        | {{ pageNumber }}
-      button.collection-paginator-next(
-        v-if='nextPage()',
-        v-on:click='paginate(pagination.current + 1)')
-        | Próxima
 </template>
 
 <script>
@@ -25,20 +12,8 @@
       }
     },
     methods: {
-      paginate(pageNumber) {
-        this.$emit('paginate', pageNumber)
-      },
-      isCurrent(pageNumber) {
-        return this.pagination.current === pageNumber
-      },
       showPagination() {
-        return this.pagination.links && this.pagination.total > 1
-      },
-      nextPage() {
-        return this.pagination.links.next
-      },
-      previousPage() {
-        return this.pagination.links.prev
+        return this.pagination.total
       }
     }
   }
