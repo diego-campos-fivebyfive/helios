@@ -1,7 +1,9 @@
 <template lang="pug">
   .collection-paginator
     nav(v-if='showPagination()')
-      button(v-for='item in getNavigationItems()')
+      button(
+        v-for='item in getNavigationItems()',
+        :class='{ "collection-paginator-current": item.current }')
         | {{ item.value }}
 </template>
 
