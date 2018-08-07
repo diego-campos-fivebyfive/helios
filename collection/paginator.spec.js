@@ -1,5 +1,9 @@
 import Vue from 'vue'
+import VueRouter from 'vue-router'
+
 import Paginator from './Paginator.vue'
+
+Vue.use(VueRouter)
 
 const pipe = (...fns) =>
   x => fns.reduce((y, f) => f(y), x)
@@ -46,15 +50,15 @@ describe('Paginator.vue', () => {
     })
   })
 
-  describe('getNavigationItems()', () => {
-    it('should return a simple pagination array when there are 5 items or less', () => {
+  describe('getRangeItems()', () => {
+    it('should return a maxium of 5 range items', () => {
       const schemaOne = pipe(
         mountPaginator
       )({
         pagination: {
           total: 5
         }
-      }).getNavigationItems()
+      }).getRangeItems()
 
       const schemaTwo = pipe(
         mountPaginator
@@ -62,12 +66,14 @@ describe('Paginator.vue', () => {
         pagination: {
           total: 9
         }
-      }).getNavigationItems()
+      }).getRangeItems()
 
       expect(schemaOne).toHaveLength(5)
-      expect(schemaTwo).not.toHaveLength(5)
+      expect(schemaTwo).toHaveLength(5)
     })
+  })
 
+  describe('getNavigationItems()', () => {
     it('should render the array returned by navigationItems()', () => {
       const schema = pipe(
         mountPaginator,
@@ -78,7 +84,7 @@ describe('Paginator.vue', () => {
         }
       })
 
-      expect(schema).toBe('12345')
+      expect(schema).toBe('12345Próximo')
     })
 
     it('should contains at least one current item', () => {
@@ -108,10 +114,10 @@ describe('Paginator.vue', () => {
         }
       }).getNavigationItems()
 
-      const expected = [
+      const expected = expect.arrayContaining([
         expect.objectContaining({ current: true }),
         expect.objectContaining({ current: false })
-      ]
+      ])
 
       expect(schema).toEqual(expected)
     })
@@ -127,8 +133,8 @@ describe('Paginator.vue', () => {
       }).getNavigationItems()
 
       const expected = expect.arrayContaining([
-        expect.objectContaining({ value: '...' }),
-        expect.objectContaining({ value: 9 })
+        expect.objectContaining({ label: '...' }),
+        expect.objectContaining({ label: 9, value: 9 })
       ])
 
       expect(schema).toEqual(expected)
@@ -155,7 +161,7 @@ describe('Paginator.vue', () => {
       }).getNavigationItems()
 
       const expected = expect.arrayContaining([
-        expect.objectContaining({ value: 'Próximo' })
+        expect.objectContaining({ label: 'Próximo' })
       ])
 
       expect(schemaOne).toEqual(expected)

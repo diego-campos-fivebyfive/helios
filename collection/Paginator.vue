@@ -1,10 +1,14 @@
 <template lang="pug">
   .collection-paginator
     nav(v-if='showPagination()')
-      button(
-        v-for='item in getNavigationItems()',
-        :class='{ "collection-paginator-current": item.current }')
-        | {{ item.value }}
+      ul
+        li(
+          v-for='item in getNavigationItems()',
+          :class='{ "collection-paginator-current": item.current }')
+          span(v-if='!Number(item.value)')
+            | {{ item.label }}
+          router-link(v-else, :to='item.value')
+            | {{ item.label }}
 </template>
 
 <script>
@@ -19,7 +23,7 @@
       showPagination() {
         return this.pagination.total
       },
-      getNavigationItems() {
+      getRangeItems() {
         let ranges = []
 
         for(
@@ -29,23 +33,32 @@
           i++
         ) {
           ranges.push({
+            label: i,
             value: i,
             current: this.getCurrent(i) 
           })
         }
 
+        return ranges
+      },
+      getNavigationItems() {
+        const navigationItems = this.getRangeItems()
+
         if (this.pagination.total > 5) {
-          ranges.push(
-            { value: '...' },
-            { value: this.pagination.total }
+          navigationItems.push(
+            { label: '...' },
+            {
+              label: this.pagination.total,
+              value: this.pagination.total
+            }
           )
         }
 
-        if (this.pagination.current < this.pagination.total) {
-          ranges.push({ value: 'Próximo' })
+        if (this.pagination.current || 1 < this.pagination.total) {
+          navigationItems.push({ label: 'Próximo' })
         }
 
-        return ranges
+        return navigationItems
       },
       getCurrent(i) {
         if (!this.pagination.current && i === 1) {
