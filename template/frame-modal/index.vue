@@ -19,8 +19,12 @@
     }),
     mounted() {
       window.renderFrameModal = this.renderFrameModal
+      this.closeModalWhenBackButtonPressed()
     },
     methods: {
+      closeModalWhenBackButtonPressed() {
+        window.onpopstate = this.hideFrameModal
+      },
       hideFrameModal() {
         this.path = ''
         this.handleTwigModal.toogle()
