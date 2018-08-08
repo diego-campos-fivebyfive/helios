@@ -21,7 +21,7 @@
         return this.pagination.total
       },
       paginate(item) {
-        if (Number(item.value)) {
+        if (item.value) {
           this.$emit('paginate', item.value)
         }
       },
@@ -30,10 +30,7 @@
           this.pagination.current > 2
           && this.pagination.total >= 5
         ) {
-          if (
-            this.pagination.current + 2
-            > this.pagination.total
-          ) {
+          if (this.pagination.current + 2 > this.pagination.total) {
             return this.pagination.total - 4
           }
 
@@ -42,19 +39,18 @@
 
         return 1
       },
-      getCurrent(i) {
-        if (!this.pagination.current && i === 1) {
+      getCurrent(rangeIndex) {
+        if (!this.pagination.current && rangeIndex === 1) {
           return true
         }
 
-        return this.pagination.current === i
+        return this.pagination.current === rangeIndex
       },
       getRangeItems() {
         let ranges = []
 
-        let i = this.getInitialRangeIndex()
-
-        for(;
+        for(
+          let i = this.getInitialRangeIndex();
           i <= this.pagination.total
             && ranges.length < 5;
           i++
@@ -71,7 +67,7 @@
       getPrevControls(rangeItems) {
         const [firstRangeItem] = rangeItems
 
-        let prevControls = []
+        const prevControls = []
 
         if (this.pagination.current > 1) {
           prevControls.push({
@@ -86,18 +82,30 @@
               label: 1,
               value: 1
             },
-            { label: '...' }
+            {
+              label: '...',
+              value: null
+            }
           )
         }
 
         return prevControls
       },
-      getNextControls() {
-        let nextControls = []
+      getNextControls(rangeItems) {
+        const lastRangeItemIndex = rangeItems.length - 1
+        const lastRangeItem = rangeItems[lastRangeItemIndex]
 
-        if (this.pagination.total > 5) {
+        const nextControls = []
+
+        if (
+          lastRangeItem.value !== this.pagination.total
+          && this.pagination.total > 5
+        ) {
           nextControls.push(
-            { label: '...' },
+            {
+              label: '...',
+              value: null
+            },
             {
               label: this.pagination.total,
               value: this.pagination.total
@@ -116,10 +124,14 @@
       },
       getNavigationItems() {
         const rangeItems = this.getRangeItems()
+        const prevControls = this.getPrevControls(rangeItems)
+        const nextControls = this.getNextControls(rangeItems)
 
-        return this.getPrevControls(rangeItems)
-          .concat(rangeItems)
-          .concat(this.getNextControls())
+        return [
+          ...prevControls,
+          ...rangeItems,
+          ...nextControls
+        ]
       }
     }
   }
