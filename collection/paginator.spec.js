@@ -103,7 +103,77 @@ describe('Paginator.vue', () => {
       ])
 
       expect(schema).toEqual(expected)
+    })
 
+    it('should keep current item after the middle when there are no or 1 next item', () => {
+      const schemaOne = pipe(
+        mountPaginator
+      )({
+        pagination: {
+          total: 15,
+          current: 14
+        }
+      }).getRangeItems()
+
+      const schemaTwo = pipe(
+        mountPaginator
+      )({
+        pagination: {
+          total: 15,
+          current: 15
+        }
+      }).getRangeItems()
+
+      const expectedOne = expect.arrayContaining([
+        expect.objectContaining({
+          label: 11,
+          value: 11
+        }),
+        expect.objectContaining({
+          label: 12,
+          value: 12
+        }),
+        expect.objectContaining({
+          label: 13,
+          value: 13
+        }),
+        expect.objectContaining({
+          label: 14,
+          value: 14,
+          current: true
+        }),
+        expect.objectContaining({
+          label: 15,
+          value: 15
+        })
+      ])
+
+      const expectedTwo = expect.arrayContaining([
+        expect.objectContaining({
+          label: 11,
+          value: 11
+        }),
+        expect.objectContaining({
+          label: 12,
+          value: 12
+        }),
+        expect.objectContaining({
+          label: 13,
+          value: 13
+        }),
+        expect.objectContaining({
+          label: 14,
+          value: 14
+        }),
+        expect.objectContaining({
+          label: 15,
+          value: 15,
+          current: true
+        })
+      ])
+
+      expect(schemaOne).toEqual(expectedOne)
+      expect(schemaTwo).toEqual(expectedTwo)
     })
   })
 

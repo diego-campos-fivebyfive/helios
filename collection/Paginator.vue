@@ -18,22 +18,34 @@
     },
     methods: {
       paginate(item) {
-          if (Number(item.value)) {
-            this.$emit('paginate', item.value)
-          }
+        if (Number(item.value)) {
+          this.$emit('paginate', item.value)
+        }
       },
       showPagination() {
         return this.pagination.total
       },
+      getInitialRangeIndex() {
+        if (
+          this.pagination.current > 2
+          && this.pagination.total >= 5
+        ) {
+          if (
+            this.pagination.current + 2
+            > this.pagination.total
+          ) {
+            return this.pagination.total - 4
+          }
+
+          return this.pagination.current - 2
+        }
+
+        return 1
+      },
       getRangeItems() {
         let ranges = []
 
-        let i = (
-          this.pagination.current > 2
-          && this.pagination.total > 4
-        )
-          ? this.pagination.current - 2
-          : 1
+        let i = this.getInitialRangeIndex()
 
         for(;
           i <= this.pagination.total
