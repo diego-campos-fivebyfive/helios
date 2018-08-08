@@ -307,5 +307,23 @@ describe('Paginator.vue', () => {
 
       expect(schema).toEqual(expected)
     })
+
+    it('should exhibit the first index with spread item when the first range item is not 1', () => {
+      const schema = pipe(
+        mountPaginator
+      )({
+        pagination: {
+          total: 9,
+          current: 5
+        }
+      }).getNavigationItems()
+
+      const expected = expect.arrayContaining([
+        expect.objectContaining({ label: 1, value: 1 }),
+        expect.objectContaining({ label: '...' })
+      ])
+
+      expect(schema).toEqual(expected)
+    })
   })
 })

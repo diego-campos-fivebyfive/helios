@@ -63,6 +63,8 @@
       },
       getNavigationItems() {
         let navigationItems = []
+        const rangeItems = this.getRangeItems()
+        const [firstRangeItem] = rangeItems
 
         if (this.pagination.current > 1) {
           navigationItems.push({
@@ -71,7 +73,17 @@
           })
         }
 
-        navigationItems = navigationItems.concat(this.getRangeItems())
+        if (firstRangeItem.value > 1) {
+          navigationItems.push(
+            {
+              label: 1,
+              value: 1
+            },
+            { label: '...' }
+          )
+        }
+
+        navigationItems = navigationItems.concat(rangeItems)
 
         if (this.pagination.total > 5) {
           navigationItems.push(
