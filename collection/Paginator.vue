@@ -28,8 +28,14 @@
       getRangeItems() {
         let ranges = []
 
-        for(
-          let i = 1;
+        let i = (
+          this.pagination.current > 2
+          && this.pagination.total > 4
+        )
+          ? this.pagination.current - 2
+          : 1
+
+        for(;
           i <= this.pagination.total
             && ranges.length < 5;
           i++

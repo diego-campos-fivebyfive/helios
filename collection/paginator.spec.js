@@ -47,7 +47,7 @@ describe('Paginator.vue', () => {
   })
 
   describe('getRangeItems()', () => {
-    it('should return a maxium of 5 range items', () => {
+    it('should return a maximum of 5 range items when there are 5 items or more', () => {
       const schemaOne = pipe(
         mountPaginator
       )({
@@ -66,6 +66,44 @@ describe('Paginator.vue', () => {
 
       expect(schemaOne).toHaveLength(5)
       expect(schemaTwo).toHaveLength(5)
+    })
+
+    it('should keep current item in the middle when there are 2 prev items and 2 next items when there are 5 items or more', () => {
+      const schema = pipe(
+        mountPaginator
+      )({
+        pagination: {
+          total: 15,
+          current: 10
+        }
+      }).getRangeItems()
+
+      const expected = expect.arrayContaining([
+        expect.objectContaining({
+          label: 8,
+          value: 8
+        }),
+        expect.objectContaining({
+          label: 9,
+          value: 9
+        }),
+        expect.objectContaining({
+          label: 10,
+          value: 10,
+          current: true
+        }),
+        expect.objectContaining({
+          label: 11,
+          value: 11
+        }),
+        expect.objectContaining({
+          label: 12,
+          value: 12
+        })
+      ])
+
+      expect(schema).toEqual(expected)
+
     })
   })
 
