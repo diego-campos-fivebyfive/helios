@@ -18,10 +18,13 @@
       path: ''
     }),
     mounted() {
-      window.renderFrameModal = this.renderFrameModal
+      this.setRenderFrameModal()
       this.closeModalWhenBackButtonPressed()
     },
     methods: {
+      setRenderFrameModal() {
+        window.renderFrameModal = this.renderFrameModal
+      },
       closeModalWhenBackButtonPressed() {
         window.onpopstate = this.hideFrameModal
       },
