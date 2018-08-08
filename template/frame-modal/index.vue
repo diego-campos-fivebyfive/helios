@@ -18,16 +18,10 @@
       path: ''
     }),
     mounted() {
-      this.setRenderFrameModal()
-      this.closeModalWhenBackButtonPressed()
+      window.renderFrameModal = this.renderFrameModal
+      window.onpopstate = this.hideFrameModal
     },
     methods: {
-      setRenderFrameModal() {
-        window.renderFrameModal = this.renderFrameModal
-      },
-      closeModalWhenBackButtonPressed() {
-        window.onpopstate = this.hideFrameModal
-      },
       hideFrameModal() {
         this.path = ''
         this.handleTwigModal.toogle()
