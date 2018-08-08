@@ -46,15 +46,15 @@ describe('Paginator.vue', () => {
     })
   })
 
-  describe('getNavigationItems()', () => {
-    it('should return a simple pagination array when there are 5 items or less', () => {
+  describe('getRangeItems()', () => {
+    it('should return a maxium of 5 range items', () => {
       const schemaOne = pipe(
         mountPaginator
       )({
         pagination: {
           total: 5
         }
-      }).getNavigationItems()
+      }).getRangeItems()
 
       const schemaTwo = pipe(
         mountPaginator
@@ -62,12 +62,14 @@ describe('Paginator.vue', () => {
         pagination: {
           total: 9
         }
-      }).getNavigationItems()
+      }).getRangeItems()
 
       expect(schemaOne).toHaveLength(5)
-      expect(schemaTwo).not.toHaveLength(5)
+      expect(schemaTwo).toHaveLength(5)
     })
+  })
 
+  describe('getNavigationItems()', () => {
     it('should render the array returned by navigationItems()', () => {
       const schema = pipe(
         mountPaginator,

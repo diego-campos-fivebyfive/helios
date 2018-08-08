@@ -19,7 +19,7 @@
       showPagination() {
         return this.pagination.total
       },
-      getNavigationItems() {
+      getRangeItems() {
         let ranges = []
 
         for(
@@ -34,18 +34,23 @@
           })
         }
 
+        return ranges
+      },
+      getNavigationItems() {
+        const navigationItems = this.getRangeItems()
+
         if (this.pagination.total > 5) {
-          ranges.push(
+          navigationItems.push(
             { value: '...' },
             { value: this.pagination.total }
           )
         }
 
         if (this.pagination.current < this.pagination.total) {
-          ranges.push({ value: 'Próximo' })
+          navigationItems.push({ value: 'Próximo' })
         }
 
-        return ranges
+        return navigationItems
       },
       getCurrent(i) {
         if (!this.pagination.current && i === 1) {
