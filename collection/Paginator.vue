@@ -1,11 +1,11 @@
 <template lang="pug">
   .collection-paginator
     nav(v-if='showPagination()')
-      ul
-        li(
-          v-for='item in getNavigationItems()',
-          :class='{ "collection-paginator-current": item.current }')
-          | {{ item.label }}
+      button.collection-paginator(
+        v-for='item in getNavigationItems()',
+        v-on:click='paginate(item)',
+        :class='{ "collection-paginator-current": item.current }')
+        | {{ item.label }}
 </template>
 
 <script>
@@ -17,6 +17,11 @@
       }
     },
     methods: {
+      paginate(item) {
+          if (Number(item.value)) {
+            this.$emit('paginate', item.value)
+          }
+      },
       showPagination() {
         return this.pagination.total
       },
@@ -32,7 +37,7 @@
           ranges.push({
             label: i,
             value: i,
-            current: this.getCurrent(i) 
+            current: this.getCurrent(i)
           })
         }
 
