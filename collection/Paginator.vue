@@ -17,13 +17,13 @@
       }
     },
     methods: {
+      showPagination() {
+        return this.pagination.total
+      },
       paginate(item) {
         if (Number(item.value)) {
           this.$emit('paginate', item.value)
         }
-      },
-      showPagination() {
-        return this.pagination.total
       },
       getInitialRangeIndex() {
         if (
@@ -41,6 +41,13 @@
         }
 
         return 1
+      },
+      getCurrent(i) {
+        if (!this.pagination.current && i === 1) {
+          return true
+        }
+
+        return this.pagination.current === i
       },
       getRangeItems() {
         let ranges = []
@@ -61,20 +68,20 @@
 
         return ranges
       },
-      getNavigationItems() {
-        let navigationItems = []
-        const rangeItems = this.getRangeItems()
+      getPrevControls(rangeItems) {
         const [firstRangeItem] = rangeItems
 
+        let prevControls = []
+
         if (this.pagination.current > 1) {
-          navigationItems.push({
+          prevControls.push({
             label: 'Anterior',
             value: this.pagination.current - 1
           })
         }
 
         if (firstRangeItem.value > 1) {
-          navigationItems.push(
+          prevControls.push(
             {
               label: 1,
               value: 1
@@ -83,10 +90,13 @@
           )
         }
 
-        navigationItems = navigationItems.concat(rangeItems)
+        return prevControls
+      },
+      getNextControls() {
+        let nextControls = []
 
         if (this.pagination.total > 5) {
-          navigationItems.push(
+          nextControls.push(
             { label: '...' },
             {
               label: this.pagination.total,
@@ -96,20 +106,20 @@
         }
 
         if (this.pagination.current < this.pagination.total) {
-          navigationItems.push({
+           nextControls.push({
             label: 'Próximo',
             value: this.pagination.current + 1
           })
         }
 
-        return navigationItems
+        return nextControls
       },
-      getCurrent(i) {
-        if (!this.pagination.current && i === 1) {
-          return true
-        }
+      getNavigationItems() {
+        const rangeItems = this.getRangeItems()
 
-        return this.pagination.current === i
+        return this.getPrevControls(rangeItems)
+          .concat(rangeItems)
+          .concat(this.getNextControls())
       }
     }
   }
