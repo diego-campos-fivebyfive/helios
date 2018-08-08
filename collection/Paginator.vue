@@ -57,7 +57,10 @@
         }
 
         if (this.pagination.current < this.pagination.total) {
-          navigationItems.push({ label: 'Próximo' })
+          navigationItems.push({
+            label: 'Próximo',
+            value: this.pagination.current + 1
+          })
         }
 
         return navigationItems

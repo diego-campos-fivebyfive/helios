@@ -163,4 +163,25 @@ describe('Paginator.vue', () => {
       expect(schemaOne).toEqual(expected)
     })
   })
+
+  it('should sum current page plus one and add it to next button as value', () => {
+      const schema = pipe(
+        mountPaginator
+      )({
+        pagination: {
+          total: 3,
+          current: 2
+        }
+      }).getNavigationItems()
+
+      const expected = expect.arrayContaining([
+        expect.objectContaining({
+          label: 'Próximo',
+          value: 3
+        })
+      ])
+
+      expect(schema).toEqual(expected)
+
+  })
 })
