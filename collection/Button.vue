@@ -8,6 +8,7 @@
   a.collection-button(
     v-else-if='redirect',
     :href='redirect',
+    :title='[title]'
     :class='[pos, { labeled: label }]')
     slot
     | {{ label }}
@@ -15,6 +16,7 @@
     v-else,
     type='button',
     v-on:click='action',
+    :title='[title]'
     :class='[pos, { labeled: label }]')
     slot
     | {{ label }}
@@ -38,6 +40,10 @@
         required: false
       },
       label: {
+        type: String,
+        required: false
+      },
+      title: {
         type: String,
         required: false
       },
