@@ -129,8 +129,8 @@ describe('Paginator.vue', () => {
       }).getNavigationItems()
 
       const expected = expect.arrayContaining([
-        expect.objectContaining({ value: '...' }),
-        expect.objectContaining({ value: 9 })
+        expect.objectContaining({ label: '...' }),
+        expect.objectContaining({ label: 9, value: 9 })
       ])
 
       expect(schema).toEqual(expected)
@@ -157,7 +157,7 @@ describe('Paginator.vue', () => {
       }).getNavigationItems()
 
       const expected = expect.arrayContaining([
-        expect.objectContaining({ value: 'Próximo' })
+        expect.objectContaining({ label: 'Próximo' })
       ])
 
       expect(schemaOne).toEqual(expected)

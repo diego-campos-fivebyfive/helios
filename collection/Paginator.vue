@@ -1,10 +1,11 @@
 <template lang="pug">
   .collection-paginator
     nav(v-if='showPagination()')
-      button(
-        v-for='item in getNavigationItems()',
-        :class='{ "collection-paginator-current": item.current }')
-        | {{ item.value }}
+      ul
+        li(
+          v-for='item in getNavigationItems()',
+          :class='{ "collection-paginator-current": item.current }')
+          | {{ item.label }}
 </template>
 
 <script>
@@ -29,6 +30,7 @@
           i++
         ) {
           ranges.push({
+            label: i,
             value: i,
             current: this.getCurrent(i) 
           })
@@ -41,13 +43,16 @@
 
         if (this.pagination.total > 5) {
           navigationItems.push(
-            { value: '...' },
-            { value: this.pagination.total }
+            { label: '...' },
+            {
+              label: this.pagination.total,
+              value: this.pagination.total
+            }
           )
         }
 
         if (this.pagination.current < this.pagination.total) {
-          navigationItems.push({ value: 'Próximo' })
+          navigationItems.push({ label: 'Próximo' })
         }
 
         return navigationItems
