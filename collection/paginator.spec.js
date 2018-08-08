@@ -270,9 +270,25 @@ describe('Paginator.vue', () => {
 
       expect(schemaOne).toEqual(expected)
     })
-  })
 
-  it('should sum current page plus one and add it to next button as value', () => {
+    it('should exhibit the prev button when there is a prev item', () => {
+      const schemaOne = pipe(
+        mountPaginator
+      )({
+        pagination: {
+          total: 9,
+          current: 4
+        }
+      }).getNavigationItems()
+
+      const expected = expect.arrayContaining([
+        expect.objectContaining({ label: 'Anterior' })
+      ])
+
+      expect(schemaOne).toEqual(expected)
+    })
+
+    it('should sum current page plus one and add it to next button as value', () => {
       const schema = pipe(
         mountPaginator
       )({
@@ -290,6 +306,6 @@ describe('Paginator.vue', () => {
       ])
 
       expect(schema).toEqual(expected)
-
+    })
   })
 })

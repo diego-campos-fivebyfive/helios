@@ -62,7 +62,16 @@
         return ranges
       },
       getNavigationItems() {
-        const navigationItems = this.getRangeItems()
+        let navigationItems = []
+
+        if (this.pagination.current > 1) {
+          navigationItems.push({
+            label: 'Anterior',
+            value: this.pagination.current - 1
+          })
+        }
+
+        navigationItems = navigationItems.concat(this.getRangeItems())
 
         if (this.pagination.total > 5) {
           navigationItems.push(
