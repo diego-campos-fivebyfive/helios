@@ -108,10 +108,10 @@ describe('Paginator.vue', () => {
         }
       }).getNavigationItems()
 
-      const expected = [
+      const expected = expect.arrayContaining([
         expect.objectContaining({ current: true }),
         expect.objectContaining({ current: false })
-      ]
+      ])
 
       expect(schema).toEqual(expected)
     })
