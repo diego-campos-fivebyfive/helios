@@ -9,9 +9,9 @@
 <script>
   export default {
     props: {
-      handleTwigModal: {
-        type: Object,
-        required: true
+      stateTwigModal: {
+        type: Boolean,
+        required:true
       }
     },
     data: () => ({
@@ -23,7 +23,6 @@
     methods: {
       hideFrameModal() {
         this.path = ''
-        this.handleTwigModal.toogle()
       },
       renderFrameModal(path) {
         const baseUri = process.env.API_URL
@@ -37,7 +36,12 @@
       showFrameModal() {
         return Boolean(this.path)
       }
-    }
+    },
+    watch: {
+        stateTwigModal: {
+          handler: 'hideFrameModal'
+        }
+      }
   }
 </script>
 
