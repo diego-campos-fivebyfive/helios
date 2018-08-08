@@ -326,4 +326,28 @@ describe('Paginator.vue', () => {
       expect(schema).toEqual(expected)
     })
   })
+
+  describe('getNextControls()', () => {
+    it('should exhibit neither the spread item nor the last index when last range item and index are the same', () => {
+      const schema = pipe(
+        mountPaginator,
+        Paginator => pipe(
+          Paginator.getRangeItems,
+          Paginator.getNextControls
+        )
+      )({
+        pagination: {
+          total: 9,
+          current: 9
+        }
+      })
+
+      const expected = expect.arrayContaining([
+        expect.objectContaining({ label: 9, value: 9 }),
+        expect.objectContaining({ label: '...' })
+      ])
+
+      expect(schema).not.toEqual(expected)
+    })
+  })
 })
