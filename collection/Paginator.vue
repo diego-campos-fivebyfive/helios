@@ -17,13 +17,12 @@
       }
     },
     methods: {
-      showPagination() {
-        return this.pagination.total
-      },
-      paginate(item) {
-        if (item.value) {
-          this.$emit('paginate', item.value)
+      getCurrent(rangeIndex) {
+        if (!this.pagination.current && rangeIndex === 1) {
+          return true
         }
+
+        return this.pagination.current === rangeIndex
       },
       getInitialRangeIndex() {
         if (
@@ -39,57 +38,16 @@
 
         return 1
       },
-      getCurrent(rangeIndex) {
-        if (!this.pagination.current && rangeIndex === 1) {
-          return true
-        }
+      getNavigationItems() {
+        const rangeItems = this.getRangeItems()
+        const prevControls = this.getPrevControls(rangeItems)
+        const nextControls = this.getNextControls(rangeItems)
 
-        return this.pagination.current === rangeIndex
-      },
-      getRangeItems() {
-        let ranges = []
-
-        for(
-          let i = this.getInitialRangeIndex();
-          i <= this.pagination.total
-            && ranges.length < 5;
-          i++
-        ) {
-          ranges.push({
-            label: i,
-            value: i,
-            current: this.getCurrent(i)
-          })
-        }
-
-        return ranges
-      },
-      getPrevControls(rangeItems) {
-        const [firstRangeItem] = rangeItems
-
-        const prevControls = []
-
-        if (this.pagination.current > 1) {
-          prevControls.push({
-            label: 'Anterior',
-            value: this.pagination.current - 1
-          })
-        }
-
-        if (firstRangeItem.value > 1) {
-          prevControls.push(
-            {
-              label: 1,
-              value: 1
-            },
-            {
-              label: '...',
-              value: null
-            }
-          )
-        }
-
-        return prevControls
+        return [
+          ...prevControls,
+          ...rangeItems,
+          ...nextControls
+        ]
       },
       getNextControls(rangeItems) {
         const lastRangeItemIndex = rangeItems.length - 1
@@ -122,16 +80,58 @@
 
         return nextControls
       },
-      getNavigationItems() {
-        const rangeItems = this.getRangeItems()
-        const prevControls = this.getPrevControls(rangeItems)
-        const nextControls = this.getNextControls(rangeItems)
+      getPrevControls(rangeItems) {
+        const [firstRangeItem] = rangeItems
 
-        return [
-          ...prevControls,
-          ...rangeItems,
-          ...nextControls
-        ]
+        const prevControls = []
+
+        if (this.pagination.current > 1) {
+          prevControls.push({
+            label: 'Anterior',
+            value: this.pagination.current - 1
+          })
+        }
+
+        if (firstRangeItem.value > 1) {
+          prevControls.push(
+            {
+              label: 1,
+              value: 1
+            },
+            {
+              label: '...',
+              value: null
+            }
+          )
+        }
+
+        return prevControls
+      },
+      getRangeItems() {
+        let ranges = []
+
+        for(
+          let i = this.getInitialRangeIndex();
+          i <= this.pagination.total
+            && ranges.length < 5;
+          i++
+        ) {
+          ranges.push({
+            label: i,
+            value: i,
+            current: this.getCurrent(i)
+          })
+        }
+
+        return ranges
+      },
+      paginate(item) {
+        if (item.value) {
+          this.$emit('paginate', item.value)
+        }
+      },
+      showPagination() {
+        return this.pagination.total
       }
     }
   }
