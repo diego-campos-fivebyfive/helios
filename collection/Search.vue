@@ -1,7 +1,9 @@
 <template lang="pug">
   form.collection-search(
     v-on:keypress.enter.prevent='')
-    input.collection-search-input(v-model='termSearch')
+    input.collection-search-input(
+      v-model='termSearch',
+      v-on:keyup='searchEnterPressed')
     Button.collection-search-button(
       :action='() => $emit("updateList")',
       class='primary-common',
@@ -18,7 +20,16 @@
     },
     data: () => ({
       termSearch: ''
-    })
+    }),
+    methods: {
+      searchEnterPressed(event) {
+        const enterCode = 13
+        if (event.keyCode === enterCode) {
+          console.log('enter')
+          this.$emit("updateList")
+        }
+      }
+    }
   }
 </script>
 
