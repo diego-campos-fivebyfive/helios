@@ -19,6 +19,7 @@
     }),
     mounted() {
       window.renderFrameModal = this.renderFrameModal
+      window.onpopstate = this.hideFrameModal
     },
     methods: {
       hideFrameModal() {
