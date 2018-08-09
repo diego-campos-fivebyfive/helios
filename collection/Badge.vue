@@ -27,8 +27,8 @@
           return
         }
 
-        if (this.badge.asyncTotal) {
-          this.badge.asyncTotal().then(total => {
+        if (this.badge.async) {
+          this.badge.async().then(total => {
             this.total = total
           })
         }
