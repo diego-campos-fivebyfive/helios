@@ -11,29 +11,59 @@
 <script>
   export default {
     props: {
+      current: {
+        type: Number,
+        required: false,
+        default: 1
+      },
       pagination: {
         type: Object,
-        required: true
+        required: false
+      },
+      total: {
+        type: Number,
+        required: false,
+        default: 1
+      }
+    },
+    data: () => ({
+      params: {
+        current: 1,
+        total: 1
+      }
+    }),
+    watch: {
+      current: {
+        handler: 'handleParams',
+        immediate: true
+      },
+      pagination: {
+        handler: 'handleParams',
+        immediate: true
+      },
+      total: {
+        handler: 'handleParams',
+        immediate: true
       }
     },
     methods: {
       getCurrent(rangeIndex) {
-        if (!this.pagination.current && rangeIndex === 1) {
+        if (!this.params.current && rangeIndex === 1) {
           return true
         }
 
-        return this.pagination.current === rangeIndex
+        return this.params.current === rangeIndex
       },
       getInitialRangeIndex() {
         if (
-          this.pagination.current > 2
-          && this.pagination.total >= 5
+          this.params.current > 2
+          && this.params.total >= 5
         ) {
-          if (this.pagination.current + 2 > this.pagination.total) {
-            return this.pagination.total - 4
+          if (this.params.current + 2 > this.params.total) {
+            return this.params.total - 4
           }
 
-          return this.pagination.current - 2
+          return this.params.current - 2
         }
 
         return 1
@@ -56,8 +86,8 @@
         const nextControls = []
 
         if (
-          lastRangeItem.value !== this.pagination.total
-          && this.pagination.total > 5
+          lastRangeItem.value !== this.params.total
+          && this.params.total > 5
         ) {
           nextControls.push(
             {
@@ -65,16 +95,16 @@
               value: null
             },
             {
-              label: this.pagination.total,
-              value: this.pagination.total
+              label: this.params.total,
+              value: this.params.total
             }
           )
         }
 
-        if (this.pagination.current < this.pagination.total) {
+        if (this.params.current < this.params.total) {
            nextControls.push({
             label: 'Próximo',
-            value: this.pagination.current + 1
+            value: this.params.current + 1
           })
         }
 
@@ -85,10 +115,10 @@
 
         const prevControls = []
 
-        if (this.pagination.current > 1) {
+        if (this.params.current > 1) {
           prevControls.push({
             label: 'Anterior',
-            value: this.pagination.current - 1
+            value: this.params.current - 1
           })
         }
 
@@ -112,7 +142,7 @@
 
         for(
           let i = this.getInitialRangeIndex();
-          i <= this.pagination.total
+          i <= this.params.total
             && ranges.length < 5;
           i++
         ) {
@@ -125,13 +155,32 @@
 
         return ranges
       },
+      handleParams() {
+        if (this.pagination && this.pagination.total) {
+          this.params.total = this.pagination.total
+          this.params.current = this.pagination.current || 1
+          return
+        }
+
+        if (this.total) {
+          this.params.total = this.total
+          this.params.current = this.current
+          return
+        }
+
+        throw new Error(`
+          You must provide a total,
+          as an arg for pagination prop
+          or as a total prop
+        `)
+      },
       paginate(item) {
         if (item.value) {
           this.$emit('paginate', item.value)
         }
       },
       showPagination() {
-        return this.pagination.total
+        return this.params.total
       }
     }
   }

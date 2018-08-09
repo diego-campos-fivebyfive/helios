@@ -17,6 +17,10 @@ const getProps = Component => {
   return Component.$options.props
 }
 
+const getData = Component => {
+  return Component
+}
+
 describe('Paginator.vue', () => {
   it('should mount Paginator with a pagination prop', () => {
     const schema = pipe(
@@ -52,14 +56,15 @@ describe('Paginator.vue', () => {
   })
 
   describe('getCurrent()', () => {
-
+    // .. needs tests
   })
 
   describe('getInitialRangeIndex()', () => {
-
+    // .. needs tests
   })
 
   describe('getNavigationItems()', () => {
+    // .. needs tests
   })
 
   describe('getNextControls()', () => {
@@ -403,6 +408,21 @@ describe('Paginator.vue', () => {
 
       expect(schemaOne).toEqual(expected)
       expect(schemaTwo).toEqual(expected)
+    })
+  })
+
+  describe('handleParams()', () => {
+    it('should set pagination.total to params.total', () => {
+      const schema = pipe(
+        mountPaginator,
+        getData
+      )({
+        pagination: {
+          total: 5
+        }
+      }).params.total
+
+      expect(schema).toEqual(5)
     })
   })
 
