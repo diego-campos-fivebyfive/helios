@@ -201,7 +201,7 @@
   .collection-paginator-item {
     color: $ui-text-main;
     display: inline-block;
-    padding: $ui-space-y/3 $ui-space-x/2.5;
+    padding: $ui-space-y / 3 $ui-space-x / 2.5;
 
     &:hover {
       background-color: $ui-gray-lighter;
