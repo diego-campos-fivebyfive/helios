@@ -8,7 +8,7 @@
   a.collection-button(
     v-else-if='redirect',
     :href='redirect',
-    :title='[title]'
+    :title='title'
     :class='[pos, { labeled: label }]')
     slot
     | {{ label }}
@@ -16,7 +16,7 @@
     v-else,
     type='button',
     v-on:click='action',
-    :title='[title]'
+    :title='title'
     :class='[pos, { labeled: label }]')
     slot
     | {{ label }}
