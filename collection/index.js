@@ -13,7 +13,6 @@ import Paginator from './Paginator'
 import Panel from './Panel'
 import Progress from './Progress'
 import Search from './Search'
-import Sticker from './Sticker'
 import Table from './Table'
 
 export default {
@@ -30,6 +29,5 @@ export default {
   Panel,
   Progress,
   Search,
-  Sticker,
   Table
 }
