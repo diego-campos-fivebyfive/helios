@@ -6,13 +6,13 @@ import Banner from './Banner'
 import Button from './Button'
 import ButtonDropdown from './ButtonDropdown'
 import Confirm from './Confirm'
-import Count from './Count'
 import Modal from './Modal'
 import Notification from './Notification'
 import Paginator from './Paginator'
 import Panel from './Panel'
 import Progress from './Progress'
 import Search from './Search'
+import Sticker from './Sticker'
 import Table from './Table'
 
 export default {
@@ -22,12 +22,12 @@ export default {
   Button,
   ButtonDropdown,
   Confirm,
-  Count,
   Modal,
   Notification,
   Paginator,
   Panel,
   Progress,
   Search,
+  Sticker,
   Table
 }
