@@ -7,7 +7,7 @@
     span(:style='labelPosition.top')
       | {{ item.name }}
     Icon.icon-arrow(name='angle-right')
-    Count(v-if='item.count', :count='item.count')
+    Badge(v-if='item.badge', :badge='item.badge')
 </template>
 
 <script>

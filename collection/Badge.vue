@@ -1,12 +1,12 @@
 <template lang="pug">
-  span.count(v-if='this.total')
+  span.badge(v-if='this.total')
     | {{ total }}
 </template>
 
 <script>
   export default {
     props: {
-      count: {
+      badge: {
         type: Object,
         required: true
       }
@@ -15,20 +15,20 @@
       total: 0
     }),
     watch: {
-      count: {
-        handler: 'resolveCount',
+      badge: {
+        handler: 'resolveBadge',
         immediate: true
       }
     },
     methods: {
-      resolveCount() {
-        if (this.count.total) {
-          this.total = this.count.total
+      resolveBadge() {
+        if (this.badge.total) {
+          this.total = this.badge.total
           return
         }
 
-        if (this.count.asyncTotal) {
-          this.count.asyncTotal().then(total => {
+        if (this.badge.asyncTotal) {
+          this.badge.asyncTotal().then(total => {
             this.total = total
           })
         }
@@ -38,7 +38,7 @@
 </script>
 
 <style lang="scss" scoped>
-  .count {
+  .badge {
     background: $ui-blue-light;
     border-radius: $ui-corner/2;
     color: $ui-white-regular;

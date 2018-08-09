@@ -1,11 +1,11 @@
 import Icon from 'vue-awesome/components/Icon'
 import './icons'
 
+import Badge from './Badge'
 import Banner from './Banner'
 import Button from './Button'
 import ButtonDropdown from './ButtonDropdown'
 import Confirm from './Confirm'
-import Count from './Count'
 import Level from './Level'
 import Modal from './Modal'
 import Notification from './Notification'
@@ -17,11 +17,11 @@ import Table from './Table'
 
 export default {
   Icon,
+  Badge,
   Banner,
   Button,
   ButtonDropdown,
   Confirm,
-  Count,
   Level,
   Modal,
   Notification,
