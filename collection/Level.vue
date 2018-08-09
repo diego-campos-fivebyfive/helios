@@ -1,11 +1,11 @@
 <template lang="pug">
-  .collection-badge(:style='getBadgeBackground()')
-    img.collection-badge-logo(
+  .collection-level(:style='getLevelBackground()')
+    img.collection-level-logo(
       src='~theme/assets/media/logo-inverse.png')
-    .collection-badge-label
+    .collection-level-label
       | Sices
-      span.collection-badge-label-level
-        | {{ level }}
+      span.collection-level-label-levelName
+        | {{ levelName }}
 </template>
 
 <script>
@@ -13,14 +13,14 @@
 
   export default {
     props: {
-      level: {
+      levelName: {
         type: String,
         required: true
       }
     },
     methods: {
-      getBadgeBackground() {
-        const badgesBackground = {
+      getLevelBackground() {
+        const levelsBackground = {
           black: '#6d6d6d',
           partner: '#e7b042',
           platinum: '#c6c6c6',
@@ -28,29 +28,29 @@
           titanium: `url(${titaniumCover})`
         }
 
-        return `background: ${badgesBackground[this.level]};`
+        return `background: ${levelsBackground[this.levelName]};`
       }
     }
   }
 </script>
 
 <style lang="scss">
-  $badges-size: 28px;
+  $levels-size: 28px;
 
-  .collection-badge {
+  .collection-level {
     border-radius: $ui-corner/2;
     display: inline-flex;
-    font-size: $badges-size;
+    font-size: $levels-size;
     height: 1.25em;
     padding: 0.25em;
 
-    .collection-badge-logo {
+    .collection-level-logo {
       border-right: 0.03em solid $ui-white-regular;
       height: 100%;
       padding-right: $ui-space-x/8;
     }
 
-    .collection-badge-label {
+    .collection-level-label {
       color: $ui-white-regular;
       font-size: 0.3em;
       font-weight: 600;
@@ -58,7 +58,7 @@
       text-align: left;
       text-transform: uppercase;
 
-      .collection-badge-label-level {
+      .collection-level-label-levelName {
         display: block;
         font-size: 1.25em;
       }
