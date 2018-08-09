@@ -9,7 +9,7 @@
 <script>
   export default {
     props: {
-      stateTwigModal: {
+      twigModalState: {
         type: Boolean,
         required:true
       }
@@ -39,7 +39,7 @@
       }
     },
     watch: {
-        stateTwigModal: {
+        twigModalState: {
           handler: 'hideFrameModal'
         }
       }

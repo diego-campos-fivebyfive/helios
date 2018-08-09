@@ -1,6 +1,6 @@
 <template lang="pug">
   .app-page(:class='sidebarType')
-    FrameModal(:stateTwigModal='stateTwigModal')
+    FrameModal(:twigModalState='twigModalState')
     Sidebar(
       v-if='showSidebar()',
       :sidebarType='sidebarType',
@@ -23,7 +23,7 @@
       Sidebar
     },
     data: () => ({
-      stateTwigModal: false,
+      twigModalState: false,
       mainbarType: '',
       sidebarType: '',
       stateSidebarType: 'common'
@@ -37,7 +37,7 @@
       this.setInitialSidebarType()
 
       window.hideTwigModal = state => {
-        this.stateTwigModal = state
+        this.twigModalState = state
       }
 
       window.updateSidebarType = sidebarType => {
