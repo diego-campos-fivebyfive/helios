@@ -3,7 +3,7 @@
     v-on:keypress.enter.prevent='')
     input.collection-search-input(
       v-model='termSearch',
-      v-on:keyup='searchEnterPressed')
+      v-on:keyup.enter='() => $emit("updateList")')
     Button.collection-search-button(
       :action='() => $emit("updateList")',
       class='primary-common',
@@ -20,16 +20,7 @@
     },
     data: () => ({
       termSearch: ''
-    }),
-    methods: {
-      searchEnterPressed(event) {
-        const enterCode = 13
-        if (event.keyCode === enterCode) {
-          console.log('enter')
-          this.$emit("updateList")
-        }
-      }
-    }
+    })
   }
 </script>
 
