@@ -1,6 +1,6 @@
 <template lang="pug">
-  span.badge(v-if='this.total')
-    | {{ total }}
+  span.badge(v-if='this.content')
+    | {{ content }}
 </template>
 
 <script>
@@ -12,7 +12,7 @@
       }
     },
     data: () => ({
-      total: 0
+      content: 0
     }),
     watch: {
       badge: {
@@ -22,14 +22,14 @@
     },
     methods: {
       resolveBadge() {
-        if (this.badge.total) {
-          this.total = this.badge.total
+        if (this.badge.content) {
+          this.content = this.badge.content
           return
         }
 
         if (this.badge.async) {
-          this.badge.async().then(total => {
-            this.total = total
+          this.badge.async().then(content => {
+            this.content = content
           })
         }
       }

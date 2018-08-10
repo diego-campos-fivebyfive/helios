@@ -2,10 +2,10 @@
   .collection-level(:style='getLevelBackground()')
     img.collection-level-logo(
       src='~theme/assets/media/logo-inverse.png')
-    .collection-level-label
+    .collection-level-title
       | Sices
-      span.collection-level-label-levelName
-        | {{ levelName }}
+      span.collection-level-title-label
+        | {{ label }}
 </template>
 
 <script>
@@ -13,7 +13,7 @@
 
   export default {
     props: {
-      levelName: {
+      label: {
         type: String,
         required: true
       }
@@ -28,7 +28,7 @@
           titanium: `url(${titaniumCover})`
         }
 
-        return `background: ${levelsBackground[this.levelName]};`
+        return `background: ${levelsBackground[this.label]};`
       }
     }
   }
@@ -50,7 +50,7 @@
       padding-right: $ui-space-x/8;
     }
 
-    .collection-level-label {
+    .collection-level-title {
       color: $ui-white-regular;
       font-size: 0.3em;
       font-weight: 600;
@@ -58,9 +58,9 @@
       text-align: left;
       text-transform: uppercase;
 
-      .collection-level-label-levelName {
-        display: block;
-        font-size: 1.25em;
+      .collection-level-title-label {
+          display: block;
+          font-size: 1.25em;
       }
     }
   }
