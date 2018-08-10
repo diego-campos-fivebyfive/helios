@@ -43,6 +43,13 @@
         this.sidebarType = sidebarType
       }
 
+      window.updateVueRoute = path => {
+        // DEBUG: console.log('twig', location.pathname, path)
+
+        this.$route.meta.pushState = path
+        this.$router.push({ path })
+      }
+
       window.pushVueRoute = fullPath => {
         const path = fullPath
           .replace(/\/twig/, '')
