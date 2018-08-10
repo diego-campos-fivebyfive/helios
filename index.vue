@@ -29,15 +29,14 @@
       stateSidebarType: 'common'
     }),
     watch: {
-      $route() {
-        this.setInitialSidebarType()
+      $route: {
+        handler: 'setInitialSidebarType',
+        immediate: true
       }
     },
     mounted() {
-      this.setInitialSidebarType()
-
-      window.hideTwigModal = state => {
-        this.twigModalState = state
+      window.handleTwigModal = handler => {
+        this.handleTwigModal = handler
       }
 
       window.updateSidebarType = sidebarType => {
@@ -47,10 +46,17 @@
       window.updateVueRoute = path => {
         // DEBUG: console.log('twig', location.pathname, path)
 
-        setTimeout(() => {
-          this.$route.meta.pushState = path
-          history.replaceState({}, null, path)
-        }, 1000)
+        this.$route.meta.pushState = path
+        this.$router.push({ path })
+      }
+
+      window.pushVueRoute = fullPath => {
+        const path = fullPath
+          .replace(/\/twig/, '')
+          .replace(/\/$/g, '')
+          .replace(process.env.API_URL, '')
+
+        this.$router.push({ path })
       }
     },
     methods: {
