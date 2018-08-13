@@ -180,7 +180,7 @@
       }
     },
     showPagination() {
-      return this.params.total
+      return this.params.total > 1
     }
   }
   }

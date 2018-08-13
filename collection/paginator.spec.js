@@ -51,8 +51,11 @@ import Paginator from './Paginator.vue'
         }
       })
 
-      expect(schemaOne).toBe('12345Próximo')
-      expect(schemaTwo).toBe('Anterior1...34567...10Próximo')
+      const expectedOne = '12345Próximo'
+      const expectedTwo = 'Anterior1...34567...10Próximo'
+
+      expect(schemaOne).toBe(expectedOne)
+      expect(schemaTwo).toBe(expectedTwo)
     })
 
     describe('getCurrent()', () => {
@@ -149,13 +152,20 @@ import Paginator from './Paginator.vue'
           }
         })
 
-        const expected = expect.arrayContaining([
+        const expectedOne = expect.arrayContaining([
           expect.objectContaining({
             label: 'Próximo'
           })
         ])
 
-        expect(schemaOne).toEqual(expected)
+        const expectedTwo = expect.not.arrayContaining([
+          expect.objectContaining({
+            label: 'Próximo'
+          })
+        ])
+
+        expect(schemaOne).toEqual(expectedOne)
+        expect(schemaTwo).toEqual(expectedTwo)
       })
 
       it('should sum current page plus one and add it to next button as value', () => {
@@ -422,12 +432,14 @@ import Paginator from './Paginator.vue'
           }
         }).params.total
 
-        expect(schema).toEqual(5)
+        const expected = 5
+
+        expect(schema).toEqual(expected)
       })
     })
 
     describe('showPagination()', () => {
-      it('should return false when total is 0 or there is no total arg', () => {
+      it('should return false when total is 0, 1 or there is no total arg', () => {
         const schemaOne = mountPaginator({
           pagination: {}
         }).showPagination()
@@ -438,8 +450,24 @@ import Paginator from './Paginator.vue'
           }
         }).showPagination()
 
-        expect(schemaOne).not.toEqual(true)
-        expect(schemaTwo).not.toEqual(true)
+        const schemaThree = mountPaginator({
+          pagination: {
+            total: 1
+          }
+        }).showPagination()
+
+        const schemaFour = mountPaginator({
+          pagination: {
+            total: 2
+          }
+        }).showPagination()
+
+        const expected = false
+
+        expect(schemaOne).toEqual(expected)
+        expect(schemaTwo).toEqual(expected)
+        expect(schemaThree).toEqual(expected)
+        expect(schemaFour).not.toEqual(expected)
       })
     })
   })
