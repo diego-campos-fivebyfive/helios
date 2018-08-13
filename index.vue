@@ -47,7 +47,7 @@
         // DEBUG: console.log('twig', location.pathname, path)
 
         this.$route.meta.pushState = path
-        this.$router.push({ path })
+        history.replaceState({}, null, path)
       }
 
       window.pushVueRoute = fullPath => {
