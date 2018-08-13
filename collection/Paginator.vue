@@ -180,7 +180,9 @@
       }
     },
     showPagination() {
-      return this.params.total
+      if (this.params.total > 1) {
+        return this.params.total
+      }
     }
   }
   }
