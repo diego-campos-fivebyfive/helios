@@ -156,6 +156,7 @@ import Paginator from './Paginator.vue'
         ])
 
         expect(schemaOne).toEqual(expected)
+        expect(schemaTwo).toEqual([])
       })
 
       it('should sum current page plus one and add it to next button as value', () => {
@@ -440,6 +441,18 @@ import Paginator from './Paginator.vue'
 
         expect(schemaOne).not.toEqual(true)
         expect(schemaTwo).not.toEqual(true)
+      })
+    })
+
+    describe('showPagination()', () => {
+      it('should not exhibit the pagination when returns one single page', () => {
+        const schema = mountPaginator({
+          pagination: {
+            total: 1
+          }
+        }).showPagination()
+
+        expect(schema).toEqual(undefined)
       })
     })
   })
