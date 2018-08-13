@@ -1,8 +1,13 @@
 <template lang="pug">
   .collection-banner(:class='type')
-    Icon.collection-banner-icon(v-if='icon', :name='icon', scale='1.75')
-    h2.collection-banner-title {{ title }}
-    p.collection-banner-text {{ message }}
+    Icon.collection-banner-icon(
+      v-if='icon',
+      :name='icon',
+      scale='1.75')
+    h2.collection-banner-title
+      | {{ title }}
+    p.collection-banner-text
+      | {{ message }}
 </template>
 
 <script>

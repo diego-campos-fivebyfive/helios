@@ -1,7 +1,9 @@
 <template lang="pug">
   form.collection-search(
     v-on:keypress.enter.prevent='')
-    input.collection-search-input(v-model='searchParams')
+    input.collection-search-input(
+      v-model='searchParams',
+      v-on:keyup.enter='() => updateSearch()')
     Button.collection-search-button(
       :action='() => updateSearch()',
       class='primary-common',

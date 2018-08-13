@@ -1,15 +1,12 @@
 <template lang="pug">
   .app-page(:class='sidebarType')
-    FrameModal(:handleTwigModal='handleTwigModal')
+    FrameModal(:twigModalState='twigModalState')
     Sidebar(
       v-if='showSidebar()',
       :sidebarType='sidebarType',
-      :updateSidebarType='updateSidebarType',
-      :handleTwigModal='handleTwigModal')
+      :updateSidebarType='updateSidebarType')
     main.app-page-main
-      Mainbar(
-        v-if='showMainbar()',
-        :handleTwigModal='handleTwigModal')
+      Mainbar(v-if='showMainbar()')
       .app-page-main-wrapper
         router-view
 </template>
@@ -20,28 +17,25 @@
   import Sidebar from 'theme/template/sidebar'
 
   export default {
+    name: 'App',
     components: {
       FrameModal,
       Mainbar,
       Sidebar
     },
     data: () => ({
-      handleTwigModal: {
-        state: false,
-        toogle: () => {}
-      },
+      twigModalState: false,
       mainbarType: '',
       sidebarType: '',
       stateSidebarType: 'common'
     }),
     watch: {
-      $route() {
-        this.setInitialSidebarType()
+      $route: {
+        handler: 'setInitialSidebarType',
+        immediate: true
       }
     },
     mounted() {
-      this.setInitialSidebarType()
-
       window.handleTwigModal = handler => {
         this.handleTwigModal = handler
       }
@@ -51,6 +45,18 @@
       }
 
       window.updateVueRoute = path => {
+        // DEBUG: console.log('twig', location.pathname, path)
+
+        this.$route.meta.pushState = path
+        history.replaceState({}, null, path)
+      }
+
+      window.pushVueRoute = fullPath => {
+        const path = fullPath
+          .replace(/\/twig/, '')
+          .replace(/\/$/g, '')
+          .replace(process.env.API_URL, '')
+
         this.$router.push({ path })
       }
     },
