@@ -2,9 +2,10 @@
   .collection-level(:style='getLevelBackground()')
     img.collection-level-logo(
       src='~theme/assets/media/logo-inverse.png')
-    .collection-level-title
-      | Sices
-      span.collection-level-title-label
+    .collection-level-text
+      span.collection-level-text-title
+        | Sices
+      span.collection-level-text-label
         | {{ label }}
 </template>
 
@@ -39,29 +40,36 @@
 
   .collection-level {
     border-radius: $ui-corner/2;
-    display: inline-flex;
+
     font-size: $levels-size;
     height: 1.25em;
     padding: 0.25em;
+    text-align: left;
 
     .collection-level-logo {
       border-right: 0.03em solid $ui-white-regular;
+      float:left;
       height: 100%;
       padding-right: $ui-space-x/8;
     }
 
-    .collection-level-title {
+    .collection-level-text {
       color: $ui-white-regular;
-      font-size: 0.3em;
+      float:right;
       font-weight: 600;
       padding-left: $ui-space-x/8;
-      text-align: left;
       text-transform: uppercase;
-
-      .collection-level-title-label {
-          display: block;
-          font-size: 1.25em;
-      }
     }
+    .collection-level-text-title {
+      display: block;
+      font-size: 0.3em;
+    }
+
+    .collection-level-text-label {
+      display: block;
+      font-size: 0.4em;
+    }
+
+
   }
 </style>
