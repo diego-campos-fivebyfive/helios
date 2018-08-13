@@ -428,7 +428,7 @@ import Paginator from './Paginator.vue'
     })
 
     describe('showPagination()', () => {
-      it('should return false when total is 0 or there is no total arg', () => {
+      it('should return false when total is 0, 1 or there is no total arg', () => {
         const schemaOne = mountPaginator({
           pagination: {}
         }).showPagination()
@@ -439,20 +439,15 @@ import Paginator from './Paginator.vue'
           }
         }).showPagination()
 
-        expect(schemaOne).not.toEqual(true)
-        expect(schemaTwo).not.toEqual(true)
-      })
-    })
-
-    describe('showPagination()', () => {
-      it('should not exhibit the pagination when returns one single page', () => {
-        const schema = mountPaginator({
+        const schemaThree = mountPaginator({
           pagination: {
             total: 1
           }
         }).showPagination()
 
-        expect(schema).toEqual(false)
+        expect(schemaOne).not.toEqual(true)
+        expect(schemaTwo).not.toEqual(true)
+        expect(schemaThree).not.toEqual(true)
       })
     })
   })
