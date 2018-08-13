@@ -452,7 +452,7 @@ import Paginator from './Paginator.vue'
           }
         }).showPagination()
 
-        expect(schema).toEqual(undefined)
+        expect(schema).toEqual(false)
       })
     })
   })
