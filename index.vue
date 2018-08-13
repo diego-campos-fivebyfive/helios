@@ -17,6 +17,7 @@
   import Sidebar from 'theme/template/sidebar'
 
   export default {
+    name: 'App',
     components: {
       FrameModal,
       Mainbar,
