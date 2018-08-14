@@ -35,15 +35,15 @@
 </script>
 
 <style lang="scss" scoped>
-	.frameview {
-		height: 100%;
-		overflow: hidden;
-		width: 100%;
-	}
+  .frameview {
+    height: 100%;
+    overflow: hidden;
+    width: 100%;
+  }
 
-	.frameview-frame {
-		border: 0;
-		height: 100%;
-		width: 100%;
-	}
+  .frameview-frame {
+    border: 0;
+    height: 100%;
+    width: 100%;
+  }
 </style>
