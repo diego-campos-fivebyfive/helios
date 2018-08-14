@@ -28,7 +28,7 @@
       searchParams: ''
     }),
     watch: {
-      searchTerms() {
+      search() {
         this.searchParams = this.search
       }
     },
