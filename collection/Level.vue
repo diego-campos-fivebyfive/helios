@@ -39,8 +39,7 @@
   $levels-size: 28px;
 
   .collection-level {
-    border-radius: $ui-corner/2;
-
+    border-radius: $ui-corner / 2;
     font-size: $levels-size;
     height: 1.25em;
     padding: 0.25em;
@@ -48,18 +47,19 @@
 
     .collection-level-logo {
       border-right: 0.03em solid $ui-white-regular;
-      float:left;
+      float: left;
       height: 100%;
-      padding-right: $ui-space-x/8;
+      padding-right: $ui-space-x / 8;
     }
 
     .collection-level-text {
       color: $ui-white-regular;
-      float:right;
+      float: right;
       font-weight: 600;
-      padding-left: $ui-space-x/8;
+      padding-left: $ui-space-x / 8;
       text-transform: uppercase;
     }
+
     .collection-level-text-title {
       display: block;
       font-size: 0.3em;
@@ -69,7 +69,5 @@
       display: block;
       font-size: 0.4em;
     }
-
-
   }
 </style>
