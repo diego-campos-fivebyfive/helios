@@ -2,7 +2,7 @@ import available from './available'
 
 describe('available()', () => {
   it('should returns false if at least one item is rejected', () => {
-    const payload = [
+    const schemaOne = available([
       {
         name: 'name1',
         rejected: false
@@ -15,13 +15,9 @@ describe('available()', () => {
         name: 'name3',
         rejected: false
       }
-    ]
+    ])
 
-    expect(available(payload)).toBe(false)
-  })
-
-  it('should returns true if all items are not rejected', () => {
-    const payload = [
+    const schemaTwo = available([
       {
         name: 'name1',
         rejected: false
@@ -30,8 +26,11 @@ describe('available()', () => {
         name: 'name2',
         rejected: false
       }
-    ]
+    ])
 
-    expect(available(payload)).toBe(true)
+    const expected = false
+
+    expect(schemaOne).toBe(expected)
+    expect(schemaTwo).not.toBe(expected)
   })
 })
