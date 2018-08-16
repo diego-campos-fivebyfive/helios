@@ -176,7 +176,7 @@
     },
     paginate(item) {
       if (item.value) {
-        this.$emit('paginate', item.value)
+        this.$emit('paginate', { current: item.value })
       }
     },
     showPagination() {
