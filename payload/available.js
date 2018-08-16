@@ -1,6 +1,4 @@
 const available = payload =>
-  payload.reduce((acc, item) => (
-    acc && !item.rejected
-  ), true)
+  payload.every(item => !item.rejected)
 
 export default available
