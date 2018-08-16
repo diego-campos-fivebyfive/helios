@@ -1,5 +1,10 @@
 import available from './available'
 
+const setAttr = (field, key, value) => {
+  field[key] = value
+  return field
+}
+
 describe('available()', () => {
   it('should returns false if at least one item is rejected', () => {
     const schemaOne = available([
@@ -15,7 +20,7 @@ describe('available()', () => {
         name: 'name3',
         rejected: false
       }
-    ])
+    ], setAttr)
 
     const schemaTwo = available([
       {
@@ -26,7 +31,7 @@ describe('available()', () => {
         name: 'name2',
         rejected: false
       }
-    ])
+    ], setAttr)
 
     const expected = false
 
@@ -42,7 +47,7 @@ describe('available()', () => {
         required: true,
         rejected: false
       }
-    ])
+    ], setAttr)
 
     const expected = false
 
