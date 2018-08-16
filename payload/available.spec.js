@@ -33,4 +33,19 @@ describe('available()', () => {
     expect(schemaOne).toBe(expected)
     expect(schemaTwo).not.toBe(expected)
   })
+
+  it('should returns false when an item is required, has no value and is not rejected', () => {
+    const schema = available([
+      {
+        name: 'name1',
+        value: '',
+        required: true,
+        rejected: false
+      }
+    ])
+
+    const expected = false
+
+    expect(schema).toBe(expected)
+  })
 })
