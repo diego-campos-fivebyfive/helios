@@ -2,10 +2,10 @@
   form.collection-search(
     v-on:keypress.enter.prevent='')
     input.collection-search-input(
-      v-model='termSearch',
-      v-on:keyup.enter='() => $emit("updateList")')
+      v-model='searchParams',
+      v-on:keyup.enter='() => updateSearch()')
     Button.collection-search-button(
-      :action='() => $emit("updateList")',
+      :action='() => updateSearch()',
       class='primary-common',
       label='Pesquisar',
       pos='last')
@@ -18,9 +18,25 @@
     components: {
       Button
     },
+    props: {
+      search: {
+        type: String,
+        required: false
+      }
+    },
     data: () => ({
-      termSearch: ''
-    })
+      searchParams: ''
+    }),
+    watch: {
+      search() {
+        this.searchParams = this.search
+      }
+    },
+    methods: {
+      updateSearch() {
+        this.$emit('updateSearch', this.searchParams)
+      }
+    }
   }
 </script>
 
