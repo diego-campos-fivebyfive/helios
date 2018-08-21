@@ -1,6 +1,6 @@
 <template lang="pug">
   .collection-card
-    figure.collection-card-img
+    figure.collection-card-image
       slot(name='image')
     .collection-card-content
       h3.collection-card-content-title
@@ -23,22 +23,27 @@
 
   .collection-card {
     background-color: $ui-white-regular;
-    display: block;
     border: 0.03em solid $ui-gray-light;
     color: $ui-text-main;
+    display: block;
     padding: 0.05em;
 
-    .collection-card-content {
-      margin: $ui-space-y $ui-space-x / 2;
-      border-bottom: 1px dashed $ui-gray-regular;
-      padding-bottom: $ui-space-y;
+    .collection-card-image {
+      img {
+        height: 100%;
+      }
+
+      background-color: $ui-gray-lighter;
+      display: block;
+      height: $card-img-size;
+      margin: auto;
+      text-align: center;
     }
 
-    .collection-card-img {
-      display: block;
-      background-color: $ui-gray-lighter;
-      height: $card-img-size;
-      width: 100%;
+    .collection-card-content {
+      border-bottom: 1px dashed $ui-gray-regular;
+      margin: $ui-space-y $ui-space-x / 2;
+      padding-bottom: $ui-space-y;
     }
 
     .collection-card-content-title {
@@ -56,18 +61,17 @@
     }
     .collection-card-actions {
       display: block;
-    //  border: inset $ui-gray-darken 0.03em;
       margin: $ui-space-y 0;
       padding: $ui-space-y / 2 $ui-space-x / 4;
       width: 100%;
     }
 
-    li {
-      margin-top: 5px;
-    }
-
     ul {
       list-style: none;
+
+      li {
+        margin-top: 5px;
+      }
     }
 
   }
