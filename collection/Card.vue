@@ -1,6 +1,6 @@
 <template lang="pug">
   .collection-card
-    figure.collection-card-image
+    figure.collection-card-image(v-if='$slots.image')
       slot(name='image')
     .collection-card-content
       h3.collection-card-content-title
@@ -12,31 +12,26 @@
 </template>
 
 <script>
-  export default {
-
-  }
+  /* Card Script */
 </script>
 
 <style lang="scss">
   $card-img-size: 180px;
-  $font-title-size: 16px;
 
   .collection-card {
     background-color: $ui-white-regular;
-    border: 0.03em solid $ui-gray-light;
+    border: 1px solid $ui-gray-light;
     color: $ui-text-main;
     display: block;
-    padding: 0.05em;
+    padding: $ui-space-y / 8;
 
     .collection-card-image {
       img {
         height: 100%;
       }
 
-      background-color: $ui-gray-lighter;
       display: block;
       height: $card-img-size;
-      margin: auto;
       text-align: center;
     }
 
@@ -48,7 +43,7 @@
 
     .collection-card-content-title {
       display: block;
-      font-size: $font-title-size;
+      font-size:  1.25rem;
       font-weight: 600;
       padding-bottom: $ui-space-y / 2;
       width: 100%;
@@ -56,7 +51,7 @@
 
     .collection-card-content-info {
       display: block;
-      font-size: 85%;
+      font-size: 0.9rem;
       padding: $ui-space-y / 2 0;
       width: 100%;
     }
@@ -65,12 +60,8 @@
       display: block;
       margin: $ui-space-y 0;
       padding: $ui-space-y / 2 $ui-space-x / 4;
+      text-align: center;
       width: 100%;
     }
-
-    li {
-      margin-top: 5px;
-    }
-
   }
 </style>
