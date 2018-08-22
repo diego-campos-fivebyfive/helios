@@ -5,6 +5,7 @@ import Badge from './Badge'
 import Banner from './Banner'
 import Button from './Button'
 import ButtonDropdown from './ButtonDropdown'
+import Card from './Card'
 import Confirm from './Confirm'
 import Level from './Level'
 import Modal from './Modal'
@@ -21,6 +22,7 @@ export default {
   Banner,
   Button,
   ButtonDropdown,
+  Card,
   Confirm,
   Level,
   Modal,
