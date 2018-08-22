@@ -39,6 +39,10 @@
     },
     methods: {
       hasAccess(allowedRoles, userRoles) {
+        if (!allowedRoles) {
+          throw new Error('allowedRoles not defined')
+        }
+
         if (allowedRoles === '*') {
           return true
         }
