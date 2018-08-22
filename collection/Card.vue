@@ -53,12 +53,14 @@
       padding-bottom: $ui-space-y / 2;
       width: 100%;
     }
+
     .collection-card-content-info {
       display: block;
       font-size: 85%;
       padding: $ui-space-y / 2 0;
       width: 100%;
     }
+
     .collection-card-actions {
       display: block;
       margin: $ui-space-y 0;
@@ -66,12 +68,8 @@
       width: 100%;
     }
 
-    ul {
-      list-style: none;
-
-      li {
-        margin-top: 5px;
-      }
+    li {
+      margin-top: 5px;
     }
 
   }
