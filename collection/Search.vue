@@ -45,6 +45,7 @@
             searchParams: this.searchParams
           }
         })
+
         this.$emit('updateSearch', this.searchParams)
       }
     }
