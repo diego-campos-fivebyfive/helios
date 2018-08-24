@@ -3,6 +3,7 @@
     v-on:keypress.enter.prevent='')
     input.collection-search-input(
       v-model='searchParams',
+      :placeholder='placeholder',
       v-on:keyup.enter='() => updateSearch()')
     Button.collection-search-button(
       :action='() => updateSearch()',
@@ -22,6 +23,10 @@
       search: {
         type: String,
         required: false
+      },
+      placeholder: {
+        type: String,
+        required: false
       }
     },
     data: () => ({
@@ -34,6 +39,12 @@
     },
     methods: {
       updateSearch() {
+        this.$router.push({
+          query: {
+            ...this.$route.query,
+            searchParams: this.searchParams
+          }
+        })
         this.$emit('updateSearch', this.searchParams)
       }
     }
@@ -44,7 +55,6 @@
   .collection-search {
     height: 2.25rem;
     position: relative;
-    width: 100%;
 
     .collection-search-input {
       background-color: $ui-white-regular;
@@ -55,6 +65,18 @@
       transition:
         border-color 0.15s ease-in-out 0s,
         box-shadow 0.15s ease-in-out 0s;
+    }
+
+    ::placeholder {
+      color: $ui-gray-light;
+    }
+
+    :-ms-input-placeholder {
+      color: $ui-gray-light;
+    }
+
+    ::-ms-input-placeholder {
+      color: $ui-gray-light;
     }
 
     .collection-search-button {

@@ -2,6 +2,7 @@
   router-link.collection-button(
     v-if='link',
     :to='link',
+    :title='title',
     :class='[pos, { labeled: label }]')
     slot
     | {{ label }}
