@@ -68,15 +68,15 @@
         box-shadow 0.15s ease-in-out 0s;
     }
 
-    ::placeholder {
+    .collection-search-input::placeholder {
       color: $ui-gray-light;
     }
 
-    :-ms-input-placeholder {
+    .collection-search-input:-ms-input-placeholder {
       color: $ui-gray-light;
     }
 
-    ::-ms-input-placeholder {
+    .collection-search-input::-ms-input-placeholder {
       color: $ui-gray-light;
     }
 
