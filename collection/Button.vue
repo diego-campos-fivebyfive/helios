@@ -131,8 +131,8 @@
 
     &.danger-bordered {
       background-color: $ui-red-lighter;
-      color: $ui-white-regular;
       border: 1px solid $ui-red-light;
+      color: $ui-white-regular;
 
       &:hover {
         background-color: $ui-red-light;
@@ -189,7 +189,7 @@
 
     &.small {
       padding: $ui-corner * 2 $ui-corner * 3;
-      font-size: .850rem;
+      font-size: 0.850rem;
       line-height: $ui-corner / 2;
 
       svg {
