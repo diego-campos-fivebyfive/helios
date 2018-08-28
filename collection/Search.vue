@@ -45,7 +45,7 @@
 
           this.updateSearch()
         },
-        immediate: true
+        sync: true
       }
     },
     methods: {
