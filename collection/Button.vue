@@ -187,7 +187,7 @@
       border-bottom-right-radius: $ui-corner;
     }
 
-    &.small {
+    &.size-small {
       padding: $ui-corner * 2 $ui-corner * 3;
       font-size: 0.850rem;
       line-height: $ui-corner / 2;
