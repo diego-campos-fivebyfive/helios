@@ -85,6 +85,20 @@
       }
     }
 
+    &.primary-bordered {
+      background-color: $ui-blue-light;
+      color: $ui-white-regular;
+      border: 1px solid $ui-blue-light;
+
+      &:hover {
+        background-color: $ui-blue-dark;
+      }
+
+      &:active {
+        box-shadow: inset 3px 3px 3px $ui-blue-darken;
+      }
+    }
+
     &.primary-strong {
       background-color: $ui-blue-dark;
       color: $ui-white-regular;
@@ -103,6 +117,22 @@
     &.danger-common {
       background-color: $ui-red-lighter;
       color: $ui-white-regular;
+
+      &:hover {
+        background-color: $ui-red-light;
+      }
+
+      &:active {
+        box-shadow:
+          inset 1px 1px 4px $ui-red-dark,
+          inset -1px -1px 4px $ui-red-dark;
+      }
+    }
+
+    &.danger-bordered {
+      background-color: $ui-red-lighter;
+      color: $ui-white-regular;
+      border: 1px solid $ui-red-light;
 
       &:hover {
         background-color: $ui-red-light;
@@ -155,6 +185,16 @@
     &.last {
       border-top-right-radius: $ui-corner;
       border-bottom-right-radius: $ui-corner;
+    }
+
+    &.small {
+      padding: $ui-corner * 2 $ui-corner * 3;
+      font-size: .850rem;
+      line-height: $ui-corner / 2;
+
+      svg {
+        margin-right: $ui-corner;
+      }
     }
 
     &.single {
