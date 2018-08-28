@@ -35,18 +35,47 @@
     watch: {
       search() {
         this.searchParams = this.search
+      },
+      $route: {
+        handler() {
+          this.searchParams = this.$route.query.searchParams
+          if (!this.searchParams) {
+            this.removeQueryParam('searchParams')
+          }
+        },
+        immediate: true
       }
     },
     methods: {
       updateSearch() {
-        this.$router.push({
-          query: {
-            ...this.$route.query,
-            searchParams: this.searchParams
-          }
-        })
+        this.removeQueryParam('searchParams')
+
+        if (this.searchParams) {
+          this.$router.push({
+            query: {
+              ...this.$route.query,
+              searchParams: this.searchParams
+            }
+          })
+        }
 
         this.$emit('updateSearch', this.searchParams)
+      },
+      removeQueryParam(paramToRemove = '') {
+        if (!paramToRemove) {
+          return
+        }
+
+        this.$router.push({ query: {
+          ...Object.entries(this.$route.query)
+            .reduce((acc, [queryName, queryValue]) => {
+              if (queryName !== paramToRemove) {
+                acc[queryName] = queryValue
+              }
+
+              return acc
+            }, {})
+        } })
       }
     }
   }
