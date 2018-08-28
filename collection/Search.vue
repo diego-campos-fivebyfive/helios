@@ -42,6 +42,8 @@
           if (!this.searchParams) {
             this.removeQueryParam('searchParams')
           }
+
+          this.updateSearch()
         },
         immediate: true
       }
