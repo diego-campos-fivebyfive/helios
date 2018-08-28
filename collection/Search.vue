@@ -48,7 +48,9 @@
     },
     methods: {
       updateSearch() {
-        this.removeQueryParam('searchParams')
+        if (!this.searchParams) {
+          this.removeQueryParam('searchParams')
+        }
 
         if (this.searchParams) {
           this.$router.push({
@@ -59,11 +61,11 @@
           })
         }
 
-        this.$emit('updateSearch', this.searchParams)
+        this.$emit('updateSearch', { searchParams: this.searchParams })
       },
       removeQueryParam(paramToRemove) {
         if (!paramToRemove) {
-          return
+          throw new Error('You must provide a params to remove')
         }
 
         this.$router.push({ query: {

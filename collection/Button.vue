@@ -49,7 +49,7 @@
         required: false
       },
       link: {
-        type: String,
+        type: [String, Object],
         required: false
       },
       type: {
@@ -189,7 +189,7 @@
 
     &.size-small {
       padding: $ui-corner * 2 $ui-corner * 3;
-      font-size: 0.850rem;
+      font-size: 0.85rem;
       line-height: $ui-corner / 2;
 
       svg {
