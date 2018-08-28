@@ -36,7 +36,7 @@
     }
 
     .collection-card-content {
-      border-bottom: 1px dashed $ui-gray-regular;
+      border-bottom: 1px dashed $ui-gray-light;
       margin: $ui-space-y $ui-space-x / 2;
       padding-bottom: $ui-space-y;
     }
