@@ -61,7 +61,7 @@
 
         this.$emit('updateSearch', this.searchParams)
       },
-      removeQueryParam(paramToRemove = '') {
+      removeQueryParam(paramToRemove) {
         if (!paramToRemove) {
           return
         }
