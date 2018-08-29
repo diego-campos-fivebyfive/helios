@@ -2,7 +2,7 @@
   form.collection-search(
     v-on:keypress.enter.prevent='')
     input.collection-search-input(
-      v-model='searchParams',
+      v-model='searchTerm',
       :placeholder='placeholder',
       v-on:keyup.enter='updateRoute')
     Button.collection-search-button(
@@ -30,20 +30,22 @@
       }
     },
     data: () => ({
-      searchParams: ''
+      searchTerm: ''
     }),
     mounted() {
-      this.searchParams = this.search
+      this.searchTerm = this.search
     },
     watch: {
       search() {
-        this.searchParams = this.search
+        this.searchTerm = this.search
       },
       $route: {
         handler() {
-          if (!this.$route.query.searchParams) {
-            this.removeQueryParam('searchParams')
+          if (this.$route.query.searchTerm) {
+            return
           }
+
+          this.removeQueryParam('searchTerm')
         },
         sync: true
       }
@@ -53,7 +55,7 @@
         this.$router.push({
           query: {
             ...this.$route.query,
-            searchParams: this.searchParams
+            searchTerm: this.searchTerm
           }
         })
       },
