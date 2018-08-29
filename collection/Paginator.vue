@@ -175,9 +175,16 @@
       `)
     },
     paginate(item) {
-      if (item.value) {
-        this.$emit('paginate', { current: item.value })
+      if (!item.value) {
+        return
       }
+
+      this.$router.push({
+        query: {
+          ...this.$route.query,
+          page: item.value
+        }
+      })
     },
     showPagination() {
       return this.params.total > 1
