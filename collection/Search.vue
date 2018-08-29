@@ -2,11 +2,11 @@
   form.collection-search(
     v-on:keypress.enter.prevent='')
     input.collection-search-input(
-      v-model='searchParams',
+      v-model='search',
       :placeholder='placeholder',
-      v-on:keyup.enter='() => updateSearch()')
+      v-on:keyup.enter='updateSearch')
     Button.collection-search-button(
-      :action='() => updateSearch()',
+      :action='updateSearch',
       class='primary-common',
       label='Pesquisar',
       pos='last')
@@ -38,22 +38,15 @@
       },
       $route: {
         handler() {
-          this.searchParams = this.$route.query.searchParams
-          if (!this.searchParams) {
+          if (!this.$route.query.searchParams) {
             this.removeQueryParam('searchParams')
           }
-
-          this.updateSearch()
         },
         sync: true
       }
     },
     methods: {
       updateSearch() {
-        if (!this.searchParams) {
-          this.removeQueryParam('searchParams')
-        }
-
         if (this.searchParams) {
           this.$router.push({
             query: {
@@ -62,8 +55,6 @@
             }
           })
         }
-
-        this.$emit('updateSearch', { searchParams: this.searchParams })
       },
       removeQueryParam(paramToRemove) {
         if (!paramToRemove) {
