@@ -2,11 +2,11 @@
   form.collection-search(
     v-on:keypress.enter.prevent='')
     input.collection-search-input(
-      v-model='search',
+      v-model='searchParams',
       :placeholder='placeholder',
-      v-on:keyup.enter='updateSearch')
+      v-on:keyup.enter='updateRoute')
     Button.collection-search-button(
-      :action='updateSearch',
+      :action='updateRoute',
       class='primary-common',
       label='Pesquisar',
       pos='last')
@@ -32,6 +32,9 @@
     data: () => ({
       searchParams: ''
     }),
+    mounted() {
+      this.searchParams = this.search
+    },
     watch: {
       search() {
         this.searchParams = this.search
@@ -46,15 +49,13 @@
       }
     },
     methods: {
-      updateSearch() {
-        if (this.searchParams) {
-          this.$router.push({
-            query: {
-              ...this.$route.query,
-              searchParams: this.searchParams
-            }
-          })
-        }
+      updateRoute() {
+        this.$router.push({
+          query: {
+            ...this.$route.query,
+            searchParams: this.searchParams
+          }
+        })
       },
       removeQueryParam(paramToRemove) {
         if (!paramToRemove) {
