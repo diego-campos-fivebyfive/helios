@@ -64,7 +64,7 @@
           throw new Error('You must provide a params to remove')
         }
 
-        this.$router.push({ query: {
+        this.$router.replace({ query: {
           ...Object.entries(this.$route.query)
             .reduce((acc, [queryName, queryValue]) => {
               if (queryName !== paramToRemove) {
