@@ -25,7 +25,6 @@
   .collection-panel-header {
     border-top: $ui-space-y/5 solid $ui-divider-color;
     padding: $ui-space-y $ui-space-x/2;
-    text-align: right;
 
     @include clearfix;
 
