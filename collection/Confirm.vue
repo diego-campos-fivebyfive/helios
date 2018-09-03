@@ -25,6 +25,7 @@
     }),
     methods: {
       hide() {
+        this.callback = () => {}
         this.open = false
       },
       show(callback) {
