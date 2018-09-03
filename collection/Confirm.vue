@@ -11,7 +11,7 @@
         label='Fechar')
         Icon(name='times-circle-o')
       Button(
-        :action='removeItem',
+        :action='callback',
         class='danger-common',
         label='Confirmar')
         Icon(name='trash')
@@ -21,17 +21,15 @@
   export default {
     data: () => ({
       open: false,
-      id: Number
+      callback: () => {}
     }),
     methods: {
       hide() {
+        this.callback = () => {}
         this.open = false
       },
-      removeItem() {
-        this.$emit('removeItem', this.id)
-      },
-      show(id) {
-        this.id = id
+      show(callback) {
+        this.callback = callback
         this.open = true
       }
     }
