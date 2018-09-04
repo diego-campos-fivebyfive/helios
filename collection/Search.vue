@@ -96,15 +96,15 @@
     }
 
     .collection-search-input::placeholder {
-      color: $ui-gray-light;
+      color: $ui-text-main;
     }
 
     .collection-search-input:-ms-input-placeholder {
-      color: $ui-gray-light;
+      color: $ui-text-main;
     }
 
     .collection-search-input::-ms-input-placeholder {
-      color: $ui-gray-light;
+      color: $ui-text-main;
     }
 
     .collection-search-button {
