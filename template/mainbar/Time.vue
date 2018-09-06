@@ -4,41 +4,22 @@
 </template>
 
 <script>
+  import $locale from 'locale'
+
   export default {
     computed: {
       currentDate() {
-        const months = [
-          'janeiro',
-          'fevereiro',
-          'março',
-          'abril',
-          'maio',
-          'junho',
-          'julho',
-          'agosto',
-          'setembro',
-          'outubro',
-          'novembro',
-          'dezembro'
-        ]
-
-        const daysInTheWeek = [
-          'domingo',
-          'segunda-feira',
-          'terça-feira',
-          'quarta-feira',
-          'quinta-feira',
-          'sexta-feira',
-          'sábado'
-        ]
+        const months = Object.values($locale.theme.months)
+        const daysInTheWeek = Object.values($locale.theme.weekdays)
 
         const date = new Date()
-        const year = date.getFullYear()
-        const month = months[date.getMonth()]
-        const day = date.getDate()
-        const dayInTheWeek = daysInTheWeek[date.getDay()]
 
-        return `${dayInTheWeek}, ${day} de ${month} de ${year}`
+        return $locale.theme.getFullDate({
+          year: date.getFullYear(),
+          month: months[date.getMonth()],
+          day: date.getDate(),
+          dayInTheWeek: daysInTheWeek[date.getDay()]
+        })
       }
     }
   }
