@@ -23,6 +23,8 @@
     "extract-text-webpack-plugin": "^3.0.2",
     "serialize-javascript": "^1.4.0",
     "vue": "^2.5.11",
+    "vue-the-mask": "^0.11.1",
+    "vuejs-datepicker": "^1.1.1",
     "vue-storybook": "^0.3.0"
   },
   "devDependencies": {

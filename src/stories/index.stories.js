@@ -1,20 +1,24 @@
 /* eslint-disable react/react-in-jsx-scope */
-
+import Vue from 'vue'
 import { storiesOf } from '@storybook/vue';
 import { action } from '@storybook/addon-actions';
-import { linkTo } from '@storybook/addon-links';
 import { withNotes } from '@storybook/addon-notes';
-import { withKnobs, text, boolean, number } from '@storybook/addon-knobs/vue';
+import { withKnobs } from '@storybook/addon-knobs/vue';
 import { registerStories } from 'vue-storybook'
-import { configure } from '@storybook/vue';
 
-const req = require.context('../../collection', true, /\.vue$/)
+import Banner from '../../collection/Banner'
+Vue.component('Banner', Banner)
 
-function loadStories() {
-  req.keys().forEach((filename) => {
-    registerStories(req, filename, storiesOf, {withKnobs, withNotes, action, text})
+const req = require.context('../../collection', true, /\.story.vue$/)
+
+{
+  req.keys().forEach(filename => {
+    registerStories(req, filename, storiesOf, {
+      withKnobs,
+      withNotes,
+      action
+    })
   })
 }
 
-loadStories()
 /* eslint-enable react/react-in-jsx-scope */
