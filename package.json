@@ -4,7 +4,8 @@
   "description": "sices theme",
   "main": "index.vue",
   "scripts": {
-    "storybook": "start-storybook -p 8888"
+    "storybook": "start-storybook -p 8888",
+    "test": "jest ./collection --config .jestrc.js"
   },
   "repository": {
     "type": "git",
@@ -31,6 +32,7 @@
     "@storybook/addons": "^3.3.14",
     "@storybook/vue": "^3.4.8",
     "babel-core": "^6.26.0",
+    "babel-jest": "^23.6.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.0",
@@ -40,6 +42,8 @@
     "cross-env": "^5.0.5",
     "css-loader": "^0.28.7",
     "file-loader": "^1.1.4",
+    "jest": "^23.6.0",
+    "jest-serializer-vue": "^2.0.2",
     "loader-utils": "^1.1.0",
     "node-sass": "^4.7.2",
     "pug": "^2.0.0-rc.4",
@@ -47,6 +51,7 @@
     "sass-loader": "^6.0.6",
     "sass-resources-loader": "^1.3.1",
     "storybook-addon-vue-info": "^0.6.1",
+    "vue-jest": "^2.6.0",
     "vue-loader": "^14.2.1",
     "vue-style-loader": "^3.0.3",
     "vue-template-compiler": "^2.4.4",
