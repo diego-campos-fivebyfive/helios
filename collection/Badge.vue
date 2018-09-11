@@ -3,13 +3,6 @@
     | {{ content }}
 </template>
 
-<story
-  name="Badge"
-  knobs="{badge: { content: 'asdfadsf' }}"
-  notes="You can't touch this">
-  <Badge :badge='badge'></Badge>
-</story>
-
 <script>
   export default {
     props: {
