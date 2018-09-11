@@ -1,11 +1,27 @@
-import { configure } from '@storybook/vue'
+import VueInfoAddon from 'storybook-addon-vue-info'
+import { configure, storiesOf } from '@storybook/vue'
 
-const stories = require.context('../stories', true, /.stories.js$/)
+const requireStories = require.context('../collection', true, /.story.js$/)
 
-function loadStories() {
-  stories.keys().forEach(filename => {
-    stories(filename)
-  })
+const loadStories = () => {
+  requireStories.keys()
+    .forEach(filename => {
+      const storyName = filename.replace(/.\/|.story.js/g, '')
+      const storyConfig = requireStories(filename)
+      const { components, models } = storyConfig.default || storyConfig
+
+      const story = storiesOf(storyName, module)
+        .addDecorator(VueInfoAddon)
+
+      Object
+        .entries(models)
+        .forEach(([modelName, template]) => {
+          story.add(modelName, () => ({
+            components,
+            template
+          }))
+        })
+    })
 }
 
 configure(loadStories, module)
