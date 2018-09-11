@@ -6,14 +6,14 @@ import { withNotes } from '@storybook/addon-notes';
 import { withKnobs } from '@storybook/addon-knobs/vue';
 import { registerStories } from 'vue-storybook'
 
-import Banner from '../../collection/Banner'
+import Banner from '../collection/Banner'
 Vue.component('Banner', Banner)
 
-const req = require.context('../../collection', true, /\.story.vue$/)
+const stories = require.context('../collection', true, /\.story.vue$/)
 
 {
-  req.keys().forEach(filename => {
-    registerStories(req, filename, storiesOf, {
+  stories.keys().forEach(filename => {
+    registerStories(stories, filename, storiesOf, {
       withKnobs,
       withNotes,
       action
