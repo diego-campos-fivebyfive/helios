@@ -1,10 +1,8 @@
 const path = require('path')
-const { storyLoader } = require('vue-storybook')
 
 module.exports = (storybookBaseConfig, configType) => {
   storybookBaseConfig.module.rules[1].options = {
     loaders: {
-      story: storyLoader,
       js: {
         loader: 'babel-loader'
       },
