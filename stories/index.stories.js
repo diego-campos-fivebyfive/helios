@@ -9,7 +9,7 @@ import { registerStories } from 'vue-storybook'
 import Banner from '../collection/Banner'
 Vue.component('Banner', Banner)
 
-const stories = require.context('../collection', true, /\.story.vue$/)
+const stories = require.context('./', true, /\.story.vue$/)
 
 {
   stories.keys().forEach(filename => {
