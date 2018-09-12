@@ -4,14 +4,16 @@ import { withNotes } from '@storybook/addon-notes'
 
 const requireStories = require.context('../collection', true, /.story.js$/)
 
-const addStory = (story, { components, models, docs }) => {
+const addStory = (story, { components, models, computed, data, docs }) => {
   Object
     .entries(models)
     .forEach(([modelName, template]) => {
       story
         .add(modelName, withNotes(docs)(() => ({
           components,
-          template
+          template,
+          computed,
+          data
         })))
     })
 }
@@ -29,9 +31,8 @@ const loadStories = () => {
         addStory(story, Object.assign(storyConfig.default || storyConfig, {
           docs: require(`../collection/${storyName}.md`)
         }))
-      } catch(error) {
-        console.error(error)
-        throw new Error(`You must create a doc file for ${storyName} component`)
+      } catch(errorMessage) {
+        throw new Error(errorMessage)
       }
     })
 }

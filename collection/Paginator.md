@@ -1,32 +1,23 @@
-PAGINATOR
-=========
+## Pagination
+---
+### Descrição
+Componente utilizado para a criação de paginação de registros.
 
-# Usage
-
-*Utilizando com propriedade 'pagination'*:
-
+---
+Particularidades:
+- É possível criar a pagianção com as seguintes estruturas:
+```javascript
+  {
+    total: 10,
+    current: 5,
+    links: {
+      prev: true,
+      self: "#?page=5",
+      next: "#?page=6"
+    }
+  }
 ```
-<template>
-  Paginator(:pagination='{ total: 2, current: 1 }')
-</template>
+ou simplesmente enviando dois parâmetros:
 ```
-
-Propriedades:
-
-| pagination | Object | required |
-| pagination.total | Number | required |
-| pagination.current | Number | not required |
-
-
-*Utilizando com propriedades 'total' e 'current'*:
-
+:total='5' :current='1'
 ```
-<template>
-  Paginator(total='2', current='1')
-</template>
-```
-
-Propriedades:
-
-| total | Number | required |
-| current | Number | not required |
