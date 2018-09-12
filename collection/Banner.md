@@ -1,3 +1,6 @@
-Banner
+## Banner doc
 ---
-Usado para exibir mensagens de aviso ao usuário.
+### Descrição
+Componente utilizado para exibir mensagens de alerta ao usuário.
+
+---
