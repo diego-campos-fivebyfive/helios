@@ -28,7 +28,7 @@ const loadStories = () => {
         .addDecorator(VueInfoAddon)
 
       try {
-        addStory(story, Object.assign(storyConfig.default || storyConfig ,{
+        addStory(story, Object.assign(storyConfig.default || storyConfig, {
           docs: require(`../collection/${storyName}.md`)
         }))
       } catch(errorMessage) {
