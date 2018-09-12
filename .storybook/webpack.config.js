@@ -1,6 +1,6 @@
 const path = require('path')
 
-module.exports = (storybookBaseConfig, configType) => {
+module.exports = (storybookBaseConfig) => {
   storybookBaseConfig.module.rules[1].options = {
     loaders: {
       js: {
@@ -69,5 +69,5 @@ module.exports = (storybookBaseConfig, configType) => {
 
   storybookBaseConfig.resolve.alias.theme = path.resolve(__dirname, '../')
 
-  return storybookBaseConfig;
-};
+  return storybookBaseConfig
+}
