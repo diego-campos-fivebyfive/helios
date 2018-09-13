@@ -3,7 +3,7 @@
     Button.collection-dropdown-button(
       :action='showDropdown',
       class='primary-common',
-      label='$locale.theme.collection.operations')
+      :label='$locale.theme.collection.operations')
       Icon(name='arrow-down')
     nav.collection-dropdown-content(v-show='showDropdownContent')
       ul.collection-dropdown-content-separator(v-for='group in groups')
