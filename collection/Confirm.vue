@@ -18,8 +18,6 @@
 </template>
 
 <script>
-  import $locale from 'locale'
-
   export default {
     data: () => ({
       open: false,

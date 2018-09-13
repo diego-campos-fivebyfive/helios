@@ -13,7 +13,6 @@
 </template>
 
 <script>
-  import $locale from 'locale'
   import Menu from '@/app/theme/Menu'
   import Widgets from '@/app/theme/Widgets'
 
