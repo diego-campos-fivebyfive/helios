@@ -23,7 +23,21 @@ export default {
       november: 'novembro',
       december: 'dezembro'
     },
+    requireField(field) {
+      return `Campo ${field} requirido`
+    },
     getFullDate: ({ dayInTheWeek, day, month, year }) =>
       `${dayInTheWeek}, ${day} de ${month} de ${year}`
+    ,
+    collection: {
+      operations: 'Operações',
+      confirm: 'Confirmar',
+      close: 'Fechar',
+      next: 'Próximo',
+      previous: 'Anterior'
+    },
+    template: {
+      signOut: 'Sair'
+    }
   }
 }
