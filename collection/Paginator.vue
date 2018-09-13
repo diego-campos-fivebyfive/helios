@@ -9,6 +9,8 @@
 </template>
 
 <script>
+  import $locale from 'locale'
+
   export default {
     props: {
       current: {
@@ -103,7 +105,7 @@
 
       if (this.params.current < this.params.total) {
           nextControls.push({
-              label: 'Próximo',
+              label: $locale.theme.collection.next,
               value: this.params.current + 1
           })
       }
@@ -117,7 +119,7 @@
 
       if (this.params.current > 1) {
         prevControls.push({
-          label: 'Anterior',
+          label: $locale.theme.collection.previous,
           value: this.params.current - 1
         })
       }
