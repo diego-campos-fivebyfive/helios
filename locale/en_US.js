@@ -23,6 +23,9 @@ export default {
       november: 'november',
       december: 'december'
     },
+    requireField(field) {
+      return `The field ${field} is required`
+    },
     getFullDate: ({ dayInTheWeek, day, month, year }) => {
       const ordinaryDefault = 'th'
       const ordinaries = {
@@ -35,6 +38,16 @@ export default {
       const ordinary = ordinaries[dayOrdinaryChar] || ordinaryDefault
 
       return `${dayInTheWeek}, ${month} ${day}${ordinary} ${year}`
+    },
+    collection: {
+      operations: 'Operations',
+      confirm: 'Confirm',
+      close: 'Close',
+      next: 'Next',
+      previous: 'Previous'
+    },
+    template: {
+      signOut: 'Sign out'
     }
   }
 }

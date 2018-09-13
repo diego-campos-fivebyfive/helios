@@ -8,12 +8,12 @@
       Button(
         :action='hide',
         class='default-bordered',
-        label='Fechar')
+        :label='$locale.theme.collection.close')
         Icon(name='times-circle-o')
       Button(
         :action='callback',
         class='danger-common',
-        label='Confirmar')
+        :label='$locale.theme.collection.confirm')
         Icon(name='trash')
 </template>
 

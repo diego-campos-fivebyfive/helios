@@ -9,7 +9,7 @@
       a.leave(href='/logout')
         Icon(name='sign-out')
         span.leave-label
-          | Sair
+          | {{ $locale.template.signOut }}
 </template>
 
 <script>
