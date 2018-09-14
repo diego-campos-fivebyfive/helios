@@ -79,10 +79,10 @@ export default {
   },
   computed: {
     footer() {
-      return `
-        padding: 5px;
-        font-size: 10px;"
-      `
+      return {
+        padding: '5px',
+        'font-size': '10px'
+      }
     }
   }
 }

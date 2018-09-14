@@ -32,7 +32,9 @@ export default {
   },
   computed: {
     sectionMargin() {
-      return `margin: 30px`
+      return {
+        margin: '30px'
+      }
     }
   }
 }

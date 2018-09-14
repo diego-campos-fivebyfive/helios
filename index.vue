@@ -83,12 +83,7 @@
 </script>
 
 <style lang="scss">
-  body,
-  html {
-    background-color: $ui-gray-lighter;
-    font-family: $ui-font-family-main;
-    font-size: $ui-font-size-main;
-  }
+  @import "./assets/style/index.scss";
 
   .app-page {
     max-width: 100%;
