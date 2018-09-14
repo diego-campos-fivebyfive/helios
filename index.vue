@@ -83,8 +83,6 @@
 </script>
 
 <style lang="scss">
-  @import "./assets/style/index.scss";
-
   .app-page {
     max-width: 100%;
     min-height: 100vh;
