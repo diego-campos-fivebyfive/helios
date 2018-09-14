@@ -80,7 +80,6 @@ export default {
   computed: {
     container() {
       return `
-        background: #d6d6d6;
         padding: 5px;
         height: 680px;
       `
