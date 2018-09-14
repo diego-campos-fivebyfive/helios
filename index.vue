@@ -86,7 +86,7 @@
   body,
   html {
     background-color: $ui-gray-lighter;
-    font-family: $ui-font-main;
+    font-family: $ui-font-family-main;
     font-size: $ui-font-size-main;
   }
 
