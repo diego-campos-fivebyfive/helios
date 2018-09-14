@@ -35,11 +35,10 @@ module.exports = (storybookBaseConfig) => {
     },
     {
       test: /\.scss$/,
-      use: [
-        'vue-style-loader',
-        'css-loader',
-        'sass-loader'
-      ]
+      loader: 'vue-style-loader!css-loader!sass-loader!sass-resources-loader',
+      options: {
+        resources: path.resolve(__dirname, '../assets/style/main.scss')
+      }
     },
     {
       test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,

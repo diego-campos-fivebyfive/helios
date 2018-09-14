@@ -86,8 +86,8 @@
   body,
   html {
     background-color: $ui-gray-lighter;
-    font-family: "Open Sans", "Helvetica Neue", sans-serif;
-    font-size: 13px;
+    font-family: $ui-font-main;
+    font-size: $ui-font-size-main;
   }
 
   .app-page {

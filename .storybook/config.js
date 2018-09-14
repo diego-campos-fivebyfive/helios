@@ -1,4 +1,3 @@
-import '../assets/style/main.scss'
 import VueInfoAddon from 'storybook-addon-vue-info'
 import { configure, storiesOf } from '@storybook/vue'
 import { withNotes } from '@storybook/addon-notes'
