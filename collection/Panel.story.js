@@ -3,7 +3,7 @@ import Button from './Button'
 import Table from './Table'
 
 const Types = `
-  <div :style="container">
+  <div>
     <!-- Simple panel -->
     <Panel>
       <div slot='header'>
@@ -78,12 +78,6 @@ export default {
     Types
   },
   computed: {
-    container() {
-      return `
-        padding: 5px;
-        height: 680px;
-      `
-    },
     footer() {
       return `
         padding: 5px;

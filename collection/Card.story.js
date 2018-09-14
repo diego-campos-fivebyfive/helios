@@ -105,13 +105,17 @@ export default {
   }),
   computed: {
     cardSize() {
-      return "width: 300px"
+      return `
+        width: 300px;
+        margin: 20px;
+      `
     },
     primaryCard() {
       return `
         width: 300px;
         color: whitesmoke;
         background: #007bff;
+        margin: 20px;
       `
     },
     successCard() {
@@ -119,6 +123,7 @@ export default {
         width: 300px;
         color: whitesmoke;
         background: #43c70d;
+        margin: 20px;
       `
     }
   }
