@@ -83,13 +83,6 @@
 </script>
 
 <style lang="scss">
-  body,
-  html {
-    background-color: $ui-gray-lighter;
-    font-family: "Open Sans", "Helvetica Neue", sans-serif;
-    font-size: 13px;
-  }
-
   .app-page {
     max-width: 100%;
     min-height: 100vh;

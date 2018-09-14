@@ -4,7 +4,8 @@
   "description": "sices theme",
   "main": "index.vue",
   "scripts": {
-    "storybook": "start-storybook -p 8888",
+    "start": "start-storybook -p 8888 -c .storybook",
+    "build": "build-storybook -c .storybook -o .out",
     "test": "jest ./collection --config .jestrc.js"
   },
   "repository": {

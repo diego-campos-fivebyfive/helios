@@ -21,10 +21,10 @@ export default {
   },
   computed: {
     levelSize() {
-      return `
-        width:105px;
-        margin: 10px;
-      `
+      return {
+        width: '105px',
+        margin: '10px'
+      }
     }
   }
 }
