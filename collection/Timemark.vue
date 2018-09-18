@@ -94,7 +94,7 @@
 
   .collection-timemark-title {
     display: inline-block;
-    font-size: 1.05em;
+    font-size: 1rem;
     font-weight: 600;
     padding-right: $ui-space-x/3;
 
