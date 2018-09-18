@@ -6,7 +6,10 @@
       | {{ timestump.createdAt }}
     span.collection-timemark-timeago
       | ({{ timestump.timeAgo }})
-    p.collection-timemark-description
+    p.collection-timemark-description(
+      v-if='descriptionHtml',
+      v-html='description')
+    p.collection-timemark-description(v-else)
       | {{ description }}
     nav.collection-timemark-links
       router-link.collection-timemark-links-link(
@@ -27,6 +30,11 @@
       description: {
         type: String,
         required: true
+      },
+      descriptionHtml: {
+        type: Boolean,
+        required: false,
+        default: true
       },
       links: {
         type: Array,
