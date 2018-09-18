@@ -12,10 +12,12 @@
     p.collection-timemark-description(v-else)
       | {{ description }}
     nav.collection-timemark-links
-      router-link.collection-timemark-links-link(
-        v-for='link in links',
-        :to='link.href')
-        | {{ link.title }}
+      ul
+        li
+          a.collection-timemark-links-link(
+            v-for='link in links',
+            :href='link.url')
+            | {{ link.label }}
 </template>
 
 <script>
@@ -110,11 +112,22 @@
     }
   }
 
+  .collection-timemark-links {
+    ul {
+      list-style: none;
+    }
+  }
+
   .collection-timemark-links-link {
+    color: $ui-text-main;
     display: list-item;
     list-style-type: disc;
     list-style-position: inside;
     padding-left: $ui-space-x;
     padding-top: $ui-space-y/2;
+
+    &:first-letter {
+      text-transform: capitalize;
+    }
   }
 </style>
