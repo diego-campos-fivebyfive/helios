@@ -13,10 +13,10 @@
       | {{ description }}
     nav.collection-timemark-links
       ul
-        li
-          a.collection-timemark-links-link(
-            v-for='link in links',
-            :href='link.url')
+        li.collection-timemark-links-link(
+          v-for='link in links',
+          :key='link.url')
+          a(:href='link.url')
             | {{ link.label }}
 </template>
 
@@ -88,6 +88,10 @@
 </script>
 
 <style lang="scss">
+  .collection-timemark {
+    color: $ui-text-main;
+  }
+
   .collection-timemark-title {
     display: inline-block;
     font-size: 1.05em;
@@ -113,21 +117,18 @@
   }
 
   .collection-timemark-links {
-    ul {
-      list-style: none;
-    }
+    padding-left: $ui-space-x;
   }
 
   .collection-timemark-links-link {
-    color: $ui-text-main;
-    display: list-item;
-    list-style-type: disc;
-    list-style-position: inside;
-    padding-left: $ui-space-x;
-    padding-top: $ui-space-y/2;
+    padding-top: $ui-space-y / 2;
 
     &:first-letter {
       text-transform: capitalize;
+    }
+
+    a {
+      color: $ui-text-main;
     }
   }
 </style>
