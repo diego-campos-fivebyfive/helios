@@ -14,8 +14,8 @@
     nav.collection-timemark-links
       router-link.collection-timemark-links-link(
         v-for='link in links',
-        :to='link.href')
-        | {{ link.title }}
+        :to='link.url')
+        | {{ link.label }}
 </template>
 
 <script>
