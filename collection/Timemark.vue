@@ -80,6 +80,8 @@
 <style lang="scss">
   .collection-timemark-title {
     display: inline-block;
+    font-size: 1.05em;
+    font-weight: 600;
     padding-right: $ui-space-x/3;
 
     &:first-letter {
@@ -93,6 +95,11 @@
 
   .collection-timemark-description {
     padding-top: $ui-space-y/2;
+    text-transform: lowercase;
+
+    &:first-letter {
+      text-transform: capitalize;
+    }
   }
 
   .collection-timemark-links-link {
