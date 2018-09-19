@@ -90,6 +90,7 @@
 <style lang="scss">
   .collection-timemark {
     color: $ui-text-main;
+    padding: $ui-space-y / 2 0;
   }
 
   .collection-timemark-title {
