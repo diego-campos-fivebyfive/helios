@@ -109,6 +109,7 @@
   }
 
   .collection-timemark-description {
+    line-height: 1.25;
     padding-top: $ui-space-y/2;
     text-transform: lowercase;
 
@@ -119,6 +120,10 @@
 
   .collection-timemark-links {
     padding-left: $ui-space-x;
+
+    ul {
+      color: $ui-blue-light;
+    }
   }
 
   .collection-timemark-links-link {
