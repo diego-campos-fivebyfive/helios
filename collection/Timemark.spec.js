@@ -52,8 +52,8 @@ describe('Timemark.vue', () => {
         description: 'Lorem ipsum dolor sit amet'
       }).getTimeAgo()
 
-      const expectedOne = '3 months ago'
-      const expectedTwo = '3 hours ago'
+      const expectedOne = 'há 3 meses'
+      const expectedTwo = 'há 3 horas'
 
       expect(schemaOne).toEqual(expectedOne)
     })

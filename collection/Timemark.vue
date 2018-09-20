@@ -22,6 +22,7 @@
 
 <script>
   import moment from 'moment'
+  import 'moment/locale/pt-br'
 
   export default {
     props: {
@@ -78,7 +79,7 @@
           return false
         }
 
-        const now = moment()
+        const now = moment().locale('pt-BR')
         const created = moment(this.createdAt, 'YYYY-MM-DD hh:mm:ss')
         const duration = moment.duration(-Math.abs(now.diff(created)))
         return duration.humanize(true)
