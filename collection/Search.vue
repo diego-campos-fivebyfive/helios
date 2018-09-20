@@ -39,7 +39,7 @@
       search() {
         this.searchTerm = this.search
       },
-      $route: {
+      '$route.query.searchTerm': {
         handler() {
           if (this.$route.query.searchTerm) {
             return
