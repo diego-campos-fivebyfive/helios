@@ -64,8 +64,8 @@
             moment(this.createdAt, 'YYYY-MM-DD hh:mm:ss')
               .format('HH:mm')
             
-          this.timestump.timeAgo = this.getTimeAgo()
-          this.timestump.createdAt = getCreatedAt()
+          this.$set(this.timestump, 'timeAgo', this.getTimeAgo())
+          this.$set(this.timestump, 'createdAt', getCreatedAt())
         },
         immediate: true
       }
