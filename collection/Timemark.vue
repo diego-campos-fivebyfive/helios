@@ -66,6 +66,11 @@
             
           this.$set(this.timestump, 'timeAgo', this.getTimeAgo())
           this.$set(this.timestump, 'createdAt', getCreatedAt())
+
+          setInterval(() => {
+            this.$set(this.timestump, 'timeAgo', this.getTimeAgo())
+          }, 1000)
+
         },
         immediate: true
       }
