@@ -38,16 +38,6 @@
     watch: {
       search() {
         this.searchTerm = this.search
-      },
-      '$route.query.searchTerm': {
-        handler() {
-          if (this.$route.query.searchTerm) {
-            return
-          }
-
-          this.removeQueryParam('searchTerm')
-        },
-        sync: true
       }
     },
     methods: {
@@ -58,22 +48,6 @@
             searchTerm: this.searchTerm
           }
         })
-      },
-      removeQueryParam(paramToRemove) {
-        if (!paramToRemove) {
-          throw new Error('You must provide a params to remove')
-        }
-
-        this.$router.replace({ query: {
-          ...Object.entries(this.$route.query)
-            .reduce((acc, [queryName, queryValue]) => {
-              if (queryName !== paramToRemove) {
-                acc[queryName] = queryValue
-              }
-
-              return acc
-            }, {})
-        } })
       }
     }
   }
