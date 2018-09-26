@@ -67,6 +67,7 @@ module.exports = (storybookBaseConfig) => {
   )
 
   storybookBaseConfig.resolve.alias.theme = path.resolve(__dirname, '../')
+  storybookBaseConfig.resolve.alias.locale = path.resolve(__dirname,'./locale')
 
   return storybookBaseConfig
 }

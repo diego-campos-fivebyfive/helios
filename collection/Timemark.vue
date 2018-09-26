@@ -6,17 +6,23 @@
       | {{ timestump.createdAt }}
     span.collection-timemark-timeago
       | ({{ timestump.timeAgo }})
-    p.collection-timemark-description
+    p.collection-timemark-description(
+      v-if='descriptionHtml',
+      v-html='description')
+    p.collection-timemark-description(v-else)
       | {{ description }}
     nav.collection-timemark-links
-      router-link.collection-timemark-links-link(
-        v-for='link in links',
-        :to='link.href')
-        | {{ link.title }}
+      ul
+        li.collection-timemark-links-link(
+          v-for='link in links',
+          :key='link.url')
+          a(:href='link.url')
+            | {{ link.label }}
 </template>
 
 <script>
   import moment from 'moment'
+  import 'moment/locale/pt-br'
 
   export default {
     props: {
@@ -27,6 +33,11 @@
       description: {
         type: String,
         required: true
+      },
+      descriptionHtml: {
+        type: Boolean,
+        required: false,
+        default: true
       },
       links: {
         type: Array,
@@ -53,8 +64,13 @@
             moment(this.createdAt, 'YYYY-MM-DD hh:mm:ss')
               .format('HH:mm')
             
-          this.timestump.timeAgo = this.getTimeAgo()
-          this.timestump.createdAt = getCreatedAt()
+          this.$set(this.timestump, 'timeAgo', this.getTimeAgo())
+          this.$set(this.timestump, 'createdAt', getCreatedAt())
+
+          setInterval(() => {
+            this.$set(this.timestump, 'timeAgo', this.getTimeAgo())
+          }, 1000)
+
         },
         immediate: true
       }
@@ -68,7 +84,7 @@
           return false
         }
 
-        const now = moment()
+        const now = moment().locale('pt-BR')
         const created = moment(this.createdAt, 'YYYY-MM-DD hh:mm:ss')
         const duration = moment.duration(-Math.abs(now.diff(created)))
         return duration.humanize(true)
@@ -78,8 +94,15 @@
 </script>
 
 <style lang="scss">
+  .collection-timemark {
+    color: $ui-text-main;
+    padding: $ui-space-y / 2 0;
+  }
+
   .collection-timemark-title {
     display: inline-block;
+    font-size: 1rem;
+    font-weight: 600;
     padding-right: $ui-space-x/3;
 
     &:first-letter {
@@ -92,14 +115,32 @@
   }
 
   .collection-timemark-description {
+    line-height: 1.25;
     padding-top: $ui-space-y/2;
+    text-transform: lowercase;
+
+    &:first-letter {
+      text-transform: capitalize;
+    }
+  }
+
+  .collection-timemark-links {
+    padding-left: $ui-space-x;
+
+    ul {
+      color: $ui-blue-light;
+    }
   }
 
   .collection-timemark-links-link {
-    display: list-item;
-    list-style-type: disc;
-    list-style-position: inside;
-    padding-left: $ui-space-x;
-    padding-top: $ui-space-y/2;
+    padding-top: $ui-space-y / 2;
+
+    &:first-letter {
+      text-transform: capitalize;
+    }
+
+    a {
+      color: $ui-text-main;
+    }
   }
 </style>

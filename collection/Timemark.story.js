@@ -8,11 +8,11 @@ const Default = `
     createdAt="2017-08-28 12:27:17"
     :showTimeAgo="true"
     :links="[{
-      title: '${faker.finance.transactionType()}',
-      href: '${faker.internet.url()}'
+      label: '${faker.finance.transactionType()}',
+      url: '${faker.internet.url()}'
     },{
-      title: '${faker.finance.transactionType()}',
-      href: '${faker.internet.url()}'
+      label: '${faker.finance.transactionType()}',
+      url: '${faker.internet.url()}'
     }]">
   </Timemark>
 `

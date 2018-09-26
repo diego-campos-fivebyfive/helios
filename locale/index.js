@@ -1,9 +1,9 @@
-import ptBR from './pt_BR'
-import enUS from './en_US'
+import en_US from './en_US'
+import pt_BR from './pt_BR'
 
 const themeLocales = {
-  'en_US': enUS,
-  'pt_BR': ptBR
+  en_US,
+  pt_BR
 }
 
 export const getThemeLocale = userLanguage =>
