@@ -26,6 +26,7 @@
           partner: '#e7b042',
           platinum: '#c6c6c6',
           premium: '#a3bd21',
+          turnkey: '#34a4e9',
           titanium: `url(${titaniumCover})`
         }
 
