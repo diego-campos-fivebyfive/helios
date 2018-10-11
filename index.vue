@@ -92,8 +92,8 @@
       updateSidebarType() {
         if (process.env.PLATFORM !== 'web') {
           this.sidebarType = (this.sidebarType === 'occult')
-          ? 'mobile'
-          : 'occult'
+            ? 'mobile'
+            : 'occult'
         }
 
         if (process.env.PLATFORM === 'web') {

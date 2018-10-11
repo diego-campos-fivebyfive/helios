@@ -2,7 +2,9 @@
   transition(name='sidebar-slide')
     aside.sidebar(:class='sidebarType')
       transition(name='fade')
-        .sidebar-cover(v-if='showSidebarCover()')
+        .sidebar-cover(
+          v-if='showSidebarCover()',
+          v-on:click='updateSidebarType')
       nav.menu
         .toogle
           Button.toogle-button(
