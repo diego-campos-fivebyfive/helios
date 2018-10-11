@@ -1,5 +1,8 @@
 <template lang="pug">
 	.frameview
+		.frameview-loading
+			img.frameview-loading-img(
+				src='~theme/assets/media/loading.gif')
 		iframe.frameview-frame(:src='getRoute')
 </template>
 
@@ -45,5 +48,18 @@
     border: 0;
     height: 100%;
     width: 100%;
-  }
+	}
+
+	.frameview-loading {
+		position: absolute;
+		z-index: -1;
+		width: 100%;
+    text-align: center;
+    margin-top: 70vw;
+	}
+
+	.frameview-loading-img {
+		width: 40px;
+		opacity: 0.5;
+	}
 </style>
