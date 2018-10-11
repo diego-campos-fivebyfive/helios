@@ -54,7 +54,6 @@
     position: relative;
     text-align: right;
     width: 100%;
-    z-index: 100;
 
     @include clearfix;
   }

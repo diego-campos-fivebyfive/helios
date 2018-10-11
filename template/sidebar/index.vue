@@ -1,5 +1,5 @@
 <template lang="pug">
-  transition(name='slide')
+  transition(name='sidebar-slide')
     aside.sidebar(:class='sidebarType')
       transition(name='fade')
         .sidebar-cover(v-if='showSidebarCover()')
@@ -77,7 +77,7 @@
       max-width: $ui-sidebar-common-x;
       margin-left: -($ui-sidebar-common-x);
       margin-top: $ui-mainbar-mobile-y;
-      transition: all 300ms ease-in-out;
+      transition: all 100ms ease-in-out;
     }
 
     .menu {
@@ -86,12 +86,12 @@
   }
 
   .sidebar-cover {
-    top: 0;
-    width: 100%;
+    background: rgba(0, 0, 0, 0.35);
     height: 100%;
     left: 0;
+    top: 0;
     position: fixed;
-    background: rgba(0, 0, 0, 0.35);
+    width: 100%;
     z-index: -1;
   }
 
@@ -99,9 +99,15 @@
     position: absolute;
     right: -($ui-sidebar-toogle-x + $ui-space-x);
     top: $ui-space-y;
+    z-index: 50;
   }
 
-  .slide-enter-active { position: absolute }
-  .slide-enter-active,
-  .slide-leave-active { transition: all 750ms ease-in-out }
+  .sidebar-slide-enter-active {
+    position: absolute
+  }
+
+  .sidebar-slide-enter-active,
+  .sidebar-slide-leave-active {
+    transition: all 750ms ease-in-out
+  }
 </style>

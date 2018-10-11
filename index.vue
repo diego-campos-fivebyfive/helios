@@ -6,11 +6,11 @@
       :sidebarType='sidebarType',
       :updateSidebarType='updateSidebarType')
     main.app-page-main
-      MobileMainbar(
-        v-if='showMobileMainbar()',
+      MainbarMobile(
+        v-if='showMainbarMobile()',
         :updateSidebarType='updateSidebarType')
       Mainbar(v-if='showMainbar()')
-      .app-page-main-wrapper
+      .app-page-main-wrapper(:class='sidebarType')
         router-view
       TabBar(v-if='showBottomBar()')
 </template>
@@ -18,7 +18,7 @@
 <script>
   import FrameModal from 'theme/template/frame-modal'
   import Mainbar from 'theme/template/mainbar'
-  import MobileMainbar from 'theme/template/mobile-mainbar'
+  import MainbarMobile from 'theme/template/mainbar-mobile'
   import Sidebar from 'theme/template/sidebar'
 
   export default {
@@ -26,7 +26,7 @@
     components: {
       FrameModal,
       Mainbar,
-      MobileMainbar,
+      MainbarMobile,
       Sidebar
     },
     data: () => ({
@@ -81,9 +81,9 @@
         return this.sidebarType !== "none"
       },
       showMainbar() {
-        return this.mainbarType !== "none" && process.env.PLATFORM !== 'web'
+        return this.mainbarType !== "none" && process.env.PLATFORM === 'web'
       },
-      showMobileMainbar() {
+      showMainbarMobile() {
         return process.env.PLATFORM !== 'web'
       },
       showBottomBar() {
@@ -131,5 +131,9 @@
     height: calc(100vh - #{$ui-mainbar-y});
     overflow-y: auto;
     width: 100%;
+
+    &.mobile, &.occult {
+      margin-top: $ui-mainbar-mobile-y;
+    }
   }
 </style>
