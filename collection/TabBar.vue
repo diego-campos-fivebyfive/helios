@@ -1,34 +1,21 @@
 <template lang="pug">
   .tabbar
-    label.tabbar-item
-      router-link.tabbar-item-button(to='/orders')
-        Icon(name='sun-o')
+    label.tabbar-item(v-for='tab in tabs')
+      router-link.tabbar-item-button(:to='tab.to')
+        Icon(:name='tab.icon')
         .tabbar-item-label
-          | My orders
-    label.tabbar-item
-      router-link.tabbar-item-button(to='/kit')
-        Icon(name='cart-plus')
-        .tabbar-item-label
-          | Sices Express
-    label.tabbar-item
-      router-link.tabbar-item-button(to='/ranking')
-        Icon(name='trophy')
-        .tabbar-item-label
-          | Ranking
-    label.tabbar-item
-      router-link.tabbar-item-button(to='/notification')
-        Icon(name='bell')
-        .tabbar-item-label
-          | Notifications
+          | {{ tab.title }}
 </template>
 
 <script>
   export default {
-    components: {
-    },
     data: () => ({
     }),
-    methods: {
+    props: {
+      tabs: {
+        type: Array,
+        required: true
+      }
     }
   }
 </script>

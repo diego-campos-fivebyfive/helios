@@ -12,7 +12,9 @@
       Mainbar(v-if='showMainbar()')
       .app-page-main-wrapper(:class='sidebarType')
         router-view
-      TabBar(v-if='showBottomBar()')
+      TabBar(
+        :tabs='tabs',
+        v-if='showBottomBar()')
 </template>
 
 <script>
@@ -33,7 +35,29 @@
       twigModalState: false,
       mainbarType: '',
       sidebarType: '',
-      stateSidebarType: 'common'
+      stateSidebarType: 'common',
+      tabs: [{
+          'title': 'My orders',
+          'icon': 'sun-o',
+          'to': '/orders'
+        },{
+          'title': 'Sices Express',
+          'icon': 'cart-plus',
+          'to': '/kit'
+        },{
+          'title': 'Dashboard',
+          'icon': 'dashboard',
+          'to': '/dashboard'
+        },{
+          'title': 'Ranking',
+          'icon': 'trophy',
+          'to': '/ranking'
+        },{
+          'title': 'Notifications',
+          'icon': 'bell',
+          'to': '/notification'
+        }
+      ]
     }),
     watch: {
       $route: {
