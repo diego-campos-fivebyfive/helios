@@ -6,14 +6,19 @@
       :sidebarType='sidebarType',
       :updateSidebarType='updateSidebarType')
     main.app-page-main
+      MobileMainbar(
+        v-if='showMobileMainbar()',
+        :updateSidebarType='updateSidebarType')
       Mainbar(v-if='showMainbar()')
       .app-page-main-wrapper
         router-view
+      TabBar(v-if='showBottomBar()')
 </template>
 
 <script>
   import FrameModal from 'theme/template/frame-modal'
   import Mainbar from 'theme/template/mainbar'
+  import MobileMainbar from 'theme/template/mobile-mainbar'
   import Sidebar from 'theme/template/sidebar'
 
   export default {
@@ -21,6 +26,7 @@
     components: {
       FrameModal,
       Mainbar,
+      MobileMainbar,
       Sidebar
     },
     data: () => ({
@@ -62,6 +68,12 @@
     },
     methods: {
       setInitialSidebarType() {
+        if (process.env.PLATFORM !== 'web') {
+          this.mainbarType = 'none'
+          this.sidebarType = 'occult'
+          return
+        }
+
         this.mainbarType = this.$route.meta.mainbar || 'common'
         this.sidebarType = this.$route.meta.sidebar || this.stateSidebarType
       },
@@ -69,12 +81,26 @@
         return this.sidebarType !== "none"
       },
       showMainbar() {
-        return this.mainbarType !== "none"
+        return this.mainbarType !== "none" && process.env.PLATFORM !== 'web'
+      },
+      showMobileMainbar() {
+        return process.env.PLATFORM !== 'web'
+      },
+      showBottomBar() {
+        return process.env.PLATFORM !== 'web'
       },
       updateSidebarType() {
-        this.sidebarType = (this.sidebarType === 'collapse')
-          ? 'common'
-          : 'collapse'
+        if (process.env.PLATFORM !== 'web') {
+          this.sidebarType = (this.sidebarType === 'occult')
+          ? 'mobile'
+          : 'occult'
+        }
+
+        if (process.env.PLATFORM === 'web') {
+          this.sidebarType = (this.sidebarType === 'collapse')
+            ? 'common'
+            : 'collapse'
+        }
 
         this.stateSidebarType = this.sidebarType
       }

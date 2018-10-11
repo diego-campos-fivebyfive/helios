@@ -6,7 +6,6 @@
     Icon.icon-ui(:name='item.icon')
     span(:style='labelPosition.top')
       | {{ item.name }}
-    Icon.icon-arrow(name='angle-right')
     Badge(v-if='item.badge', :badge='item.badge')
 </template>
 
@@ -103,7 +102,7 @@
 
   .router-link-exact-active {
     background-color: $ui-gray-dark;
-    border-left: $ui-space-x/6.25 solid $ui-blue-light;
+    border-left: $ui-space-x/6.25 solid $ui-orange-light;
     color: $ui-white-regular;
   }
 

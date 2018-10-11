@@ -16,6 +16,7 @@ import Progress from './Progress'
 import Search from './Search'
 import Table from './Table'
 import Timemark from './Timemark'
+import TabBar from './TabBar'
 
 export default {
   Icon,
@@ -33,5 +34,6 @@ export default {
   Progress,
   Search,
   Table,
-  Timemark
+  Timemark,
+  TabBar
 }

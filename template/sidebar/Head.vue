@@ -1,6 +1,6 @@
 <template lang="pug">
   div(:class='`sidebar-${sidebarType}`')
-    router-link.header(to='/')
+    router-link.header(to='/', v-if='showHeader()')
       img.logo(
         src='~theme/assets/media/logo-small.png',
         alt='Sices Solar Logo')
@@ -34,6 +34,9 @@
       },
       showInfo() {
         return (this.user && this.sidebarType === 'common')
+      },
+      showHeader() {
+        return process.env.PLATFORM === 'web'
       }
     },
     mounted() {
