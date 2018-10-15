@@ -75,7 +75,7 @@
       }
 
       &.common, &.mobile {
-        padding: $ui-space-y/2 $ui-space-x/1.5 $ui-space-y/2 $ui-space-x*2;
+        padding: $ui-space-y / 2 $ui-space-x / 1.5 $ui-space-y / 2 $ui-space-x * 2;
       }
     }
 
@@ -102,7 +102,7 @@
 
   .router-link-exact-active {
     background-color: $ui-gray-dark;
-    border-left: $ui-space-x/6.25 solid $ui-blue-light;
+    border-left: $ui-space-x / 6.25 solid $ui-blue-light;
     color: $ui-white-regular;
   }
 

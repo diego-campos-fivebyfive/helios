@@ -1,6 +1,6 @@
 <template lang="pug">
 	.frameview
-		.frameview-loading(v-if='loadingTwig')
+		.frameview-loading(v-show='loadingTwig')
 			img.frameview-loading-img(
 				src='~theme/assets/media/loading.gif')
 		iframe.frameview-frame(:src='getRoute', ref='twig')
@@ -43,7 +43,7 @@
 		methods: {
 			routeTwigLoaded() {
 				this.$refs.twig.onload = () => {
-					this.loadingTwig = true
+					this.loadingTwig = false
 				}
 			}
 		}

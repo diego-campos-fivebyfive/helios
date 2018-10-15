@@ -72,14 +72,14 @@
       max-width: $ui-sidebar-common-x;
       margin-left: 0;
       margin-top: $ui-mainbar-mobile-y;
-      transition: all 100ms ease-in-out;
+      transition: all 300ms ease-in-out;
     }
 
      &.occult {
       max-width: $ui-sidebar-common-x;
       margin-left: -($ui-sidebar-common-x);
       margin-top: $ui-mainbar-mobile-y;
-      transition: all 100ms ease-in-out;
+      transition: all 300ms ease-in-out;
     }
 
     .menu {
