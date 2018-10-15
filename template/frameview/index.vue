@@ -1,13 +1,19 @@
 <template lang="pug">
 	.frameview
-		.frameview-loading
+		.frameview-loading(v-if='loadingTwig')
 			img.frameview-loading-img(
 				src='~theme/assets/media/loading.gif')
-		iframe.frameview-frame(:src='getRoute')
+		iframe.frameview-frame(:src='getRoute', ref='twig')
 </template>
 
 <script>
 	export default {
+		data:() => ({
+			loadingTwig: true
+		}),
+		mounted() {
+			this.routeTwigLoaded()
+		},
 		computed: {
 			getRoute() {
 				const currentPath = this.$route.fullPath
@@ -33,6 +39,13 @@
 						: `${acc}/${segment}`
 				), process.env.API_URL)
 			}
+		},
+		methods: {
+			routeTwigLoaded() {
+				this.$refs.twig.onload = () => {
+					this.loadingTwig = true
+				}
+			}
 		}
 	}
 </script>
@@ -51,15 +64,15 @@
 	}
 
 	.frameview-loading {
-		position: absolute;
-		z-index: -1;
+		position: fixed;
 		width: 100%;
-    text-align: center;
+		z-index: -1;
     margin-top: 70vw;
+    text-align: center;
 	}
 
 	.frameview-loading-img {
-		width: 40px;
 		opacity: 0.5;
+		width: 40px;
 	}
 </style>

@@ -67,6 +67,7 @@
     top: 0;
     width: 100%;
     z-index: 400;
+
     @media screen and (max-width: $small-device) {
       z-index: 0;
     }
@@ -74,27 +75,27 @@
 
   .frame-modal-view {
     background-color: $ui-white-regular;
-    height: calc(100% - #{$view-space-y * 2});
-    outline: none;
-    margin: $view-space-y $view-space-x;
-    width: calc(100% - #{$view-space-x * 2});
     border-bottom: ($ui-corner / 3) solid $ui-gray-lighter;
-    border: ($ui-corner / 3) solid $ui-gray-regular;
     border-radius: 4px;
+    border: ($ui-corner / 3) solid $ui-gray-regular;
+    height: calc(100% - #{$view-space-y * 2});
+    margin: $view-space-y $view-space-x;
+    outline: none;
+    width: calc(100% - #{$view-space-x * 2});
 
     @media screen and (max-width: $small-device) {
-      margin: $ui-corner * 2;
-      margin-top: $ui-mainbar-mobile-y + $ui-corner;
       height: 150vw;
+      margin-top: $ui-mainbar-mobile-y + $ui-corner;
+      margin: $ui-corner * 2;
       width: calc(100vw - #{$ui-space-x / 2});
     }
   }
 
   .frame-modal-view-content {
-    width: 100%;
-    height: 90%;
     border: none;
+    height: 90%;
     padding: $ui-corner;
+    width: 100%;
   }
 
   .frame-modal-view-footer {

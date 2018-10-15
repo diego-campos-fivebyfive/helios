@@ -44,10 +44,10 @@
     background: url("~theme/assets/media/logo-cover.png") 100%;
     display: flex;
     font-size: 18px;
+    height: $ui-mainbar-mobile-y;
+    justify-content: center;
     list-style-type: none;
     position: fixed;
-    justify-content: center;
-    height: $ui-mainbar-mobile-y;
     width: 100%;
     z-index: 100;
 

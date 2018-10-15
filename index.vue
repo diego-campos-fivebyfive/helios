@@ -20,6 +20,7 @@
 <script>
   import FrameModal from 'theme/template/frame-modal'
   import Mainbar from 'theme/template/mainbar'
+  import TabBar from 'theme/template/tabbar'
   import MainbarMobile from 'theme/template/mainbar-mobile'
   import Sidebar from 'theme/template/sidebar'
 
@@ -29,7 +30,8 @@
       FrameModal,
       Mainbar,
       MainbarMobile,
-      Sidebar
+      Sidebar,
+      TabBar
     },
     data: () => ({
       twigModalState: false,
