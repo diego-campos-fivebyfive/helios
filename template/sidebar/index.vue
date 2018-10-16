@@ -69,16 +69,16 @@
     }
 
     &.mobile {
-      max-width: $ui-sidebar-common-x;
       margin-left: 0;
       margin-top: $ui-mainbar-mobile-y;
+      max-width: $ui-sidebar-common-x;
       transition: all 300ms ease-in-out;
     }
 
      &.occult {
-      max-width: $ui-sidebar-common-x;
       margin-left: -($ui-sidebar-common-x);
       margin-top: $ui-mainbar-mobile-y;
+      max-width: $ui-sidebar-common-x;
       transition: all 300ms ease-in-out;
     }
 
@@ -91,8 +91,8 @@
     background: rgba(0, 0, 0, 0.35);
     height: 100%;
     left: 0;
-    top: 0;
     position: fixed;
+    top: 0;
     width: 100%;
     z-index: -1;
   }
