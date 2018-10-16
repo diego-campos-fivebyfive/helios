@@ -1,8 +1,7 @@
 <template lang="pug">
-  .app-page(:class='sidebarType')
+  .app-page(:class='sidebarClasses()')
     FrameModal(:twigModalState='twigModalState')
     Sidebar(
-      v-if='showSidebar()',
       :sidebarType='sidebarType',
       :updateSidebarType='updateSidebarType')
     main.app-page-main
@@ -10,7 +9,7 @@
         v-if='showMainbarMobile()',
         :updateSidebarType='updateSidebarType')
       Mainbar(v-if='showMainbar()')
-      .app-page-main-wrapper(:class='sidebarType')
+      .app-page-main-wrapper(:class='sidebarClasses()')
         router-view
       TabBar(
         :tabs='tabs',
@@ -38,6 +37,7 @@
       mainbarType: '',
       sidebarType: '',
       stateSidebarType: 'common',
+      mobileClass: process.env.PLATFORM !== 'web' ? 'mobile' : '',
       tabs: [{
           'title': 'My orders',
           'icon': 'sun-o',
@@ -100,7 +100,7 @@
       setInitialSidebarType() {
         if (process.env.PLATFORM !== 'web') {
           this.mainbarType = 'none'
-          this.sidebarType = 'occult'
+          this.sidebarType = 'none'
           return
         }
 
@@ -108,10 +108,10 @@
         this.sidebarType = this.$route.meta.sidebar || this.stateSidebarType
       },
       showSidebar() {
-        return this.sidebarType !== "none"
+        return this.sidebarType !== 'none'
       },
       showMainbar() {
-        return this.mainbarType !== "none" && process.env.PLATFORM === 'web'
+        return this.mainbarType !== 'none' && process.env.PLATFORM === 'web'
       },
       showMainbarMobile() {
         return process.env.PLATFORM !== 'web'
@@ -121,9 +121,9 @@
       },
       updateSidebarType() {
         if (process.env.PLATFORM !== 'web') {
-          this.sidebarType = (this.sidebarType === 'occult')
-            ? 'mobile'
-            : 'occult'
+          this.sidebarType = (this.sidebarType === 'none')
+            ? 'common'
+            : 'none'
         }
 
         if (process.env.PLATFORM === 'web') {
@@ -133,6 +133,9 @@
         }
 
         this.stateSidebarType = this.sidebarType
+      },
+      sidebarClasses() {
+        return `${this.sidebarType} ${this.mobileClass}`
       }
     }
   }
@@ -161,8 +164,16 @@
     height: calc(100vh - #{$ui-mainbar-y});
     overflow-y: auto;
     width: 100%;
+  }
 
-    &.mobile, &.occult {
+  @media screen and (max-width: $small-device) {
+    .mobile {
+      &.common {
+        padding-left: 0;
+      }
+    }
+
+    .app-page-main-wrapper {
       margin-top: $ui-mainbar-mobile-y;
     }
   }

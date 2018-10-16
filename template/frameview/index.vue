@@ -51,6 +51,8 @@
 </script>
 
 <style lang="scss" scoped>
+	$loading-img: 40px;
+
   .frameview {
     height: 100%;
     overflow: hidden;
@@ -67,12 +69,17 @@
 		position: fixed;
 		width: 100%;
 		z-index: -1;
-    margin-top: 70vw;
-    text-align: center;
+		margin-top: 70vw;
+		text-align: center;
 	}
 
 	.frameview-loading-img {
 		opacity: 0.5;
-		width: 40px;
+		width: $loading-img;
+	}
+	@media screen and (min-width: $small-device) {
+		.frameview-loading {
+			display: none;
+		}
 	}
 </style>

@@ -1,9 +1,9 @@
 <template lang="pug">
   transition(name='sidebar-slide')
-    aside.sidebar(:class='sidebarType')
+    aside.sidebar(:class='sidebarClasses()')
       transition(name='fade')
         .sidebar-cover(
-          v-if='showSidebarCover()',
+          v-show='showSidebarCover()',
           v-on:click='updateSidebarType')
       nav.menu
         .toogle
@@ -25,6 +25,9 @@
       Head,
       Menu
     },
+    data: () => ({
+      mobileClass: process.env.PLATFORM !== 'web' ? 'mobile' : ''
+    }),
     props: {
       sidebarType: {
         type: String,
@@ -43,7 +46,10 @@
         return process.env.PLATFORM === 'web'
       },
       showSidebarCover() {
-        return this.sidebarType === 'mobile'
+        return process.env.PLATFORM !== 'web' && this.sidebarType === 'common'
+      },
+      sidebarClasses() {
+        return `${this.sidebarType} ${this.mobileClass}`
       }
     }
   }
@@ -66,20 +72,6 @@
 
     &.common {
       max-width: $ui-sidebar-common-x;
-    }
-
-    &.mobile {
-      margin-left: 0;
-      margin-top: $ui-mainbar-mobile-y;
-      max-width: $ui-sidebar-common-x;
-      transition: all 300ms ease-in-out;
-    }
-
-     &.occult {
-      margin-left: -($ui-sidebar-common-x);
-      margin-top: $ui-mainbar-mobile-y;
-      max-width: $ui-sidebar-common-x;
-      transition: all 300ms ease-in-out;
     }
 
     .menu {
@@ -111,5 +103,22 @@
   .sidebar-slide-enter-active,
   .sidebar-slide-leave-active {
     transition: all 750ms ease-in-out
+  }
+
+  @media screen and (max-width: $small-device) {
+    .mobile {
+      &.none {
+        max-width: $ui-sidebar-common-x;
+        margin-left: -($ui-sidebar-common-x);
+        padding-top: $ui-mainbar-mobile-y;
+        transition: all 300ms ease-in-out;
+      }
+
+      &.common {
+        margin-left: 0;
+        padding-top: $ui-mainbar-mobile-y;
+        transition: all 300ms ease-in-out;
+      }
+    }
   }
 </style>

@@ -89,15 +89,15 @@
       padding: 0;
     }
 
-      .tabbar-item-label {
-        display: block;
-        font-size: 10px;
-        font-weight: 400;
-        line-height: 1;
-        margin: -20px;
+    .tabbar-item-label {
+      display: block;
+      font-size: 10px;
+      font-weight: 400;
+      line-height: 1;
+      margin: -20px;
     }
-
   }
+
   .router-link-exact-active {
     background: $ui-gray-lighter;
     border-top: 1px solid $ui-blue-dark;

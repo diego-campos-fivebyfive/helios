@@ -53,7 +53,6 @@
 </script>
 
 <style lang="scss">
-  $small-device: 768px;
   $view-space-x: $ui-space-x * 4;
   $view-space-y: $ui-space-y * 4;
 
@@ -67,10 +66,6 @@
     top: 0;
     width: 100%;
     z-index: 400;
-
-    @media screen and (max-width: $small-device) {
-      z-index: 0;
-    }
   }
 
   .frame-modal-view {
@@ -82,13 +77,6 @@
     margin: $view-space-y $view-space-x;
     outline: none;
     width: calc(100% - #{$view-space-x * 2});
-
-    @media screen and (max-width: $small-device) {
-      height: 150vw;
-      margin-top: $ui-mainbar-mobile-y + $ui-corner;
-      margin: $ui-corner * 2;
-      width: calc(100vw - #{$ui-space-x / 2});
-    }
   }
 
   .frame-modal-view-content {
@@ -115,5 +103,18 @@
   .fade-enter,
   .fade-leave-to {
     opacity: 0;
+  }
+
+  @media screen and (max-width: $small-device) {
+    .frame-modal {
+      z-index: 0;
+    }
+
+    .frame-modal-view {
+      height: 150vw;
+      margin-top: $ui-mainbar-mobile-y + $ui-corner;
+      margin: $ui-corner * 2;
+      width: calc(100vw - #{$ui-space-x / 2});
+    }
   }
 </style>

@@ -94,7 +94,7 @@
     margin: $ui-space-y/1.25 $ui-space-x/2;
   }
 
-  @media (max-width: $ui-size-lg) {
+  @media screen and (max-width: $small-device) {
     .time {
       display: none;
     }
