@@ -15,7 +15,7 @@
 <script>
   import Item from './Item'
   import Dropdown from './Dropdown'
-  import menuMap from '@/app/theme/menu'
+  import menuMap from '@/../theme/menu'
 
   export default {
     components: {
