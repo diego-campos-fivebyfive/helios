@@ -19,31 +19,24 @@
         required: true
       }
     },
-    data: () => ({
-      user: {}
-    }),
+    computed: {
+      user() {
+        return {
+          name: localStorage.getItem('userName'),
+          company: localStorage.getItem('userCompany')
+        }
+      }
+    },
     watch: {
       sidebarType() {}
     },
     methods: {
-      setUser() {
-        window.$global.getUser
-          .then(user => {
-            this.user = user
-          })
-      },
       showInfo() {
-        return (this.user && this.sidebarType === 'common')
+        return (this.sidebarType === 'common')
       },
       showHeader() {
         return process.env.PLATFORM === 'web'
       }
-    },
-    mounted() {
-      window.$global.getUser
-        .then(user => {
-          this.user = user
-        })
     }
   }
 </script>

@@ -82,10 +82,8 @@
         return serializeNode(menu)
       },
       setMenu() {
-        window.$global.getUser
-          .then(user => {
-            this.menu = this.serializeMenu(menuMap, user.roles)
-          })
+        const userRoles = JSON.parse(localStorage.getItem('userRoles'))
+        this.menu = this.serializeMenu(menuMap, userRoles)
       }
     }
   }
