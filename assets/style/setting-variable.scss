@@ -39,6 +39,9 @@ $ui-sidebar-collapse-x: 65px;
 $ui-sidebar-toogle-x: 40px;
 $ui-text-main: #676a6c;
 
+/* Media queries */
+$small-device: 768px;
+
 :export {
   ui-space-x: $ui-space-x;
   ui-space-y: $ui-space-y;
