@@ -6,14 +6,14 @@
       :updateSidebarType='updateSidebarType')
     main.app-page-main
       MainbarMobile(
-        v-if='showMainbarMobile()',
+        v-if='isMobile()',
         :updateSidebarType='updateSidebarType')
       Mainbar(v-if='showMainbar()')
       .app-page-main-wrapper(:class='sidebarTypes()')
         router-view
       TabBar(
         :tabs='tabs',
-        v-if='showBottomBar()')
+        v-if='isMobile()')
 </template>
 
 <script>
@@ -87,26 +87,20 @@
         this.mainbarType = this.$route.meta.mainbar || 'common'
         this.sidebarType = this.$route.meta.sidebar || this.stateSidebarType
       },
-      showSidebar() {
-        return this.sidebarType !== 'none'
-      },
       showMainbar() {
-        return this.mainbarType !== 'none' && process.env.PLATFORM === 'web'
+        return this.mainbarType !== 'none' && !this.isMobile()
       },
-      showMainbarMobile() {
-        return process.env.PLATFORM !== 'web'
-      },
-      showBottomBar() {
+      isMobile() {
         return process.env.PLATFORM !== 'web'
       },
       updateSidebarType() {
-        if (process.env.PLATFORM !== 'web') {
+        if (this.isMobile()) {
           this.sidebarType = (this.sidebarType === 'none')
             ? 'common'
             : 'none'
         }
 
-        if (process.env.PLATFORM === 'web') {
+        if (!this.isMobile()) {
           this.sidebarType = (this.sidebarType === 'collapse')
             ? 'common'
             : 'collapse'

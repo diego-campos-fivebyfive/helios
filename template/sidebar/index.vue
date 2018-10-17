@@ -9,7 +9,7 @@
         .toogle
           Button.toogle-button(
             class='primary-common',
-            v-if='showMobileMainbar()',
+            v-if='!isMobile()',
             :action='updateSidebarType')
             Icon(name='bars')
         Head(:sidebarType='sidebarType')
@@ -42,11 +42,11 @@
       sidebarType() {}
     },
     methods: {
-      showMobileMainbar() {
-        return process.env.PLATFORM === 'web'
+      isMobile() {
+        return process.env.PLATFORM !== 'web'
       },
       showSidebarCover() {
-        return process.env.PLATFORM !== 'web' && this.sidebarType === 'common'
+        return this.isMobile() && this.sidebarType === 'common'
       },
       sidebarTypes() {
         return `${this.sidebarType} ${this.mobileClass}`
@@ -105,20 +105,18 @@
     transition: all 750ms ease-in-out
   }
 
-  //@media screen and (max-width: $small-device) {
-    .mobile {
-      &.none {
-        max-width: $ui-sidebar-common-x;
-        margin-left: -($ui-sidebar-common-x);
-        padding-top: $ui-mainbar-mobile-y;
-        transition: all 300ms ease-in-out;
-      }
-
-      &.common {
-        margin-left: 0;
-        padding-top: $ui-mainbar-mobile-y;
-        transition: all 300ms ease-in-out;
-      }
+  .mobile {
+    &.none {
+      max-width: $ui-sidebar-common-x;
+      margin-left: -($ui-sidebar-common-x);
+      padding-top: $ui-mainbar-mobile-y;
+      transition: all 300ms ease-in-out;
     }
-  //}
+
+    &.common {
+      margin-left: 0;
+      padding-top: $ui-mainbar-mobile-y;
+      transition: all 300ms ease-in-out;
+    }
+  }
 </style>
