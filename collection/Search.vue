@@ -26,7 +26,8 @@
       },
       placeholder: {
         type: String,
-        required: false
+        required: false,
+        default: 'Pesquisar'
       }
     },
     data: () => ({
@@ -61,7 +62,7 @@
     .collection-search-input {
       background-color: $ui-white-regular;
       background-image: none;
-      border: 1px solid $ui-blue-light;
+      border: 1px solid $ui-gray-light;
       color: inherit;
       padding: 0.5rem;
       transition:
@@ -70,20 +71,30 @@
     }
 
     .collection-search-input::placeholder {
-      color: $ui-text-main;
+      color: $ui-gray-regular;
     }
 
     .collection-search-input:-ms-input-placeholder {
-      color: $ui-text-main;
+      color: $ui-gray-regular;
     }
 
     .collection-search-input::-ms-input-placeholder {
-      color: $ui-text-main;
+      color: $ui-gray-regular;
     }
 
     .collection-search-button {
       display: inline-block;
       vertical-align: middle;
+    }
+  }
+
+  @media screen and (max-width: $small-device) {
+    .collection-search {
+      display: flex;
+    }
+
+    .collection-search-input {
+      flex: 1;
     }
   }
 </style>
