@@ -5,9 +5,11 @@
         Icon(v-if='tab.icon', :name='tab.icon')
         .tabbar-item-label
           | {{ tab.title }}
+      Badge(v-if='tab.badge', :badge='tab.badge')
 </template>
 
 <script>
+
   export default {
     props: {
       tabs: {
@@ -33,6 +35,12 @@
     right: 0;
     white-space: nowrap;
     width: 100%;
+
+    .badge {
+      position: absolute;
+      right: 0;
+      margin-right: 0px;
+    }
   }
 
   .tabbar-item {

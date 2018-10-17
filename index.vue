@@ -1,5 +1,5 @@
 <template lang="pug">
-  .app-page(:class='sidebarClasses()')
+  .app-page(:class='sidebarTypes()')
     FrameModal(:twigModalState='twigModalState')
     Sidebar(
       :sidebarType='sidebarType',
@@ -9,7 +9,7 @@
         v-if='showMainbarMobile()',
         :updateSidebarType='updateSidebarType')
       Mainbar(v-if='showMainbar()')
-      .app-page-main-wrapper(:class='sidebarClasses()')
+      .app-page-main-wrapper(:class='sidebarTypes()')
         router-view
       TabBar(
         :tabs='tabs',
@@ -22,6 +22,7 @@
   import TabBar from 'theme/template/tabbar'
   import MainbarMobile from 'theme/template/mainbar-mobile'
   import Sidebar from 'theme/template/sidebar'
+  import tabs from '@/../theme/tabs'
 
   export default {
     name: 'App',
@@ -38,28 +39,7 @@
       sidebarType: '',
       stateSidebarType: 'common',
       mobileClass: process.env.PLATFORM !== 'web' ? 'mobile' : '',
-      tabs: [{
-          'title': 'My orders',
-          'icon': 'sun-o',
-          'to': '/orders'
-        },{
-          'title': 'Sices Express',
-          'icon': 'cart-plus',
-          'to': '/kit'
-        },{
-          'title': 'Dashboard',
-          'icon': 'dashboard',
-          'to': '/dashboard'
-        },{
-          'title': 'Ranking',
-          'icon': 'trophy',
-          'to': '/ranking'
-        },{
-          'title': 'Notifications',
-          'icon': 'bell',
-          'to': '/notification'
-        }
-      ]
+      tabs
     }),
     watch: {
       $route: {
@@ -134,7 +114,7 @@
 
         this.stateSidebarType = this.sidebarType
       },
-      sidebarClasses() {
+      sidebarTypes() {
         return `${this.sidebarType} ${this.mobileClass}`
       }
     }
@@ -154,6 +134,12 @@
     &.collapse {
       padding-left: $ui-sidebar-collapse-x;
     }
+
+    &.mobile {
+      &.common {
+        padding-left: 0;
+      }
+    }
   }
 
   .app-page-main {
@@ -164,16 +150,9 @@
     height: calc(100vh - #{$ui-mainbar-y});
     overflow-y: auto;
     width: 100%;
-  }
 
-  @media screen and (max-width: $small-device) {
-    .mobile {
-      &.common {
-        padding-left: 0;
-      }
-    }
-
-    .app-page-main-wrapper {
+    &.mobile {
+      padding-left: 0;
       margin-top: $ui-mainbar-mobile-y;
     }
   }

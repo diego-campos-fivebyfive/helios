@@ -77,6 +77,7 @@
 		opacity: 0.5;
 		width: $loading-img;
 	}
+
 	@media screen and (min-width: $small-device) {
 		.frameview-loading {
 			display: none;

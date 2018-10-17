@@ -75,7 +75,7 @@
       }
 
       &.common {
-        padding: $ui-space-y / 2 $ui-space-x / 1.5 $ui-space-y / 2 $ui-space-x * 2;
+        padding: $ui-space-y/2 $ui-space-x/1.5 $ui-space-y/2 $ui-space-x*2;
       }
     }
 

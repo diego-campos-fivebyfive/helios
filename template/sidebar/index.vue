@@ -1,6 +1,6 @@
 <template lang="pug">
   transition(name='sidebar-slide')
-    aside.sidebar(:class='sidebarClasses()')
+    aside.sidebar(:class='sidebarTypes()')
       transition(name='fade')
         .sidebar-cover(
           v-show='showSidebarCover()',
@@ -48,7 +48,7 @@
       showSidebarCover() {
         return process.env.PLATFORM !== 'web' && this.sidebarType === 'common'
       },
-      sidebarClasses() {
+      sidebarTypes() {
         return `${this.sidebarType} ${this.mobileClass}`
       }
     }
@@ -105,7 +105,7 @@
     transition: all 750ms ease-in-out
   }
 
-  @media screen and (max-width: $small-device) {
+  //@media screen and (max-width: $small-device) {
     .mobile {
       &.none {
         max-width: $ui-sidebar-common-x;
@@ -120,5 +120,5 @@
         transition: all 300ms ease-in-out;
       }
     }
-  }
+  //}
 </style>
