@@ -52,8 +52,20 @@
     z-index: 100;
 
     li {
-      width: 100%;
       color: white;
+      width: 100%;
+    }
+
+    .mainbar-mobile-list-button-left {
+      width: 20%;
+    }
+
+    .mainbar-mobile-list-title {
+      width: 60%;
+    }
+
+    .mainbar-mobile-list-button-right {
+      width: 20%;
     }
   }
 
