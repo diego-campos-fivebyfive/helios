@@ -147,6 +147,7 @@
 
     &.mobile {
       padding-left: 0;
+      height: calc(100vh - (#{$ui-mainbar-mobile-y} + #{$ui-tabbar-mobile-y}));
       margin-top: $ui-mainbar-mobile-y;
     }
   }
