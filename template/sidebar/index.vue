@@ -74,6 +74,10 @@
       max-width: $ui-sidebar-common-x;
     }
 
+    &.none {
+      display: none;
+    }
+
     .menu {
       overflow-x: hidden;
     }
@@ -107,6 +111,7 @@
 
   .mobile {
     &.none {
+      display: block;
       max-width: $ui-sidebar-common-x;
       margin-left: -($ui-sidebar-common-x);
       padding-top: $ui-mainbar-mobile-y;
