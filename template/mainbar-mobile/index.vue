@@ -9,7 +9,7 @@
         | {{ pageTitle }}
       li.mainbar-mobile-list-button-right
         Button.mainbar-mobile-list-toggle-sidebar-right(
-          link='/logout')
+          :action='logout')
           Icon(name='sign-out')
 </template>
 
@@ -31,6 +31,15 @@
       }
     },
     methods: {
+      logout() {
+        console.log('logout')
+        this.axios.get(`${process.env.API_URL}/logout`)
+          .then(() => {
+            console.log('then ')
+            this.$router.push({ path: '/login' })
+          })
+          .catch(console.log)
+      },
       setPageTitle() {
         this.pageTitle = this.$router.history.current.meta.title
       }
