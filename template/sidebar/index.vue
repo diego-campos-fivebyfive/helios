@@ -1,6 +1,6 @@
 <template lang="pug">
   transition(name='sidebar-slide')
-    aside.sidebar(:class='sidebarTypes()')
+    aside.sidebar(:class='[sidebarType, platform]')
       transition(name='fade')
         .sidebar-cover(
           v-show='showSidebarCover()',
@@ -26,7 +26,7 @@
       Menu
     },
     data: () => ({
-      mobileClass: process.env.PLATFORM !== 'web' ? 'mobile' : ''
+      platform: process.env.PLATFORM !== 'web' ? 'mobile' : ''
     }),
     props: {
       sidebarType: {
@@ -47,9 +47,6 @@
       },
       showSidebarCover() {
         return this.isMobile() && this.sidebarType === 'common'
-      },
-      sidebarTypes() {
-        return `${this.sidebarType} ${this.mobileClass}`
       }
     }
   }

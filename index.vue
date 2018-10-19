@@ -1,19 +1,19 @@
 <template lang="pug">
-  .app-page(:class='sidebarTypes()')
+  .app-page(:class='[sidebarType, platform]')
     FrameModal(:twigModalState='twigModalState')
     Sidebar(
       :sidebarType='sidebarType',
       :updateSidebarType='updateSidebarType')
     main.app-page-main
       MainbarMobile(
-        v-if='isMobile()',
+        v-if='showMobileMainbar()',
         :updateSidebarType='updateSidebarType')
       Mainbar(v-if='showMainbar()')
-      .app-page-main-wrapper(:class='sidebarTypes()')
+      .app-page-main-wrapper(:class='[sidebarType, platform]')
         router-view
       TabBar(
         :tabs='tabs',
-        v-if='isMobile()')
+        v-if='showTabbar()')
 </template>
 
 <script>
@@ -36,14 +36,16 @@
     data: () => ({
       twigModalState: false,
       mainbarType: '',
+      mobileMainbarType: '',
+      tabbarType: '',
       sidebarType: '',
       stateSidebarType: 'common',
-      mobileClass: process.env.PLATFORM !== 'web' ? 'mobile' : '',
+      platform: process.env.PLATFORM !== 'web' ? 'mobile' : '',
       tabs
     }),
     watch: {
       $route: {
-        handler: 'setInitialSidebarType',
+        handler: 'setInitialComponents',
         immediate: true
       }
     },
@@ -77,18 +79,28 @@
       }
     },
     methods: {
-      setInitialSidebarType() {
-        if (process.env.PLATFORM !== 'web') {
+      setInitialComponents() {
+        if (this.isMobile()) {
+          this.tabbarType = this.$route.meta.tabbar || 'common'
+          this.mobileMainbarType = this.$route.meta.mainbar || 'common'
           this.mainbarType = 'none'
           this.sidebarType = 'none'
-          return
+        } else {
+          this.tabbarType = 'none'
+          this.mobileMainbarType = 'none'
+          this.mainbarType = this.$route.meta.mainbar || 'common'
+          this.sidebarType = this.$route.meta.sidebar || this.stateSidebarType
         }
-
-        this.mainbarType = this.$route.meta.mainbar || 'common'
-        this.sidebarType = this.$route.meta.sidebar || this.stateSidebarType
       },
       showMainbar() {
         return this.mainbarType !== 'none' && !this.isMobile()
+      },
+      showMobileMainbar() {
+        console.log(this.mobileMainbarType)
+        return this.mobileMainbarType !== 'none' && this.isMobile()
+      },
+      showTabbar() {
+        return this.tabbarType !== 'none' && this.isMobile()
       },
       isMobile() {
         return process.env.PLATFORM !== 'web'
@@ -107,9 +119,6 @@
         }
 
         this.stateSidebarType = this.sidebarType
-      },
-      sidebarTypes() {
-        return `${this.sidebarType} ${this.mobileClass}`
       }
     }
   }
@@ -133,6 +142,7 @@
       &.common {
         padding-left: 0;
       }
+
     }
   }
 
