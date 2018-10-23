@@ -94,8 +94,11 @@
     margin: $ui-space-y/1.25 $ui-space-x/2;
   }
 
-  @media screen and (max-width: $small-device) {
+  @media screen and (max-width: $ui-size-md) {
     .time {
+      display: none;
+    }
+    .leave-label {
       display: none;
     }
   }

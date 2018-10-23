@@ -88,7 +88,7 @@
     }
   }
 
-  @media screen and (max-width: $small-device) {
+  @media screen and (max-width: $ui-size-md) {
     .collection-search {
       display: flex;
     }

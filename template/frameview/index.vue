@@ -78,7 +78,7 @@
 		width: $loading-img;
 	}
 
-	@media screen and (min-width: $small-device) {
+	@media screen and (min-width: $ui-size-md) {
 		.frameview-loading {
 			display: none;
 		}

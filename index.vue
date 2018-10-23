@@ -40,7 +40,7 @@
       tabbarType: '',
       sidebarType: '',
       stateSidebarType: 'common',
-      platform: process.env.PLATFORM !== 'web' ? 'mobile' : '',
+      platform: process.env.PLATFORM !== 'web' ? 'mobile' : 'web',
       tabs
     }),
     watch: {
@@ -142,7 +142,6 @@
       &.common {
         padding-left: 0;
       }
-
     }
   }
 

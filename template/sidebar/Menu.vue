@@ -124,7 +124,7 @@
     max-height: calc(100vh - #{$menu-head-common-y});
   }
 
-  @media screen and (max-width: $small-device) {
+  @media screen and (max-width: $ui-size-md) {
     .sidebar-common {
       max-height: calc(100vh - #{$ui-mainbar-mobile-y});
     }

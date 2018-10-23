@@ -70,9 +70,9 @@
 
   .frame-modal-view {
     background-color: $ui-white-regular;
-    border-bottom: ($ui-corner / 3) solid $ui-gray-lighter;
-    border-radius: 4px;
-    border: ($ui-corner / 3) solid $ui-gray-regular;
+    border-bottom: 1px solid $ui-gray-lighter;
+    border-radius: $ui-corner;
+    border: 1px solid $ui-gray-regular;
     height: calc(100% - #{$view-space-y * 2});
     margin: $view-space-y $view-space-x;
     outline: none;
@@ -105,7 +105,7 @@
     opacity: 0;
   }
 
-  @media screen and (max-width: $small-device) {
+  @media screen and (max-width: $ui-size-md) {
     .frame-modal {
       z-index: 0;
     }
