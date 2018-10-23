@@ -96,7 +96,6 @@
         return this.mainbarType !== 'none' && !this.isMobile()
       },
       showMobileMainbar() {
-        console.log(this.mobileMainbarType)
         return this.mobileMainbarType !== 'none' && this.isMobile()
       },
       showTabbar() {
