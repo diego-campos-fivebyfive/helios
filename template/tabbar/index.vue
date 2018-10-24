@@ -37,9 +37,9 @@
     width: 100%;
 
     .badge {
+      margin-right: 0px;
       position: absolute;
       right: 0;
-      margin-right: 0px;
     }
   }
 
