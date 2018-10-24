@@ -49,6 +49,11 @@
         immediate: true
       }
     },
+    computed: {
+      isMobile() {
+        return process.env.PLATFORM !== 'web'
+      }
+    },
     mounted() {
       window.handleTwigModal = handler => {
         this.handleTwigModal = handler
@@ -60,10 +65,6 @@
 
       window.updateVueRoute = path => {
         // DEBUG: console.log('twig', location.pathname, path)
-
-        if (process.env.PLATFORM !== 'web') {
-          return
-        }
 
         this.$route.meta.pushState = path
         history.replaceState({}, null, path)
@@ -80,7 +81,7 @@
     },
     methods: {
       setInitialComponents() {
-        if (this.isMobile()) {
+        if (this.isMobile) {
           this.tabbarType = this.$route.meta.tabbar || 'common'
           this.mobileMainbarType = this.$route.meta.mainbar || 'common'
           this.mainbarType = 'none'
@@ -93,25 +94,20 @@
         }
       },
       showMainbar() {
-        return this.mainbarType !== 'none' && !this.isMobile()
+        return this.mainbarType !== 'none' && !this.isMobile
       },
       showMobileMainbar() {
-        return this.mobileMainbarType !== 'none' && this.isMobile()
+        return this.mobileMainbarType !== 'none' && this.isMobile
       },
       showTabbar() {
-        return this.tabbarType !== 'none' && this.isMobile()
-      },
-      isMobile() {
-        return process.env.PLATFORM !== 'web'
+        return this.tabbarType !== 'none' && this.isMobile
       },
       updateSidebarType() {
-        if (this.isMobile()) {
+        if (this.isMobile) {
           this.sidebarType = (this.sidebarType === 'none')
             ? 'common'
             : 'none'
-        }
-
-        if (!this.isMobile()) {
+        } else {
           this.sidebarType = (this.sidebarType === 'collapse')
             ? 'common'
             : 'collapse'

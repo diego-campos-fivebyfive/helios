@@ -111,7 +111,7 @@
     }
 
     .frame-modal-view {
-      height: 150vw;
+      height: 100%;
       margin-top: $ui-mainbar-mobile-y + $ui-corner;
       margin: $ui-corner * 2;
       width: calc(100vw - #{$ui-space-x / 2});
