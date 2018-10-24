@@ -78,7 +78,7 @@
         }
       },
       openCommonDropdown(event) {
-        if (this.sidebarType === 'common' /*|| this.sidebarType === 'mobile'*/) {
+        if (this.sidebarType === 'common') {
           this.toogleList(event)
         }
       },
