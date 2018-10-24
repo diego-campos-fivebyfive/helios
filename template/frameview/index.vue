@@ -1,24 +1,25 @@
 <template lang="pug">
 	.frameview
-		.frameview-loading(v-show='loadingTwig')
+		.frameview-loading(v-show='frameLoading', :class='platform')
 			img.frameview-loading-img(
 				src='~theme/assets/media/loading.gif')
-		iframe.frameview-frame(:src='getRoute', ref='twig')
+		iframe.frameview-frame(:src='getRoute', ref='frame')
 </template>
 
 <script>
 	export default {
 		data:() => ({
-			loadingTwig: true
+			frameLoading: true,
+			platform: process.env.PLATFORM !== 'web' ? 'mobile' : 'web'
 		}),
 		mounted() {
-			this.routeTwigLoaded()
+			this.frameLoad()
 		},
 		computed: {
 			getRoute() {
 				const currentPath = this.$route.fullPath
 
-				if (currentPath === '/') {
+				if (currentPath === '/' || currentPath === '/#/') {
 					const homePath = 'twig/dashboard'
 					return `${process.env.API_URL}/${homePath}`
 				}
@@ -41,9 +42,9 @@
 			}
 		},
 		methods: {
-			routeTwigLoaded() {
-				this.$refs.twig.onload = () => {
-					this.loadingTwig = false
+			frameLoad() {
+				this.$refs.frame.onload = () => {
+					this.frameLoading = false
 				}
 			}
 		}
@@ -79,7 +80,7 @@
 	}
 
 	@media screen and (min-width: $ui-size-md) {
-		.frameview-loading {
+		.mobile {
 			display: none;
 		}
 	}
