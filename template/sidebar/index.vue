@@ -9,10 +9,10 @@
         .toogle
           Button.toogle-button(
             class='primary-common',
-            v-if='!isMobile()',
+            v-if='!isMobile',
             :action='updateSidebarType')
             Icon(name='bars')
-        Head(:sidebarType='sidebarType')
+        Head(:sidebarType='sidebarType', v-if='!isMobile')
         Menu(:sidebarType='sidebarType')
 </template>
 
@@ -41,12 +41,14 @@
     watch: {
       sidebarType() {}
     },
-    methods: {
+    computed: {
       isMobile() {
         return process.env.PLATFORM !== 'web'
-      },
+      }
+    },
+    methods: {
       showSidebarCover() {
-        return this.isMobile() && this.sidebarType === 'common'
+        return this.isMobile && this.sidebarType === 'common'
       }
     }
   }
