@@ -1,15 +1,25 @@
 <template lang="pug">
 	.frameview
-		iframe.frameview-frame(:src='getRoute')
+		.frameview-loading(v-show='frameLoading', :class='platform')
+			img.frameview-loading-img(
+				src='~theme/assets/media/loading.gif')
+		iframe.frameview-frame(:src='getRoute', ref='frame')
 </template>
 
 <script>
 	export default {
+		data:() => ({
+			frameLoading: true,
+			platform: process.env.PLATFORM !== 'web' ? 'mobile' : 'web'
+		}),
+		mounted() {
+			this.frameLoad()
+		},
 		computed: {
 			getRoute() {
 				const currentPath = this.$route.fullPath
 
-				if (currentPath === '/') {
+				if (currentPath === '/' || currentPath === '/#/') {
 					const homePath = 'twig/dashboard'
 					return `${process.env.API_URL}/${homePath}`
 				}
@@ -30,11 +40,20 @@
 						: `${acc}/${segment}`
 				), process.env.API_URL)
 			}
+		},
+		methods: {
+			frameLoad() {
+				this.$refs.frame.onload = () => {
+					this.frameLoading = false
+				}
+			}
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
+	$loading-img: 40px;
+
   .frameview {
     height: 100%;
     overflow: hidden;
@@ -45,5 +64,24 @@
     border: 0;
     height: 100%;
     width: 100%;
-  }
+	}
+
+	.frameview-loading {
+		position: fixed;
+		width: 100%;
+		z-index: -1;
+		margin-top: 70vw;
+		text-align: center;
+	}
+
+	.frameview-loading-img {
+		opacity: 0.5;
+		width: $loading-img;
+	}
+
+	@media screen and (min-width: $ui-size-md) {
+		.mobile {
+			display: none;
+		}
+	}
 </style>
