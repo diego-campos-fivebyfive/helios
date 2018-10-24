@@ -1,5 +1,5 @@
 <template lang="pug">
-  div(:class='`sidebar-${sidebarType}`', v-if='showHeader()')
+  div(:class='`sidebar-${sidebarType}`')
     router-link.header(to='/')
       img.logo(
         src='~theme/assets/media/logo-small.png',
@@ -33,9 +33,6 @@
     methods: {
       showInfo() {
         return (this.sidebarType === 'common')
-      },
-      showHeader() {
-        return process.env.PLATFORM === 'web'
       }
     }
   }
