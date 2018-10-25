@@ -4,6 +4,8 @@
     :style='item.customStyle',
     :class='[{ "item-dropdown": itemDropdown }, sidebarType]')
     Icon.icon-ui(:name='item.icon')
+    span(:style='labelPosition.top')
+      | {{ item.name }}
     Badge.badge(
       v-if='item.content || item.contentAsync',
       :content='item.content',
