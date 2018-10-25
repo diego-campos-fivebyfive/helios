@@ -54,7 +54,6 @@
     position: relative;
     text-align: right;
     width: 100%;
-    z-index: 100;
 
     @include clearfix;
   }
@@ -95,8 +94,11 @@
     margin: $ui-space-y/1.25 $ui-space-x/2;
   }
 
-  @media (max-width: $ui-size-lg) {
+  @media screen and (max-width: $ui-size-md) {
     .time {
+      display: none;
+    }
+    .leave-label {
       display: none;
     }
   }

@@ -52,7 +52,7 @@
   .name {
     display: block;
     font-weight: 600;
-    padding: $ui-space-y/4;
+    padding: $ui-space-y / 4;
   }
 
   .sidebar-collapse {
@@ -64,7 +64,7 @@
 
   .sidebar-common {
     .header {
-      padding: $ui-space-y/2 $ui-space-x;
+      padding: $ui-space-y / 2 $ui-space-x;
     }
 
     .info {
