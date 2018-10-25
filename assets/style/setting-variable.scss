@@ -46,3 +46,9 @@ $ui-text-main: #676a6c;
   ui-size-lg: $ui-size-lg;
   ui-size-xl: $ui-size-xl;
 }
+
+/* Collection Variables */
+$ui-badge-label-minx: 20px;
+$ui-badge-label-miny: 15px;
+$ui-badge-label-space-x: $ui-space-x / 7.5;
+$ui-badge-label-space-y: $ui-space-y / 7.5;

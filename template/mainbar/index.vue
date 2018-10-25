@@ -13,8 +13,8 @@
 </template>
 
 <script>
-  import Menu from '@/app/theme/Menu'
-  import Widgets from '@/app/theme/Widgets'
+  import Menu from '@/../theme/Menu'
+  import Widgets from '@/../theme/Widgets'
 
   import Time from './Time'
 

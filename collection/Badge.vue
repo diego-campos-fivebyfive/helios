@@ -1,50 +1,79 @@
 <template lang="pug">
-  span.badge(v-if='this.content')
-    | {{ content }}
+  label.badge(
+    v-if='formattedContent',
+    :class='labelType')
+    | {{ formattedContent }}
 </template>
 
 <script>
   export default {
     props: {
-      badge: {
-        type: Object,
-        required: true
+      content: {
+        type: [Number, String],
+        required: false,
+        default: 0
+      },
+      contentAsync: {
+        type: Promise,
+        required: false
+      },
+      labelType: {
+        type: String,
+        required: false,
+        default: 'info'
       }
     },
     data: () => ({
-      content: 0
+      formattedContent: 0
     }),
     watch: {
-      badge: {
-        handler: 'resolveBadge',
+      content: {
+        handler: 'resolveData',
         immediate: true
       }
     },
     methods: {
-      resolveBadge() {
-        if (this.badge.content) {
-          this.content = this.badge.content
+      formatContent(content) {
+        if (!Number.isInteger(content)) {
+          return content
+        }
+
+        return (content < 100) ? content : '+99'
+      },
+      resolveData() {
+        if (this.content) {
+          this.formattedContent = this.formatContent(this.content)
           return
         }
 
-        if (this.badge.async) {
-          this.badge.async().then(content => {
-            this.content = content
-          })
+        if (this.contentAsync) {
+          this.contentAsync()
+            .then(content => {
+              this.formattedContent = this.formatContent(content)
+            })
         }
       }
     }
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .badge {
-    background: $ui-blue-light;
-    border-radius: $ui-corner/2;
+    border-radius: $ui-corner / 2;
     color: $ui-white-regular;
-    font-size: 0.8em;
-    float: right;
-    margin-right: $ui-space-y;
-    padding: $ui-space-y/6 $ui-space-y/2;
+    font-weight: 600;
+    min-height: $ui-badge-label-miny;
+    min-width: $ui-badge-label-minx;
+    padding: 0.15em 0.4em;
+    text-align: center;
+    z-index: 105;
+
+    &.info {
+      background-color: $ui-blue-light;
+    }
+
+    &.warning {
+      background-color: $ui-orange-light;
+    }
   }
 </style>
