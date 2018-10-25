@@ -5,7 +5,11 @@
         Icon(v-if='tab.icon', :name='tab.icon')
         .tabbar-item-label
           | {{ tab.title }}
-      Badge(v-if='tab.badge', :badge='tab.badge')
+      Badge(
+        v-if='item.content || item.contentAsync',
+        :content='item.content',
+        :contentAsync='item.contentAsync',
+        labelType='warning')
 </template>
 
 <script>

@@ -6,7 +6,11 @@
     Icon.icon-ui(:name='item.icon')
     span(:style='labelPosition.top')
       | {{ item.name }}
-    Badge(v-if='item.badge', :badge='item.badge')
+    Badge.badge(
+      v-if='item.content || item.contentAsync',
+      :content='item.content',
+      :contentAsync='item.contentAsync',
+      labelType='warning')
 </template>
 
 <script>
@@ -102,7 +106,7 @@
 
   .router-link-exact-active {
     background-color: $ui-gray-dark;
-    border-left: $ui-space-x / 6.25 solid $ui-blue-light;
+    border-left: 4px solid $ui-blue-light;
     color: $ui-white-regular;
   }
 
@@ -110,5 +114,12 @@
     margin-right: $ui-space-x/3;
     vertical-align: bottom;
     width: 1rem;
+  }
+
+  .badge {
+    float: right;
+    font-size: 0.75rem;
+    line-height: 1.5em;
+    margin-right: $ui-space-y * 1.5;
   }
 </style>
