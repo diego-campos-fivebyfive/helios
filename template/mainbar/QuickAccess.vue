@@ -8,8 +8,8 @@
         v-if='item.icon',
         :name='item.icon')
       Badge.quick-access-item-badge(
-        v-bind='item',
         :content='states[itemName]',
+        :contentAsync='item.getInitial',
         labelType='warning')
 </template>
 
