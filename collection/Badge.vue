@@ -14,8 +14,9 @@
         default: 0
       },
       contentAsync: {
-        type: Promise,
-        required: false
+        type: Function,
+        required: false,
+        default: () => {}
       },
       labelType: {
         type: String,
@@ -41,7 +42,7 @@
         return (content < 100) ? content : '+99'
       },
       resolveData() {
-        if (this.content) {
+        if (Number.isInteger(this.content) || this.content) {
           this.formattedContent = this.formatContent(this.content)
           return
         }
