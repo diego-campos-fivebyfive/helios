@@ -100,7 +100,9 @@
         return this.mobileMainbarType !== 'none' && this.isMobile
       },
       showTabbar() {
-        return this.tabbarType !== 'none' && this.isMobile
+        return this.tabbarType !== 'none'
+          && this.isMobile
+          && this.tabs.lenght > 0
       },
       updateSidebarType() {
         if (this.isMobile) {
