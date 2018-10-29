@@ -6,7 +6,7 @@
         .tabbar-item-label
           | {{ tab.title }}
       Badge(
-        v-if='item.content || item.contentAsync',
+        v-if='tab.content || tab.contentAsync',
         :content='item.content',
         :contentAsync='item.contentAsync',
         labelType='warning')

@@ -21,7 +21,7 @@
   import MainbarMobile from 'theme/template/mainbar-mobile'
   import Sidebar from 'theme/template/sidebar'
   import tabs from '@/../theme/tabs'
-
+console.log(tabs)
   export default {
     name: 'App',
     components: {
@@ -98,7 +98,7 @@
       showTabbar() {
         return this.tabbarType !== 'none'
           && this.isMobile
-          && this.tabs.lenght > 0
+          && this.tabs.length > 0
       },
       updateSidebarType() {
         if (this.isMobile) {
