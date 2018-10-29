@@ -1,22 +1,29 @@
 <template lang="pug">
-  header.mainbar-mobile
-    ul.mainbar-mobile-list
-      li.mainbar-mobile-list-button-left
-        Button.mainbar-mobile-list-toggle-sidebar-left(
-          :action='updateSidebarType')
-          Icon(name='list')
-      li.mainbar-mobile-list-title
-        | {{ pageTitle }}
-      li.mainbar-mobile-list-button-right
-        Button.mainbar-mobile-list-toggle-sidebar-right(
-          :action='logout')
-          Icon(name='sign-out')
+  .wrapper-mainbar
+    header.mainbar-mobile
+      ul.mainbar-mobile-list
+        li.mainbar-mobile-list-button-left
+          Button.mainbar-mobile-list-toggle-sidebar-left(
+            :action='updateSidebarType')
+            Icon(name='list')
+        li.mainbar-mobile-list-title
+          | {{ pageTitle }}
+        li.mainbar-mobile-list-button-right
+          Button.mainbar-mobile-list-toggle-sidebar-right(
+            v-if='!submitting',
+            :action='logout')
+            Icon(name='sign-out')
+          Icon.mainbar-mobile-list-logout(
+            class='rotate', name='repeat', v-else)
 </template>
 
 <script>
+  import cookie from '@/app/cookie'
+
   export default {
     data: () => ({
-      pageTitle: ''
+      pageTitle: '',
+      submitting: false
     }),
     props: {
       updateSidebarType: {
@@ -32,8 +39,13 @@
     },
     methods: {
       logout() {
-        this.axios.get(`${process.env.API_URL}/logout`)
+        this.submitting = true
+        this.axios.post(`${process.env.API_URL}/logout`)
           .then(() => {
+            this.submitting = false
+            localStorage.clear()
+            cookie.clear()
+
             this.$router.push({ path: '/login' })
           })
       },
@@ -87,5 +99,23 @@
   .mainbar-mobile-list-toggle-sidebar-right {
     color: white;
     float: right;
+  }
+
+  .mainbar-mobile-list-logout {
+    float: right;
+    margin: $ui-space-y;
+  }
+
+  .rotate {
+    animation: rotate 1s infinite;
+  }
+
+  @keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(315deg);
+    }
   }
 </style>
