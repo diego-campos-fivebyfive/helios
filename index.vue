@@ -21,7 +21,7 @@
   import MainbarMobile from 'theme/template/mainbar-mobile'
   import Sidebar from 'theme/template/sidebar'
   import tabs from '@/../theme/tabs'
-console.log(tabs)
+
   export default {
     name: 'App',
     components: {
