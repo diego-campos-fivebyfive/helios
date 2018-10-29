@@ -18,8 +18,6 @@
 </template>
 
 <script>
-  import cookie from '@/app/cookie'
-
   export default {
     data: () => ({
       pageTitle: '',
@@ -44,7 +42,7 @@
           .then(() => {
             this.submitting = false
             localStorage.clear()
-            cookie.clear()
+            document.cookie = ''
 
             this.$router.push({ path: '/login' })
           })
