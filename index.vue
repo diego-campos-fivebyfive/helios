@@ -1,7 +1,6 @@
 <template lang="pug">
   .app-page(:class='[sidebarType, platform]')
     Sidebar(
-      v-if='showSidebarType()',
       :sidebarType='sidebarType',
       :updateSidebarType='updateSidebarType')
     main.app-page-main
@@ -89,9 +88,6 @@
           this.mainbarType = this.$route.meta.mainbar || 'common'
           this.sidebarType = this.$route.meta.sidebar || this.stateSidebarType
         }
-      },
-      showSidebarType() {
-        return this.sidebarType !== 'none'
       },
       showMainbar() {
         return this.mainbarType !== 'none' && !this.isMobile
