@@ -19,7 +19,7 @@
 			getRoute() {
 				const currentPath = this.$route.fullPath
 
-				if (currentPath === '/' || currentPath.includes('/#/')) {
+				if (currentPath === '/' || currentPath === '/#/') {
 					const homePath = 'twig/dashboard'
 					return `${process.env.API_URL}/${homePath}`
 				}
