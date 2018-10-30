@@ -1,23 +1,21 @@
 <template lang="pug">
   .app-page(:class='[sidebarType, platform]')
-    FrameModal(:twigModalState='twigModalState')
     Sidebar(
       :sidebarType='sidebarType',
       :updateSidebarType='updateSidebarType')
     main.app-page-main
       MainbarMobile(
-        v-if='showMobileMainbar()',
+        v-if='showMainbarMobile()',
         :updateSidebarType='updateSidebarType')
       Mainbar(v-if='showMainbar()')
       .app-page-main-wrapper(:class='[sidebarType, platform]')
         router-view
       TabBar(
-        :tabs='tabs',
-        v-if='showTabbar()')
+        v-if='showTabbar()',
+        :tabs='tabs')
 </template>
 
 <script>
-  import FrameModal from 'theme/template/frame-modal'
   import Mainbar from 'theme/template/mainbar'
   import TabBar from 'theme/template/tabbar'
   import MainbarMobile from 'theme/template/mainbar-mobile'
@@ -27,14 +25,12 @@
   export default {
     name: 'App',
     components: {
-      FrameModal,
       Mainbar,
       MainbarMobile,
       Sidebar,
       TabBar
     },
     data: () => ({
-      twigModalState: false,
       mainbarType: '',
       mobileMainbarType: '',
       tabbarType: '',
@@ -66,6 +62,10 @@
       window.updateVueRoute = path => {
         // DEBUG: console.log('twig', location.pathname, path)
 
+        if (process.env.PLATFORM !== 'web') {
+          return
+        }
+
         this.$route.meta.pushState = path
         history.replaceState({}, null, path)
       }
@@ -96,11 +96,13 @@
       showMainbar() {
         return this.mainbarType !== 'none' && !this.isMobile
       },
-      showMobileMainbar() {
+      showMainbarMobile() {
         return this.mobileMainbarType !== 'none' && this.isMobile
       },
       showTabbar() {
-        return this.tabbarType !== 'none' && this.isMobile
+        return this.tabbarType !== 'none'
+          && this.isMobile
+          && this.tabs.length
       },
       updateSidebarType() {
         if (this.isMobile) {

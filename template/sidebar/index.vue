@@ -5,7 +5,7 @@
         .sidebar-cover(
           v-show='showSidebarCover()',
           v-on:click='updateSidebarType')
-      nav.menu
+      nav.menu(v-if='showMenu()')
         .toogle
           Button.toogle-button(
             class='primary-common',
@@ -49,6 +49,9 @@
     methods: {
       showSidebarCover() {
         return this.isMobile && this.sidebarType === 'common'
+      },
+      showMenu() {
+        return this.sidebarType !== 'none'
       }
     }
   }
