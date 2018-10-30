@@ -18,13 +18,18 @@
 		computed: {
 			getRoute() {
 				const currentPath = this.$route.fullPath
+        const viewsEntryPoint = 'twig'
 
-				if (currentPath === '/' || currentPath === '/#/') {
-					const homePath = 'twig/dashboard'
+				if (currentPath === '/') {
+          const homePath = `${viewsEntryPoint}/dashboard`
 					return `${process.env.API_URL}/${homePath}`
-				}
+        }
 
-				const viewsEntryPoint = 'twig'
+        if (currentPath.includes('/#/')) {
+          const path = currentPath.replace('/#/', '')
+					return `${process.env.API_URL}/${viewsEntryPoint}/${path}`
+        }
+
 				const viewsEntryPointIndex = this.$route.meta.absolutePath
 					.split('/')
 					.filter(segment => segment)
@@ -78,6 +83,10 @@
 		opacity: 0.5;
 		width: $loading-img;
 	}
+
+  .web {
+    display: none;
+  }
 
 	@media screen and (min-width: $ui-size-md) {
 		.mobile {
