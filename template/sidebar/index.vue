@@ -13,7 +13,7 @@
             :action='updateSidebarType')
             Icon(name='bars')
         Head(:sidebarType='sidebarType', v-if='!isMobile')
-        Menu(:sidebarType='sidebarType', )
+        Menu(:sidebarType='sidebarType')
 </template>
 
 <script>
