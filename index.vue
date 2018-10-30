@@ -62,6 +62,10 @@
       window.updateVueRoute = path => {
         // DEBUG: console.log('twig', location.pathname, path)
 
+        if (process.env.PLATFORM !== 'web') {
+          return
+        }
+
         this.$route.meta.pushState = path
         history.replaceState({}, null, path)
       }
