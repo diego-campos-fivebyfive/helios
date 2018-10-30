@@ -5,7 +5,7 @@
         .sidebar-cover(
           v-show='showSidebarCover()',
           v-on:click='updateSidebarType')
-      nav.menu(v-if='showMenu()',)
+      nav.menu(v-if='showMenu()')
         .toogle
           Button.toogle-button(
             class='primary-common',
