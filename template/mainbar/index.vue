@@ -5,7 +5,7 @@
     nav.util
       Widgets.widget
       Time.time
-      Menu.menu
+      QuickAccess.quick-access
       a.leave(href='/logout')
         Icon(name='sign-out')
         span.leave-label
@@ -13,15 +13,15 @@
 </template>
 
 <script>
-  import Menu from '@/../theme/Menu'
+  import QuickAccess from './QuickAccess'
   import Widgets from '@/../theme/Widgets'
 
   import Time from './Time'
 
   export default {
     components: {
+      QuickAccess,
       Time,
-      Menu,
       Widgets
     },
     data: () => ({
@@ -76,7 +76,7 @@
     display: inline-block;
   }
 
-  .menu {
+  .quick-access {
     display: flex;
     float: right;
   }
