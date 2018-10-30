@@ -7,8 +7,8 @@
           | {{ tab.title }}
       Badge(
         v-if='tab.content || tab.contentAsync',
-        :content='item.content',
-        :contentAsync='item.contentAsync',
+        :content='tab.content',
+        :contentAsync='tab.contentAsync',
         labelType='warning')
 </template>
 
