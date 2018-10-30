@@ -102,7 +102,7 @@
       showTabbar() {
         return this.tabbarType !== 'none'
           && this.isMobile
-          && this.tabs.length > 0
+          && this.tabs.length
       },
       updateSidebarType() {
         if (this.isMobile) {
