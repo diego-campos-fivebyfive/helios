@@ -42,8 +42,6 @@
           .then(() => {
             this.submitting = false
             localStorage.clear()
-            document.cookie = 'BEARER=;'
-
             this.$router.push({ path: '/login' })
           })
       },
