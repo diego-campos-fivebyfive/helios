@@ -37,13 +37,17 @@
     },
     methods: {
       logout() {
+        const onLogout = () => {
+          this.submitting = false
+          localStorage.clear()
+          this.$router.push({ path: '/login' })
+        }
+
         this.submitting = true
-        this.axios.post(`${process.env.API_URL}/logout`)
-          .then(() => {
-            this.submitting = false
-            localStorage.clear()
-            this.$router.push({ path: '/login' })
-          })
+
+        this.axios.get('/logout')
+          .then(onLogout)
+          .catch(onLogout)
       },
       setPageTitle() {
         this.pageTitle = this.$router.history.current.meta.title
