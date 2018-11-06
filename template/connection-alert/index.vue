@@ -1,5 +1,5 @@
 <template lang="pug">
-  .connection-alert(v-if='show')
+  .connection-alert(v-if='!showMessage')
     img.connection-alert-img(
       src='~theme/assets/media/no-internet.png')
     .connection-alert-message
@@ -20,16 +20,16 @@
 <script>
   export default {
     data: () => ({
-      show: navigator.onLine
+      showMessage: navigator.onLine
     }),
     mounted() {
-      const changeStatus = () => this.show = navigator.onLine
+      const changeStatus = () => this.showMessage = navigator.onLine
       window.addEventListener('online', changeStatus, false)
       window.addEventListener('offline', changeStatus , false)
     },
     methods: {
       hideMessage() {
-        this.show = !this.show
+        this.showMessage = !this.showMessage
       }
     }
   }
