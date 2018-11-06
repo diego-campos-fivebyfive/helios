@@ -1,5 +1,8 @@
 <template lang="pug">
   .app-page(:class='[sidebarType, platform]')
+    ConnectionAlert(
+      v-if='isMobile',
+      ref='connection')
     Sidebar(
       :sidebarType='sidebarType',
       :updateSidebarType='updateSidebarType')
@@ -20,6 +23,7 @@
   import TabBar from 'theme/template/tabbar'
   import MainbarMobile from 'theme/template/mainbar-mobile'
   import Sidebar from 'theme/template/sidebar'
+  import ConnectionAlert from 'theme/template/connection-alert'
   import tabs from '@/../theme/tabs'
 
   export default {
@@ -28,7 +32,8 @@
       Mainbar,
       MainbarMobile,
       Sidebar,
-      TabBar
+      TabBar,
+      ConnectionAlert
     },
     data: () => ({
       mainbarType: '',
@@ -144,6 +149,7 @@
 
   .app-page-main {
     @include clearfix;
+    margin: 0 $ui-space-y;
   }
 
   .app-page-main-wrapper {
@@ -155,6 +161,11 @@
       padding-left: 0;
       height: calc(100vh - (#{$ui-mainbar-mobile-y} + #{$ui-tabbar-mobile-y}));
       margin-top: $ui-mainbar-mobile-y;
+    }
+
+    &.none {
+      height: 100vh;
+      margin-top: 0;
     }
   }
 </style>
