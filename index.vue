@@ -1,21 +1,20 @@
 <template lang="pug">
-  .app-page(:class='[sidebarType, platform]')
-    ConnectionAlert(
-      v-if='isMobile',
-      ref='connection')
-    Sidebar(
-      :sidebarType='sidebarType',
-      :updateSidebarType='updateSidebarType')
-    main.app-page-main
-      MainbarMobile(
-        v-if='showMainbarMobile()',
+  .app-wrapper
+    ConnectionAlert
+    .app-page(:class='[sidebarType, platform]')
+      Sidebar(
+        :sidebarType='sidebarType',
         :updateSidebarType='updateSidebarType')
-      Mainbar(v-if='showMainbar()')
-      .app-page-main-wrapper(:class='[sidebarType, platform]')
-        router-view
-      TabBar(
-        v-if='showTabbar()',
-        :tabs='tabs')
+      main.app-page-main
+        MainbarMobile(
+          v-if='showMainbarMobile()',
+          :updateSidebarType='updateSidebarType')
+        Mainbar(v-if='showMainbar()')
+        .app-page-main-wrapper(:class='[sidebarType, platform]')
+          router-view
+        TabBar(
+          v-if='showTabbar()',
+          :tabs='tabs')
 </template>
 
 <script>
