@@ -1,5 +1,5 @@
 <template lang="pug">
-  .connection-alert(v-if='!connected')
+  .connection-alert(v-if='!show')
     img.connection-alert-img(
       src='~theme/assets/media/no-internet.png')
     .connection-alert-message
@@ -7,34 +7,46 @@
       .connection-alert-message-tip
         | Cheque sua conexão e tente novamente.
         p
-          | Esta mensagem desaparecerá quando a conexão for restabelecida.
+          | Esta mensagem desaparecerá automaticamente
+          | quando a conexão for restabelecida.
+        .connection-alert-try-reconect
+          | Tentando reconectar...
+    Button.connection-alert-hide(
+      :action='hideMessage',
+      class='default-bordered')
+        | Ocultar mensagem
 </template>
 
 <script>
   export default {
     data: () => ({
-      connected: navigator.onLine
+      show: navigator.onLine
     }),
     mounted() {
-      const changeStatus = () => {
-        this.connected = !this.connected
+      const changeStatus = () => this.show = navigator.onLine
+      window.addEventListener('online', changeStatus, false)
+      window.addEventListener('offline', changeStatus , false)
+    },
+    methods: {
+      hideMessage() {
+        this.show = !this.show
       }
-      window.document.addEventListener('online', changeStatus, false)
-      window.document.addEventListener('offline', changeStatus , false)
     }
   }
 </script>
 
 <style lang="scss" scoped>
   .connection-alert {
-    animation: pulse 2s;
+    animation: pulse 4s;
     background: $ui-white-regular;
     height: 100%;
+    line-height: normal;
     position: absolute;
     transition:
       border-color 150ms ease-in-out 0s,
       box-shadow 150ms ease-in-out 0s;
     width: 100%;
+    z-index: 110;
   }
 
   .connection-alert-message {
@@ -48,11 +60,22 @@
   .connection-alert-message-tip {
     color: $ui-gray-regular;
     font-size: 0.5em;
+    margin-top: $ui-space-y * 2;
   }
 
   .connection-alert-img {
     display: block;
-    margin: 40% auto 10%;
+    margin: 10% auto;
+  }
+
+  .connection-alert-hide {
+    animation: pulse 2s;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .connection-alert-try-reconect {
+    color: $ui-orange-light;
   }
 
   @keyframes pulse {
