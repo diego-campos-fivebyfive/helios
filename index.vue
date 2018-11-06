@@ -1,18 +1,20 @@
 <template lang="pug">
-  .app-page(:class='[sidebarType, platform]')
-    Sidebar(
-      :sidebarType='sidebarType',
-      :updateSidebarType='updateSidebarType')
-    main.app-page-main
-      MainbarMobile(
-        v-if='showMainbarMobile()',
+  .app-wrapper
+    ConnectionAlert
+    .app-page(:class='[sidebarType, platform]')
+      Sidebar(
+        :sidebarType='sidebarType',
         :updateSidebarType='updateSidebarType')
-      Mainbar(v-if='showMainbar()')
-      .app-page-main-wrapper(:class='[sidebarType, platform]')
-        router-view
-      TabBar(
-        v-if='showTabbar()',
-        :tabs='tabs')
+      main.app-page-main
+        MainbarMobile(
+          v-if='showMainbarMobile()',
+          :updateSidebarType='updateSidebarType')
+        Mainbar(v-if='showMainbar()')
+        .app-page-main-wrapper(:class='[sidebarType, platform]')
+          router-view
+        TabBar(
+          v-if='showTabbar()',
+          :tabs='tabs')
 </template>
 
 <script>
@@ -20,6 +22,7 @@
   import TabBar from 'theme/template/tabbar'
   import MainbarMobile from 'theme/template/mainbar-mobile'
   import Sidebar from 'theme/template/sidebar'
+  import ConnectionAlert from 'theme/template/connection-alert'
   import tabs from '@/../theme/tabs'
 
   export default {
@@ -28,7 +31,8 @@
       Mainbar,
       MainbarMobile,
       Sidebar,
-      TabBar
+      TabBar,
+      ConnectionAlert
     },
     data: () => ({
       mainbarType: '',

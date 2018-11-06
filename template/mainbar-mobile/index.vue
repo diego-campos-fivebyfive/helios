@@ -14,7 +14,9 @@
             :action='logout')
             Icon(name='sign-out')
           Icon.mainbar-mobile-list-logout(
-            class='rotate', name='repeat', v-else)
+            v-else,
+            class='rotate',
+            name='spinner')
 </template>
 
 <script>
