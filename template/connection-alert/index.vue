@@ -86,4 +86,10 @@
       opacity: 1;
     }
   }
+
+  @media screen and (max-width: $ui-size-md) {
+    .connection-alert-img {
+      margin: 40% auto 10%;
+    }
+  }
 </style>
