@@ -1,5 +1,5 @@
 <template lang="pug">
-  .connection-alert(v-if='!show')
+  .connection-alert(v-if='show')
     img.connection-alert-img(
       src='~theme/assets/media/no-internet.png')
     .connection-alert-message
@@ -38,6 +38,9 @@
 <style lang="scss" scoped>
   .connection-alert {
     animation: pulse 4s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     background: $ui-white-regular;
     height: 100%;
     line-height: normal;
@@ -64,14 +67,12 @@
   }
 
   .connection-alert-img {
-    display: block;
-    margin: 10% auto;
+    margin-top: $ui-space-y * 10;
   }
 
   .connection-alert-hide {
     animation: pulse 2s;
     display: block;
-    margin: 0 auto;
   }
 
   .connection-alert-try-reconect {
@@ -84,12 +85,6 @@
     }
     100% {
       opacity: 1;
-    }
-  }
-
-  @media screen and (max-width: $ui-size-md) {
-    .connection-alert-img {
-      margin: 40% auto 10%;
     }
   }
 </style>
