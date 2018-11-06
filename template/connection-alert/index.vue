@@ -37,11 +37,11 @@
 
 <style lang="scss" scoped>
   .connection-alert {
+    align-items: center;
     animation: pulse 4s;
+    background: $ui-white-regular;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    background: $ui-white-regular;
     height: 100%;
     line-height: normal;
     position: absolute;
