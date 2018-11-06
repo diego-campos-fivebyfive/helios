@@ -12,6 +12,7 @@
         .connection-alert-try-reconect
           | Tentando reconectar...
     Button.connection-alert-hide(
+      v-if='onDeveloperMode()',
       :action='hideMessage',
       class='default-bordered')
         | Ocultar mensagem
@@ -29,7 +30,10 @@
     },
     methods: {
       hideMessage() {
-        this.showMessage = !this.showMessage
+        this.showMessage = true
+      },
+      onDeveloperMode() {
+        return process.env.NODE_ENV === 'development'
       }
     }
   }
