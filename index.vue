@@ -149,7 +149,6 @@
 
   .app-page-main {
     @include clearfix;
-    margin: 0 $ui-space-y;
   }
 
   .app-page-main-wrapper {
@@ -161,11 +160,6 @@
       padding-left: 0;
       height: calc(100vh - (#{$ui-mainbar-mobile-y} + #{$ui-tabbar-mobile-y}));
       margin-top: $ui-mainbar-mobile-y;
-    }
-
-    &.none {
-      height: 100vh;
-      margin-top: 0;
     }
   }
 </style>

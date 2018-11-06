@@ -3,9 +3,11 @@
     img.connection-alert-img(
       src='~theme/assets/media/no-internet.png')
     .connection-alert-message
-      | No internet connection!
+      | Sem conexão com a internet!
       .connection-alert-message-tip
-        | Check your connection or try again
+        | Cheque sua conexão e tente novamente.
+        p
+          | Esta mensagem desaparecerá quando a conexão for restabelecida.
 </template>
 
 <script>
@@ -14,9 +16,7 @@
       connected: navigator.onLine
     }),
     mounted() {
-      console.log(this.connected)
       const changeStatus = () => {
-        console.log('changed ', this.connected)
         this.connected = !this.connected
       }
       window.document.addEventListener('online', changeStatus, false)
@@ -27,26 +27,27 @@
 
 <style lang="scss" scoped>
   .connection-alert {
-    background: white;
-    position: absolute;
-    width: 100%;
-    height: 100%;
     animation: pulse 2s;
+    background: $ui-white-regular;
+    height: 100%;
+    position: absolute;
     transition:
       border-color 150ms ease-in-out 0s,
       box-shadow 150ms ease-in-out 0s;
+    width: 100%;
   }
 
   .connection-alert-message {
-    font-size: 25px;
-    text-align: center;
     color: $ui-blue-light;
+    font-size: 2em;
     font-weight: 600;
+    margin: $ui-space-y;
+    text-align: center;
   }
 
   .connection-alert-message-tip {
     color: $ui-gray-regular;
-    font-size: 15px;
+    font-size: 0.5em;
   }
 
   .connection-alert-img {
