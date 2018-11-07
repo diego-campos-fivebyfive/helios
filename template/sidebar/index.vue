@@ -106,24 +106,21 @@
     position: absolute
   }
 
-  .sidebar-slide-enter-active,
-  .sidebar-slide-leave-active {
-    transition: all 750ms ease-in-out
-  }
-
   .mobile {
+    padding-top: $ui-mainbar-mobile-y;
+
     &.none {
       display: block;
       max-width: $ui-sidebar-common-x;
-      margin-left: -($ui-sidebar-common-x);
-      padding-top: $ui-mainbar-mobile-y;
-      transition: all 300ms ease-in-out;
+      -webkit-transform: translateX(-100%);
+          transform: translateX(-100%);
+      transition: transform 100ms linear;
     }
 
     &.common {
-      margin-left: 0;
-      padding-top: $ui-mainbar-mobile-y;
-      transition: all 300ms ease-in-out;
+      -webkit-transform: none;
+			transform: none;
+	    transition: transform 100ms linear;
     }
   }
 </style>
