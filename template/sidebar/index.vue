@@ -112,13 +112,11 @@
     &.none {
       display: block;
       max-width: $ui-sidebar-common-x;
-      -webkit-transform: translateX(-100%);
-          transform: translateX(-100%);
+      transform: translateX(-100%);
       transition: transform 100ms linear;
     }
 
     &.common {
-      -webkit-transform: none;
 			transform: none;
 	    transition: transform 100ms linear;
     }
