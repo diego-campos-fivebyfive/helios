@@ -42,7 +42,7 @@
 <style lang="scss" scoped>
   .connection-alert {
     align-items: center;
-    animation: pulse 4s;
+    animation: pulse 1s;
     background: $ui-white-regular;
     display: flex;
     flex-direction: column;
