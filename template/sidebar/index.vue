@@ -113,12 +113,11 @@
       display: block;
       max-width: $ui-sidebar-common-x;
       transform: translateX(-100%);
-      transition: transform 100ms linear;
     }
 
     &.common {
 			transform: none;
-	    transition: transform 100ms linear;
+	    transition: transform 200ms linear;
     }
   }
 </style>
