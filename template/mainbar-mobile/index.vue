@@ -39,17 +39,8 @@
     },
     methods: {
       logout() {
-        const onLogout = () => {
-          this.submitting = false
-          localStorage.clear()
-          this.$router.push({ path: '/login' })
-        }
-
         this.submitting = true
-
-        this.axios.get('/logout')
-          .then(onLogout)
-          .catch(onLogout)
+        this.$router.push({ path: '/logout' })
       },
       setPageTitle() {
         this.pageTitle = this.$router.history.current.meta.title
