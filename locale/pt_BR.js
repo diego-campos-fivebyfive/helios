@@ -37,6 +37,8 @@ export default {
       previous: 'Anterior'
     },
     template: {
+      refreshing: 'Recarregando',
+      releaseToReload: 'Solte para recarregar o aplicativo',
       signOut: 'Sair'
     }
   }

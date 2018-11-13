@@ -24,6 +24,8 @@
   import Sidebar from 'theme/template/sidebar'
   import ConnectionAlert from 'theme/template/connection-alert'
   import tabs from '@/../theme/tabs'
+  import $locale from 'locale'
+  import pullToRefresh from 'pulltorefreshjs'
 
   export default {
     name: 'App',
@@ -84,6 +86,8 @@
       }
 
       this.downloadFileFromIframe()
+
+      this.mobilePullRefresh()
     },
     methods: {
       setInitialComponents() {
@@ -142,6 +146,16 @@
  				addEventListener
 					? addEventListener('message', launchFile, false)
 					: attachEvent('onmessage', launchFile, false)
+      },
+      mobilePullRefresh() {
+        pullToRefresh.init({
+          mainElement: 'body',
+          instructionsRefreshing: $locale.theme.template.refreshing,
+          instructionsReleaseToRefresh: $locale.theme.template.releaseToReload,
+          onRefresh: () => {
+            window.location.reload()
+          }
+        })
       }
     }
   }
