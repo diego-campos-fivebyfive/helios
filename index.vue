@@ -149,12 +149,15 @@
       },
       mobilePullRefresh() {
         pullToRefresh.init({
-          mainElement: '.mainbar-mobile',
+          mainElement: 'body',
           instructionsPullToRefresh: $locale.theme.template.pullToRefresh,
           instructionsRefreshing: $locale.theme.template.refreshing,
           instructionsReleaseToRefresh: $locale.theme.template.releaseToReload,
           onRefresh: () => {
             window.location.reload()
+          },
+          shouldPullToRefresh: () => {
+            return !window.scrollY && this.sidebarType === 'none'
           }
         })
       }
