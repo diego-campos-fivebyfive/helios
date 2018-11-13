@@ -82,6 +82,8 @@
 
         this.$router.push({ path })
       }
+
+      this.downloadFileFromIframe()
     },
     methods: {
       setInitialComponents() {
@@ -120,6 +122,26 @@
         }
 
         this.stateSidebarType = this.sidebarType
+      },
+      downloadFileFromIframe() {
+        const { addEventListener, attachEvent } = window
+
+        const launchFile = message => {
+          const { download } = message.data
+          if (!download) {
+            return false
+          }
+
+          const newWindow = process.env.PLATFORM !== 'web'
+            ? 'location=yes'
+            : null
+
+          window.open(download, '_system', newWindow)
+        }
+
+ 				addEventListener
+					? addEventListener('message', launchFile, false)
+					: attachEvent('onmessage', launchFile, false)
       }
     }
   }
