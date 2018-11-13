@@ -47,6 +47,9 @@ export default {
       previous: 'Previous'
     },
     template: {
+      refreshing: 'Refreshing',
+      pullToRefresh: 'Pull down to refresh',
+      releaseToReload: 'Release to reload',
       signOut: 'Sign out'
     }
   }

@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/sices/helios#readme",
   "dependencies": {
+    "pulltorefreshjs": "^0.1.14",
     "extract-text-webpack-plugin": "^3.0.2",
     "moment": "^2.22.2",
     "serialize-javascript": "^1.4.0",

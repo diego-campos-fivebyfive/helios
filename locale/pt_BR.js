@@ -37,6 +37,9 @@ export default {
       previous: 'Anterior'
     },
     template: {
+      refreshing: 'Recarregando',
+      pullToRefresh: 'Puxe para atualizar',
+      releaseToReload: 'Solte para recarregar',
       signOut: 'Sair'
     }
   }
