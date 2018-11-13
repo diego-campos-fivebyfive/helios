@@ -48,7 +48,8 @@ export default {
     },
     template: {
       refreshing: 'Refreshing',
-      releaseToReload: 'Release to reload the app',
+      pullToRefresh: 'Pull down to refresh',
+      releaseToReload: 'Release to reload',
       signOut: 'Sign out'
     }
   }

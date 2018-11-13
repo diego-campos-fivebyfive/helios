@@ -38,7 +38,8 @@ export default {
     },
     template: {
       refreshing: 'Recarregando',
-      releaseToReload: 'Solte para recarregar o aplicativo',
+      pullToRefresh: 'Puxe para atualizar',
+      releaseToReload: 'Solte para recarregar',
       signOut: 'Sair'
     }
   }

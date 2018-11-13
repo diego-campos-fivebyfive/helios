@@ -149,7 +149,8 @@
       },
       mobilePullRefresh() {
         pullToRefresh.init({
-          mainElement: 'body',
+          mainElement: '.mainbar-mobile',
+          instructionsPullToRefresh: $locale.theme.template.pullToRefresh,
           instructionsRefreshing: $locale.theme.template.refreshing,
           instructionsReleaseToRefresh: $locale.theme.template.releaseToReload,
           onRefresh: () => {
