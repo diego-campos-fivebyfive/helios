@@ -154,7 +154,7 @@
           instructionsRefreshing: $locale.theme.template.refreshing,
           instructionsReleaseToRefresh: $locale.theme.template.releaseToReload,
           onRefresh: () => {
-            window.location.reload()
+            location.reload(true)
           },
           shouldPullToRefresh: () => {
             return !window.scrollY && this.sidebarType === 'none'
