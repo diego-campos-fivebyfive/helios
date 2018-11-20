@@ -15,8 +15,8 @@
 
 <script>
   import { mapMutations, mapState } from 'vuex'
-  import ring from '@/app/ring'
   import quickAccess from '@/../theme/quick-access'
+  import { ring } from 'apis'
 
   export default {
     computed: {
