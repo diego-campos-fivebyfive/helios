@@ -128,7 +128,7 @@
   }
 
   .svgBackground {
-    background: #da8c3f;
+    background: $ui-orange-dark;
     opacity: 1;
     position: absolute;
     z-index: 100;
