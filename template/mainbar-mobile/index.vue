@@ -41,11 +41,7 @@
       }
     },
     mounted() {
-      insertBackground(
-        '.svgBackground',
-        window.innerWidth,
-        45,
-        20)
+      this.svgBackground()
     },
     methods: {
       logout() {
@@ -54,7 +50,17 @@
       },
       setPageTitle() {
         this.pageTitle = this.$router.history.current.meta.title
-      }
+      },
+      svgBackground() {
+        const params = {
+          'element': '.svgBackground',
+          'width': window.innerWidth,
+          'height': 45,
+          'scale': 10,
+          'duration': 15000
+        }
+        insertBackground(params)
+      },
     }
   }
 </script>

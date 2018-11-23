@@ -1,15 +1,15 @@
 <template lang="pug">
   div(:class='`sidebar-${sidebarType}`')
     .svgBackground
-      router-link.header(to='/')
-        img.logo(
-          src='~theme/assets/media/logo-small.png',
-          alt='Sices Solar Logo')
-        .info(v-if='showInfo()')
-          span.name
-            | {{ user.name }}
-          span
-            | {{ user.company }}
+    router-link.header(to='/')
+      img.logo(
+        src='~theme/assets/media/logo-small.png',
+        alt='Sices Solar Logo')
+      .info(v-if='showInfo()')
+        span.name
+          | {{ user.name }}
+        span
+          | {{ user.company }}
 </template>
 
 <script>
@@ -34,11 +34,21 @@
       sidebarType() {}
     },
     mounted() {
-      insertBackground('.svgBackground', 220, 120)
+      this.svgBackground()
     },
     methods: {
       showInfo() {
         return (this.sidebarType === 'common')
+      },
+      svgBackground() {
+        const params = {
+          'element': '.svgBackground',
+          'width': 220,
+          'height': 119,
+          'scale': 4,
+          'duration': 30000
+        }
+        insertBackground(params)
       }
     }
   }
@@ -47,6 +57,8 @@
 <style lang="scss" scoped>
   $collapse-logo-x: 60px;
   $common-info-y: 38px;
+  $sidebarWidht: 220px;
+  $sidebarHeight: 120px;
 
   .header {
     position: relative;
@@ -70,11 +82,19 @@
 
   .sidebar-common {
     .header {
-      padding: $ui-space-y / 2 $ui-space-x;
+      position: relative;
+      width: $sidebarWidht;
+      height: $sidebarHeight;
+      padding-top: $ui-space-y / 2;
     }
 
     .info {
       min-height: $common-info-y;
     }
+  }
+
+  .svgBackground {
+    background: #da8c3f;
+    position: absolute;
   }
 </style>
