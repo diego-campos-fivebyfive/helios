@@ -13,7 +13,7 @@
 </template>
 
 <script>
-  import { methods as background } from '../triangles'
+  import { insertBackground } from '../triangles'
 
   export default {
     props: {
@@ -34,7 +34,7 @@
       sidebarType() {}
     },
     mounted() {
-      background.start('.svgBackground', 220, 120)
+      insertBackground('.svgBackground', 220, 120)
     },
     methods: {
       showInfo() {

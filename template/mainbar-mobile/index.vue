@@ -21,7 +21,7 @@
 </template>
 
 <script>
-  import triangles from '../triangles'
+  import { insertBackground } from '../triangles'
 
   export default {
     data: () => ({
@@ -41,7 +41,11 @@
       }
     },
     mounted() {
-      triangles.methods.start('.svgBackground', window.innerWidth, 45)
+      insertBackground(
+        '.svgBackground',
+        window.innerWidth,
+        45,
+        20)
     },
     methods: {
       logout() {
