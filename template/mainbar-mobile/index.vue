@@ -68,7 +68,6 @@
 <style lang="scss" scoped>
   .mainbar-mobile-list {
     align-items: center;
-    //background: url('~theme/assets/media/logo-cover.png') 100%;
     display: flex;
     font-size: 18px;
     height: $ui-mainbar-mobile-y;
