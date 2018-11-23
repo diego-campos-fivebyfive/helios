@@ -1,6 +1,4 @@
-<script>
   var refreshDuration = 10000;
-  var refreshTimeout;
   var numPointsX;
   var numPointsY;
   var unitWidth;
@@ -118,4 +116,3 @@
       }
     }
   }
-</script>
