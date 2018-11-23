@@ -13,7 +13,7 @@
 </template>
 
 <script>
-  import { insertBackground } from '../triangles'
+  import { insertBackground } from '../svg-background'
 
   export default {
     props: {
