@@ -1,25 +1,28 @@
 <template lang="pug">
   .wrapper-mainbar
-    header.mainbar-mobile
-      ul.mainbar-mobile-list
-        li.mainbar-mobile-list-button-left
-          Button.mainbar-mobile-list-toggle-sidebar-left(
-            :action='updateSidebarType')
-            Icon(name='list')
-        li.mainbar-mobile-list-title
-          | {{ pageTitle }}
-        li.mainbar-mobile-list-button-right
-          Button.mainbar-mobile-list-toggle-sidebar-right(
-            v-if='!submitting',
-            :action='logout')
-            Icon(name='sign-out')
-          Icon.mainbar-mobile-list-logout(
-            v-else,
-            class='rotate',
-            name='spinner')
+    .svgBackground
+      header.mainbar-mobile
+        ul.mainbar-mobile-list
+          li.mainbar-mobile-list-button-left
+            Button.mainbar-mobile-list-toggle-sidebar-left(
+              :action='updateSidebarType')
+              Icon(name='list')
+          li.mainbar-mobile-list-title
+            | {{ pageTitle }}
+          li.mainbar-mobile-list-button-right
+            Button.mainbar-mobile-list-toggle-sidebar-right(
+              v-if='!submitting',
+              :action='logout')
+              Icon(name='sign-out')
+            Icon.mainbar-mobile-list-logout(
+              v-else,
+              class='rotate',
+              name='spinner')
 </template>
 
 <script>
+  import triangles from '../triangles'
+
   export default {
     data: () => ({
       pageTitle: '',
@@ -37,6 +40,9 @@
         immediate: true
       }
     },
+    mounted() {
+      triangles.methods.start('.svgBackground', window.innerWidth, 45)
+    },
     methods: {
       logout() {
         this.submitting = true
@@ -52,7 +58,7 @@
 <style lang="scss" scoped>
   .mainbar-mobile-list {
     align-items: center;
-    background: url('~theme/assets/media/logo-cover.png') 100%;
+    //background: url('~theme/assets/media/logo-cover.png') 100%;
     display: flex;
     font-size: 18px;
     height: $ui-mainbar-mobile-y;
@@ -110,5 +116,12 @@
     100% {
         transform: rotate(315deg);
     }
+  }
+
+  .svgBackground {
+    background: #da8c3f;
+    opacity: 1;
+    position: absolute;
+    z-index: 100;
   }
 </style>

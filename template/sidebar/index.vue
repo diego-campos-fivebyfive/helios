@@ -86,13 +86,11 @@
   }
 
   .sidebar-cover {
-    background: rgba(0, 0, 0, 0.35);
     height: 100%;
     left: 0;
     position: fixed;
     top: 0;
     width: 100%;
-    z-index: -1;
   }
 
   .toogle {
@@ -118,6 +116,10 @@
     &.common {
 			transform: none;
 	    transition: transform 200ms linear;
+    }
+
+    .menu {
+      box-shadow: $ui-space-y*10 0px $ui-space-y*15 rgba(0, 0, 0, 0.2);
     }
   }
 </style>

@@ -1,17 +1,20 @@
 <template lang="pug">
   div(:class='`sidebar-${sidebarType}`')
-    router-link.header(to='/')
-      img.logo(
-        src='~theme/assets/media/logo-small.png',
-        alt='Sices Solar Logo')
-      .info(v-if='showInfo()')
-        span.name
-          | {{ user.name }}
-        span
-          | {{ user.company }}
+    .svgBackground
+      router-link.header(to='/')
+        img.logo(
+          src='~theme/assets/media/logo-small.png',
+          alt='Sices Solar Logo')
+        .info(v-if='showInfo()')
+          span.name
+            | {{ user.name }}
+          span
+            | {{ user.company }}
 </template>
 
 <script>
+  import { methods as background } from '../triangles'
+
   export default {
     props: {
       sidebarType: {
@@ -30,6 +33,9 @@
     watch: {
       sidebarType() {}
     },
+    mounted() {
+      background.start('.svgBackground', 220, 120)
+    },
     methods: {
       showInfo() {
         return (this.sidebarType === 'common')
@@ -43,7 +49,7 @@
   $common-info-y: 38px;
 
   .header {
-    background: url("~theme/assets/media/logo-cover.png");
+    position: relative;
     color: $ui-white-regular;
     display: block;
     text-align: center;
