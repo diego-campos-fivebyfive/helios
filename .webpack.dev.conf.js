@@ -113,6 +113,7 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
+        'CLIENT': JSON.stringify(process.env.CLIENT),
         'PLATFORM': JSON.stringify(process.env.PLATFORM),
         'NODE_ENV': JSON.stringify(process.env.CES_AMBIENCE),
         'API_URL': JSON.stringify((process.env.PLATFORM !== 'web')
