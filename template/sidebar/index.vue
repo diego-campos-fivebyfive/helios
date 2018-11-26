@@ -119,7 +119,7 @@
     }
 
     .menu {
-      box-shadow: $ui-space-y*10 0px $ui-space-y*15 rgba(0, 0, 0, 0.2);
+      box-shadow: 150px 0 225px rgba(0, 0, 0, 0.2);
     }
   }
 </style>
