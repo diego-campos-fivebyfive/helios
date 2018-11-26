@@ -2,9 +2,9 @@ import Vue from 'vue'
 
 import App from 'theme'
 
-//import checkers from './checkers'
+import checkers from './checkers'
 import plugins from './plugins'
-//import trackers from './trackers'
+import trackers from './trackers'
 
 /* eslint-disable no-new */
 Vue.use(plugins, ({ router, sockets }) => {
