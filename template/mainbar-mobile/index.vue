@@ -1,28 +1,30 @@
 <template lang="pug">
   .wrapper-mainbar
-    .svgBackground
-      header.mainbar-mobile
-        ul.mainbar-mobile-list
-          li.mainbar-mobile-list-button-left
-            Button.mainbar-mobile-list-toggle-sidebar-left(
-              :action='updateSidebarType')
-              Icon(name='list')
-          li.mainbar-mobile-list-title
-            | {{ pageTitle }}
-          li.mainbar-mobile-list-button-right
-            Button.mainbar-mobile-list-toggle-sidebar-right(
-              v-if='!submitting',
-              :action='logout')
-              Icon(name='sign-out')
-            Icon.mainbar-mobile-list-logout(
-              v-else,
-              class='rotate',
-              name='spinner')
+    Cover(
+      elementClass='svg-background',
+      :height='45',
+      :speed='8000',
+      :scale='10')
+    header.mainbar-mobile
+      ul.mainbar-mobile-list
+        li.mainbar-mobile-list-button-left
+          Button.mainbar-mobile-list-toggle-sidebar-left(
+            :action='updateSidebarType')
+            Icon(name='list')
+        li.mainbar-mobile-list-title
+          | {{ pageTitle }}
+        li.mainbar-mobile-list-button-right
+          Button.mainbar-mobile-list-toggle-sidebar-right(
+            v-if='!submitting',
+            :action='logout')
+            Icon(name='sign-out')
+          Icon.mainbar-mobile-list-logout(
+            v-else,
+            class='rotate',
+            name='spinner')
 </template>
 
 <script>
-  import { insertBackground } from '../svg-background'
-
   export default {
     data: () => ({
       pageTitle: '',
@@ -40,9 +42,6 @@
         immediate: true
       }
     },
-    mounted() {
-      this.svgBackground()
-    },
     methods: {
       logout() {
         this.submitting = true
@@ -50,17 +49,7 @@
       },
       setPageTitle() {
         this.pageTitle = this.$router.history.current.meta.title
-      },
-      svgBackground() {
-        const params = {
-          'element': '.svgBackground',
-          'width': window.innerWidth,
-          'height': 45,
-          'scale': 10,
-          'duration': 15000
-        }
-        insertBackground(params)
-      },
+      }
     }
   }
 </script>
@@ -127,9 +116,8 @@
     }
   }
 
-  .svgBackground {
+  .svg-background {
     background: $ui-orange-dark;
-    opacity: 1;
     position: absolute;
     z-index: 100;
   }

@@ -8,27 +8,27 @@ let unitHeight
 let points
 let svg
 
-export const insertBackground = ({
-  element,
+const insertBackground = ({
+  elementClass,
   width,
   height,
-  scale,
-  duration
+  speed,
+  scale
 }) => {
-  const startIn = duration / 10
+  const startIn = speed / 20
 
-  svg = this.create(width, height, scale, duration)
+  svg = create(width, height, scale, speed)
 
-  setTimeout(() => this.animate(element, duration), startIn)
+  setTimeout(() => animate(elementClass, speed), startIn)
 
-  document.querySelector(element).appendChild(svg)
+  document.querySelector(elementClass).appendChild(svg)
 }
 
-export const create = (
+const create = (
   width = window.innerWidth,
   height = window.innerHeight,
   trianglesScale = defaultTrianglesSize,
-  refreshDuration = defaultRefreshDuration
+  refreshSpeed = defaultRefreshDuration
 ) => {
   svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
   svg.setAttribute('width', width)
@@ -55,7 +55,7 @@ export const create = (
     }
   }
 
-  this.randomize()
+  randomize()
 
   for (let i = 0; i < points.length; i++) {
     if (
@@ -120,7 +120,7 @@ export const create = (
         let animate = document.createElementNS('http://www.w3.org/2000/svg', 'animate')
         animate.setAttribute('fill', 'freeze')
         animate.setAttribute('attributeName', 'points')
-        animate.setAttribute('dur', `${refreshDuration}ms`)
+        animate.setAttribute('dur', `${refreshSpeed}ms`)
         animate.setAttribute('calcMode', 'linear')
         polygon.appendChild(animate)
         svg.appendChild(polygon)
@@ -133,7 +133,7 @@ export const create = (
   return svg
 }
 
-export const randomize = () => {
+const randomize = () => {
   for (let i = 0; i < points.length; i++) {
     if (
       points[i].originX !== 0
@@ -151,8 +151,8 @@ export const randomize = () => {
   }
 }
 
-export const animate = (element, refreshDuration) => {
-  this.randomize();
+const animate = (element, refreshSpeed) => {
+  randomize();
   const triangles = document.querySelector(`${element} .triangles`)
   for (let i = 0; i < triangles.childNodes.length; i++) {
     let polygon = triangles.childNodes[i]
@@ -168,5 +168,9 @@ export const animate = (element, refreshDuration) => {
     animate.beginElement()
   }
 
-  setTimeout(() => this.animate(element, refreshDuration), refreshDuration)
+  setTimeout(() => animate(element, refreshSpeed), refreshSpeed)
+}
+
+export {
+  insertBackground
 }

@@ -1,6 +1,11 @@
 <template lang="pug">
   div(:class='`sidebar-${sidebarType}`')
-    .svgBackground
+    Cover(
+      elementClass='svg-background',
+      :width='220',
+      :height='119',
+      :speed='23000',
+      :scale='4')
     router-link.header(to='/')
       img.logo(
         src='~theme/assets/media/logo-small.png',
@@ -13,8 +18,6 @@
 </template>
 
 <script>
-  import { insertBackground } from '../svg-background'
-
   export default {
     props: {
       sidebarType: {
@@ -33,22 +36,9 @@
     watch: {
       sidebarType() {}
     },
-    mounted() {
-      this.svgBackground()
-    },
     methods: {
       showInfo() {
         return (this.sidebarType === 'common')
-      },
-      svgBackground() {
-        const params = {
-          'element': '.svgBackground',
-          'width': 220,
-          'height': 119,
-          'scale': 4,
-          'duration': 30000
-        }
-        insertBackground(params)
       }
     }
   }
@@ -93,7 +83,7 @@
     }
   }
 
-  .svgBackground {
+  .svg-background {
     background: #da8c3f;
     position: absolute;
   }
