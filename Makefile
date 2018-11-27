@@ -1,26 +1,42 @@
 SHELL := /bin/bash
+PATH := ../.bin/:$(PATH)
+
+@start_dev:
+	webpack-dev-server --hot --config .webpack.dev.conf.js
+
+# web-sices
+start_sices:
+	PLATFORM=web CLIENT=sices \
+  make @start_dev --inspect
 
 build_web_sices:
-	PLATFORM=web CLIENT=sices node .webpack.prod.conf.js
+	PLATFORM=web CLIENT=sices \
+  node .webpack.prod.conf.js
+
+# web-integrador
+start_integrador:
+  PLATFORM=web CLIENT=integrador \
+  make @start_dev
+
+start_integrador_android:
+	PLATFORM=android CLIENT=integrador \
+  make @start_dev
 
 build_web_integrador:
-	PLATFORM=web CLIENT=integrador node .webpack.prod.conf.js
+	PLATFORM=web CLIENT=integrador \
+  node .webpack.prod.conf.js
 
-start_web:
-	PLATFORM=web node_modules/.bin/webpack-dev-server --hot --config .webpack.dev.conf.js
-
-start: | start_web
-
+# generals
 lint_template:
-	node_modules/.bin/pug-lint-vue src
+	pug-lint-vue src
 
 lint_style:
-	node_modules/.bin/stylelint '**/*.vue' --syntax scss
+	stylelint '**/*.vue' --syntax scss
 
 lint_script:
-	node_modules/.bin/eslint --ext .js,.vue src
+	eslint --ext .js,.vue src
 
 lint: | lint_template lint_style lint_script
 
 test:
-	node_modules/.bin/jest src node_module/helios --config .jestrc.js
+	jest src node_module/helios --config .jestrc.js
