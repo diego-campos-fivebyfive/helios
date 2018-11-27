@@ -1,4 +1,4 @@
-//import { http } from 'apis'
+import { http } from 'apis'
 
 const userRoles = JSON.parse(localStorage.getItem('userRoles'))
 const userIsLogged = Boolean(userRoles)
@@ -39,7 +39,7 @@ export const checkAccess = (to, from, next) => {
     return
   }
 
-  if (!userIsLogged && process.env.PLATFORM !== 'web') {
+  if (!userIsLogged && process.env.PLATFORM !== 'web' && to.path !== '/login') {
     next('/login')
     return
   }
