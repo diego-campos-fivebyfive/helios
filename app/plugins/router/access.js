@@ -3,9 +3,12 @@ import { http } from 'apis'
 const userRoles = JSON.parse(localStorage.getItem('userRoles'))
 const userIsLogged = Boolean(userRoles)
 
-
 const hasUserRouteAccess = routeAllowedRoles => {
-  userRoles.some(userRole => {
+  if (!routeAllowedRoles || routeAllowedRoles === '*') {
+    return true
+  }
+
+  return userRoles.some(userRole => {
     return routeAllowedRoles.some(routeAllowedRole => (
       routeAllowedRole === userRole
     ))
@@ -46,11 +49,6 @@ export const checkAccess = (to, from, next) => {
 
   isAccountTermsPassingOrNotRequired()
     .then(() => {
-      if (!to.meta.allowedRoles || to.meta.allowedRoles === '*') {
-        next()
-        return
-      }
-
       if (hasUserRouteAccess(to.meta.allowedRoles)) {
         next()
         return
