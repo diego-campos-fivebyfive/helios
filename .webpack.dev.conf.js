@@ -102,6 +102,7 @@ module.exports = {
     },
     extensions: ['*', '.js', '.vue', '.json']
   },
+  devtool: 'inline-cheap-module-source-map',
   devServer: {
     historyApiFallback: true,
     inline: true,
@@ -111,6 +112,9 @@ module.exports = {
     }
   },
   plugins: [
+    new webpack.LoaderOptionsPlugin({
+      debug: true
+    }),
     new webpack.DefinePlugin({
       'process.env': {
         'CLIENT': JSON.stringify(process.env.CLIENT),
