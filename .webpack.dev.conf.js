@@ -6,7 +6,7 @@ const webpack = require('webpack')
 const babelConfig = require('./.babel.config.js')
 
 module.exports = {
-  entry: './app/main.js',
+  entry: './app/dev-main.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/',
