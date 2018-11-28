@@ -1,7 +1,6 @@
 <template lang="pug">
   div(:class='`sidebar-${sidebarType}`')
-    Cover(
-      elementClass='svg-background',
+    Cover.svg-background(
       :width='220',
       :height='119',
       :speed='23000',

@@ -7,10 +7,6 @@
 
   export default {
     props: {
-      elementClass: {
-        type: String,
-        required: true
-      },
       width: {
         type: Number,
         required: false,
@@ -42,6 +38,11 @@
         speed,
         scale
       })
+    },
+    computed: {
+      elementClass() {
+        return Math.random().toString(36).substr(2, 9)
+      }
     }
   }
 </script>

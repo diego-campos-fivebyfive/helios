@@ -1,7 +1,6 @@
 <template lang="pug">
   .wrapper-mainbar
-    Cover(
-      elementClass='svg-background',
+    Cover.svg-background(
       :height='45',
       :speed='8000',
       :scale='10')
