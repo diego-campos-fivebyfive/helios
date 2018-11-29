@@ -1,28 +1,28 @@
 <template lang="pug">
-  header.mainbar-mobile
-    ul
-      li.mainbar-mobile-sidebar
-        Button.mainbar-mobile-toggle-sidebar(
+  header.bar
+    nav.util
+      .sidebar
+        Button.sidebar-toggle(
           :action='updateSidebarType')
           Icon(name='list')
-      li.mainbar-mobile-title
+      .title
         | {{ pageTitle }}
-      li.mainbar-mobile-options
+      .dropdown
         MenuUser
-          .mainbar-mobile-options-content(slot='content')
-            .mainbar-mobile-options-content-logo
-              img(src='~theme/assets/media/logo.png')
-            .mainbar-mobile-options-name
-              | {{ user.name }}
-            .mainbar-mobile-options-company
-              | {{ user.company }}
-            .mainbar-mobile-options-details
-              .mainbar-mobile-options-details-first
-                .mainbar-mobile-options-level
-                  span.dot(:class='user.level')
-                    | &#9679;
-                  |  {{ user.level }}
-                .mainbar-mobile-options-ranking
+          .menu(slot='content')
+            .menu-main
+              .menu-main-image
+                img(src='~theme/assets/media/logo.png')
+              .menu-main-name
+                | {{ user.name }}
+              .menu-main-company
+                | {{ user.company }}
+            .menu-details
+              .menu-details-achievements
+                .menu-details-achievements-level
+                  Level.widgets-level(
+                    :label='user.level')
+                .menu-details-achievements-ranking
                   | {{ user.ranking }} pontos
               .time
                 Time
@@ -72,114 +72,72 @@
 </script>
 
 <style lang="scss" scoped>
-  @each $label, $color in $level-colors {
-    .#{$label} {
-      color: $color;
-    }
-  }
-
-  .dot {
-    font-size: 20px;
-  }
-
-  .mainbar-mobile ul {
+  .util {
     align-items: center;
     background: url('~theme/assets/media/logo-cover.png') 100%;
     display: flex;
-    font-size: 18px;
     height: $ui-mainbar-mobile-y;
-    justify-content: center;
-    list-style-type: none;
+    justify-content: space-between;
     position: fixed;
     width: 100%;
     z-index: 100;
 
-    li {
+    .sidebar .sidebar-toggle {
       color: white;
-      width: 100%;
     }
 
-    .mainbar-mobile-sidebar {
-      width: 20%;
+    .title {
+      color: white;
+      font-size: 18px;
     }
 
-    .mainbar-mobile-title {
-      width: 60%;
-    }
-
-    .mainbar-mobile-options {
-      width: 20%;
+    .dropdown {
+      color: white;
     }
   }
 
-  .mainbar-mobile-title {
-    text-align: center;
-  }
-
-  .mainbar-mobile-toggle-sidebar {
-    color: white;
-    padding-top: $ui-space-x / 5;
-  }
-
-  .mainbar-mobile-toggle-sidebar-right {
-    color: white;
-    float: right;
-  }
-
-  .mainbar-mobile-logout {
-    float: right;
-    margin: $ui-space-y;
-  }
-
-  .mainbar-mobile-options-content {
-    //line-height: 22px;
+  .menu {
+    color: $ui-gray-dark;
     margin: 15px;
     font-size: 14px;
 
-    img {
+    .menu-main {
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+
+      .menu-main-name {
+        font-weight: 400;
+        margin-bottom: 5px;
+      }
+
+      .menu-main-company {
+        font-weight: 100;
+        font-size: 13px;
+      }
+    }
+
+    .menu-main-image img {
       width: 60px;
     }
   }
 
-  .mainbar-mobile-options-content {
-    color: $ui-gray-dark;
+  .menu-details-achievements-ranking {
+    //padding: 5px;
   }
 
-  .mainbar-mobile-options-name {
-    text-align: center;
-    font-size: 1.20em;
-  }
-
-  .mainbar-mobile-options-company {
-    text-align: center;
-    font-weight: 100;
-    font-size: 1em;
-  }
-
-  .mainbar-mobile-options-ranking {
-    //font-weight: 100;
-    //font-size: 1em;
-    padding: 5px;
-  }
-
-  .mainbar-mobile-options-content-logo {
-    text-align: center;
-  }
-
-
-  .mainbar-mobile-options-details {
+  .menu-details {
     margin-top: 20px;
     border-top: 1px solid $ui-gray-lighter;
-    //text-align: center;
-    div {
-      margin: 5px;
-      //display: inline-block;
-    }
   }
 
-  .mainbar-mobile-options-details-first {
+  .menu-details-achievements {
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    padding: 10px;
   }
 
   .time {
@@ -189,9 +147,19 @@
     font-size: 0.85em;
   }
 
-  .mainbar-mobile-options-level {
-    font-size: 14px;
-    width: 110px;
+  .menu-details-achievements-level {
+    //font-size: 14px;
+    //width: 110px;
     text-transform: capitalize;
+  }
+
+  @each $label, $color in $level-colors {
+    .#{$label} {
+      color: $color;
+    }
+  }
+
+  .dot {
+    font-size: 17px;
   }
 </style>

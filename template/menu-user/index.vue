@@ -1,25 +1,25 @@
 <template lang="pug">
-  .menu-user
+  .bar
     transition(name='fade')
-      .menu-user-backdrop(
+      .backdrop(
         v-show='menuOpen',
         v-on:click='toggleMenu')
-    Button.menu-user-action(
+    Button.action(
       :action='toggleMenu')
       Icon(name='angle-down')
     transition(name='slide-fade')
-      .menu-user-panel(v-show='menuOpen')
-        .menu-user-panel-content
-          .menu-user-panel-slot
+      .panel(v-show='menuOpen')
+        .panel-content
+          .panel-slot
             slot(name='content')
-          .menu-user-panel-actions
-            Button.menu-user-panel-actions-settings(
-              class='default-bordered',
+          .panel-actions
+            Button.panel-actions-settings(
+              class='default-common',
               :action='userSettings')
               Icon(name='male')
               |  Meus dados
-            Button.menu-user-panel-actions-logout(
-              class='default-bordered',
+            Button.panel-actions-logout(
+              class='default-common',
               :action='logout')
               Icon(name='sign-out')
               |  Sair
@@ -47,7 +47,7 @@
 </script>
 
 <style lang="scss" scoped>
-  .menu-user-backdrop {
+  .backdrop {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
@@ -56,7 +56,7 @@
     left: 0;
   }
 
-  .menu-user-panel {
+  .panel {
     background: #fff;
     border: 1px solid #d8d8d8;
     //height: 250px;
@@ -67,12 +67,12 @@
     width: 100%;
   }
 
-  .menu-user-action {
+  .action {
     color: white;
     float: right;
   }
 
-  .menu-user-panel-actions {
+  .panel-actions {
     //text-align: center;
     bottom: 0;
     //position: absolute;
@@ -88,12 +88,12 @@
     }
   }
 
-  .menu-user-panel-actions-logout {
+  .panel-actions-logout {
     float: right;
   }
 
   @media screen and (min-width: $ui-size-md) {
-    .menu-user-panel {
+    .panel {
       width: 300px;
     }
   }
