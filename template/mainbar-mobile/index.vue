@@ -13,19 +13,24 @@
             .menu-main
               .menu-main-image
                 img(src='~theme/assets/media/logo.png')
-              .menu-main-name
-                | {{ user.name }}
-              .menu-main-company
-                | {{ user.company }}
-            .menu-details
-              .menu-details-achievements
-                .menu-details-achievements-level
-                  Level.widgets-level(
-                    :label='user.level')
-                .menu-details-achievements-ranking
-                  | {{ user.ranking }} pontos
-              .time
-                Time
+              .menu-main-details
+                .menu-main-name
+                  | {{ user.name }}
+                .menu-main-company
+                  | {{ user.company }}
+              .menu-details
+                .menu-details-achievements
+                  .menu-details-achievements-level
+                    Level.widgets-level(
+                      :label='user.level')
+
+            .time-scope-de
+              .menu-details-achievements-ranking
+                | {{ user.ranking }}
+                span.menu-details-achievements-ranking-label
+                  |  pontos
+            .time-scope
+              Time.time
 </template>
 
 <script>
@@ -103,12 +108,13 @@
 
     .menu-main {
       display: flex;
-      flex-direction: column;
-      text-align: center;
+      justify-content: space-between;
+      //flex-direction: column;
 
       .menu-main-name {
         font-weight: 400;
         margin-bottom: 5px;
+
       }
 
       .menu-main-company {
@@ -118,17 +124,24 @@
     }
 
     .menu-main-image img {
-      width: 60px;
+      width: 45px;
+      margin-right: 10px;
     }
   }
 
   .menu-details-achievements-ranking {
-    //padding: 5px;
+    //text-align: center;
+    //padding: 10px;
+    font-size: 16px;
+  }
+
+  .menu-details-achievements-ranking-label {
+    font-size: 11px;
   }
 
   .menu-details {
-    margin-top: 20px;
-    border-top: 1px solid $ui-gray-lighter;
+    //margin-top: 20px;
+
   }
 
   .menu-details-achievements {
@@ -137,14 +150,26 @@
     justify-content: center;
     align-items: center;
     font-size: 12px;
-    padding: 10px;
+    //padding: 10px;
   }
 
-  .time {
+.time-scope-de {
+  //border-top: 1px solid $ui-gray-lighter;
+  margin-top: 15px;
+  text-align: center;
+}
+
+.time-scope {
     display: flex;
     justify-content: center;
-    text-transform: capitalize;
+
+  text-transform: capitalize;
+  border-top: 1px solid $ui-gray-lighter;
+  margin-top: 15px;
+}
+  .time {
     font-size: 0.85em;
+    margin-top: 15px;
   }
 
   .menu-details-achievements-level {

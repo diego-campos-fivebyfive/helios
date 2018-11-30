@@ -14,12 +14,12 @@
             slot(name='content')
           .panel-actions
             Button.panel-actions-settings(
-              class='default-common',
+              class='primary-common',
               :action='userSettings')
               Icon(name='male')
               |  Meus dados
             Button.panel-actions-logout(
-              class='default-common',
+              class='primary-common',
               :action='logout')
               Icon(name='sign-out')
               |  Sair
