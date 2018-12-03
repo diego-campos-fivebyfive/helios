@@ -9,19 +9,19 @@ let points
 let svg
 
 const insertBackground = ({
-  elementClass,
+  element,
   width,
   height,
   speed,
   scale
 }) => {
-  const startIn = speed / 20
+  const startIn = speed / 10
 
   svg = create(width, height, scale, speed)
 
-  setTimeout(() => animate(elementClass, speed), startIn)
+  setTimeout(() => animate(element, speed), startIn)
 
-  document.querySelector(elementClass).appendChild(svg)
+  element.appendChild(svg)
 }
 
 const create = (
@@ -153,7 +153,7 @@ const randomize = () => {
 
 const animate = (element, refreshSpeed) => {
   randomize();
-  const triangles = document.querySelector(`${element} .triangles`)
+  const triangles = document.querySelector(`.triangles`)
   for (let i = 0; i < triangles.childNodes.length; i++) {
     let polygon = triangles.childNodes[i]
     let animate = polygon.childNodes[0]

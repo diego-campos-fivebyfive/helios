@@ -29,10 +29,10 @@
       }
     },
     mounted() {
-      const { width, height, speed, scale, elementClass } = this
+      const { width, height, speed, scale } = this
 
       insertBackground({
-        elementClass: `.${elementClass}`,
+        element: this.$el,
         width,
         height,
         speed,

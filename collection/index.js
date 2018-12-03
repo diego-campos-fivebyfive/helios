@@ -7,6 +7,7 @@ import Button from './Button'
 import ButtonDropdown from './ButtonDropdown'
 import Card from './Card'
 import Confirm from './Confirm'
+import Cover from './Cover'
 import Level from './Level'
 import Modal from './Modal'
 import Notification from './Notification'
@@ -16,7 +17,6 @@ import Progress from './Progress'
 import Search from './Search'
 import Table from './Table'
 import Timemark from './Timemark'
-import Cover from './Cover'
 
 export default {
   Icon,

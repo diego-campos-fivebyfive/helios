@@ -1,6 +1,6 @@
 <template lang="pug">
   .wrapper-mainbar
-    Cover.svg-background(
+    Cover.cover(
       :height='45',
       :speed='8000',
       :scale='10')
@@ -115,7 +115,7 @@
     }
   }
 
-  .svg-background {
+  .cover {
     background: $ui-orange-dark;
     position: absolute;
     z-index: 100;
