@@ -6,26 +6,26 @@
         v-on:click='toggleMenu')
     Button.action(
       :action='toggleMenu')
-      Icon(name='angle-down')
+      Icon(name='user')
     transition(name='slide-fade')
       .panel(v-show='menuOpen')
-        .panel-content
-          .panel-slot
-            slot(name='content')
-          .panel-actions
-            Button.panel-actions-settings(
-              class='primary-common',
-              :action='userSettings')
-              Icon(name='male')
-              |  Meus dados
-            Button.panel-actions-logout(
-              class='primary-common',
-              :action='logout')
-              Icon(name='sign-out')
-              |  Sair
+        slot.panel-slot(name='content')
+        .panel-actions
+          Button.panel-actions-settings(
+            class='primary-common size-small ',
+            :action='userSettings')
+            Icon(name='user', scale='0.8')
+            |  {{ $locale.theme.template.myData }}
+          Button(
+            class='primary-common size-small',
+            :action='logout')
+            Icon(name='sign-out', scale='0.8')
+            |  {{ $locale.theme.template.signOut }}
 </template>
 
 <script>
+  import $locale from 'locale'
+
   export default {
     data: () => ({
       menuOpen: false
@@ -35,7 +35,6 @@
         this.menuOpen = !this.menuOpen
       },
       logout() {
-        this.submitting = true
         this.$router.push({ path: '/logout' })
       },
       userSettings() {
@@ -47,60 +46,57 @@
 </script>
 
 <style lang="scss" scoped>
+  $menuUserWidth: 350px;
+
   .backdrop {
-    width: 100%;
-    height: 100%;
     background: rgba(0, 0, 0, 0.5);
-    position: fixed;
-    top: 45px;//externo
+    height: 100vh;
     left: 0;
+    position: absolute;
+    top: $ui-mainbar-mobile-y;
+    width: 100vw;
   }
 
   .panel {
-    background: #fff;
-    border: 1px solid #d8d8d8;
-    //height: 250px;
+    background: $ui-white-regular;
+    border: 1px solid $ui-gray-light;
     position: absolute;
     right: 0;
     top: 0;
-    top: 45px;//externo
+    top: $ui-mainbar-mobile-y;
     width: 100%;
   }
 
   .action {
-    color: white;
+    color: $ui-white-regular;
     float: right;
   }
 
   .panel-actions {
-    //text-align: center;
+    background: $ui-white-regular;
+    border-top: 1px solid $ui-gray-light;
     bottom: 0;
-    //position: absolute;
+    font-size: $ui-font-size-main;
     width: 100%;
-    font-size: 14px;
-    //padding: 10px;
-    background: white;
-    border-top: 1px solid #d6d6d6;
+    display: flex;
+    justify-content: space-between;
 
     button {
-      margin: 5px;
+      margin: $ui-space-x / 5;
       position: relative;
     }
   }
 
-  .panel-actions-logout {
-    float: right;
-  }
-
   @media screen and (min-width: $ui-size-md) {
     .panel {
-      width: 300px;
+      width: $menuUserWidth;
     }
   }
 
   .fade-enter-active, .fade-leave-active {
     transition: opacity 0.6s;
   }
+
   .fade-enter, .fade-leave-to {
     opacity: 0;
   }
