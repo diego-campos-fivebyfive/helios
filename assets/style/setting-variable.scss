@@ -54,3 +54,12 @@ $ui-badge-label-minx: 20px;
 $ui-badge-label-miny: 15px;
 $ui-badge-label-space-x: $ui-space-x / 7.5;
 $ui-badge-label-space-y: $ui-space-y / 7.5;
+
+$levels-background: (
+  black: #6d6d6d,
+  partner: #e7b042,
+  platinum: #c6c6c6,
+  premium: #a3bd21,
+  turnkey: #34a4e9,
+  titanium: url('~theme/assets/media/titanium.jpg')
+);
