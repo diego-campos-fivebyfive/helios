@@ -1,5 +1,5 @@
 <template lang="pug">
-  .wrapper
+  .collection-cover
 </template>
 
 <script>
