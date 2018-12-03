@@ -40,7 +40,8 @@ export default {
       refreshing: 'Recarregando',
       pullToRefresh: 'Puxe para atualizar',
       releaseToReload: 'Solte para recarregar',
-      signOut: 'Sair'
+      signOut: 'Sair',
+      myData: 'Meus dados'
     }
   }
 }

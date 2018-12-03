@@ -50,7 +50,8 @@ export default {
       refreshing: 'Refreshing',
       pullToRefresh: 'Pull down to refresh',
       releaseToReload: 'Release to reload',
-      signOut: 'Sign out'
+      signOut: 'Sign out',
+      myData: 'My data'
     }
   }
 }
