@@ -13,6 +13,7 @@ $ui-gray-regular: #919396;
 $ui-gray-dark: #293846;
 $ui-gray-darken: #080c17;
 $ui-orange-light: #f8ac59;
+$ui-orange-dark: #da8c3f;
 $ui-white-regular: #ffffff;
 
 /* Globals Exports */
@@ -37,6 +38,8 @@ $ui-sidebar-color: #a7b1c2;
 $ui-sidebar-common-x: 220px;
 $ui-sidebar-collapse-x: 65px;
 $ui-sidebar-toogle-x: 40px;
+$ui-sidebar-head-common-y: 120px;
+$ui-sidebar-head-collapse-y: 62px;
 $ui-text-main: #676a6c;
 
 :export {
@@ -47,6 +50,8 @@ $ui-text-main: #676a6c;
   ui-size-md: $ui-size-md;
   ui-size-lg: $ui-size-lg;
   ui-size-xl: $ui-size-xl;
+  ui-sidebar-common-x: $ui-sidebar-common-x;
+  ui-sidebar-head-common-y: $ui-sidebar-head-common-y;
 }
 
 /* Collection Variables */

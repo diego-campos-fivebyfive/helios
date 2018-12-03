@@ -1,32 +1,37 @@
 <template lang="pug">
-  header.bar
-    nav.util
-      .sidebar
-        Button.sidebar-toggle(
-          :action='updateSidebarType')
-          Icon(name='list')
-      h2.title
-        | {{ pageTitle }}
-      .dropdown
-        MenuUser
-          .content(slot='content')
-            .menu
-              .menu-account
-                img(src='~theme/assets/media/logo.png')
-                .menu-account-details
-                  .menu-account-name
-                    | {{ user.name }}
-                  .menu-account-company
-                    | {{ user.company }}
-              .menu-achievements
-                Level.widgets-level(:label='user.level')
-                .menu-points(:class='user.level')
-                  Icon(
-                    :class='user.level',
-                    name='trophy',
-                    scale='0.7')
-                  |  {{ user.ranking }} P
-            Time.time
+  .wrapper
+    Cover.cover(
+      :height='45',
+      :speed='8000',
+      :scale='10')
+    header.bar
+      nav.util
+        .sidebar
+          Button.sidebar-toggle(
+            :action='updateSidebarType')
+            Icon(name='list')
+        h2.title
+          | {{ pageTitle }}
+        .dropdown
+          MenuUser
+            .content(slot='content')
+              .menu
+                .menu-account
+                  img(src='~theme/assets/media/logo.png')
+                  .menu-account-details
+                    .menu-account-name
+                      | {{ user.name }}
+                    .menu-account-company
+                      | {{ user.company }}
+                .menu-achievements
+                  Level.widgets-level(:label='user.level')
+                  .menu-points(:class='user.level')
+                    Icon(
+                      :class='user.level',
+                      name='trophy',
+                      scale='0.7')
+                    |  {{ user.ranking }} P
+              Time.time
 </template>
 
 <script>
@@ -77,7 +82,6 @@
 
   .util {
     align-items: center;
-    background: url('~theme/assets/media/logo-cover.png') 100%;
     color: $ui-white-regular;
     display: flex;
     height: $ui-mainbar-mobile-y;
@@ -160,5 +164,11 @@
       color: $background;
       border-color: $background;
     }
+  }
+
+  .cover {
+    background: $ui-orange-dark;
+    position: absolute;
+    z-index: 100;
   }
 </style>

@@ -106,7 +106,7 @@
 
   .router-link-exact-active {
     background-color: $ui-gray-dark;
-    border-left: 4px solid $ui-blue-light;
+    border-left: 4px solid $ui-orange-light;
     color: $ui-white-regular;
   }
 

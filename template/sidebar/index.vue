@@ -58,6 +58,9 @@
 </script>
 
 <style lang="scss" scoped>
+  $sidebar-shadow-size: 150px;
+  $sidebar-blur: 225px;
+
   .sidebar {
     background-color: $ui-gray-darken;
     display: block;
@@ -86,13 +89,11 @@
   }
 
   .sidebar-cover {
-    background: rgba(0, 0, 0, 0.35);
     height: 100%;
     left: 0;
     position: fixed;
     top: 0;
     width: 100%;
-    z-index: -1;
   }
 
   .toogle {
@@ -118,6 +119,10 @@
     &.common {
 			transform: none;
 	    transition: transform 200ms linear;
+    }
+
+    .menu {
+      box-shadow: $sidebar-shadow-size 0 $sidebar-blur rgba(0, 0, 0, 0.2);
     }
   }
 </style>
