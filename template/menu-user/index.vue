@@ -46,7 +46,7 @@
 </script>
 
 <style lang="scss" scoped>
-  $menuUserWidth: 350px;
+  $menu-user-width: 350px;
 
   .backdrop {
     background: rgba(0, 0, 0, 0.5);
@@ -89,7 +89,7 @@
 
   @media screen and (min-width: $ui-size-md) {
     .panel {
-      width: $menuUserWidth;
+      width: $menu-user-width;
     }
   }
 

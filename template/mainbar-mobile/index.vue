@@ -74,7 +74,7 @@
 </script>
 
 <style lang="scss" scoped>
-  $accountImageSize: 45px;
+  $account-image-size: 45px;
 
   .util {
     align-items: center;
@@ -127,8 +127,8 @@
     }
 
     .menu-account-image {
-      width: $accountImageSize;
-      height: $accountImageSize;
+      width: $account-image-size;
+      height: $account-image-size;
     }
   }
 
