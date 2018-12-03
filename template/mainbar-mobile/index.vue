@@ -12,7 +12,7 @@
           .content(slot='content')
             .menu
               .menu-account
-                img.menu-account-image(src='~theme/assets/media/logo.png')
+                img(src='~theme/assets/media/logo.png')
                 .menu-account-details
                   .menu-account-name
                     | {{ user.name }}
@@ -126,7 +126,7 @@
       }
     }
 
-    .menu-account-image {
+    img {
       width: $account-image-size;
       height: $account-image-size;
     }
@@ -153,14 +153,6 @@
 
   .widgets-level {
     font-size: $ui-font-size-main;
-  }
-
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity 0.6s;
-  }
-
-  .fade-enter, .fade-leave-to {
-    opacity: 0;
   }
 
   @each $label, $color in $level-colors {
