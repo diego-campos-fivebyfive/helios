@@ -26,6 +26,7 @@ export default {
   ButtonDropdown,
   Card,
   Confirm,
+  Cover,
   Level,
   Modal,
   Notification,
@@ -34,6 +35,5 @@ export default {
   Progress,
   Search,
   Table,
-  Timemark,
-  Cover
+  Timemark
 }
