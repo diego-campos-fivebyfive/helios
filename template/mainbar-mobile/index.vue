@@ -36,8 +36,7 @@
 
   export default {
     data: () => ({
-      pageTitle: '',
-      submitting: false
+      pageTitle: ''
     }),
     components: {
       MenuUser,
