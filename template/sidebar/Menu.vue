@@ -90,9 +90,6 @@
 </script>
 
 <style lang="scss" scoped>
-  $menu-head-common-y: 120px;
-  $menu-head-collapse-y: 62px;
-
   ul {
     list-style: none;
     margin-right: - $ui-space-x/1.5;
@@ -117,11 +114,11 @@
   }
 
   .sidebar-collapse {
-    max-height: calc(100vh - #{$menu-head-collapse-y});
+    max-height: calc(100vh - #{$ui-sidebar-head-collapse-y});
   }
 
   .sidebar-common {
-    max-height: calc(100vh - #{$menu-head-common-y});
+    max-height: calc(100vh - #{$ui-sidebar-head-common-y});
   }
 
   @media screen and (max-width: $ui-size-md) {
