@@ -5,7 +5,7 @@
         Button.sidebar-toggle(
           :action='updateSidebarType')
           Icon(name='list')
-      .title
+      h2.title
         | {{ pageTitle }}
       .dropdown
         MenuUser
@@ -91,7 +91,8 @@
     }
 
     .title {
-      font-size: 18px;
+      font-size: 1.5rem;
+      font-weight: 400;
     }
   }
 
@@ -154,10 +155,10 @@
     font-size: $ui-font-size-main;
   }
 
-  @each $label, $color in $level-colors {
-    .#{$label} {
-      color: $color;
-      border-color: $color;
+  @each $level, $background in $levels-background {
+    .#{$level} {
+      color: $background;
+      border-color: $background;
     }
   }
 </style>

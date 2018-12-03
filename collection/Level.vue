@@ -25,9 +25,9 @@
 <style lang="scss" scoped>
   $levels-size: 28px;
 
-  @each $label, $color in $level-colors {
-    .#{$label} {
-      background: $color;
+  @each $level, $background in $levels-background {
+    .#{$level} {
+      background: $background;
     }
   }
 
