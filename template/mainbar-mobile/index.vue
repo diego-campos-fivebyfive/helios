@@ -82,7 +82,6 @@
 
   .util {
     align-items: center;
-    background: url('~theme/assets/media/logo-cover.png') 100%;
     color: $ui-white-regular;
     display: flex;
     height: $ui-mainbar-mobile-y;
