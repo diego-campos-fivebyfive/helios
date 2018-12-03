@@ -71,6 +71,7 @@
 
   .logo {
     position: relative;
+    padding-top: $ui-space-x / 10;
   }
 
   .sidebar-collapse {
@@ -83,7 +84,6 @@
   .sidebar-common {
     .header {
       position: relative;
-      width: $ui-sidebar-common-x;
       height: $ui-sidebar-head-common-y;
     }
 
