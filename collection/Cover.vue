@@ -1,5 +1,5 @@
 <template lang="pug">
-  div(:class='elementClass')
+  .wrapper
 </template>
 
 <script>
@@ -38,11 +38,6 @@
         speed,
         scale
       })
-    },
-    computed: {
-      elementClass() {
-        return Math.random().toString(36).substr(2, 9)
-      }
     }
   }
 </script>
