@@ -1,8 +1,8 @@
 <template lang="pug">
   div(:class='`sidebar-${sidebarType}`')
-    Cover.svg-background(
-      :width='220',
-      :height='119',
+    Cover.cover(
+      :width='sidebarWidth',
+      :height='sidebarHight',
       :speed='23000',
       :scale='4')
     router-link.header(to='/')
@@ -17,7 +17,13 @@
 </template>
 
 <script>
+  import styles from 'theme/assets/style/main.scss'
+
   export default {
+    data:() => ({
+      sidebarWidth: parseInt(styles['ui-sidebar-common-x'], 10),
+      sidebarHight: parseInt(styles['ui-sidebar-head-common-y'], 10)
+    }),
     props: {
       sidebarType: {
         type: String,
@@ -46,8 +52,6 @@
 <style lang="scss" scoped>
   $collapse-logo-x: 60px;
   $common-info-y: 38px;
-  $sidebar-widht: 220px;
-  $sidebar-height: 120px;
 
   .header {
     position: relative;
@@ -72,8 +76,8 @@
   .sidebar-common {
     .header {
       position: relative;
-      width: $sidebar-widht;
-      height: $sidebar-height;
+      width: $ui-sidebar-common-x;
+      height: $ui-sidebar-head-common-y;
       padding-top: $ui-space-y / 2;
     }
 
@@ -82,8 +86,8 @@
     }
   }
 
-  .svg-background {
-    background: #da8c3f;
+  .cover {
+    background: $ui-orange-dark;
     position: absolute;
   }
 </style>
