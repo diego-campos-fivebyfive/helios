@@ -58,6 +58,9 @@
 </script>
 
 <style lang="scss" scoped>
+  $sidebar-shadow-size: 150px;
+  $sidebar-blur: 225px;
+
   .sidebar {
     background-color: $ui-gray-darken;
     display: block;
@@ -119,7 +122,7 @@
     }
 
     .menu {
-      box-shadow: 150px 0 225px rgba(0, 0, 0, 0.2);
+      box-shadow: $sidebar-shadow-size 0 $sidebar-blur rgba(0, 0, 0, 0.2);
     }
   }
 </style>

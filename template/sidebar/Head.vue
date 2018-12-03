@@ -46,8 +46,8 @@
 <style lang="scss" scoped>
   $collapse-logo-x: 60px;
   $common-info-y: 38px;
-  $sidebarWidht: 220px;
-  $sidebarHeight: 120px;
+  $sidebar-widht: 220px;
+  $sidebar-height: 120px;
 
   .header {
     position: relative;
@@ -72,8 +72,8 @@
   .sidebar-common {
     .header {
       position: relative;
-      width: $sidebarWidht;
-      height: $sidebarHeight;
+      width: $sidebar-widht;
+      height: $sidebar-height;
       padding-top: $ui-space-y / 2;
     }
 
