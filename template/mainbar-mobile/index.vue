@@ -9,33 +9,30 @@
         | {{ pageTitle }}
       .dropdown
         MenuUser
-          .menu(slot='content')
-            .menu-main
-              .menu-main-image
-                img(src='~theme/assets/media/logo.png')
-              .menu-main-details
-                .menu-main-name
-                  | {{ user.name }}
-                .menu-main-company
-                  | {{ user.company }}
-              .menu-details
-                .menu-details-achievements
-                  .menu-details-achievements-level
-                    Level.widgets-level(
-                      :label='user.level')
-
-            .time-scope-de
-              .menu-details-achievements-ranking
-                | {{ user.ranking }}
-                span.menu-details-achievements-ranking-label
-                  |  pontos
-            .time-scope
-              Time.time
+          .content(slot='content')
+            .menu
+              .menu-account
+                img.menu-account-image(src='~theme/assets/media/logo.png')
+                .menu-account-details
+                  .menu-account-name
+                    | {{ user.name }}
+                  .menu-account-company
+                    | {{ user.company }}
+              .menu-achievements
+                Level.widgets-level(:label='user.level')
+                .menu-points(:class='user.level')
+                  Icon(
+                    :class='user.level',
+                    name='trophy',
+                    scale='0.7')
+                  |  {{ user.ranking }} P
+            Time.time
 </template>
 
 <script>
   import MenuUser from 'theme/template/menu-user'
   import Time from '../mainbar/Time'
+  import $locale from 'locale'
 
   export default {
     data: () => ({
@@ -77,9 +74,12 @@
 </script>
 
 <style lang="scss" scoped>
+  $accountImageSize: 45px;
+
   .util {
     align-items: center;
     background: url('~theme/assets/media/logo-cover.png') 100%;
+    color: $ui-white-regular;
     display: flex;
     height: $ui-mainbar-mobile-y;
     justify-content: space-between;
@@ -87,104 +87,86 @@
     width: 100%;
     z-index: 100;
 
-    .sidebar .sidebar-toggle {
-      color: white;
+    .sidebar-toggle {
+      color: $ui-white-regular;
     }
 
     .title {
-      color: white;
       font-size: 18px;
     }
+  }
 
-    .dropdown {
-      color: white;
-    }
+  .menu-achievements {
+    font-size: $ui-font-size-main;
+    min-width: 100px;
   }
 
   .menu {
     color: $ui-gray-dark;
-    margin: 15px;
-    font-size: 14px;
+    margin: $ui-space-x / 2;
+    display: flex;
+    justify-content: space-between;
 
-    .menu-main {
+    .menu-account {
       display: flex;
-      justify-content: space-between;
-      //flex-direction: column;
 
-      .menu-main-name {
+      .menu-account-details {
+        margin: 0 $ui-space-x / 2;
+      }
+
+      .menu-account-name {
         font-weight: 400;
-        margin-bottom: 5px;
-
+        margin-bottom: $ui-space-x / 5;
+        font-size: 15px;
       }
 
-      .menu-main-company {
+      .menu-account-company {
         font-weight: 100;
-        font-size: 13px;
+        font-size: $ui-font-size-main;
       }
     }
 
-    .menu-main-image img {
-      width: 45px;
-      margin-right: 10px;
+    .menu-account-image {
+      width: $accountImageSize;
+      height: $accountImageSize;
     }
   }
 
-  .menu-details-achievements-ranking {
-    //text-align: center;
-    //padding: 10px;
-    font-size: 16px;
+  .menu-points {
+    border: 1px solid;
+    border-radius: 0 0 3px 3px;
+    font-size: $ui-font-size-main;
+    padding: $ui-space-x / 5;
+    text-align: center;
+    vertical-align: middle;
   }
 
-  .menu-details-achievements-ranking-label {
-    font-size: 11px;
-  }
-
-  .menu-details {
-    //margin-top: 20px;
-
-  }
-
-  .menu-details-achievements {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-size: 12px;
-    //padding: 10px;
-  }
-
-.time-scope-de {
-  //border-top: 1px solid $ui-gray-lighter;
-  margin-top: 15px;
-  text-align: center;
-}
-
-.time-scope {
-    display: flex;
-    justify-content: center;
-
-  text-transform: capitalize;
-  border-top: 1px solid $ui-gray-lighter;
-  margin-top: 15px;
-}
   .time {
+    border-top: 1px solid $ui-gray-lighter;
+    color: $ui-gray-dark;
+    display: flex;
     font-size: 0.85em;
-    margin-top: 15px;
+    justify-content: center;
+    padding: $ui-space-x / 2;
+    text-transform: capitalize;
   }
 
-  .menu-details-achievements-level {
-    //font-size: 14px;
-    //width: 110px;
-    text-transform: capitalize;
+  .widgets-level {
+    font-size: $ui-font-size-main;
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity 0.6s;
+  }
+
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
   }
 
   @each $label, $color in $level-colors {
     .#{$label} {
       color: $color;
+      border-color: $color;
     }
-  }
-
-  .dot {
-    font-size: 17px;
   }
 </style>
