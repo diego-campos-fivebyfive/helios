@@ -1,6 +1,6 @@
 <template lang="pug">
   .dropdown(
-    :class='[{ "dropdown-active": dropdownActived }, sidebarType]',
+    :class='[{ "dropdown-active": dropdownActived }, sidebarType, platform]',
     v-on:mouseleave='closeDropdown')
     button.dropdown-toogle(
       type='button',
@@ -41,7 +41,8 @@
       style: {
         labelTopPosition: '',
         listTopPosition: ''
-      }
+      },
+      platform: process.env.PLATFORM !== 'web' ? 'mobile' : ''
     }),
     watch: {
       sidebarType() {
@@ -114,7 +115,6 @@
   .icon-arrow {
     left: $ui-sidebar-common-x - $ui-space-x;
     position: absolute;
-    top: $ui-space-y;
   }
 
   .dropdown-toogle {
@@ -192,5 +192,47 @@
     margin-right: $ui-space-x/3;
     vertical-align: bottom;
     width: 1rem;
+  }
+
+  .mobile {
+    .dropdown-active {
+      border-left: $dropdown-border-size solid $ui-orange-light;
+    }
+
+    .dropdown {
+      ul
+      li {
+        padding: $ui-corner 0;
+      }
+
+      .dropdown-toogle {
+        color: $ui-gray-medium;
+        padding: $ui-space-x / 1.2;
+      }
+
+      &:hover {
+        background: $ui-gray-lighter;
+      }
+
+      svg {
+        color: $ui-gray-medium;
+      }
+
+      .router-link-exact-active {
+        background-color: $ui-gray-lighter;
+        border-left: 4px solid $ui-orange-light;
+        color: $ui-gray-medium;
+      }
+    }
+
+    .dropdown-active {
+      background-color: $ui-gray-light;
+
+      &.collapse {
+        .icon-arrow {
+          display: none;
+        }
+      }
+    }
   }
 </style>
