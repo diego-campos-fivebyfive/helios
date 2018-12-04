@@ -15,7 +15,6 @@
 <script>
   import QuickAccess from './QuickAccess'
   import Widgets from '@/../theme/Widgets'
-
   import Time from './Time'
 
   export default {

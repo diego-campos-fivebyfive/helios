@@ -10,9 +10,11 @@ $ui-red-dark: #ed0a20;
 $ui-gray-lighter: #f3f3f4;
 $ui-gray-light: #d7d7d8;
 $ui-gray-regular: #919396;
+$ui-gray-medium: #5a5a5a;
 $ui-gray-dark: #293846;
 $ui-gray-darken: #080c17;
 $ui-orange-light: #f8ac59;
+$ui-orange-dark: #da8c3f;
 $ui-white-regular: #ffffff;
 
 /* Globals Exports */
@@ -37,6 +39,8 @@ $ui-sidebar-color: #a7b1c2;
 $ui-sidebar-common-x: 220px;
 $ui-sidebar-collapse-x: 65px;
 $ui-sidebar-toogle-x: 40px;
+$ui-sidebar-head-common-y: 120px;
+$ui-sidebar-head-collapse-y: 62px;
 $ui-text-main: #676a6c;
 
 :export {
@@ -47,6 +51,8 @@ $ui-text-main: #676a6c;
   ui-size-md: $ui-size-md;
   ui-size-lg: $ui-size-lg;
   ui-size-xl: $ui-size-xl;
+  ui-sidebar-common-x: $ui-sidebar-common-x;
+  ui-sidebar-head-common-y: $ui-sidebar-head-common-y;
 }
 
 /* Collection Variables */
@@ -54,3 +60,12 @@ $ui-badge-label-minx: 20px;
 $ui-badge-label-miny: 15px;
 $ui-badge-label-space-x: $ui-space-x / 7.5;
 $ui-badge-label-space-y: $ui-space-y / 7.5;
+
+$levels-background: (
+  black: #6d6d6d,
+  partner: #e7b042,
+  platinum: #c6c6c6,
+  premium: #a3bd21,
+  turnkey: #34a4e9,
+  titanium: url('~theme/assets/media/titanium.jpg')
+);

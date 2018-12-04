@@ -1,6 +1,11 @@
 <template lang="pug">
   div(:class='`sidebar-${sidebarType}`')
     router-link.header(to='/')
+      Cover.cover(
+        :width='sidebarHeaderWidth()',
+        :height='sidebarHeaderHeight()',
+        :speed='23000',
+        :scale='4')
       img.logo(
         src='~theme/assets/media/logo-small.png',
         alt='Sices Solar Logo')
@@ -12,6 +17,8 @@
 </template>
 
 <script>
+  import styles from 'theme/assets/style/main.scss'
+
   export default {
     props: {
       sidebarType: {
@@ -33,6 +40,12 @@
     methods: {
       showInfo() {
         return (this.sidebarType === 'common')
+      },
+      sidebarHeaderWidth() {
+        return parseInt(styles['ui-sidebar-common-x'], 10)
+      },
+      sidebarHeaderHeight() {
+        return parseInt(styles['ui-sidebar-head-common-y'], 10)
       }
     }
   }
@@ -43,16 +56,22 @@
   $common-info-y: 38px;
 
   .header {
-    background: url("~theme/assets/media/logo-cover.png");
+    position: relative;
     color: $ui-white-regular;
     display: block;
     text-align: center;
+    overflow: hidden;
   }
 
   .name {
     display: block;
     font-weight: 600;
     padding: $ui-space-y / 4;
+  }
+
+  .logo {
+    position: relative;
+    padding-top: $ui-space-x / 10;
   }
 
   .sidebar-collapse {
@@ -64,11 +83,18 @@
 
   .sidebar-common {
     .header {
-      padding: $ui-space-y / 2 $ui-space-x;
+      position: relative;
+      height: $ui-sidebar-head-common-y;
     }
 
     .info {
+      position: relative;
       min-height: $common-info-y;
     }
+  }
+
+  .cover {
+    background: $ui-orange-dark;
+    position: absolute;
   }
 </style>

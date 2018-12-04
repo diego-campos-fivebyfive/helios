@@ -1,6 +1,8 @@
 <template lang="pug">
   ul.menu(:class='`sidebar-${sidebarType}`')
-    li(v-for='itemMenu in menu')
+    li(
+      :class='platform',
+      v-for='itemMenu in menu')
       Dropdown(
         v-if='itemMenu.dropdown',
         :sidebarType='sidebarType',
@@ -29,7 +31,9 @@
       }
     },
     data: () => ({
-      menu: []
+      menu: [],
+      platform: process.env.PLATFORM !== 'web' ? 'mobile' : ''
+
     }),
     watch: {
       sidebarType() {}
@@ -90,9 +94,6 @@
 </script>
 
 <style lang="scss" scoped>
-  $menu-head-common-y: 120px;
-  $menu-head-collapse-y: 62px;
-
   ul {
     list-style: none;
     margin-right: - $ui-space-x/1.5;
@@ -117,16 +118,20 @@
   }
 
   .sidebar-collapse {
-    max-height: calc(100vh - #{$menu-head-collapse-y});
+    max-height: calc(100vh - #{$ui-sidebar-head-collapse-y});
   }
 
   .sidebar-common {
-    max-height: calc(100vh - #{$menu-head-common-y});
+    max-height: calc(100vh - #{$ui-sidebar-head-common-y});
   }
 
   @media screen and (max-width: $ui-size-md) {
     .sidebar-common {
       max-height: calc(100vh - #{$ui-mainbar-mobile-y});
     }
+  }
+
+  .mobile {
+    box-shadow: 0px 1px 0px $ui-gray-lighter;
   }
  </style>

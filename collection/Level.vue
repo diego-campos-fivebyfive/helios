@@ -1,5 +1,5 @@
 <template lang="pug">
-  .collection-level(:style='getLevelBackground()')
+  .collection-level(:class='label')
     img.collection-level-logo(
       src='~theme/assets/media/logo-inverse.png')
     .collection-level-text
@@ -18,26 +18,18 @@
         type: String,
         required: true
       }
-    },
-    methods: {
-      getLevelBackground() {
-        const levelsBackground = {
-          black: '#6d6d6d',
-          partner: '#e7b042',
-          platinum: '#c6c6c6',
-          premium: '#a3bd21',
-          turnkey: '#34a4e9',
-          titanium: `url(${titaniumCover})`
-        }
-
-        return `background: ${levelsBackground[this.label]};`
-      }
     }
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   $levels-size: 28px;
+
+  @each $level, $background in $levels-background {
+    .#{$level} {
+      background: $background;
+    }
+  }
 
   .collection-level {
     border-radius: $ui-corner / 2;

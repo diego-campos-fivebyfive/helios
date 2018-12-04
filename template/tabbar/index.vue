@@ -13,7 +13,6 @@
 </template>
 
 <script>
-
   export default {
     props: {
       tabs: {
@@ -25,26 +24,15 @@
 </script>
 
 <style lang="scss" scoped>
+  $tab-icon-height: 28px;
+
   .tabbar {
     background-color: $ui-white-regular;
-    border-top: 1px solid $ui-gray-light;
-    bottom: 0;
     display: flex;
     font-weight: 400;
     height: $ui-tabbar-mobile-y;
-    left: 0;
-    margin: 0;
-    padding: 0;
     position: fixed;
-    right: 0;
-    white-space: nowrap;
     width: 100%;
-
-    .badge {
-      margin-right: 0px;
-      position: absolute;
-      right: 0;
-    }
   }
 
   .tabbar-item {
@@ -54,59 +42,26 @@
     position: relative;
   }
 
-  .tabbar-item-radio {
-    background-color: transparent;
-    border: 0;
-    bottom: 0;
-    height: 100%;
-    left: 0;
-    margin: 0;
-    outline: none;
-    padding: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
-    vertical-align: top;
-    width: 100%;
-    z-index: 1;
-  }
-
   .tabbar-item-button {
-    background-clip: padding-box;
-    border-top: none;
-    border: none;
-    box-sizing: border-box;
     color: $ui-gray-regular;
     display: inline-block;
-    font-weight: 400;
+    border-top: 1px solid $ui-gray-light;
     font: inherit;
     height: $ui-tabbar-mobile-y;
     letter-spacing: 0;
-    line-height: $ui-tabbar-mobile-y;
+    line-height: 1;
     margin: 0;
     overflow: hidden;
-    padding: 0;
-    position: relative;
     text-align: center;
-    text-decoration: none;
-    vertical-align: top;
-    white-space: nowrap;
     width: 100%;
 
     svg {
-      font-size: 24px;
-      height: 28px;
-      line-height: 26px;
-      margin: 0;
-      padding: 0;
+      height: $tab-icon-height;
     }
 
     .tabbar-item-label {
       display: block;
-      font-size: 10px;
-      font-weight: 400;
-      line-height: 1;
-      margin: -20px;
+      font-size: 0.65em;
     }
   }
 

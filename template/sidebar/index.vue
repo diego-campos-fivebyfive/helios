@@ -2,18 +2,19 @@
   transition(name='sidebar-slide')
     aside.sidebar(:class='[sidebarType, platform]')
       transition(name='fade')
-        .sidebar-cover(
+        .backdrop(
           v-show='showSidebarCover()',
           v-on:click='updateSidebarType')
-      nav.menu(v-if='showMenu()')
-        .toogle
-          Button.toogle-button(
-            class='primary-common',
-            v-if='!isMobile',
-            :action='updateSidebarType')
-            Icon(name='bars')
-        Head(:sidebarType='sidebarType', v-if='!isMobile')
-        Menu(:sidebarType='sidebarType')
+      transition(name='slide-fade')
+        nav.menu(v-if='showMenu()')
+          .toogle
+            Button.toogle-button(
+              class='primary-common',
+              v-if='!isMobile',
+              :action='updateSidebarType')
+              Icon(name='bars')
+          Head(:sidebarType='sidebarType', v-if='!isMobile')
+          Menu(:sidebarType='sidebarType')
 </template>
 
 <script>
@@ -85,13 +86,12 @@
     }
   }
 
-  .sidebar-cover {
-    background: rgba(0, 0, 0, 0.35);
-    height: 100%;
-    left: 0;
+  .backdrop {
+    background: rgba(0, 0, 0, 0.5);
+    height: 100vh;
+    left: $ui-sidebar-common-x;
     position: fixed;
-    top: 0;
-    width: 100%;
+    width: 100vw;
     z-index: -1;
   }
 
@@ -107,6 +107,7 @@
   }
 
   .mobile {
+    background: $ui-white-regular;
     padding-top: $ui-mainbar-mobile-y;
 
     &.none {
@@ -119,5 +120,13 @@
 			transform: none;
 	    transition: transform 200ms linear;
     }
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity 0.6s;
+  }
+
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
   }
 </style>

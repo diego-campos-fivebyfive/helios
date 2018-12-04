@@ -2,8 +2,10 @@
   router-link.item(
     :to='item.link',
     :style='item.customStyle',
-    :class='[{ "item-dropdown": itemDropdown }, sidebarType]')
-    Icon.icon-ui(:name='item.icon')
+    :class='[{ "item-dropdown": itemDropdown }, sidebarType, platform]')
+    Icon.icon-ui(
+      :name='item.icon',
+      :scale='platform == "mobile" ? 0.7 : 1')
     span(:style='labelPosition.top')
       | {{ item.name }}
     Badge.badge(
@@ -30,7 +32,8 @@
       }
     },
     data: () => ({
-      labelPosition: {}
+      labelPosition: {},
+      platform: process.env.PLATFORM !== 'web' ? 'mobile' : ''
     }),
     watch: {
       sidebarType() {}
@@ -106,7 +109,7 @@
 
   .router-link-exact-active {
     background-color: $ui-gray-dark;
-    border-left: 4px solid $ui-blue-light;
+    border-left: 4px solid $ui-orange-light;
     color: $ui-white-regular;
   }
 
@@ -121,5 +124,26 @@
     font-size: 0.75rem;
     line-height: 1.5em;
     margin-right: $ui-space-y * 1.5;
+  }
+
+  .mobile {
+    .item {
+      color: $ui-gray-medium;
+      padding: $ui-space-x / 1.2;
+
+      &:hover {
+        background: $ui-gray-lighter;
+      }
+
+      svg {
+        color: $ui-gray-medium;
+      }
+    }
+
+    .router-link-exact-active {
+      background-color: $ui-gray-lighter;
+      border-left: 4px solid $ui-orange-light;
+      color: $ui-gray-medium;
+    }
   }
 </style>
