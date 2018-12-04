@@ -104,10 +104,7 @@
   .slide-fade-enter-active {
     transition: all 0.5s cubic-bezier(0, 1, 0.5, 1);
   }
-  .slide-fade-leave-active {
-    transition: all 0.2s ease;
 
-  }
   .slide-fade-enter, .slide-fade-leave-to {
     transform: translateY(-45px);
     opacity: 0;
