@@ -156,7 +156,7 @@
   }
 
   .widgets-level {
-    font-size: $ui-font-size-main;
+    font-size: 2em;
   }
 
   @each $level, $background in $levels-background {
