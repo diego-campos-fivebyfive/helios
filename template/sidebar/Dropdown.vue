@@ -200,9 +200,10 @@
     }
 
     .dropdown {
-      ul
-      li {
-        padding: $ui-corner 0;
+      ul {
+        li {
+          padding: $ui-corner 0;
+        }
       }
 
       .dropdown-toogle {
