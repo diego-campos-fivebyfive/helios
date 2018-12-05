@@ -84,7 +84,7 @@
     .action {
       float: right;
       padding-right: 0;
-      padding-top: 0px;
+      padding-top: 0;
     }
 
     .action:hover {
@@ -94,7 +94,7 @@
   }
 
   .menu-points {
-    border-radius: 0 0 3px 3px;
+    border-radius: 0 0 $ui-corner $ui-corner;
     border: 1px solid;
     font-size: $ui-font-size-main;
     padding: $ui-space-x / 5;
