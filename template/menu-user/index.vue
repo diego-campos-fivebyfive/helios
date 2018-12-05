@@ -41,7 +41,11 @@
         this.menuOpen = !this.menuOpen
       },
       logout() {
-        this.$router.push({ path: '/logout' })
+        if (process.env.PLATFORM === 'web') {
+          window.location = `${process.env.API_URL}/logout`
+        } else {
+          this.$router.push({ path: '/logout' })
+        }
       },
       userSettings() {
         this.toggleMenu()
