@@ -72,7 +72,7 @@
     margin: ($ui-space-y / 10) 0;
     font-size: 0.65rem;
     position: absolute;
-    right: $ui-badge-label-minx / 2 - $ui-badge-label-space-x;
+    right: ($ui-badge-label-minx / 2) - $ui-badge-label-space-x;
     bottom: $ui-badge-label-miny - $ui-badge-label-space-y;
   }
 
