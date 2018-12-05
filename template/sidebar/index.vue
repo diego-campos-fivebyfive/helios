@@ -9,7 +9,6 @@
         nav.menu(v-if='showMenu()')
           .toogle
             Button.toogle-button(
-              class='primary-common',
               v-if='!isMobile',
               :action='updateSidebarType')
               Icon(name='bars')
@@ -97,9 +96,13 @@
 
   .toogle {
     position: absolute;
-    right: -($ui-sidebar-toogle-x + $ui-space-x);
-    top: $ui-space-y;
+    right: -($ui-sidebar-toogle-x + $ui-space-x / 2);
+    top: $ui-space-y / 2;
     z-index: 50;
+
+    .toogle-button {
+      color:  $ui-text-main;
+    }
   }
 
   .sidebar-slide-enter-active {
@@ -120,6 +123,11 @@
 			transform: none;
 	    transition: transform 200ms linear;
     }
+  }
+
+  .toogle:hover {
+    opacity: 0.5;
+    transition: 1s;
   }
 
   .fade-enter-active, .fade-leave-active {

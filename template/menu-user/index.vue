@@ -1,5 +1,5 @@
 <template lang="pug">
-  .bar
+  .menu-user(:class='platform')
     transition(name='fade')
       .backdrop(
         v-show='menuOpen',
@@ -7,6 +7,8 @@
     Button.action(
       :action='toggleMenu')
       Icon(name='user')
+      span.menu-user(v-if='hideOnMobile()')
+        |  {{ user.name }}
     transition(name='slide-fade')
       .panel(v-show='menuOpen')
         slot.panel-slot(name='content')
@@ -28,7 +30,8 @@
 
   export default {
     data: () => ({
-      menuOpen: false
+      menuOpen: false,
+      platform: process.env.PLATFORM !== 'web' ? 'mobile' : ''
     }),
     methods: {
       toggleMenu() {
@@ -40,36 +43,56 @@
       userSettings() {
         this.toggleMenu()
         this.$router.push({ path: '/member/profile' })
+      },
+      hideOnMobile() {
+        return process.env.PLATFORM === 'web'
+      }
+    },
+    computed: {
+      user() {
+        return {
+          name: localStorage.getItem('userName')
+        }
       }
     }
   }
 </script>
 
 <style lang="scss" scoped>
-  $menu-user-width: 350px;
+  $menu-user-width: 360px;
 
   .backdrop {
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.2);
     height: 100vh;
     left: 0;
     position: absolute;
-    top: $ui-mainbar-mobile-y;
     width: 100vw;
   }
 
   .panel {
     background: $ui-white-regular;
-    border: 1px solid $ui-gray-light;
     position: absolute;
     right: 0;
     top: 0;
     top: $ui-mainbar-mobile-y;
     width: 100%;
+    z-index: 150;
+  }
+
+  .web {
+    .backdrop {
+      top: $ui-mainbar-y;
+    }
+
+    .panel {
+      top: $ui-mainbar-y;
+    }
   }
 
   .action {
     color: $ui-white-regular;
     float: right;
+    margin: 0 $ui-space-x / 2;
   }
 
   .panel-actions {
@@ -87,10 +110,26 @@
     }
   }
 
+  .web {
+    .action {
+      color: $ui-gray-regular;
+      padding: 0;
+
+      svg {
+        margin-right: $ui-space-x / 5;
+      }
+    }
+  }
+
   @media screen and (min-width: $ui-size-md) {
     .panel {
       width: $menu-user-width;
     }
+  }
+
+  .action:hover {
+    opacity: 0.5;
+    transition: 1s;
   }
 
   .fade-enter-active, .fade-leave-active {

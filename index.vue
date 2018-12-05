@@ -18,9 +18,9 @@
 </template>
 
 <script>
-  import Mainbar from 'theme/template/mainbar'
+  import Mainbar from 'theme/template/mainbar/web'
   import TabBar from 'theme/template/tabbar'
-  import MainbarMobile from 'theme/template/mainbar-mobile'
+  import MainbarMobile from 'theme/template/mainbar/mobile'
   import Sidebar from 'theme/template/sidebar'
   import ConnectionAlert from 'theme/template/connection-alert'
   import tabs from '@/../theme/tabs'
