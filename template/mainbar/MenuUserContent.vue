@@ -27,6 +27,9 @@
     components: {
       Time
     },
+    mounted() {
+      console.log(this.user.sices)
+    },
     computed: {
       user() {
         return {
@@ -34,7 +37,7 @@
           company: localStorage.getItem('userCompany'),
           ranking: localStorage.getItem('userRanking'),
           level: localStorage.getItem('userLevel'),
-          sices: localStorage.getItem('userSices')
+          sices: localStorage.getItem('userSices') === 'true'
         }
       }
     }
