@@ -75,7 +75,7 @@
     float: right;
     height: 100%;
     justify-content: flex-end;
-    padding: 0 $ui-space-x;
+    padding: 0 $ui-space-x / 1.8;
   }
 
   .leave {
