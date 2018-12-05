@@ -96,7 +96,7 @@
 
   .toogle {
     position: absolute;
-    right: -($ui-sidebar-toogle-x + $ui-space-x / 2);
+    right: -($ui-sidebar-toogle-x + ($ui-space-x / 2));
     top: $ui-space-y / 2;
     z-index: 50;
 
