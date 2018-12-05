@@ -7,7 +7,7 @@
     Button.action(
       :action='toggleMenu',
       v-if='hideOnMobile()')
-      Avatar.avatar(:userName='user.name')
+      Avatar.avatar(:current='user.name')
     Button.action(
       v-else,
       :action='toggleMenu')
@@ -137,7 +137,10 @@
   }
 
   .avatar {
-    background: $ui-white-regular;
+    background: $ui-blue-dark;
+    color: $ui-white-regular;
+    height: 2.5rem;
+    width: 2.5rem;
   }
 
   .action:hover {
