@@ -9,13 +9,14 @@
           .menu-account-company
             | {{ user.company }}
       .menu-achievements
-        Level.widgets-level(:label='user.level')
-        .menu-points(:class='user.level')
-          Icon(
-            :class='user.level',
-            name='trophy',
-            scale='0.7')
-          |  {{ user.ranking }} P
+        Button.action(link='/ranking')
+          Level.widgets-level(:label='user.level')
+          .menu-points(:class='user.level')
+            Icon(
+              :class='user.level',
+              name='trophy',
+              scale='0.7')
+            |  {{ user.ranking }} p
     Time.datetime
 </template>
 
@@ -41,6 +42,7 @@
 
 <style lang="scss" scoped>
   $account-image-size: 45px;
+  $level-size: 125px;
 
   .menu {
     color: $ui-gray-dark;
@@ -52,7 +54,7 @@
       display: flex;
 
       .menu-account-details {
-        margin: 0 $ui-space-x / 2;
+        margin-left: $ui-space-x / 2;
         text-align: left;
       }
 
@@ -76,7 +78,18 @@
 
   .menu-achievements {
     font-size: $ui-font-size-main;
-    min-width: 100px;
+    min-width: $level-size;
+
+    .action {
+      padding-top: 0px;
+      padding-right: 0;
+      float: right;
+    }
+
+    .action:hover {
+      opacity: 0.8;
+      transition: 1s;
+    }
   }
 
   .menu-points {

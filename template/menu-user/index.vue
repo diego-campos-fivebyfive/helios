@@ -5,10 +5,13 @@
         v-show='menuOpen',
         v-on:click='toggleMenu')
     Button.action(
+      :action='toggleMenu',
+      v-if='hideOnMobile()')
+      Avatar.avatar(:userName='user.name')
+    Button.action(
+      v-else,
       :action='toggleMenu')
       Icon(name='user')
-      span.menu-user(v-if='hideOnMobile()')
-        |  {{ user.name }}
     transition(name='slide-fade')
       .panel(v-show='menuOpen')
         slot.panel-slot(name='content')
@@ -59,7 +62,7 @@
 </script>
 
 <style lang="scss" scoped>
-  $menu-user-width: 360px;
+  $menu-user-width: 370px;
 
   .backdrop {
     background: rgba(0, 0, 0, 0.5);
@@ -99,12 +102,13 @@
 
   .panel-actions {
     background: $ui-white-regular;
-    border-top: 1px solid $ui-gray-light;
+    border-top: 1px solid $ui-gray-lighter;
     bottom: 0;
     font-size: $ui-font-size-main;
     width: 100%;
     display: flex;
     justify-content: space-between;
+    padding: 0 ($ui-space-x / 5) 0 ($ui-space-x / 5);
 
     button {
       margin: $ui-space-x / 5;
@@ -129,12 +133,16 @@
     }
   }
 
+  .avatar {
+    background: $ui-white-regular;
+  }
+
   .action:hover {
     opacity: 0.5;
     transition: 1s;
   }
 
-  .fade-enter-active, .fade-leave-active {
+  .fade-enter-active {
     transition: opacity 0.6s;
   }
 

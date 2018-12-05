@@ -2,11 +2,14 @@
   header.bar
     h1.title
       | {{ pageTitle }}
-    nav.util
-      Widgets.widget
-      Time.time
-      QuickAccess.quick-access
-      .menu-access
+    ul.util
+      li.widget
+        Widgets
+      li.time
+        Time
+      li.quick-access
+        QuickAccess
+      li.menu-user
         MenuUser
           MenuUserContent(slot='content')
 </template>
@@ -40,16 +43,6 @@
       setPageTitle() {
         this.pageTitle = this.$router.history.current.meta.title
       }
-    },
-    computed: {
-      user() {
-        return {
-          name: localStorage.getItem('userName'),
-          company: localStorage.getItem('userCompany'),
-          ranking: localStorage.getItem('userRanking'),
-          level: localStorage.getItem('userLevel')
-        }
-      }
     }
   }
 </script>
@@ -63,9 +56,6 @@
     color: $ui-text-main;
     height: $ui-mainbar-y;
     max-height: $ui-mainbar-y - $head-border-size;
-    padding: $ui-space-x / 1.5;
-    position: relative;
-    text-align: right;
     width: 100%;
 
     @include clearfix;
@@ -73,25 +63,21 @@
 
   .title {
     display: inline-block;
-    float: left;
+    line-height: 2;
     font-size: 1.8rem;
     font-weight: 300;
-    text-align: left;
-    margin: -($ui-space-x / 4) $ui-tabbar-mobile-y;
+    margin: 0 ($ui-space-x * 2.5);
   }
 
   .util {
+    float: right;
+    list-style-type: none;
     display: flex;
-    justify-content: flex-end;
-  }
-
-  .widget {
-    display: inline-block;
-  }
-
-  .quick-access {
+    padding: 0 $ui-space-x;
     display: flex;
+    align-items: center;
     justify-content: flex-end;
+    height: 100%;
   }
 
   .leave {
@@ -102,11 +88,20 @@
     vertical-align: super;
   }
 
+  .time {
+    color: $ui-gray-regular;
+  }
+
   @media screen and (max-width: $ui-size-md) {
     .time {
       display: none;
     }
+
     .leave-label {
+      display: none;
+    }
+
+    .quick-access {
       display: none;
     }
   }
