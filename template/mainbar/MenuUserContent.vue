@@ -27,9 +27,6 @@
     components: {
       Time
     },
-    mounted() {
-      console.log(this.user.sices)
-    },
     computed: {
       user() {
         return {
