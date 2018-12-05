@@ -2,14 +2,14 @@
   header.bar
     h1.title
       | {{ pageTitle }}
-    ul.util
-      li.widget
+    .util
+      .widget
         Widgets
-      li.time
+      .time
         Time
-      li.quick-access
+      .quick-access
         QuickAccess
-      li.menu-user
+      .menu-user
         MenuUser
           MenuUserContent(slot='content')
 </template>
@@ -75,7 +75,6 @@
     float: right;
     height: 100%;
     justify-content: flex-end;
-    list-style-type: none;
     padding: 0 $ui-space-x;
   }
 
