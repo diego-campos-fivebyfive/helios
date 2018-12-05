@@ -62,9 +62,10 @@
   $menu-user-width: 360px;
 
   .backdrop {
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.5);
     height: 100vh;
     left: 0;
+    top: $ui-mainbar-mobile-y;
     position: absolute;
     width: 100vw;
   }
@@ -81,6 +82,7 @@
 
   .web {
     .backdrop {
+      background: rgba(0, 0, 0, 0.2);
       top: $ui-mainbar-y;
     }
 
