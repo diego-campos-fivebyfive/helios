@@ -56,7 +56,6 @@
     border-bottom: 1px solid $ui-gray-lighter;
     color: $ui-text-main;
     height: $ui-mainbar-y;
-    max-height: $ui-mainbar-y - $head-border-size;
     width: 100%;
 
     @include clearfix;
