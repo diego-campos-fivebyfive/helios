@@ -100,7 +100,6 @@
   .action {
     color: $ui-white-regular;
     float: right;
-    margin: 0 ($ui-space-x / 2);
   }
 
   .panel-actions {
@@ -123,6 +122,7 @@
     .action {
       color: $ui-gray-regular;
       padding: 0;
+      margin: 0 ($ui-space-x / 2);
 
       svg {
         margin-right: $ui-space-x / 5;
