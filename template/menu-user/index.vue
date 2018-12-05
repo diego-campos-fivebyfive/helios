@@ -78,7 +78,6 @@
     position: absolute;
     right: 0;
     top: $ui-mainbar-mobile-y;
-    top: 0;
     width: 100%;
     z-index: 150;
   }
@@ -97,7 +96,7 @@
   .action {
     color: $ui-white-regular;
     float: right;
-    margin: 0 $ui-space-x / 2;
+    margin: 0 ($ui-space-x / 2);
   }
 
   .panel-actions {
