@@ -68,8 +68,8 @@
     background: rgba(0, 0, 0, 0.5);
     height: 100vh;
     left: 0;
-    top: $ui-mainbar-mobile-y;
     position: absolute;
+    top: $ui-mainbar-mobile-y;
     width: 100vw;
   }
 
@@ -77,8 +77,8 @@
     background: $ui-white-regular;
     position: absolute;
     right: 0;
-    top: 0;
     top: $ui-mainbar-mobile-y;
+    top: 0;
     width: 100%;
     z-index: 150;
   }
@@ -104,11 +104,11 @@
     background: $ui-white-regular;
     border-top: 1px solid $ui-gray-lighter;
     bottom: 0;
-    font-size: $ui-font-size-main;
-    width: 100%;
     display: flex;
+    font-size: $ui-font-size-main;
     justify-content: space-between;
     padding: 0 ($ui-space-x / 5) 0 ($ui-space-x / 5);
+    width: 100%;
 
     button {
       margin: $ui-space-x / 5;

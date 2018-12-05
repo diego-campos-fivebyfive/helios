@@ -63,21 +63,20 @@
 
   .title {
     display: inline-block;
-    line-height: 2;
     font-size: 1.8rem;
     font-weight: 300;
+    line-height: 2;
     margin: 0 ($ui-space-x * 2.5);
   }
 
   .util {
-    float: right;
-    list-style-type: none;
-    display: flex;
-    padding: 0 $ui-space-x;
-    display: flex;
     align-items: center;
-    justify-content: flex-end;
+    display: flex;
+    float: right;
     height: 100%;
+    justify-content: flex-end;
+    list-style-type: none;
+    padding: 0 $ui-space-x;
   }
 
   .leave {

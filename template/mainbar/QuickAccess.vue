@@ -59,6 +59,7 @@
 <style lang="scss" scoped>
   .quick-access-item {
     color: $ui-gray-regular;
+    padding: 0 $ui-space-x;
     position: relative;
   }
 
@@ -75,12 +76,8 @@
     bottom: $ui-badge-label-miny - $ui-badge-label-space-y;
   }
 
-  .quick-access a:hover {
+  .quick-access-item:hover {
     opacity: 0.5;
     transition: 1s;
-  }
-
-  .quick-access a {
-    padding: 0 $ui-space-x;
   }
 </style>

@@ -46,9 +46,9 @@
 
   .menu {
     color: $ui-gray-dark;
-    margin: $ui-space-x / 2;
     display: flex;
     justify-content: space-between;
+    margin: $ui-space-x / 2;
 
     .menu-account {
       display: flex;
@@ -59,20 +59,20 @@
       }
 
       .menu-account-name {
+        font-size: 15px;
         font-weight: 400;
         margin-bottom: $ui-space-x / 5;
-        font-size: 15px;
       }
 
       .menu-account-company {
-        font-weight: 100;
         font-size: $ui-font-size-main;
+        font-weight: 100;
       }
     }
 
     img {
-      width: $account-image-size;
       height: $account-image-size;
+      width: $account-image-size;
     }
   }
 
@@ -81,9 +81,9 @@
     min-width: $level-size;
 
     .action {
-      padding-top: 0px;
-      padding-right: 0;
       float: right;
+      padding-right: 0;
+      padding-top: 0px;
     }
 
     .action:hover {
@@ -93,8 +93,8 @@
   }
 
   .menu-points {
-    border: 1px solid;
     border-radius: 0 0 3px 3px;
+    border: 1px solid;
     font-size: $ui-font-size-main;
     padding: $ui-space-x / 5;
     text-align: center;
