@@ -2,26 +2,33 @@
   header.bar
     h1.title
       | {{ pageTitle }}
-    nav.util
-      Widgets.widget
-      Time.time
-      QuickAccess.quick-access
-      a.leave(href='/logout')
-        Icon(name='sign-out')
-        span.leave-label
-          | {{ $locale.theme.template.signOut }}
+    .util
+      .widget
+        Widgets
+      .time
+        Time
+      .quick-access
+        QuickAccess
+      .menu-user
+        MenuUser
+          MenuUserContent(slot='content')
 </template>
 
 <script>
-  import QuickAccess from './QuickAccess'
+  import QuickAccess from '../QuickAccess'
   import Widgets from '@/../theme/Widgets'
-  import Time from './Time'
+  import Time from '../Time'
+  import MenuUserContent from '../MenuUserContent'
+  import MenuUser from 'theme/template/menu-user'
+  import $locale from 'locale'
 
   export default {
     components: {
       QuickAccess,
       Time,
-      Widgets
+      Widgets,
+      MenuUser,
+      MenuUserContent
     },
     data: () => ({
       pageTitle: ''
@@ -42,16 +49,13 @@
 
 <style lang="scss" scoped>
   $head-border-size: 1px;
+  $account-image-size: 45px;
 
   .bar {
     background-color: $ui-white-regular;
-    border-bottom: $head-border-size solid $ui-divider-color;
+    border-bottom: 1px solid $ui-gray-lighter;
     color: $ui-text-main;
     height: $ui-mainbar-y;
-    max-height: $ui-mainbar-y - $head-border-size;
-    padding: $ui-space-y $ui-space-x;
-    position: relative;
-    text-align: right;
     width: 100%;
 
     @include clearfix;
@@ -59,30 +63,22 @@
 
   .title {
     display: inline-block;
-    float: left;
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: 300;
-    margin-left: $ui-sidebar-toogle-x + $ui-space-x;
-    text-align: left;
+    margin: ($ui-space-x / 2.5) ($ui-space-x * 2.5);
   }
 
   .util {
+    align-items: center;
     display: flex;
     float: right;
-  }
-
-  .widget {
-    display: inline-block;
-  }
-
-  .quick-access {
-    display: flex;
-    float: right;
+    height: 100%;
+    justify-content: flex-end;
+    padding: 0 $ui-space-x / 1.8;
   }
 
   .leave {
     color: $ui-gray-regular;
-    margin: 10px;
   }
 
   .leave-label {
@@ -90,14 +86,19 @@
   }
 
   .time {
-    margin: $ui-space-y/1.25 $ui-space-x/2;
+    color: $ui-gray-regular;
   }
 
   @media screen and (max-width: $ui-size-md) {
     .time {
       display: none;
     }
+
     .leave-label {
+      display: none;
+    }
+
+    .quick-access {
       display: none;
     }
   }

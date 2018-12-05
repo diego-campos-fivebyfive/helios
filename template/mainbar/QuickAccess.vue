@@ -59,7 +59,7 @@
 <style lang="scss" scoped>
   .quick-access-item {
     color: $ui-gray-regular;
-    margin: $ui-space-y / 1.5 $ui-space-x / 2.5;
+    padding: 0 $ui-space-x;
     position: relative;
   }
 
@@ -69,9 +69,15 @@
   }
 
   .quick-access-item-badge {
-    font-size: 0.75rem;
+    margin: ($ui-space-y / 10) 0;
+    font-size: 0.65rem;
     position: absolute;
-    right: $ui-badge-label-minx / 2 - $ui-badge-label-space-x;
+    right: ($ui-badge-label-minx / 2) - $ui-badge-label-space-x;
     bottom: $ui-badge-label-miny - $ui-badge-label-space-y;
+  }
+
+  .quick-access-item:hover {
+    opacity: 0.5;
+    transition: 1s;
   }
 </style>
