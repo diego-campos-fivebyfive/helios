@@ -53,6 +53,7 @@
 
   .bar {
     background-color: $ui-white-regular;
+    border-bottom: 1px solid $ui-gray-lighter;
     color: $ui-text-main;
     height: $ui-mainbar-y;
     max-height: $ui-mainbar-y - $head-border-size;
