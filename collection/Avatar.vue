@@ -1,0 +1,35 @@
+<template lang="pug">
+  .collection-avatar(:data-letters='firstLetters')
+</template>
+
+<script>
+  export default {
+    props: {
+      userName: {
+        type: String,
+        required: true
+      }
+    },
+    computed: {
+      firstLetters() {
+        return this.userName.match(/\b(\w)/g).slice(0, 2).join('')
+      }
+    }
+  }
+</script>
+
+<style lang="scss" scoped>
+  [data-letters]:before {
+    content: attr(data-letters);
+    display: inline-block;
+    font-size: 1em;
+    width: 2.5em;
+    height: 2.5em;
+    line-height: 2.5em;
+    text-align: center;
+    border-radius: 50%;
+    background: $ui-blue-dark;
+    vertical-align: middle;
+    color: $ui-white-regular;
+  }
+</style>
