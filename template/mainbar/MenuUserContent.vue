@@ -8,7 +8,7 @@
             | {{ user.name }}
           .menu-account-company
             | {{ user.company }}
-      .menu-achievements
+      .menu-achievements(v-if='!user.sices')
         Button.action(link='/ranking')
           Level.widgets-level(:label='user.level')
           .menu-points(:class='user.level')
@@ -33,7 +33,8 @@
           name: localStorage.getItem('userName'),
           company: localStorage.getItem('userCompany'),
           ranking: localStorage.getItem('userRanking'),
-          level: localStorage.getItem('userLevel')
+          level: localStorage.getItem('userLevel'),
+          sices: localStorage.getItem('userSices')
         }
       }
     }
