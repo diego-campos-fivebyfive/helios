@@ -101,7 +101,7 @@
     z-index: 50;
 
     .toogle-button {
-      color:  $ui-text-main;
+      color:  $ui-gray-regular;
     }
   }
 
