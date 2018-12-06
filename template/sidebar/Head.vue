@@ -5,7 +5,7 @@
         Cover.cover(
           :width='sidebarHeaderWidth()',
           :height='sidebarHeaderHeight()',
-          :speed='23000',
+          :speed='53000',
           :scale='4')
         transition(name='fade')
           img.logo(
@@ -91,9 +91,7 @@
     }
 
     .logo {
-      //max-width: $collapse-logo-x;
       max-width: 100%;
-      //padding: $ui-space-y;
       padding: 8px 15px 0;
       transition: all 0.8s ease;
     }
