@@ -149,7 +149,6 @@
 
     .router-link-exact-active {
       background-color: $ui-gray-lighter;
-      border-left: $dropdown-border-size solid $ui-orange-light;
       color: $ui-gray-medium;
     }
   }

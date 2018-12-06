@@ -196,10 +196,6 @@
   }
 
   .mobile {
-    .dropdown-active {
-      border-left: $dropdown-border-size solid $ui-orange-light;
-    }
-
     .dropdown {
       ul {
         li {
@@ -222,7 +218,6 @@
 
       .router-link-exact-active {
         background-color: $ui-gray-lighter;
-        border-left: 4px solid $ui-orange-light;
         color: $ui-gray-medium;
       }
     }
