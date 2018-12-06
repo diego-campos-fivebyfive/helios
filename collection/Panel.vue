@@ -1,11 +1,12 @@
 <template lang="pug">
-  .collection-panel
-    header.collection-panel-header
-      slot(name='header')
-    section.collection-panel-section
-      slot(name='section')
-    footer
-      slot(name='footer')
+  transition(name='fade')
+    .collection-panel
+      header.collection-panel-header
+        slot(name='header')
+      section.collection-panel-section
+        slot(name='section')
+      footer
+        slot(name='footer')
 </template>
 
 <script>
@@ -63,5 +64,17 @@
   .collection-panel-section {
     border-top: $ui-space-y/10 solid $ui-divider-color;
     padding: $ui-space-y $ui-space-x/2;
+  }
+
+  .fade-enter-active {
+    transition: opacity 1s ease-in-out;
+  }
+
+  .fade-enter-to {
+    opacity: 1;
+  }
+
+  .fade-enter {
+    opacity: 0;
   }
 </style>

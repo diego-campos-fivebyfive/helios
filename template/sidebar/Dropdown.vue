@@ -80,13 +80,13 @@
       },
       openCommonDropdown(event) {
         if (this.sidebarType === 'common') {
-          this.toogleList(event)
+          this.toggleList(event)
         }
       },
       showDropdown() {
         return this.dropdownActived
       },
-      toogleList(event) {
+      toggleList(event) {
         this.updateElementPosition(event, 'listTopPosition')
         this.dropdownActived = !this.dropdownActived
       },
@@ -95,7 +95,7 @@
           this.sidebarType === 'collapse'
           && event.target.type === 'button'
         ) {
-          this.toogleList(event)
+          this.toggleList(event)
         }
       },
       hideDropdown() {

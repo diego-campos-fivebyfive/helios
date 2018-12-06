@@ -137,7 +137,7 @@
   }
 
   .avatar {
-    background: $ui-blue-dark;
+    background: $ui-blue-light;
     color: $ui-white-regular;
     height: 2.5rem;
     width: 2.5rem;

@@ -91,8 +91,10 @@
     }
 
     .logo {
-      max-width: $collapse-logo-x;
-      padding: $ui-space-y;
+      //max-width: $collapse-logo-x;
+      max-width: 100%;
+      //padding: $ui-space-y;
+      padding: 8px 15px 0;
       transition: all 0.8s ease;
     }
 

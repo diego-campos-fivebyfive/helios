@@ -2,7 +2,7 @@
   .wrapper
     .menu
       .menu-account
-        img(src='~theme/assets/media/logo.png')
+        img(src='~theme/assets/media/logo-ui.png')
         .menu-account-details
           .menu-account-name
             | {{ user.name }}
@@ -42,7 +42,7 @@
 </script>
 
 <style lang="scss" scoped>
-  $account-image-size: 45px;
+  $account-image-size: 40px;
   $level-size: 125px;
 
   .menu {
@@ -74,6 +74,7 @@
     img {
       height: $account-image-size;
       width: $account-image-size;
+      margin-top: $ui-space-y / 5;
     }
   }
 
