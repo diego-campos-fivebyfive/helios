@@ -70,10 +70,12 @@
 
     &.collapse {
       max-width: $ui-sidebar-collapse-x;
+      transition: 0.2s;
     }
 
     &.common {
       max-width: $ui-sidebar-common-x;
+      transition: 0.2s;
     }
 
     &.none {
@@ -131,7 +133,7 @@
   }
 
   .fade-enter-active, .fade-leave-active {
-    transition: opacity 0.6s;
+    transition: 0.2s;
   }
 
   .fade-enter, .fade-leave-to {

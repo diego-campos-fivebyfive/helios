@@ -120,10 +120,10 @@
   .dropdown-toogle {
     color: inherit;
     font-weight: inherit;
-    padding: $ui-space-y $ui-space-x/1.5 $ui-space-y $ui-space-x;
+    padding: ($ui-space-y $ui-space-x / 1.5) $ui-space-y $ui-space-x;
     text-align: inherit;
-    transition: all 300ms;
     width: 100%;
+    white-space:nowrap;
 
     &:hover {
       color: $ui-white-regular;
@@ -178,8 +178,9 @@
 
   .dropdown-active {
     background-color: $ui-gray-dark;
-    border-left: $dropdown-border-size solid $ui-blue-light;
+    box-shadow: inset $dropdown-border-size 0 0 0 $ui-orange-light;
     color: $ui-white-regular;
+    transition: 0.6s;
 
     &.collapse {
       .icon-arrow {
