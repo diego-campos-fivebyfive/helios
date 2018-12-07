@@ -65,7 +65,7 @@
     display: inline-block;
     font-size: 1.8rem;
     font-weight: 300;
-    margin: ($ui-space-x / 2.5) ($ui-space-x * 2.5);
+    margin: ($ui-space-x / 2.5) ($ui-space-x * 2);
   }
 
   .util {

@@ -1,9 +1,10 @@
 <template lang="pug">
-	.frameview
-		.frameview-loading(v-show='frameLoading', :class='platform')
-			img.frameview-loading-img(
-				src='~theme/assets/media/loading.gif')
-		iframe.frameview-frame(:src='getRoute', ref='frame')
+  transition(name='fade')
+    .frameview
+      .frameview-loading(v-show='frameLoading', :class='platform')
+        img.frameview-loading-img(
+          src='~theme/assets/media/loading.gif')
+      iframe.frameview-frame(:src='getRoute', ref='frame')
 </template>
 
 <script>
@@ -92,5 +93,17 @@
 		.mobile {
 			display: none;
 		}
-	}
+  }
+
+  .fade-enter-active {
+    transition: opacity 1s ease-in-out;
+  }
+
+  .fade-enter-to {
+    opacity: 1;
+  }
+
+  .fade-enter {
+    opacity: 0;
+  }
 </style>

@@ -132,6 +132,6 @@
   }
 
   .mobile {
-    box-shadow: 0px 1px 0px $ui-gray-lighter;
+    box-shadow: 0 1px 0 $ui-gray-lighter;
   }
  </style>

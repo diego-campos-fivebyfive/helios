@@ -7,8 +7,8 @@
           v-on:click='updateSidebarType')
       transition(name='slide-fade')
         nav.menu(v-if='showMenu()')
-          .toogle
-            Button.toogle-button(
+          .toggle
+            Button.toggle-button(
               v-if='!isMobile',
               :action='updateSidebarType')
               Icon(name='bars')
@@ -70,10 +70,12 @@
 
     &.collapse {
       max-width: $ui-sidebar-collapse-x;
+      transition: 0.2s;
     }
 
     &.common {
       max-width: $ui-sidebar-common-x;
+      transition: 0.2s;
     }
 
     &.none {
@@ -94,13 +96,14 @@
     z-index: -1;
   }
 
-  .toogle {
+  .toggle {
     position: absolute;
-    right: -($ui-sidebar-toogle-x + ($ui-space-x / 2));
-    top: $ui-space-y / 2;
+    right: -($ui-sidebar-toogle-x - ($ui-space-x / 2));
+    top: $ui-space-y;
     z-index: 50;
 
-    .toogle-button {
+    .toggle-button {
+      padding: 0;
       color:  $ui-gray-regular;
     }
   }
@@ -125,13 +128,13 @@
     }
   }
 
-  .toogle:hover {
+  .toggle:hover {
     opacity: 0.5;
     transition: 1s;
   }
 
   .fade-enter-active, .fade-leave-active {
-    transition: opacity 0.6s;
+    transition: 0.2s;
   }
 
   .fade-enter, .fade-leave-to {
