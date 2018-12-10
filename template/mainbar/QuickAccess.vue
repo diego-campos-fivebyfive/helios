@@ -14,7 +14,7 @@
 </template>
 
 <script>
-  import { mapMutations, mapState } from 'vuex'
+  import { mapMutations } from 'vuex'
   import quickAccess from '@/../theme/quick-access'
   import { ring } from 'apis'
 
@@ -24,7 +24,7 @@
         return quickAccess
       },
       states() {
-        return this.$store._modules.root._children['theme/quick-access'].state
+        return this.$store.state['theme/quick-access']
       }
     },
     mounted() {
@@ -43,16 +43,21 @@
     },
     sockets: Object
       .entries(quickAccess)
-      .reduce((acc, [itemName, { socket }]) => {
-        acc[socket] = () => {
-          ring.play()
+      .reduce((acc, [itemName, { socketEvent, channel }]) => {
+        acc[socketEvent] = {
+          channel,
+          handler() {
+            ring.play()
 
-          this.setContent({
-            toQuickAccessKey: itemName,
-            content: this.states[itemName] + 1
-          })
+            this.setContent({
+              toQuickAccessKey: itemName,
+              content: this.states[itemName] + 1
+            })
+          }
         }
-      })
+
+        return acc
+      }, {})
   }
 </script>
 
