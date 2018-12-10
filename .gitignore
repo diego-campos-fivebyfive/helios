@@ -2,9 +2,21 @@
 *.swp
 .DS_Store
 
-/node_modules/
-/dist/
 
+/static/
+/dist/
+/www/
+/gen/
+/platforms/
+/plugins/
+
+!static/.gitkeep
+!www/.gitkeep
+!gen/.gitkeep
+!platforms/.gitkeep
+!plugins/.gitkeep
+
+/node_modules/
 package-lock.json
 yarn-error.log
 yarn.lock
