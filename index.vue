@@ -5,22 +5,23 @@
       Sidebar(
         :sidebarType='sidebarType',
         :updateSidebarType='updateSidebarType')
-      main.app-page-main
-        MainbarMobile(
-          v-if='showMainbarMobile()',
-          :updateSidebarType='updateSidebarType')
-        Mainbar(v-if='showMainbar()')
-        .app-page-main-wrapper(:class='[sidebarType, platform]')
-          router-view
-        TabBar(
-          v-if='showTabbar()',
-          :tabs='tabs')
+      transition(name='fade')
+        main.app-page-main
+          MainbarMobile(
+            v-if='showMainbarMobile()',
+            :updateSidebarType='updateSidebarType')
+          Mainbar(v-if='showMainbar()')
+          .app-page-main-wrapper(:class='[sidebarType, platform]')
+            router-view
+          TabBar(
+            v-if='showTabbar()',
+            :tabs='tabs')
 </template>
 
 <script>
-  import Mainbar from 'theme/template/mainbar'
+  import Mainbar from 'theme/template/mainbar/web'
   import TabBar from 'theme/template/tabbar'
-  import MainbarMobile from 'theme/template/mainbar-mobile'
+  import MainbarMobile from 'theme/template/mainbar/mobile'
   import Sidebar from 'theme/template/sidebar'
   import ConnectionAlert from 'theme/template/connection-alert'
   import tabs from '@/../theme/tabs'
@@ -180,10 +181,12 @@
 
     &.common {
       padding-left: $ui-sidebar-common-x;
+      transition: 0.2s;
     }
 
     &.collapse {
       padding-left: $ui-sidebar-collapse-x;
+      transition: 0.2s;
     }
 
     &.mobile {

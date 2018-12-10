@@ -1,19 +1,22 @@
 <template lang="pug">
   div(:class='`sidebar-${sidebarType}`')
-    router-link.header(to='/')
-      Cover.cover(
-        :width='sidebarHeaderWidth()',
-        :height='sidebarHeaderHeight()',
-        :speed='23000',
-        :scale='4')
-      img.logo(
-        src='~theme/assets/media/logo-small.png',
-        alt='Sices Solar Logo')
-      .info(v-if='showInfo()')
-        span.name
-          | {{ user.name }}
-        span
-          | {{ user.company }}
+    transition(name='fade')
+      router-link.header(to='/')
+        Cover.cover(
+          :width='sidebarHeaderWidth()',
+          :height='sidebarHeaderHeight()',
+          :speed='53000',
+          :scale='4')
+        transition(name='fade')
+          img.logo(
+            src='~theme/assets/media/logo-small.png',
+            alt='Sices Solar Logo')
+        transition(name='fade')
+          .info(v-if='showInfo()')
+            span.name
+              | {{ user.name }}
+            span
+              | {{ user.company }}
 </template>
 
 <script>
@@ -60,7 +63,6 @@
     color: $ui-white-regular;
     display: block;
     text-align: center;
-    overflow: hidden;
   }
 
   .name {
@@ -72,12 +74,31 @@
   .logo {
     position: relative;
     padding-top: $ui-space-x / 10;
+    transition: width 1s;
+    transition-delay: 1s;
   }
 
   .sidebar-collapse {
+    .header {
+      position: relative;
+      height: $ui-sidebar-head-collapse-y;
+      transition: all 0.7s ease;
+
+      .cover {
+        height: $ui-sidebar-head-collapse-y;
+        transition: all 0.8s ease;
+      }
+    }
+
     .logo {
-      max-width: $collapse-logo-x;
-      padding: $ui-space-y;
+      max-width: 100%;
+      padding: 8px 15px 0;
+      transition: all 0.8s ease;
+    }
+
+    .info {
+      display: none;
+      transition-delay: 0.3s;
     }
   }
 
@@ -85,16 +106,31 @@
     .header {
       position: relative;
       height: $ui-sidebar-head-common-y;
+      transition: all 0.9s ease;
+
+      .cover {
+        height: $ui-sidebar-head-common-y;
+        transition: all 0.8s ease;
+      }
     }
 
     .info {
       position: relative;
       min-height: $common-info-y;
+      transition-delay: 0.3s;
     }
   }
 
   .cover {
     background: $ui-orange-dark;
     position: absolute;
+  }
+
+  .fade-enter-active {
+    transition: all 1s ease;
+  }
+
+  .fade-enter {
+    opacity: 0;
   }
 </style>
