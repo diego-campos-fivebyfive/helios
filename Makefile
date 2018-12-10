@@ -4,16 +4,14 @@ PATH := ../.bin/:$(PATH)
 @start_dev:
 	webpack-dev-server --hot --config .webpack.dev.conf.js
 
-# web-sices
 start_sices:
 	PLATFORM=web CLIENT=sices \
-  make @start_dev --inspect
+  make @start_dev
 
 build_web_sices:
 	PLATFORM=web CLIENT=sices \
   node .webpack.prod.conf.js
 
-# web-integrador
 start_integrador:
 	PLATFORM=web CLIENT=integrador \
   make @start_dev
@@ -26,7 +24,6 @@ build_web_integrador:
 	PLATFORM=web CLIENT=integrador \
   node .webpack.prod.conf.js
 
-# generals
 lint_template:
 	pug-lint-vue src
 

@@ -2,7 +2,6 @@ import Vue from 'vue'
 
 import App from 'theme'
 
-import checkers from './checkers'
 import plugins from './plugins'
 import trackers from './trackers'
 

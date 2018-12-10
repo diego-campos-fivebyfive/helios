@@ -11,16 +11,27 @@ const handleSuccessResponse = response => {
     return response
   }
 
-  throw new Error('Your session has expired')
+  return fetch(`${process.env.API_URL}/check-online`)
+    .then(({ redirected, url }) => {
+      if (
+        redirected
+        && url === `${process.env.API_URL}/login`
+      ) {
+        localStorage.clear()
+
+        window.location = process.env.PLATFORM === 'web'
+          ? process.env.API_URL
+          : '#/login'
+
+        return
+      }
+
+      throw new Error('A non JSON response was found in Axios request')
+    })
 }
 
-const handleErrorResponse = error => {
-  const { data: errorData } = error.response
-  if (errorData) {
-    return Promise.reject(errorData)
-  }
-
-  throw new Error(`An unexpected request error has occurred: ${error}`)
+const handleErrorResponse = () => {
+  throw new Error('An unexpected request error has occurred')
 }
 
 axios.interceptors.response
