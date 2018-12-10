@@ -27,7 +27,12 @@
   import $locale from 'locale'
   import pullToRefresh from 'pulltorefreshjs'
 
-  export default {
+  const App = {
+    templateOptions: {
+      el: '#app',
+      template: '<App/>',
+      render: h => h(App)
+    },
     name: 'App',
     components: {
       Mainbar,
@@ -163,6 +168,8 @@
       }
     }
   }
+
+  export default App
 </script>
 
 <style lang="scss">
