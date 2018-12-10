@@ -1,16 +1,20 @@
 <template lang="pug">
-  router-link.item(
-    :to='item.link',
-    :style='item.customStyle',
-    :class='[{ "item-dropdown": itemDropdown }, sidebarType]')
-    Icon.icon-ui(:name='item.icon')
-    span(:style='labelPosition.top')
-      | {{ item.name }}
-    Badge.badge(
-      v-if='item.content || item.contentAsync',
-      :content='item.content',
-      :contentAsync='item.contentAsync',
-      labelType='warning')
+  transition(name='fade')
+    router-link.item(
+      :to='item.link',
+      :style='item.customStyle',
+      :class='[{ "item-dropdown": itemDropdown }, sidebarType, platform]')
+      Icon.icon-ui(
+        :name='item.icon',
+        :scale='platform == "mobile" ? 0.7 : 1')
+      transition(name='fade')
+        span(:style='labelPosition.top')
+          | {{ item.name }}
+      Badge.badge(
+        v-if='item.content || item.contentAsync',
+        :content='item.content',
+        :contentAsync='item.contentAsync',
+        labelType='warning')
 </template>
 
 <script>
@@ -30,7 +34,8 @@
       }
     },
     data: () => ({
-      labelPosition: {}
+      labelPosition: {},
+      platform: process.env.PLATFORM !== 'web' ? 'mobile' : ''
     }),
     watch: {
       sidebarType() {}
@@ -40,6 +45,7 @@
 
 <style lang="scss" scoped>
   $item-dropdown-x: 145px;
+  $dropdown-border-size: 4px;
 
   .icon-arrow {
     left: $ui-sidebar-common-x - $ui-space-x;
@@ -52,7 +58,6 @@
     display: block;
     padding: $ui-space-y $ui-space-x/1.5 $ui-space-y $ui-space-x;
     position: relative;
-    transition: all 300ms;
     width: 100%;
 
     &:hover {
@@ -83,31 +88,36 @@
       }
     }
 
-    &:not(.item-dropdown) {
-      &.collapse {
-        position: relative;
+    &.common {
+      position: relative;
+      white-space:nowrap;
 
-        span {
-          background-color: $ui-gray-darken;
-          display: none;
-          left: $ui-sidebar-collapse-x;
-          padding: $ui-space-y+$ui-space-y/9 $ui-space-x;
-          position: fixed;
-          top: 0;
-          white-space: nowrap;
-        }
+      span {
+        opacity: 1;
+        transition: 0.2s;
+      }
+    }
 
-        .icon-arrow {
-          display: none;
-        }
+    &.collapse:not(.item-dropdown) {
+      position: relative;
+      white-space:nowrap;
+
+      span {
+        opacity: 0;
+        transition: 0.2s;
+      }
+
+      .icon-arrow {
+        display: none;
       }
     }
   }
 
   .router-link-exact-active {
     background-color: $ui-gray-dark;
-    border-left: 4px solid $ui-orange-light;
+    box-shadow: inset $dropdown-border-size 0 0 0 $ui-orange-dark;
     color: $ui-white-regular;
+    transition: 0.6s;
   }
 
   .icon-ui {
@@ -121,5 +131,33 @@
     font-size: 0.75rem;
     line-height: 1.5em;
     margin-right: $ui-space-y * 1.5;
+  }
+
+  .mobile {
+    .item {
+      color: $ui-gray-medium;
+      padding: $ui-space-x / 1.2;
+
+      &:hover {
+        background: $ui-gray-lighter;
+      }
+
+      svg {
+        color: $ui-gray-medium;
+      }
+    }
+
+    .router-link-exact-active {
+      background-color: $ui-gray-lighter;
+      color: $ui-gray-medium;
+    }
+  }
+
+  .fade-enter-active {
+    transition: 0.2s;
+  }
+
+  .fade-enter {
+    opacity: 0;
   }
 </style>

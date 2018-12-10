@@ -1,6 +1,6 @@
 <template lang="pug">
   .dropdown(
-    :class='[{ "dropdown-active": dropdownActived }, sidebarType]',
+    :class='[{ "dropdown-active": dropdownActived }, sidebarType, platform]',
     v-on:mouseleave='closeDropdown')
     button.dropdown-toogle(
       type='button',
@@ -41,7 +41,8 @@
       style: {
         labelTopPosition: '',
         listTopPosition: ''
-      }
+      },
+      platform: process.env.PLATFORM !== 'web' ? 'mobile' : ''
     }),
     watch: {
       sidebarType() {
@@ -79,13 +80,13 @@
       },
       openCommonDropdown(event) {
         if (this.sidebarType === 'common') {
-          this.toogleList(event)
+          this.toggleList(event)
         }
       },
       showDropdown() {
         return this.dropdownActived
       },
-      toogleList(event) {
+      toggleList(event) {
         this.updateElementPosition(event, 'listTopPosition')
         this.dropdownActived = !this.dropdownActived
       },
@@ -94,7 +95,7 @@
           this.sidebarType === 'collapse'
           && event.target.type === 'button'
         ) {
-          this.toogleList(event)
+          this.toggleList(event)
         }
       },
       hideDropdown() {
@@ -114,16 +115,15 @@
   .icon-arrow {
     left: $ui-sidebar-common-x - $ui-space-x;
     position: absolute;
-    top: $ui-space-y;
   }
 
   .dropdown-toogle {
     color: inherit;
     font-weight: inherit;
-    padding: $ui-space-y $ui-space-x/1.5 $ui-space-y $ui-space-x;
+    padding: ($ui-space-y $ui-space-x / 1.5) $ui-space-y $ui-space-x;
     text-align: inherit;
-    transition: all 300ms;
     width: 100%;
+    white-space:nowrap;
 
     &:hover {
       color: $ui-white-regular;
@@ -178,8 +178,9 @@
 
   .dropdown-active {
     background-color: $ui-gray-dark;
-    border-left: $dropdown-border-size solid $ui-blue-light;
+    box-shadow: inset $dropdown-border-size 0 0 0 $ui-orange-light;
     color: $ui-white-regular;
+    transition: 0.6s;
 
     &.collapse {
       .icon-arrow {
@@ -192,5 +193,43 @@
     margin-right: $ui-space-x/3;
     vertical-align: bottom;
     width: 1rem;
+  }
+
+  .mobile {
+    .dropdown {
+      ul {
+        li {
+          padding: $ui-corner 0;
+        }
+      }
+
+      .dropdown-toogle {
+        color: $ui-gray-medium;
+        padding: $ui-space-x / 1.2;
+      }
+
+      &:hover {
+        background: $ui-gray-lighter;
+      }
+
+      svg {
+        color: $ui-gray-medium;
+      }
+
+      .router-link-exact-active {
+        background-color: $ui-gray-lighter;
+        color: $ui-gray-medium;
+      }
+    }
+
+    .dropdown-active {
+      background-color: $ui-gray-light;
+
+      &.collapse {
+        .icon-arrow {
+          display: none;
+        }
+      }
+    }
   }
 </style>

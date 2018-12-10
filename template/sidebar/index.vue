@@ -2,18 +2,18 @@
   transition(name='sidebar-slide')
     aside.sidebar(:class='[sidebarType, platform]')
       transition(name='fade')
-        .sidebar-cover(
+        .backdrop(
           v-show='showSidebarCover()',
           v-on:click='updateSidebarType')
-      nav.menu(v-if='showMenu()')
-        .toogle
-          Button.toogle-button(
-            class='primary-common',
-            v-if='!isMobile',
-            :action='updateSidebarType')
-            Icon(name='bars')
-        Head(:sidebarType='sidebarType', v-if='!isMobile')
-        Menu(:sidebarType='sidebarType')
+      transition(name='slide-fade')
+        nav.menu(v-if='showMenu()')
+          .toggle
+            Button.toggle-button(
+              v-if='!isMobile',
+              :action='updateSidebarType')
+              Icon(name='bars')
+          Head(:sidebarType='sidebarType', v-if='!isMobile')
+          Menu(:sidebarType='sidebarType')
 </template>
 
 <script>
@@ -58,9 +58,6 @@
 </script>
 
 <style lang="scss" scoped>
-  $sidebar-shadow-size: 150px;
-  $sidebar-blur: 225px;
-
   .sidebar {
     background-color: $ui-gray-darken;
     display: block;
@@ -73,10 +70,12 @@
 
     &.collapse {
       max-width: $ui-sidebar-collapse-x;
+      transition: 0.2s;
     }
 
     &.common {
       max-width: $ui-sidebar-common-x;
+      transition: 0.2s;
     }
 
     &.none {
@@ -88,19 +87,25 @@
     }
   }
 
-  .sidebar-cover {
-    height: 100%;
-    left: 0;
+  .backdrop {
+    background: rgba(0, 0, 0, 0.5);
+    height: 100vh;
+    left: $ui-sidebar-common-x;
     position: fixed;
-    top: 0;
-    width: 100%;
+    width: 100vw;
+    z-index: -1;
   }
 
-  .toogle {
+  .toggle {
     position: absolute;
-    right: -($ui-sidebar-toogle-x + $ui-space-x);
+    right: -($ui-sidebar-toogle-x - ($ui-space-x / 2));
     top: $ui-space-y;
     z-index: 50;
+
+    .toggle-button {
+      padding: 0;
+      color:  $ui-gray-regular;
+    }
   }
 
   .sidebar-slide-enter-active {
@@ -108,6 +113,7 @@
   }
 
   .mobile {
+    background: $ui-white-regular;
     padding-top: $ui-mainbar-mobile-y;
 
     &.none {
@@ -120,9 +126,18 @@
 			transform: none;
 	    transition: transform 200ms linear;
     }
+  }
 
-    .menu {
-      box-shadow: $sidebar-shadow-size 0 $sidebar-blur rgba(0, 0, 0, 0.2);
-    }
+  .toggle:hover {
+    opacity: 0.5;
+    transition: 1s;
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: 0.2s;
+  }
+
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
   }
 </style>

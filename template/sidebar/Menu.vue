@@ -1,6 +1,8 @@
 <template lang="pug">
   ul.menu(:class='`sidebar-${sidebarType}`')
-    li(v-for='itemMenu in menu')
+    li(
+      :class='platform',
+      v-for='itemMenu in menu')
       Dropdown(
         v-if='itemMenu.dropdown',
         :sidebarType='sidebarType',
@@ -29,7 +31,9 @@
       }
     },
     data: () => ({
-      menu: []
+      menu: [],
+      platform: process.env.PLATFORM !== 'web' ? 'mobile' : ''
+
     }),
     watch: {
       sidebarType() {}
@@ -125,5 +129,9 @@
     .sidebar-common {
       max-height: calc(100vh - #{$ui-mainbar-mobile-y});
     }
+  }
+
+  .mobile {
+    box-shadow: 0 1px 0 $ui-gray-lighter;
   }
  </style>

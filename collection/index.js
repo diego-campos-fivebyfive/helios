@@ -1,6 +1,7 @@
 import Icon from 'vue-awesome/components/Icon'
 import './icons'
 
+import Avatar from './Avatar'
 import Badge from './Badge'
 import Banner from './Banner'
 import Button from './Button'
@@ -19,6 +20,7 @@ import Table from './Table'
 import Timemark from './Timemark'
 
 export default {
+  Avatar,
   Icon,
   Badge,
   Banner,
