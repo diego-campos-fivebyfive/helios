@@ -15,7 +15,7 @@ build_web_sices:
 
 # web-integrador
 start_integrador:
-  PLATFORM=web CLIENT=integrador \
+	PLATFORM=web CLIENT=integrador \
   make @start_dev
 
 start_integrador_android:
