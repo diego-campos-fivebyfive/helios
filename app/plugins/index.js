@@ -1,11 +1,10 @@
-import sockets from './sockets'
-
 import components from './component'
 import filters from './filters'
 import locale from './locale'
 import modules from './modules'
 import moment from './moment'
 import router from './router'
+import sockets from './sockets'
 
 const plugins = {
   components,
@@ -13,7 +12,8 @@ const plugins = {
   locale,
   modules,
   moment,
-  router
+  router,
+  sockets
 }
 
 const install = (Vue, VueSet) => {
@@ -24,8 +24,7 @@ const install = (Vue, VueSet) => {
     })
 
   VueSet({
-    router: router.router,
-    sockets
+    router: router.router
   })
 }
 

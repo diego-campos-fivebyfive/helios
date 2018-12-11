@@ -1,32 +1,38 @@
-import Vue from 'vue'
-import VueSocket from 'vue-socket.io'
-import io from 'socket.io-client'
+import Pusher from 'pusher-js'
 
-import { pushNotification } from 'apis/notification'
-
-const socketPath = (process.env.NODE_ENV === 'development')
-  ? '/socket.io'
-  : '/socket/socket.io'
-
-const room = `/${process.env.CLIENT}`
-
-const socket = io(`${process.env.SOCKET_URL}${room}`, {
-  path: socketPath,
-  query: {
-    token: localStorage.getItem('userToken')
-  }
+const pusher = new Pusher(process.env.PUSHER_KEY, {
+  cluster: process.env.PUSHER_CLUSTER,
+  forceTLS: true
 })
 
-/* eslint-disable no-console */
-export const connect = () => {
-  if (process.env.NODE_ENV !== 'production') {
-    console.log('socket connected')
-  }
-}
-/* eslint-enable no-console */
+const userToken = localStorage.getItem('userToken')
+const userSices = localStorage.getItem('userSices') === 'true'
 
-Vue.use(VueSocket, socket)
+const channels = {
+  user: pusher.subscribe(`user-${userToken}`)
+}
+
+if (!userSices) {
+  channels['integrador-terms'] = pusher.subscribe('integrador-terms')
+}
+
+const install = Vue => {
+  Vue.mixin({
+    mounted() {
+      if (this.$options.sockets) {
+        Object.entries(this.$options.sockets)
+          .forEach(([name, { handler, channel }]) => {
+            if (!channel || !channels[channel]) {
+              throw new Error(`Channel not found: ${channel}`)
+            }
+
+            channels[channel].bind(name, handler.bind(this))
+          })
+      }
+    }
+  })
+}
 
 export default {
-  pushNotification
+  install
 }

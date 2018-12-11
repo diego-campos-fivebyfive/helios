@@ -6,13 +6,12 @@ import plugins from './plugins'
 import trackers from './trackers'
 
 /* eslint-disable no-new */
-Vue.use(plugins, ({ router, sockets }) => {
+Vue.use(plugins, options => {
   new Vue({
     el: '#app',
     template: '<App/>',
     render: h => h(App),
-    router,
-    sockets,
+    ...options,
     mounted() {
       Notification.requestPermission()
     }

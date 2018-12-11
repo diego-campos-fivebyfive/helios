@@ -203,6 +203,8 @@ const config = {
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
+        'PUSHER_KEY': JSON.stringify(process.env.CES_SICES_PUSHER_KEY),
+        'PUSHER_CLUSTER': JSON.stringify(process.env.CES_SICES_PUSHER_CLUSTER),
         'CLIENT': JSON.stringify(process.env.CLIENT),
         'PLATFORM': JSON.stringify(process.env.PLATFORM),
         'NODE_ENV': JSON.stringify(process.env.CES_AMBIENCE),

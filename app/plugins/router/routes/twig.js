@@ -132,14 +132,6 @@ const sicesRoutes = [
     title: 'Dashboard'
   },
   {
-    path: '/settings/twig/nasa',
-    title: $locale.twigRoutes.weather
-  },
-  {
-    path: '/twig/item',
-    title: $locale.twigRoutes.myItems
-  },
-  {
     path: '/twig/member',
     title: $locale.twigRoutes.user
   },
@@ -149,20 +141,12 @@ const sicesRoutes = [
     sidebar: 'collapse'
   },
   {
-    path: '/twig/kit',
-    title: $locale.twigRoutes.express
-  },
-  {
     path: '/admin/twig/kit/create',
     title: $locale.twigRoutes.express
   },
   {
     path: '/admin/twig/kit/:id/update',
     title: $locale.twigRoutes.express
-  },
-  {
-    path: '/twig/orders',
-    title: $locale.twigRoutes.myOrders
   },
   {
     path: '/twig/orders/:id/show',
@@ -177,16 +161,8 @@ const sicesRoutes = [
     title: $locale.twigRoutes.userSetting
   },
   {
-    path: '/twig/member/business',
-    title: $locale.twigRoutes.business
-  },
-  {
     path: '/twig/cart/show',
     title: $locale.twigRoutes.cart
-  },
-  {
-    path: '/twig/cart/checkout',
-    title: $locale.twigRoutes.checkout
   },
   {
     path: '/twig/purchase/list_cart_pool',
@@ -199,14 +175,6 @@ const sicesRoutes = [
   {
     path: '/twig/purchase/payment_feedback',
     title: $locale.twigRoutes.bought
-  },
-  {
-    path: '/settings/twig/categories/contact_category/',
-    title: $locale.twigRoutes.categories
-  },
-  {
-    path: '/settings/twig/categories/sale_stage/',
-    title: $locale.twigRoutes.saleStage
   },
   {
     path: '/twig/component/module/:id/update',
@@ -275,10 +243,6 @@ const sicesRoutes = [
   {
     path: '/twig/component/maker/create',
     title: $locale.twigRoutes.manufacturers
-  },
-  {
-    path: '/twig/price',
-    title: $locale.twigRoutes.salesTotal
   },
   {
     path: '/twig/project',
