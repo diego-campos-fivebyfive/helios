@@ -7,6 +7,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const babelConfig = require('./.babel.config.js')
+const postCSSConfig = require('./config/postcss.config.js')
 
 const config = {
   entry: './app/main.js',
@@ -37,7 +38,10 @@ const config = {
                 },
                 {
                   loader: 'postcss-loader',
-                  options: { sourceMap: true }
+                  options: {
+                    sourceMap: true,
+                    ...postCSSConfig
+                  }
                 }
               ],
               fallback: 'vue-style-loader'
@@ -50,7 +54,10 @@ const config = {
                 },
                 {
                   loader: 'postcss-loader',
-                  options: { sourceMap: true }
+                  options: {
+                    sourceMap: true,
+                    ...postCSSConfig
+                  }
                 }
               ],
               fallback: 'vue-style-loader'
@@ -69,7 +76,8 @@ const config = {
                   loader: 'postcss-loader',
                   options: {
                     sourceMap: true,
-                    resources: path.resolve(__dirname, './assets/style/main.scss')
+                    resources: path.resolve(__dirname, './assets/style/main.scss'),
+                    ...postCSSConfig
                   }
                 },
                 {
@@ -116,7 +124,10 @@ const config = {
             },
             {
               loader: 'postcss-loader',
-              options: { sourceMap: true }
+              options: {
+                sourceMap: true,
+                ...postCSSConfig
+              }
             }
           ],
           fallback: 'vue-style-loader'
@@ -132,7 +143,10 @@ const config = {
             },
             {
               loader: 'postcss-loader',
-              options: { sourceMap: true }
+              options: {
+                sourceMap: true,
+                ...postCSSConfig
+              }
             }
           ],
           fallback: 'vue-style-loader'
@@ -148,7 +162,10 @@ const config = {
             },
             {
               loader: 'postcss-loader',
-              options: { sourceMap: true }
+              options: {
+                sourceMap: true,
+                ...postCSSConfig
+              }
             },
             {
               loader: 'sass-loader',
