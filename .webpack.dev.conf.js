@@ -3,7 +3,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const path = require('path')
 const webpack = require('webpack')
-const babelConfig = require('./config/babel.config.js')
+const babelConfig = require('./.babel.config.js')
 
 module.exports = {
   entry: './app/dev-main.js',
