@@ -2,27 +2,38 @@ SHELL := /bin/bash
 PATH := ../.bin/:$(PATH)
 
 @start_dev:
-	webpack-dev-server --hot --config .webpack.dev.conf.js
+	clear; \
+	echo -e "\033[93m" + "Starting server..."; \
+	webpack-dev-server --hot --config .webpack.dev.conf.js; \
 
 start_sices:
 	PLATFORM=web CLIENT=sices \
-  make @start_dev
+    make @start_dev
 
 build_web_sices:
 	PLATFORM=web CLIENT=sices \
-  node .webpack.prod.conf.js
+    node .webpack.prod.conf.js
 
 start_integrador:
 	PLATFORM=web CLIENT=integrador \
-  make @start_dev
+    make @start_dev
 
 start_integrador_android:
 	PLATFORM=android CLIENT=integrador \
-  make @start_dev
+    make @start_dev
 
 build_web_integrador:
 	PLATFORM=web CLIENT=integrador \
-  node .webpack.prod.conf.js
+    node .webpack.prod.conf.js
+
+emulate_android_integrador:
+	make build_web_integrador \
+    cordova run android
+
+mobile_ambience_install:
+	clear; \
+  echo -e "\033[93m" + "Installing platforms and plugins of cordova lib..."; \
+  cordova prepare --verbose
 
 lint_template:
 	pug-lint-vue src
