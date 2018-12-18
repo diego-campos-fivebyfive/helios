@@ -32,9 +32,8 @@ emulate_android_integrador:
 	make build_mobile_web_integrador && \
     cordova run android
 
-mobile_ambience_install:
-  echo -e "\033[93m" + "Installing platforms and plugins of cordova lib..."; \
-  cordova prepare --verbose
+mobile_ambience_install: 
+	cordova prepare --verbose
 
 lint_template:
 	pug-lint-vue src
