@@ -9,6 +9,7 @@
 /gen/
 /platforms/
 /plugins/
+config.xml
 
 !static/.gitkeep
 !www/.gitkeep
