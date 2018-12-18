@@ -6,11 +6,12 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const babelConfig = require('./.babel.config.js')
 
 const config = {
   entry: [
     './cordova',
-    './src/app/main.js'
+    './app/main.js'
   ],
   output: {
     path: path.resolve(__dirname, './www/dist'),
@@ -26,7 +27,11 @@ const config = {
         options: {
           loaders: {
             js: {
-              loader: 'babel-loader'
+              loader: 'babel-loader',
+              options: {
+                babelrc: false,
+                ...babelConfig
+              }
             },
             css: ExtractTextPlugin.extract({
               use: [
@@ -58,18 +63,31 @@ const config = {
               use: [
                 {
                   loader: 'css-loader',
-                  options: { sourceMap: true, minimize: true }
+                  options: {
+                    minimize: true,
+                    sourceMap: true,
+                    resources: path.resolve(__dirname, './assets/style/main.scss')
+                  }
                 },
                 {
                   loader: 'postcss-loader',
-                  options: { sourceMap: true }
+                  options: {
+                    sourceMap: true,
+                    resources: path.resolve(__dirname, './assets/style/main.scss')
+                  }
                 },
                 {
                   loader: 'sass-loader',
                   options: {
                     sourceMap: true,
-                    includePaths: ['node_modules/helios/assets/style'],
-                    data: '@import "main.scss";'
+                    resources: path.resolve(__dirname, './assets/style/main.scss')
+                  }
+                },
+                {
+                  loader: 'sass-resources-loader',
+                  options: {
+                    sourceMap: true,
+                    resources: path.resolve(__dirname, './assets/style/main.scss')
                   }
                 }
               ],
@@ -84,9 +102,13 @@ const config = {
         exclude: /node_modules/,
         include: [
           path.resolve(__dirname, 'node_modules/vue-awesome'),
-          path.resolve(__dirname, 'node_modules/helios'),
-          path.resolve(__dirname, 'src'),
-        ]
+          path.resolve(__dirname, './../../src'),
+          path.resolve(__dirname, './')
+        ],
+        options: {
+          babelrc: false,
+          ...babelConfig
+        }
       },
       {
         test: /\.css$/,
@@ -168,24 +190,25 @@ const config = {
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
-      'vue$': 'vue/dist/vue.min.js',
-      'styles': path.resolve(__dirname, 'node_modules/helios/assets/style'),
-      'theme': path.resolve(__dirname, 'node_modules/helios'),
-      'locale': path.resolve(__dirname, './locale'),
-      'apis': path.resolve(__dirname, './src/app/apis')
+      '@': path.resolve(__dirname, './../../src'),
+      'vue$': 'vue/dist/vue.esm.js',
+      'styles': path.resolve(__dirname, './assets/style'),
+      'helios': path.resolve(__dirname, './'),
+      'theme': path.resolve(__dirname, './'),
+      'locale': path.resolve(__dirname, './../../locale'),
+      'apis': path.resolve(__dirname, './app/apis')
     },
     extensions: ['*', '.js', '.vue', '.json']
   },
   devServer: {
-    hot: true,
     historyApiFallback: true,
-    inline: true,
-    compress: true
+    inline: true
   },
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
+        'PUSHER_KEY': JSON.stringify(process.env.CES_SICES_PUSHER_KEY),
+        'PUSHER_CLUSTER': JSON.stringify(process.env.CES_SICES_PUSHER_CLUSTER),
         'CLIENT': JSON.stringify(process.env.CLIENT),
         'PLATFORM': JSON.stringify(process.env.PLATFORM),
         'NODE_ENV': JSON.stringify(process.env.CES_AMBIENCE),
@@ -213,15 +236,7 @@ const config = {
     new OptimizeCSSPlugin({
       assetNameRegExp: /\.css$/g,
       cssProcessor: require('cssnano'),
-      cssProcessorOptions: {
-        safe: true,
-        discardComments: {
-          removeAll: true
-        },
-        map: {
-          inline: false
-        }
-      },
+      cssProcessorOptions: { discardComments: { removeAll: true } },
       canPrint: true
     }),
     new HtmlWebpackPlugin({
@@ -233,8 +248,7 @@ const config = {
         removeComments: true,
         collapseWhitespace: true,
         removeAttributeQuotes: true
-      },
-      chunksSortMode: 'dependency'
+      }
     }),
     new webpack.HashedModuleIdsPlugin(),
     new webpack.optimize.ModuleConcatenationPlugin(),
