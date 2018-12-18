@@ -33,7 +33,6 @@ emulate_android_integrador:
     cordova run android
 
 mobile_ambience_install:
-	clear; \
   echo -e "\033[93m" + "Installing platforms and plugins of cordova lib..."; \
   cordova prepare --verbose
 
