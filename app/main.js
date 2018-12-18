@@ -12,7 +12,9 @@ Vue.use(plugins, options => {
     template: '<App/>',
     render: h => h(App),
     mounted() {
-      Notification.requestPermission()
+      if (process.env.PLATFORM === 'web') {
+        Notification.requestPermission()
+      }
     }
   }, options))
 })
