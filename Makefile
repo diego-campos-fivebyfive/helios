@@ -2,8 +2,6 @@ SHELL := /bin/bash
 PATH := ../.bin/:$(PATH)
 
 @start_dev:
-	clear; \
-	echo -e "\033[93m" + "Starting server..."; \
 	webpack-dev-server --hot --config .webpack.dev.conf.js; \
 
 start_sices:
@@ -31,8 +29,8 @@ build_mobile_web_integrador:
     node .webpack.android.conf
 
 emulate_android_integrador:
-	make build_mobile_web_integrador; \
-    $$(cordova run android)
+	make build_mobile_web_integrador && \
+    cordova run android
 
 mobile_ambience_install:
 	clear; \
