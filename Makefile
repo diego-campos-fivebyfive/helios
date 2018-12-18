@@ -2,7 +2,7 @@ SHELL := /bin/bash
 PATH := ../.bin/:$(PATH)
 
 @start_dev:
-	webpack-dev-server --hot --config .webpack.dev.conf.js; \
+	webpack-dev-server --hot --config .webpack.dev.conf.js \
 
 start_sices:
 	PLATFORM=web CLIENT=sices \
@@ -32,7 +32,7 @@ emulate_android_integrador:
 	make build_mobile_web_integrador && \
     cordova run android
 
-mobile_ambience_install: 
+mobile_ambience_install:
 	cordova prepare --verbose
 
 lint_template:
