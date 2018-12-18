@@ -9,7 +9,6 @@
 /gen/
 /platforms/
 /plugins/
-config.xml
 
 !static/.gitkeep
 !www/.gitkeep
@@ -21,3 +20,5 @@ config.xml
 package-lock.json
 yarn-error.log
 yarn.lock
+config.xml
+
