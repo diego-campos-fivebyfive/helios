@@ -22,15 +22,21 @@ start_integrador_android:
 
 build_web_integrador:
 	PLATFORM=web CLIENT=integrador \
-    node .webpack.prod.conf.js
+	node .webpack.prod.conf.js
 
 build_mobile_web_integrador:
 	PLATFORM=android CLIENT=integrador \
     node .webpack.android.conf
 
 emulate_android_integrador:
+	cp ./cordova/config/dev.xml config.xml -f && \
 	make build_mobile_web_integrador && \
     cordova run android
+
+release_android_integrador:
+	cp ./cordova/config/prod.xml config.xml -f && \
+	make build_mobile_web_integrador && \
+    cordova build android --release
 
 mobile_ambience_install:
 	cordova prepare --verbose

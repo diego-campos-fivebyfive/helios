@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.kolinalabs" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Sices Solar Integrador</name>
+    <description>
+        A plataforma pensada exclusivamente em quem trabalha com Energia Solar Fotovoltaica
+    </description>
+    <author email="contato@kolinalabs.com" href="https://kolinalabs.com/">
+        Kolina Labs
+    </author>
+    <content src="dist/index.html" />
+    <access origin="http://*/*" />
+    <access origin="https://*/*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-navigation href="http://*/*" />
+    <allow-navigation href="https://*/*" />
+    <platform name="android">
+        <allow-intent href="market:*" />
+        <icon density="ldpi" src="./assets/media/android/icons/ldpi.png" />
+        <icon density="mdpi" src="./assets/media/android/icons/mdpi.png" />
+        <icon density="hdpi" src="./assets/media/android/icons/hdpi.png" />
+        <icon density="xhdpi" src="./assets/media/android/icons/xhdpi.png" />
+        <splash density="land-hdpi" src="./assets/media/android/splash-screen/land-hdpi.png" />
+        <splash density="land-ldpi" src="./assets/media/android/splash-screen/land-ldpi.png" />
+        <splash density="land-mdpi" src="./assets/media/android/splash-screen/land-mdpi.png" />
+        <splash density="land-xhdpi" src="./assets/media/android/splash-screen/land-xhdpi.png" />
+        <splash density="port-hdpi" src="./assets/media/android/splash-screen/port-hdpi.png" />
+        <splash density="port-ldpi" src="./assets/media/android/splash-screen/port-ldpi.png" />
+        <splash density="port-mdpi" src="./assets/media/android/splash-screen/port-mdpi.png" />
+        <splash density="port-xhdpi" src="./assets/media/android/splash-screen/port-xhdpi.png" />
+        <preference name="SplashScreenDelay" value="2000" />
+        <preference name="AutoHideSplashScreen" value="true" />
+        <preference name="ShowSplashScreenSpinner" value="false" />
+    </platform>
+    <platform name="browser">
+        <preference name="ShowSplashScreen" value="false" />
+    </platform>
+    <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
+    <plugin name="cordova-plugin-splashscreen" spec="^5.0.2" />
+    <plugin name="cordova-plugin-network-information" spec="^2.0.1" />
+    <plugin name="cordova-plugin-inappbrowser" spec="3.0.0" />
+    <engine name="android" spec="^7.1.1" />
+    <engine name="browser" spec="^5.0.4" />
+</widget>
