@@ -3,7 +3,7 @@ import { http } from 'apis'
 export const getUser = () => http.get('/api/v1/user')
   .then(({ data: userInfo }) => userInfo )
 
-export const setInfoLocalStorage =  userInfo => {
+export const setInfoLocalStorage = userInfo => {
   Object
     .entries(userInfo)
     .forEach(([itemName, itemValue]) => {

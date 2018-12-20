@@ -5,8 +5,12 @@ const path = require('path')
 const webpack = require('webpack')
 const babelConfig = require('./.babel.config.js')
 
+const entry = process.env.PLATFORM === 'android'
+  ? './app/main.js'
+  : './app/dev-main.js'
+
 module.exports = {
-  entry: './app/dev-main.js',
+  entry,
   output: {
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/',
