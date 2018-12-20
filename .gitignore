@@ -21,4 +21,5 @@ package-lock.json
 yarn-error.log
 yarn.lock
 config.xml
-
+android.keystore
+app-release.apk

@@ -34,6 +34,7 @@ emulate_android_integrador:
     cordova run android
 
 release_android_integrador:
+	CES_AMBIENCE=production \
 	cp ./cordova/config/prod.xml config.xml -f && \
 	make build_mobile_web_integrador && \
     cordova build android --release
