@@ -5,12 +5,8 @@ const path = require('path')
 const webpack = require('webpack')
 const babelConfig = require('./.babel.config.js')
 
-const entry = process.env.PLATFORM === 'android'
-  ? './app/main.js'
-  : './app/dev-main.js'
-
 module.exports = {
-  entry,
+  entry: './app/dev-main.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/',
@@ -126,9 +122,10 @@ module.exports = {
         'CLIENT': JSON.stringify(process.env.CLIENT),
         'PLATFORM': JSON.stringify(process.env.PLATFORM),
         'NODE_ENV': JSON.stringify(process.env.CES_AMBIENCE),
-
-        'API_URL': JSON.stringify('http://app.plataformasicessolar.com.br'),
-        'SOCKET_URL': JSON.stringify('http://app.plataformasicessolar.com.br')
+        'API_URL': JSON.stringify(process.env.CES_SICES_URI),
+        'SOCKET_URL': JSON.stringify((process.env.CES_AMBIENCE === 'development')
+          ? `${process.env.CES_SICES_SOCKET_HOST}:${process.env.CES_SICES_SOCKET_PORT}`
+          : `${process.env.CES_SICES_SOCKET_HOST}`)
       }
     }),
     new HtmlWebpackPlugin({
