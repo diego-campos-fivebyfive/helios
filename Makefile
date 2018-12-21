@@ -2,10 +2,10 @@ SHELL := /bin/bash
 PATH := ../.bin/:$(PATH)
 
 @start_dev:
-	webpack-dev-server --hot --config .webpack.dev.conf.js \
+	webpack-dev-server --hot --config .webpack.dev.conf.js
 
 @start_dev_android:
-	webpack-dev-server --hot --config .webpack.android.dev.conf.js \
+	webpack-dev-server --hot --config .webpack.android.dev.conf.js
 
 start_sices:
 	PLATFORM=web CLIENT=sices \
