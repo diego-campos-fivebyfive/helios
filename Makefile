@@ -2,7 +2,10 @@ SHELL := /bin/bash
 PATH := ../.bin/:$(PATH)
 
 @start_dev:
-	webpack-dev-server --hot --config .webpack.dev.conf.js \
+	webpack-dev-server --hot --config .webpack.dev.conf.js
+
+@start_dev_android:
+	webpack-dev-server --hot --config .webpack.android.dev.conf.js
 
 start_sices:
 	PLATFORM=web CLIENT=sices \
@@ -18,28 +21,29 @@ start_integrador:
 
 start_integrador_android:
 	PLATFORM=android CLIENT=integrador \
-    make @start_dev
+    make @start_dev_android
 
 build_web_integrador:
 	PLATFORM=web CLIENT=integrador \
 	node .webpack.prod.conf.js
 
-build_mobile_web_integrador:
+build_android_integrador:
 	PLATFORM=android CLIENT=integrador \
-    node .webpack.android.conf
+    node .webpack.android.prod.conf
 
 emulate_android_integrador:
 	cp ./cordova/config/dev.xml config.xml -f && \
-	make build_mobile_web_integrador && \
-    cordova run android
+	PLATFORM=android CLIENT=integrador \
+	node .webpack.android.dev.conf && \
+    cordova run android --verbose
 
 release_android_integrador:
 	CES_AMBIENCE=production \
 	cp ./cordova/config/prod.xml config.xml -f && \
-	make build_mobile_web_integrador && \
+	make build_android_integrador && \
     cordova build android --release
 
-mobile_ambience_install:
+cordova_ambience_install:
 	cordova prepare --verbose
 
 lint_template:
