@@ -211,13 +211,9 @@ const config = {
         'PUSHER_CLUSTER': JSON.stringify(process.env.CES_SICES_PUSHER_CLUSTER),
         'CLIENT': JSON.stringify(process.env.CLIENT),
         'PLATFORM': JSON.stringify(process.env.PLATFORM),
-        'NODE_ENV': JSON.stringify(process.env.CES_AMBIENCE),
-        'API_URL': JSON.stringify((process.env.CES_AMBIENCE === 'development')
-          ? 'https://homolog.plataformasicessolar.com.br'
-          : `${process.env.CES_SICES_URI}`),
-        'SOCKET_URL': JSON.stringify((process.env.CES_AMBIENCE === 'development')
-          ? 'https://homolog.plataformasicessolar.com.br'
-          : `${process.env.CES_SICES_SOCKET_HOST}`)
+        'NODE_ENV': JSON.stringify('production'),
+        'API_URL': JSON.stringify('https://app.plataformasicessolar.com.br'),
+        'SOCKET_URL': JSON.stringify('https://app.plataformasicessolar.com.br')
       }
     }),
     new UglifyJsPlugin({

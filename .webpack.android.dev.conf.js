@@ -1,16 +1,15 @@
 'use strict'
 
-const HtmlWebpackPlugin = require('html-webpack-plugin')
 const path = require('path')
 const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const babelConfig = require('./.babel.config.js')
 
-const entry = process.env.PLATFORM === 'android'
-  ? './app/main.js'
-  : './app/dev-main.js'
-
-module.exports = {
-  entry,
+const config = {
+  entry: [
+    './cordova',
+    './app/main.js'
+  ],
   output: {
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/',
@@ -106,7 +105,6 @@ module.exports = {
     },
     extensions: ['*', '.js', '.vue', '.json']
   },
-  devtool: 'inline-cheap-module-source-map',
   devServer: {
     historyApiFallback: true,
     inline: true,
@@ -116,9 +114,6 @@ module.exports = {
     }
   },
   plugins: [
-    new webpack.LoaderOptionsPlugin({
-      debug: true
-    }),
     new webpack.DefinePlugin({
       'process.env': {
         'PUSHER_KEY': JSON.stringify(process.env.CES_SICES_PUSHER_KEY),
@@ -126,16 +121,63 @@ module.exports = {
         'CLIENT': JSON.stringify(process.env.CLIENT),
         'PLATFORM': JSON.stringify(process.env.PLATFORM),
         'NODE_ENV': JSON.stringify(process.env.CES_AMBIENCE),
-
-        'API_URL': JSON.stringify('http://app.plataformasicessolar.com.br'),
-        'SOCKET_URL': JSON.stringify('http://app.plataformasicessolar.com.br')
+        'API_URL': JSON.stringify('https://homolog.plataformasicessolar.com.br'),
+        'SOCKET_URL': JSON.stringify('https://homolog.plataformasicessolar.com.br')
       }
     }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'index.html',
       inject: true,
-      hash: true
+      hash: true,
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeAttributeQuotes: true
+      }
+    }),
+    new webpack.HashedModuleIdsPlugin(),
+    new webpack.optimize.ModuleConcatenationPlugin(),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      minChunks (module) {
+        return (
+          module.resource &&
+          /\.js$/.test(module.resource) &&
+          module.resource.indexOf(
+            path.join(__dirname, '../node_modules')
+          ) === 0
+        )
+      }
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'manifest',
+      minChunks: Infinity
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'app',
+      async: 'vendor-async',
+      children: true,
+      minChunks: 3
     })
   ]
 }
+
+webpack(config, (err, stats) => {
+  if (err) throw err
+
+  process.stdout.write(stats.toString({
+    colors: true,
+    modules: false,
+    children: false,
+    chunks: false,
+    chunkModules: false
+  }) + '\n\n')
+
+  if (stats.hasErrors()) {
+    console.log('Build failed with erros')
+    process.exit(1)
+  }
+})
+
+module.exports = config;
