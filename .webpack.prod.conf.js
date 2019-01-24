@@ -37,7 +37,12 @@ const config = {
                 },
                 {
                   loader: 'postcss-loader',
-                  options: { sourceMap: true }
+                  options: {
+                    sourceMap: true,
+                    config: {
+                      path: 'node_modules/helios'
+                    }
+                  }
                 }
               ],
               fallback: 'vue-style-loader'
@@ -50,7 +55,12 @@ const config = {
                 },
                 {
                   loader: 'postcss-loader',
-                  options: { sourceMap: true }
+                  options: {
+                    sourceMap: true,
+                    config: {
+                      path: 'node_modules/helios'
+                    }
+                  }
                 }
               ],
               fallback: 'vue-style-loader'
@@ -69,7 +79,10 @@ const config = {
                   loader: 'postcss-loader',
                   options: {
                     sourceMap: true,
-                    resources: path.resolve(__dirname, './assets/style/main.scss')
+                    resources: path.resolve(__dirname, './assets/style/main.scss'),
+                    config: {
+                      path: 'node_modules/helios'
+                    }
                   }
                 },
                 {
@@ -116,7 +129,12 @@ const config = {
             },
             {
               loader: 'postcss-loader',
-              options: { sourceMap: true }
+              options: {
+                sourceMap: true,
+                config: {
+                  path: 'node_modules/helios'
+                }
+              }
             }
           ],
           fallback: 'vue-style-loader'
@@ -132,7 +150,12 @@ const config = {
             },
             {
               loader: 'postcss-loader',
-              options: { sourceMap: true }
+              options: {
+                sourceMap: true,
+                config: {
+                  path: 'node_modules/helios'
+                }
+              }
             }
           ],
           fallback: 'vue-style-loader'
@@ -148,7 +171,12 @@ const config = {
             },
             {
               loader: 'postcss-loader',
-              options: { sourceMap: true }
+              options: {
+                sourceMap: true,
+                config: {
+                  path: 'node_modules/helios'
+                }
+              }
             },
             {
               loader: 'sass-loader',
