@@ -173,6 +173,10 @@ const sicesRoutes = [
     title: $locale.twigRoutes.transactions
   },
   {
+    path: '/twig/purchase/cart_pool_info/:id',
+    title: $locale.twigRoutes.transactions
+  },
+  {
     path: '/twig/purchase/payment_feedback',
     title: $locale.twigRoutes.bought
   },
@@ -461,6 +465,10 @@ const integradorRoutes = [
   },
   {
     path: '/twig/purchase/cart_pool/:id',
+    title: $locale.twigRoutes.transactions
+  },
+  {
+    path: '/twig/purchase/cart_pool_info/:id',
     title: $locale.twigRoutes.transactions
   },
   {
