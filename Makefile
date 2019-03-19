@@ -4,8 +4,8 @@ PATH := ../.bin/:$(PATH)
 @start_dev:
 	webpack-dev-server --hot --config .webpack.dev.conf.js
 
-@start_dev_android:
-	webpack-dev-server --hot --config .webpack.android.dev.conf.js
+@start_dev_mobile:
+	webpack-dev-server --hot --config .webpack.mobile.dev.conf.js
 
 start_sices:
 	PLATFORM=web CLIENT=sices \
@@ -21,7 +21,11 @@ start_integrador:
 
 start_integrador_android:
 	PLATFORM=android CLIENT=integrador \
-    make @start_dev_android
+    make @start_dev_mobile
+
+start_integrador_ios:
+	PLATFORM=ios CLIENT=integrador \
+    make @start_dev_mobile
 
 build_web_integrador:
 	PLATFORM=web CLIENT=integrador \
@@ -29,12 +33,16 @@ build_web_integrador:
 
 build_android_integrador:
 	PLATFORM=android CLIENT=integrador \
-    node .webpack.android.prod.conf
+    node .webpack.mobile.prod.conf
+
+build_ios_integrador:
+	PLATFORM=ios CLIENT=integrador \
+    node .webpack.mobile.prod.conf
 
 emulate_android_integrador:
 	cp ./cordova/config/dev.xml config.xml -f && \
 	PLATFORM=android CLIENT=integrador \
-	node .webpack.android.dev.conf && \
+	node .webpack.mobile.dev.conf && \
     cordova run android --verbose
 
 release_android_integrador:
