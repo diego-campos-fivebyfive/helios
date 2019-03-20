@@ -22,6 +22,7 @@
     "axios": "^0.17.1",
     "cordova-android": "^7.1.1",
     "cordova-browser": "^5.0.4",
+    "cordova-ios": "^4.5.5",
     "cordova-plugin-inappbrowser": "3.0.0",
     "cordova-plugin-network-information": "^2.0.1",
     "cordova-plugin-splashscreen": "^5.0.2",
@@ -109,7 +110,8 @@
     },
     "platforms": [
       "android",
-      "browser"
+      "browser",
+      "ios"
     ]
   }
 }
