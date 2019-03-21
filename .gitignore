@@ -21,4 +21,6 @@ package-lock.json
 yarn-error.log
 yarn.lock
 config.xml
-app-release.apk
+
+app-release.apk #android installer
+app-release.ipa #ios installer
