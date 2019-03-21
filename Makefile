@@ -58,11 +58,11 @@ create_installer_ios_integrador:
 	zip -0 -y -r app-release.ipa platforms/ios/build/emulator && \
 	echo "app-release.ipa created!"
 
-release_ios_integrador::
+release_ios_integrador:
 	CES_AMBIENCE=production \
 	make create_installer_ios_integrador
 
-release_android_integrador::
+release_android_integrador:
 	CES_AMBIENCE=production \
 	make create_installer_android_integrador
 
