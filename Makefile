@@ -45,10 +45,6 @@ emulate_android_integrador:
 	node .webpack.mobile.dev.conf && \
     cordova run android --verbose
 
-create_ipa_ios_file:
-	zip -0 -y -r app-release.ipa platforms/ios/build/emulator && \
-	echo "app-release.ipa created!"
-
 create_installer_android_integrador:
 	cp ./cordova/config/prod.xml config.xml -f && \
 	make build_android_integrador && \
@@ -59,7 +55,8 @@ create_installer_ios_integrador:
 	cp ./cordova/config/prod.xml config.xml && \
 	make build_ios_integrador && \
     cordova build ios --release --buildFlag='-UseModernBuildSystem=0' && \
-	make create_ipa_ios_file
+	zip -0 -y -r app-release.ipa platforms/ios/build/emulator && \
+	echo "app-release.ipa created!"
 
 release_ios_integrador::
 	CES_AMBIENCE=production \
