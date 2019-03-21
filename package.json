@@ -92,7 +92,7 @@
     "stylelint-config-standard": "^18.0.0",
     "stylelint-processor-html": "^1.0.0",
     "transform-runtime": "0.0.0",
-    "uglifyjs-webpack-plugin": "^1.1.6",
+    "uglifyjs-webpack-plugin": "^1.2.7",
     "url-loader": "^0.6.2",
     "vue-jest": "^2.6.0",
     "vue-loader": "^14.2.1",
