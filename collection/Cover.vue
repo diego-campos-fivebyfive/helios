@@ -3,7 +3,7 @@
 </template>
 
 <script>
-  import { insertBackground } from './cover'
+  import { insertBackground } from './cover-background'
 
   export default {
     props: {
