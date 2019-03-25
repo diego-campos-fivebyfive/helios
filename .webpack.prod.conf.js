@@ -7,11 +7,12 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const babelConfig = require('./.babel.config.js')
+const clientPath = require('./client-path')
 
 const config = {
   entry: './app/main.js',
   output: {
-    path: path.resolve(__dirname, `../../../backend/web/app/${process.env.CLIENT}`),
+    path: path.resolve(`${process.env.SICES_PATH}/backend/web/app/${process.env.CLIENT}`),
     publicPath: `/app/${process.env.CLIENT}/`,
     filename: '[name].js'
   },
@@ -111,7 +112,7 @@ const config = {
         exclude: /node_modules/,
         include: [
           path.resolve(__dirname, 'node_modules/vue-awesome'),
-          path.resolve(__dirname, './../../src'),
+          path.resolve(clientPath('/src')),
           path.resolve(__dirname, './')
         ],
         options: {
@@ -214,12 +215,12 @@ const config = {
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './../../src'),
+      '@': path.resolve(clientPath('/src')),
       'vue$': 'vue/dist/vue.min.js',
       'styles': path.resolve(__dirname, './assets/style'),
       'helios': path.resolve(__dirname, './'),
       'theme': path.resolve(__dirname, './'),
-      'locale': path.resolve(__dirname, './../../locale'),
+      'locale': path.resolve(clientPath('/locale')),
       'apis': path.resolve(__dirname, './app/apis')
     },
     extensions: ['*', '.js', '.vue', '.json']

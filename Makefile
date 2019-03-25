@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-PATH := ../.bin/:$(PATH)
+PATH := ./node_modules/.bin/:$(PATH)
 
 @start_dev:
 	webpack-dev-server --hot --config .webpack.dev.conf.js
