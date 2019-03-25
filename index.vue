@@ -71,31 +71,61 @@
         this.sidebarType = sidebarType
       }
 
-      window.updateVueRoute = path => {
-        // DEBUG: console.log('twig', location.pathname, path)
-
-        if (process.env.PLATFORM !== 'web') {
+      /**
+       * @see https://stackoverflow.com/a/25098153
+       */
+      window.addEventListener('message', event => {
+        /* eslint-disable no-bitwise */
+        if (!~event.origin.indexOf(process.env.API_URL)) {
           return
         }
 
-        this.$route.meta.pushState = path
-        history.replaceState({}, null, path)
-      }
+        const { data } = event
+        const path = this.formatPath(data.path)
 
-      window.pushVueRoute = fullPath => {
-        const path = fullPath
-          .replace(/\/twig/, '')
-          .replace(/\/$/g, '')
-          .replace(process.env.API_URL, '')
+        if (path === this.formatPath(window.location.href)) {
+          return
+        }
 
-        this.$router.push({ path })
-      }
+        if (data.event === 'updateVueRoute') {
+          if (this.isModal(data.searchParams)) {
+            return
+          }
+
+          this.updateVueRoute(path)
+          return
+        }
+
+        if (data.event === 'pushVueRoute') {
+          this.pushVueRoute(path)
+        }
+      })
 
       this.downloadFileFromIframe()
 
       this.mobilePullRefresh()
     },
     methods: {
+      formatPath(path) {
+        return path
+          .replace(/\/twig/, '')
+          .replace(/\/$/g, '')
+          .replace(process.env.API_URL, '')
+          .replace(window.location.origin, '')
+      },
+      isModal(searchParams) {
+        const urlParams = new URLSearchParams(searchParams)
+
+        return urlParams.get('modal')
+      },
+      pushVueRoute(path) {
+        this.$router.push({ path })
+      },
+      updateVueRoute(path) {
+        // DEBUG: console.log('twig', location.pathname, path)
+        this.$route.meta.pushState = path
+        window.history.replaceState({}, null, path)
+      },
       setInitialComponents() {
         if (this.isMobile) {
           this.tabbarType = this.$route.meta.tabbar || 'common'
