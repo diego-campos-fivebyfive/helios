@@ -75,12 +75,17 @@
        * @see https://stackoverflow.com/a/25098153
        */
       window.addEventListener('message', event => {
-        /* eslint-disable no-bitwise */
-        if (!~event.origin.indexOf(process.env.API_URL)) {
+        const { API_URL } = process.env
+        const { data } = event
+
+        if (
+          !API_URL.includes(event.origin)
+          || data.path === undefined
+          || data.event === undefined
+        ) {
           return
         }
 
-        const { data } = event
         const path = this.formatPath(data.path)
 
         if (path === this.formatPath(window.location.href)) {
