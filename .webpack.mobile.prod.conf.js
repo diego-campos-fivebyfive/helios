@@ -213,8 +213,7 @@ const config = {
         'CLIENT': JSON.stringify(process.env.CLIENT),
         'PLATFORM': JSON.stringify(process.env.PLATFORM),
         'NODE_ENV': JSON.stringify('production'),
-        'API_URL': JSON.stringify('https://app.plataformasicessolar.com.br'),
-        'SOCKET_URL': JSON.stringify('https://app.plataformasicessolar.com.br')
+        'API_URL': JSON.stringify('https://app.plataformasicessolar.com.br')
       }
     }),
     new UglifyJsPlugin({
