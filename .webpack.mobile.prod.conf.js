@@ -7,6 +7,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const babelConfig = require('./.babel.config.js')
+const clientPath = require('./client-path')
 
 const config = {
   entry: [
@@ -102,7 +103,7 @@ const config = {
         exclude: /node_modules/,
         include: [
           path.resolve(__dirname, 'node_modules/vue-awesome'),
-          path.resolve(__dirname, './../../src'),
+          path.resolve(clientPath.repo('./src')),
           path.resolve(__dirname, './')
         ],
         options: {
@@ -190,12 +191,12 @@ const config = {
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './../../src'),
+      '@': path.resolve(clientPath.repo('./src')),
       'vue$': 'vue/dist/vue.esm.js',
       'styles': path.resolve(__dirname, './assets/style'),
       'helios': path.resolve(__dirname, './'),
       'theme': path.resolve(__dirname, './'),
-      'locale': path.resolve(__dirname, './../../locale'),
+      'locale': path.resolve(clientPath.repo('./locale')),
       'apis': path.resolve(__dirname, './app/apis')
     },
     extensions: ['*', '.js', '.vue', '.json']
@@ -255,7 +256,7 @@ const config = {
           module.resource &&
           /\.js$/.test(module.resource) &&
           module.resource.indexOf(
-            path.join(__dirname, '../node_modules')
+            path.join(clientPath.repo('./node_modules'))
           ) === 0
         )
       }

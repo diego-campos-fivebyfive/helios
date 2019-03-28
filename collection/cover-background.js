@@ -137,14 +137,14 @@ const randomize = () => {
   for (let i = 0; i < points.length; i++) {
     if (
       points[i].originX !== 0
-      && points[i].originX !== unitWidth * (this.numPointsX - 1)
+      && points[i].originX !== unitWidth * (numPointsX - 1)
     ) {
       points[i].x = points[i].originX + Math.random() * unitWidth - unitWidth / 5;
     }
 
     if (
       points[i].originY != 0
-      && points[i].originY != unitHeight * (this.numPointsY - 1
+      && points[i].originY != unitHeight * (numPointsY - 1
       )) {
       points[i].y = points[i].originY + Math.random() * unitHeight - unitHeight / 10;
     }
