@@ -122,10 +122,7 @@ const config = {
         'CLIENT': JSON.stringify(process.env.CLIENT),
         'PLATFORM': JSON.stringify(process.env.PLATFORM),
         'NODE_ENV': JSON.stringify(process.env.CES_AMBIENCE),
-        'API_URL': JSON.stringify(process.env.CES_SICES_URI),
-        'SOCKET_URL': JSON.stringify((process.env.CES_AMBIENCE === 'development')
-          ? `${process.env.CES_SICES_SOCKET_HOST}:${process.env.CES_SICES_SOCKET_PORT}`
-          : `${process.env.CES_SICES_SOCKET_HOST}`)
+        'API_URL': JSON.stringify(process.env.CES_SICES_URI)
       }
     }),
     new HtmlWebpackPlugin({
