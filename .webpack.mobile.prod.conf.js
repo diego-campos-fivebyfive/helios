@@ -103,7 +103,7 @@ const config = {
         exclude: /node_modules/,
         include: [
           path.resolve(__dirname, 'node_modules/vue-awesome'),
-          path.resolve(clientPath.repo('./src')),
+          clientPath.repo('./src'),
           path.resolve(__dirname, './')
         ],
         options: {
@@ -191,12 +191,12 @@ const config = {
   },
   resolve: {
     alias: {
-      '@': path.resolve(clientPath.repo('./src')),
+      '@': clientPath.repo('./src'),
       'vue$': 'vue/dist/vue.esm.js',
       'styles': path.resolve(__dirname, './assets/style'),
       'helios': path.resolve(__dirname, './'),
       'theme': path.resolve(__dirname, './'),
-      'locale': path.resolve(clientPath.repo('./locale')),
+      'locale': clientPath.repo('./locale'),
       'apis': path.resolve(__dirname, './app/apis')
     },
     extensions: ['*', '.js', '.vue', '.json']
