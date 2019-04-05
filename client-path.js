@@ -1,6 +1,10 @@
+const path = require('path')
+
+const { SICES_PATH, CLIENT } = process.env
+
 module.exports = {
   build: () =>
-    `${process.env.SICES_PATH}/backend/web/app/${process.env.CLIENT}`,
-  repo: (path = '/') =>
-    `${process.env.SICES_PATH}/web-${process.env.CLIENT}${path}`
+    path.resolve(`${SICES_PATH}/backend/web/app/${CLIENT}`),
+  repo: (dir = '/') =>
+    path.resolve(`${SICES_PATH}/web-${CLIENT}`, dir)
 }
