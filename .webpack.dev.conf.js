@@ -43,7 +43,7 @@ module.exports = {
         include: [
           path.resolve(__dirname, 'node_modules/vue-awesome'),
           path.resolve(__dirname, './'),
-          path.resolve(clientPath.repo('/src'))
+          clientPath.repo('./src')
         ],
         options: {
           babelrc: false,
@@ -93,12 +93,12 @@ module.exports = {
   },
   resolve: {
     alias: {
-      '@': path.resolve(clientPath.repo('/src')),
+      '@': clientPath.repo('./src'),
       'vue$': 'vue/dist/vue.esm.js',
       'styles': path.resolve(__dirname, './assets/style'),
       'helios': path.resolve(__dirname, './'),
       'theme': path.resolve(__dirname, './'),
-      'locale': path.resolve(clientPath.repo('/locale')),
+      'locale': clientPath.repo('./locale'),
       'apis': path.resolve(__dirname, './app/apis')
     },
     extensions: ['*', '.js', '.vue', '.json']
@@ -123,10 +123,7 @@ module.exports = {
         'CLIENT': JSON.stringify(process.env.CLIENT),
         'PLATFORM': JSON.stringify(process.env.PLATFORM),
         'NODE_ENV': JSON.stringify(process.env.CES_AMBIENCE),
-        'API_URL': JSON.stringify(process.env.CES_SICES_URI),
-        'SOCKET_URL': JSON.stringify((process.env.CES_AMBIENCE === 'development')
-          ? `${process.env.CES_SICES_SOCKET_HOST}:${process.env.CES_SICES_SOCKET_PORT}`
-          : `${process.env.CES_SICES_SOCKET_HOST}`)
+        'API_URL': JSON.stringify(process.env.CES_SICES_URI)
       }
     }),
     new HtmlWebpackPlugin({

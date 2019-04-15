@@ -185,6 +185,18 @@ const sicesRoutes = [
     title: $locale.twigRoutes.bought
   },
   {
+    path: '/twig/component/mlpe',
+    title: $locale.twigRoutes.mlpes
+  },
+  {
+    path: '/twig/component/mlpe/:id/update',
+    title: $locale.twigRoutes.mlpes
+  },
+  {
+    path: '/twig/component/mlpe/create',
+    title: $locale.twigRoutes.mlpes
+  },
+  {
     path: '/twig/component/module/:id/update',
     title: $locale.twigRoutes.modules
   },
@@ -322,6 +334,10 @@ const integradorRoutes = [
   {
     path: '/twig/component/maker/update/:id',
     title: $locale.twigRoutes.manufacturers
+  },
+  {
+    path: '/twig/component/mlpe',
+    title: $locale.twigRoutes.mlpes
   },
   {
     path: '/twig/component/module',
