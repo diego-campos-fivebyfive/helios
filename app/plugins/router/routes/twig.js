@@ -141,6 +141,10 @@ const sicesRoutes = [
     sidebar: 'collapse'
   },
   {
+    path: '/twig/reports',
+    title: $locale.twigRoutes.reports
+  },
+  {
     path: '/admin/twig/kit/create',
     title: $locale.twigRoutes.express
   },
